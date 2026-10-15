@@ -1,0 +1,296 @@
+//! Export of the family website: a static, read-only copy of the app
+//! (works on any web hosting and even opened straight from a disk).
+//!
+//! Privacy is applied HERE, before anything leaves the device: the website
+//! contains only published records, anonymous placeholders instead of hidden
+//! people and censored copies of living people.
+
+use crate::archive::MediaSource;
+use crate::db::{Database, Kind, Record};
+use crate::error::{Error, Result};
+use crate::life::Ctx;
+use crate::model::*;
+use crate::privacy::Policy;
+use serde::Serialize;
+use std::collections::{BTreeSet, HashSet};
+use std::io::{Seek, Write};
+use zip::write::SimpleFileOptions;
+use zip::{CompressionMethod, ZipWriter};
+
+/// Public copy of the database.
+pub fn public_db(db: &Database, ctx: &Ctx) -> Database {
+    let pol = Policy::public(&db.settings, ctx.today);
+    let mut out = Database::default();
+    let mut hidden = HashSet::new();
+    for p in db.persons.values() {
+        if p.status != Status::Published {
+            continue;
+        }
+        if pol.should_hide(p) {
+            hidden.insert(p.id);
+            out.persons.insert(
+                p.id,
+                Person { id: p.id, mother: p.mother, father: p.father, mother_rel: p.mother_rel, father_rel: p.father_rel, ..Default::default() },
+            );
+            continue;
+        }
+        let (mut r, _) = pol.redact(p);
+        if pol.photo_hidden(p) {
+            r.photo = None;
+            r.gallery.clear();
+            r.aging.clear();
+            r.recordings.clear();
+            r.aging_audio = None;
+        }
+        r.created = 0;
+        out.persons.insert(p.id, r);
+    }
+    // Drop parent links to people that are not exported.
+    let ids: HashSet<Id> = out.persons.keys().copied().collect();
+    for p in out.persons.values_mut() {
+        if p.mother.map(|m| !ids.contains(&m)).unwrap_or(false) {
+            p.mother = None;
+        }
+        if p.father.map(|m| !ids.contains(&m)).unwrap_or(false) {
+            p.father = None;
+        }
+    }
+    for u in db.unions.values() {
+        if !ids.contains(&u.a) || u.b.map(|b| !ids.contains(&b)).unwrap_or(false) {
+            continue;
+        }
+        let a_l = pol.is_living(&db.persons[&u.a]);
+        let b_l = u.b.and_then(|b| db.persons.get(&b)).map(|p| pol.is_living(p)).unwrap_or(false);
+        let mut r = pol.redact_union(u, a_l, b_l);
+        if hidden.contains(&u.a) || u.b.map(|b| hidden.contains(&b)).unwrap_or(false) {
+            r.date.clear();
+            r.place.clear();
+            r.end_date.clear();
+            if u.b.is_none() {
+                r.partner_first_name.clear();
+                r.partner_last_name.clear();
+            }
+        }
+        out.unions.insert(u.id, r);
+    }
+    for p in db.pets.values() {
+        if p.status != Status::Published {
+            continue;
+        }
+        let mut p = p.clone();
+        if p.owner.map(|o| !ids.contains(&o) || hidden.contains(&o)).unwrap_or(false) {
+            p.owner = None;
+        }
+        p.created = 0;
+        out.pets.insert(p.id, p);
+    }
+    // Sources used by visible people.
+    let mut used_sources: HashSet<Id> = HashSet::new();
+    for p in out.persons.values() {
+        for v in p.citations.values() {
+            used_sources.extend(v.iter().copied());
+        }
+    }
+    for s in db.sources.values() {
+        let visible_links: Vec<Id> = s.persons.iter().copied().filter(|p| ids.contains(p) && !hidden.contains(p)).collect();
+        if visible_links.is_empty() && !used_sources.contains(&s.id) && pol.active {
+            continue;
+        }
+        let mut s = s.clone();
+        s.persons = visible_links;
+        s.created = 0;
+        out.sources.insert(s.id, s);
+    }
+    for p in out.persons.values_mut() {
+        for v in p.citations.values_mut() {
+            v.retain(|s| db.sources.contains_key(s));
+        }
+    }
+    // Media referenced by exported data.
+    let mut media: BTreeSet<Id> = BTreeSet::new();
+    for p in out.persons.values() {
+        media.extend(p.photo);
+        media.extend(p.gallery.iter().map(|g| g.media));
+        media.extend(p.events.iter().filter_map(|e| e.image));
+        media.extend(p.recordings.iter().map(|r| r.media));
+        media.extend(p.aging.iter().map(|f| f.media));
+    }
+    for p in out.pets.values() {
+        media.extend(p.photo);
+        media.extend(p.gallery.iter().map(|g| g.media));
+    }
+    for s in out.sources.values() {
+        media.extend(s.photo);
+        media.extend(s.scans.iter().copied());
+    }
+    for m in media {
+        if let Some(md) = db.media.get(&m) {
+            let mut md = md.clone();
+            md.origin.clear();
+            out.media.insert(m, md);
+        }
+    }
+    // Places with coordinates (unless the map is locked or disabled).
+    if db.settings.map_external && !pol.blocks_section("map") {
+        let used: HashSet<String> = crate::query::places(&out).into_iter().map(|p| p.name.to_lowercase()).collect();
+        for pl in db.places.values() {
+            if pl.lat.is_some() && used.contains(&pl.name.trim().to_lowercase()) {
+                out.places.insert(pl.id, pl.clone());
+            }
+        }
+    }
+    let mut s = db.settings.clone();
+    s.merge_dismissed.clear();
+    s.notifications = NotificationSettings::default();
+    if !s.map_external || pol.blocks_section("map") {
+        s.map_external = false;
+    }
+    s.tree_start_person = s.tree_start_person.filter(|p| ids.contains(p) && !hidden.contains(p));
+    // the owner's e-mail / form address only when the suggestion form is on
+    if !s.suggestions.enabled {
+        s.suggestions = Default::default();
+    }
+    if !s.suggestions.endpoint.trim().to_ascii_lowercase().starts_with("https://") {
+        s.suggestions.endpoint.clear();
+    }
+    out.settings = s;
+    out.meta.version = db.meta.version;
+    out.meta.next_id = db.meta.next_id;
+    out
+}
+
+#[derive(Serialize, Debug)]
+pub struct SiteStats {
+    pub persons: usize,
+    pub hidden: usize,
+    pub media: usize,
+}
+
+/// Contents of `data.js` (works when the website is opened from a disk).
+pub fn data_js(db: &Database, ctx: &Ctx, app: &str) -> String {
+    #[derive(Serialize)]
+    struct Payload<'a> {
+        app: &'a str,
+        generated: i64,
+        today: String,
+        records: Vec<Record>,
+    }
+    let p = Payload { app, generated: ctx.now, today: ctx.today.format("%Y-%m-%d").to_string(), records: db.all_records().into_iter().filter(|r| r.kind != Kind::Revision && r.kind != Kind::Suggestion).collect() };
+    // `</` is escaped so the JSON can never close a <script> element.
+    let json = serde_json::to_string(&p).unwrap().replace("</", "<\\/");
+    format!("window.MYROOTS_SITE={json};\n")
+}
+
+/// Writes the website ZIP: viewer assets + data.js + media.
+/// `viewer` = (relative path, bytes) of the prebuilt read-only app.
+pub fn write<W: Write + Seek>(w: W, db: &Database, ctx: &Ctx, viewer: &[(String, Vec<u8>)], media: &mut dyn MediaSource, app: &str) -> Result<(W, SiteStats)> {
+    if viewer.is_empty() {
+        return Err(Error::new("site_no_viewer", "the website template is missing"));
+    }
+    let pubdb = public_db(db, ctx);
+    let mut z = ZipWriter::new(w);
+    let deflate = SimpleFileOptions::default().compression_method(CompressionMethod::Deflated);
+    let stored = SimpleFileOptions::default().compression_method(CompressionMethod::Stored);
+    let ze = |e: zip::result::ZipError| Error::new("archive", e.to_string());
+    let ie = |e: std::io::Error| Error::new("archive", e.to_string());
+    for (path, bytes) in viewer {
+        z.start_file(path.as_str(), deflate).map_err(ze)?;
+        z.write_all(bytes).map_err(ie)?;
+    }
+    z.start_file("data.js", deflate).map_err(ze)?;
+    z.write_all(data_js(&pubdb, ctx, app).as_bytes()).map_err(ie)?;
+    let full = db.settings.site.full_photos;
+    let mut count = 0;
+    for (id, m) in &pubdb.media {
+        let ext = crate::gedcom::ext_for_mime(&m.mime);
+        if !m.mime.starts_with("image/") {
+            // sound and documents: the file itself, no thumbnail
+            if let Some(o) = media.original(*id) {
+                z.start_file(format!("media/{id}.{ext}"), stored).map_err(ze)?;
+                z.write_all(&o).map_err(ie)?;
+                count += 1;
+            }
+            continue;
+        }
+        let mut thumb = media.thumb(*id);
+        if thumb.is_none() {
+            // no thumbnail stored: the original serves as one (browsers sniff the format)
+            thumb = media.original(*id);
+        }
+        let orig = if full || thumb.is_none() { media.original(*id) } else { None };
+        // no GPS position, camera or other hidden data on the public website
+        let orig = orig.map(|o| crate::metadata::strip(&o, &m.mime));
+        let thumb = thumb.map(|t| crate::metadata::strip(&t, "image/jpeg"));
+        if let Some(t) = &thumb {
+            z.start_file(format!("media/{id}_t.jpg"), stored).map_err(ze)?;
+            z.write_all(t).map_err(ie)?;
+        }
+        // Without full photos the "original" is the thumbnail-sized copy.
+        match orig {
+            Some(o) => {
+                z.start_file(format!("media/{id}.{ext}"), stored).map_err(ze)?;
+                z.write_all(&o).map_err(ie)?;
+            }
+            None => {
+                if let Some(t) = thumb {
+                    z.start_file(format!("media/{id}.{ext}"), stored).map_err(ze)?;
+                    z.write_all(&t).map_err(ie)?;
+                }
+            }
+        }
+        count += 1;
+    }
+    let hidden = pubdb.persons.values().filter(|p| p.first_name.is_empty() && p.last_name.is_empty() && p.birth_date.is_empty()).count();
+    let stats = SiteStats { persons: pubdb.persons.len(), hidden, media: count };
+    let w = z.finish().map_err(ze)?;
+    Ok((w, stats))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::ops;
+    use chrono::NaiveDate;
+
+    #[test]
+    fn privacy_applied() {
+        let c = Ctx::new(1, NaiveDate::from_ymd_opt(2026, 1, 1).unwrap());
+        let mut db = Database::new(0);
+        let old = ops::create_person(&mut db, &c, Person { first_name: "Old".into(), birth_date: "1900".into(), death_date: "1980".into(), ..Default::default() }, Default::default()).unwrap();
+        let kid = ops::create_person(&mut db, &c, Person { first_name: "Kid".into(), birth_date: "1990-02-03".into(), birth_place: "X".into(), father: Some(old), ..Default::default() }, Default::default()).unwrap();
+        let draft = ops::create_person(&mut db, &c, Person { first_name: "Draft".into(), status: Status::Draft, ..Default::default() }, Default::default()).unwrap();
+        let mut s = db.settings.clone();
+        s.privacy.enabled = true;
+        s.privacy.level = "hide_living".into();
+        ops::save_settings(&mut db, s);
+        let p = public_db(&db, &c);
+        assert_eq!(p.persons[&kid].first_name, "");
+        assert_eq!(p.persons[&kid].father, Some(old));
+        assert!(!p.persons.contains_key(&draft));
+        let mut s = db.settings.clone();
+        s.privacy.level = "censor_living".into();
+        ops::save_settings(&mut db, s);
+        let p = public_db(&db, &c);
+        assert_eq!(p.persons[&kid].first_name, "Kid");
+        assert_eq!(p.persons[&kid].birth_date, "1990");
+        assert_eq!(p.persons[&kid].birth_place, "");
+        let js = data_js(&p, &c, "t");
+        assert!(js.starts_with("window.MYROOTS_SITE="));
+        // voice and photos of the living stay private; the owner's e-mail is not published while the form is off
+        let m = ops::register_media(&mut db, &c, Media { file_name: "v.mp3".into(), mime: "audio/mpeg".into(), ..Default::default() });
+        let mut k = db.persons[&kid].clone();
+        k.recordings = vec![Recording { media: m, title: "Głos".into(), date: String::new() }];
+        k.aging = vec![AgingFrame { media: m, date: "2000".into(), eyes: None }];
+        db.put_person(k);
+        let mut s = db.settings.clone();
+        s.suggestions.enabled = false;
+        s.suggestions.email = "owner@example.com".into();
+        s.suggestions.endpoint = "javascript:alert(1)".into();
+        ops::save_settings(&mut db, s);
+        assert_eq!(db.settings.suggestions.endpoint, "");
+        let p = public_db(&db, &c);
+        assert!(p.persons[&kid].recordings.is_empty() && p.persons[&kid].aging.is_empty());
+        assert!(!p.media.contains_key(&m));
+        assert!(!data_js(&p, &c, "t").contains("owner@example.com"));
+    }
+}

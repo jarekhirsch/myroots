@@ -1,0 +1,12 @@
+node_modules/
+target/
+dist/
+dist-viewer/
+src-tauri/gen/android/
+src-tauri/gen/apple/
+.DS_Store
+wydanie/
+*.p12
+*.keystore
+*.jks
+.env

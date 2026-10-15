@@ -1,0 +1,49 @@
+{
+  "name": "myroots-app",
+  "private": true,
+  "version": "3.0.0",
+  "type": "module",
+  "description": "MyRoots — genealogy app for desktop, mobile and the web",
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "wasm": "node scripts/build-wasm.mjs",
+    "i18n": "node scripts/build-app-strings.mjs && node scripts/po2json.mjs",
+    "dev": "vite",
+    "build:viewer": "vite build --mode viewer && node scripts/finalize-viewer.mjs",
+    "build:app": "vite build",
+    "build": "npm run wasm && npm run build:viewer && npm run build:app",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^5.1.1",
+    "@tauri-apps/cli": "^2.12.2",
+    "@tsconfig/svelte": "^5.0.8",
+    "@types/d3": "^7.4.3",
+    "@types/leaflet": "^1.9.22",
+    "@types/leaflet.markercluster": "^1.5.6",
+    "binaryen": "^132.0.0",
+    "svelte": "^5.57.2",
+    "svelte-check": "^4.7.6",
+    "typescript": "5.9",
+    "vite": "^6.4.4"
+  },
+  "dependencies": {
+    "@fontsource-variable/literata": "^5.3.0",
+    "@fontsource-variable/onest": "^5.3.1",
+    "@lucide/svelte": "^1.57.0",
+    "@tauri-apps/api": "^2.12.3",
+    "@tauri-apps/plugin-dialog": "^2.8.2",
+    "@tauri-apps/plugin-fs": "^2.7.0",
+    "@tauri-apps/plugin-http": "^2.8.2",
+    "@tauri-apps/plugin-notification": "^2.6.0",
+    "@tauri-apps/plugin-opener": "^2.7.1",
+    "@vladmandic/face-api": "^1.7.15",
+    "d3": "^7.9.0",
+    "dompurify": "^3.4.17",
+    "family-chart": "^0.9.0",
+    "fflate": "^0.8.3",
+    "leaflet": "^1.9.4",
+    "leaflet.markercluster": "^1.5.3"
+  }
+}

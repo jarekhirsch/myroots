@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <!-- merged by Tauri into the iOS app's Info.plist -->
+  <key>NSMicrophoneUsageDescription</key>
+  <string>MyRoots records the voices of your family members when you choose to.</string>
+  <key>NSCameraUsageDescription</key>
+  <string>MyRoots can take a photo for a family member's profile when you choose to.</string>
+  <key>ITSAppUsesNonExemptEncryption</key>
+  <false/>
+</dict>
+</plist>

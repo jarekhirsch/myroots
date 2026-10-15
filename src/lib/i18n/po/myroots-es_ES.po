@@ -1,0 +1,4427 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: MyRoots 2.6.0\n"
+"Report-Msgid-Bugs-To: Jarek Hirsch <jarekhirsz.biz@gmail.com>\n"
+"POT-Creation-Date: 2026-10-14T09:25:34+00:00\n"
+"PO-Revision-Date: 2026-10-14 09:26+0000\n"
+"Last-Translator: Jarek Hirsch <jarekhirsz.biz@gmail.com>\n"
+"Language-Team: Spanish <jarekhirsz.biz@gmail.com>\n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Domain: myroots\n"
+"X-Generator: MyRoots build\n"
+
+#: my-roots.php:309
+msgid "Genealogy Editor"
+msgstr "Editor de genealogía"
+
+#: includes/class-book.php:57 includes/class-gallery.php:51 includes/class-kinship.php:81 includes/class-lifeline.php:55 includes/class-map.php:101 includes/class-person.php:513 includes/class-person.php:530 includes/class-rest.php:90 includes/class-rest.php:127 includes/class-rest.php:134 includes/class-rest.php:181 includes/class-rest.php:189 includes/class-stats.php:60 includes/class-tree.php:70 includes/class-tree.php:813 includes/class-tree.php:950
+msgid "Private content."
+msgstr "Contenido privado."
+
+#: includes/class-stats.php:85
+msgid "Family statistics"
+msgstr "Estadísticas familiares"
+
+#: includes/class-map.php:162 includes/class-stats.php:89
+msgid "Clan:"
+msgstr "Linaje:"
+
+#: includes/class-gallery.php:144 includes/class-gallery.php:145 includes/class-map.php:163 includes/class-map.php:164 includes/class-stats.php:90 includes/class-views.php:119 includes/class-views.php:120 includes/class-views.php:523 includes/class-views.php:524
+msgid "All clans"
+msgstr "Todos los linajes"
+
+#: includes/class-stats.php:91
+msgid "All"
+msgstr "Todos"
+
+#: includes/class-admin.php:1263 includes/class-stats.php:171
+msgid "People in the database"
+msgstr "Personas en la base de datos"
+
+#: includes/class-stats.php:172
+msgid "Women / men"
+msgstr "Mujeres / hombres"
+
+#: includes/class-stats.php:174
+msgid "Pets (living / deceased)"
+msgstr "Mascotas (vivas / fallecidas)"
+
+#: includes/class-admin.php:1266 includes/class-stats.php:175
+msgid "Average age"
+msgstr "Edad media"
+
+#: includes/class-admin.php:1485 includes/class-stats.php:175 includes/class-stats.php:180 includes/class-views.php:770 includes/class-views.php:910
+msgid "years"
+msgstr "años"
+
+#: includes/class-admin.php:1265 includes/class-stats.php:176
+msgctxt "statistics count"
+msgid "Marriages"
+msgstr "Matrimonios"
+
+#: includes/class-stats.php:177
+msgid "Avg. number of children"
+msgstr "Media de hijos"
+
+#: includes/class-stats.php:178
+msgid "Avg. age at marriage (M)"
+msgstr "Edad media al casarse (H)"
+
+#: includes/class-stats.php:179
+msgid "Avg. age at marriage (F)"
+msgstr "Edad media al casarse (M)"
+
+#: includes/class-stats.php:180
+msgid "Avg. generation gap"
+msgstr "Intervalo medio entre generaciones"
+
+#: includes/class-stats.php:181
+msgid "Oldest person"
+msgstr "Persona de mayor edad"
+
+#: includes/class-stats.php:182
+msgid "Youngest person"
+msgstr "Persona más joven"
+
+#: includes/class-stats.php:250
+msgid "Age distribution"
+msgstr "Distribución por edad"
+
+#: includes/class-stats.php:252
+msgid "No age data."
+msgstr "No hay datos de edad."
+
+#: includes/class-stats.php:259
+msgid "Most popular first names"
+msgstr "Nombres más populares"
+
+#: includes/class-stats.php:261
+msgid "No first name data."
+msgstr "No hay datos de nombres."
+
+#: includes/class-stats.php:268
+msgid "Most popular surnames"
+msgstr "Apellidos más comunes"
+
+#: includes/class-stats.php:270
+msgid "No surname data."
+msgstr "No hay datos de apellidos."
+
+#: includes/class-stats.php:277
+msgid "Number of children per person"
+msgstr "Número de hijos por persona"
+
+#: includes/class-stats.php:279
+msgid "No data on children."
+msgstr "No hay datos de hijos."
+
+#: includes/class-stats.php:286
+msgid "Birth decades"
+msgstr "Décadas de nacimiento"
+
+#: includes/class-stats.php:288
+msgid "No birth date data."
+msgstr "No hay fechas de nacimiento."
+
+#: includes/class-stats.php:295
+msgid "Most common places of birth"
+msgstr "Lugares de nacimiento más frecuentes"
+
+#: includes/class-stats.php:297
+msgid "No place of birth data."
+msgstr "No hay lugares de nacimiento."
+
+#: includes/class-stats.php:304
+msgid "Death decades"
+msgstr "Décadas de fallecimiento"
+
+#: includes/class-stats.php:306
+msgid "No death date data."
+msgstr "No hay fechas de fallecimiento."
+
+#: includes/class-health.php:41 includes/class-health.php:42 includes/class-health.php:546
+msgid "Data consistency"
+msgstr "Coherencia de los datos"
+
+#: includes/class-admin.php:2313 includes/class-health.php:107 includes/class-history.php:130 includes/class-merge.php:71 includes/class-tree.php:230 includes/class-tree.php:385 includes/class-views.php:892 includes/class-views.php:1408 includes/views/meta-box-pet.php:68 includes/views/meta-box.php:68 includes/views/meta-box.php:403
+msgid "Date of birth"
+msgstr "Fecha de nacimiento"
+
+#: includes/class-admin.php:2314 includes/class-health.php:108 includes/class-history.php:131 includes/class-merge.php:72 includes/class-views.php:895 includes/views/meta-box.php:72 includes/views/meta-box.php:404
+msgid "Place of birth"
+msgstr "Lugar de nacimiento"
+
+#: includes/class-admin.php:766 includes/class-health.php:109 includes/class-history.php:129 includes/class-merge.php:70 includes/class-tree.php:226 includes/class-views.php:126 includes/class-views.php:889 includes/class-views.php:1404 includes/views/meta-box-pet.php:44 includes/views/meta-box.php:56
+msgid "Gender"
+msgstr "Sexo"
+
+#: includes/class-health.php:110
+msgid "Date of death (deceased people)"
+msgstr "Fecha de fallecimiento (personas fallecidas)"
+
+#: includes/class-health.php:111
+msgid "Place of death (deceased people)"
+msgstr "Lugar de fallecimiento (personas fallecidas)"
+
+#: includes/class-health.php:112 includes/class-history.php:135 includes/class-merge.php:82 includes/class-views.php:807 includes/views/meta-box.php:193 includes/views/meta-box.php:410
+msgid "Biography"
+msgstr "Biografía"
+
+#: includes/class-admin.php:285 includes/class-health.php:113 includes/class-merge.php:493 includes/class-tree.php:854
+msgid "Profile photo"
+msgstr "Foto de perfil"
+
+#: includes/class-health.php:114
+msgid "Linked source"
+msgstr "Fuente vinculada"
+
+#: includes/class-health.php:115
+msgid "At least one parent"
+msgstr "Al menos un progenitor"
+
+#. translators: 1: year of death, 2: year of birth
+#: includes/class-health.php:215
+#, php-format
+msgid "The date of death (%1$d) is earlier than the date of birth (%2$d)."
+msgstr "La fecha de fallecimiento (%1$d) es anterior a la fecha de nacimiento (%2$d)."
+
+#. translators: %d: age in years
+#: includes/class-health.php:221
+#, php-format
+msgid "A lifespan of %d years exceeds a plausible threshold — check the dates."
+msgstr "Una vida de %d años supera un umbral verosímil: revisa las fechas."
+
+#: includes/class-health.php:239
+msgid "The person is set as their own parent."
+msgstr "La persona figura como su propio progenitor."
+
+#. translators: 1: field, 2: ID
+#: includes/class-health.php:243
+#, php-format
+msgid "The “%1$s” field points to a person that does not exist or is not published (ID %2$d)."
+msgstr "El campo «%1$s» apunta a una persona que no existe o no está publicada (ID %2$d)."
+
+#: includes/class-health.php:244 includes/class-kinship.php:282 includes/class-kinship.php:438 includes/class-kinship.php:499
+msgid "father"
+msgstr "padre"
+
+#: includes/class-health.php:244 includes/class-kinship.php:282 includes/class-kinship.php:438 includes/class-kinship.php:499
+msgid "mother"
+msgstr "madre"
+
+#: includes/class-health.php:255
+msgid "The person is set as their own child."
+msgstr "La persona figura como su propio hijo."
+
+#. translators: %s: full name
+#: includes/class-health.php:261
+#, php-format
+msgid "Child “%s” appears in the list of children more than once."
+msgstr "El hijo «%s» aparece más de una vez en la lista de hijos."
+
+#. translators: %d: ID
+#: includes/class-health.php:269
+#, php-format
+msgid "The list of children points to a person that does not exist or is not published (ID %d)."
+msgstr "La lista de hijos apunta a una persona que no existe o no está publicada (ID %d)."
+
+#: includes/class-health.php:280
+msgid "The person is set as their own spouse."
+msgstr "La persona figura como su propio cónyuge."
+
+#. translators: %d: ID
+#: includes/class-health.php:284
+#, php-format
+msgid "The list of spouses points to a person that does not exist or is not published (ID %d)."
+msgstr "La lista de cónyuges apunta a una persona que no existe o no está publicada (ID %d)."
+
+#: includes/class-health.php:297 includes/class-history.php:143 includes/class-merge.php:523 includes/class-views.php:946 includes/views/meta-box.php:210
+msgid "Father"
+msgstr "Padre"
+
+#: includes/class-health.php:297 includes/class-history.php:142 includes/class-merge.php:522 includes/class-views.php:943 includes/views/meta-box.php:210
+msgid "Mother"
+msgstr "Madre"
+
+#. translators: 1: role, 2: full name of the parent
+#: includes/class-health.php:312
+#, php-format
+msgid "%1$s (%2$s) was born in the same year as the child or later."
+msgstr "%1$s (%2$s) nació el mismo año que el hijo o más tarde."
+
+#. translators: 1: role, 2: full name, 3: age
+#: includes/class-health.php:318
+#, php-format
+msgid "%1$s (%2$s) was only %3$d years old when the child was born."
+msgstr "%1$s (%2$s) solo tenía %3$d años cuando nació el hijo."
+
+#. translators: 1: role, 2: full name, 3: age
+#: includes/class-health.php:324
+#, php-format
+msgid "%1$s (%2$s) was as old as %3$d when the child was born — check the dates."
+msgstr "%1$s (%2$s) tenía ya %3$d años cuando nació el hijo: revisa las fechas."
+
+#. translators: 1: role, 2: full name, 3: year of death, 4: child's year of birth
+#: includes/class-health.php:336
+#, php-format
+msgid "%1$s (%2$s) died in %3$d, before the child was born (%4$d)."
+msgstr "%1$s (%2$s) falleció en %3$d, antes del nacimiento del hijo (%4$d)."
+
+#. translators: 1: year of marriage, 2: spouse, 3: year of birth
+#: includes/class-health.php:360
+#, php-format
+msgid "Marriage in %1$d (to %2$s) before the person was born (%3$d)."
+msgstr "Matrimonio en %1$d (con %2$s) antes del nacimiento de la persona (%3$d)."
+
+#. translators: 1: age, 2: spouse
+#: includes/class-health.php:366
+#, php-format
+msgid "Age at marriage: %1$d years (to %2$s) — check the dates."
+msgstr "Edad al casarse: %1$d años (con %2$s): revisa las fechas."
+
+#. translators: 1: year of marriage, 2: spouse, 3: year of death
+#: includes/class-health.php:374
+#, php-format
+msgid "Marriage in %1$d (to %2$s) after the person's death (%3$d)."
+msgstr "Matrimonio en %1$d (con %2$s) después del fallecimiento de la persona (%3$d)."
+
+#. translators: 1: year the marriage ended, 2: year of marriage, 3: spouse
+#: includes/class-health.php:381
+#, php-format
+msgid "Marriage ended (%1$d) before it began (%2$d) — with %3$s."
+msgstr "Fin del matrimonio (%1$d) antes de su celebración (%2$d), con %3$s."
+
+#. translators: %s: full name
+#: includes/class-health.php:402
+#, php-format
+msgid "Spouse “%s” has no reciprocal relation — use the “Fix relations” button."
+msgstr "El cónyuge «%s» no tiene relación recíproca: usa el botón «Reparar relaciones»."
+
+#. translators: %s: full name
+#: includes/class-health.php:415
+#, php-format
+msgid "Parent “%s” does not have this person in their list of children — use the “Fix relations” button."
+msgstr "El progenitor «%s» no tiene a esta persona en su lista de hijos: usa el botón «Reparar relaciones»."
+
+#. translators: 1: child, 2: actual parent
+#: includes/class-health.php:429
+#, php-format
+msgid "Child “%1$s” points to a different person (%2$s) in this parent role."
+msgstr "El hijo «%1$s» indica a otra persona (%2$s) en este papel de progenitor."
+
+#. translators: %s: full name
+#: includes/class-health.php:444
+#, php-format
+msgid "Person “%s” is set as the father but is female."
+msgstr "La persona «%s» figura como padre, pero es de sexo femenino."
+
+#. translators: %s: full name
+#: includes/class-health.php:451
+#, php-format
+msgid "Person “%s” is set as the mother but is male."
+msgstr "La persona «%s» figura como madre, pero es de sexo masculino."
+
+#. translators: %s: chain of people
+#: includes/class-health.php:497
+#, php-format
+msgid "Ancestor loop: %s — the person is their own ancestor. The tree will not render correctly."
+msgstr "Bucle de antepasados: %s; la persona es su propio antepasado. El árbol no se mostrará correctamente."
+
+#: includes/class-admin.php:2646 includes/class-backup.php:123 includes/class-backup.php:176 includes/class-gedcom.php:1129 includes/class-health.php:527 includes/class-history.php:214 includes/class-kinship.php:131 includes/class-map.php:565 includes/class-merge.php:313 includes/class-merge.php:439 includes/class-merge.php:656 includes/class-notifications.php:235 includes/class-suggestions.php:219
+msgid "You do not have permission to do this."
+msgstr "No tienes permiso para hacer esto."
+
+#: includes/class-health.php:543
+msgid "Data consistency and completeness"
+msgstr "Coherencia e integridad de los datos"
+
+#: includes/class-health.php:547
+msgid "Data completeness"
+msgstr "Integridad de los datos"
+
+#. translators: 1: number of people, 2: date/time
+#: includes/class-health.php:579 includes/class-health.php:703
+#, php-format
+msgid "Analyzed %1$d people. Report from: %2$s."
+msgstr "Se han analizado %1$d personas. Informe del: %2$s."
+
+#: includes/class-health.php:585 includes/class-health.php:709
+msgid "Check again"
+msgstr "Volver a comprobar"
+
+#: includes/class-health.php:590 includes/class-sources.php:196 includes/class-tree.php:179
+msgid "There are no people in the database."
+msgstr "No hay personas en la base de datos."
+
+#: includes/class-health.php:597
+msgid "average completeness"
+msgstr "integridad media"
+
+#: includes/class-health.php:608
+msgid "Criterion"
+msgstr "Criterio"
+
+#: includes/class-health.php:609
+msgid "Filled in"
+msgstr "Completado"
+
+#: includes/class-health.php:610
+msgid "Coverage"
+msgstr "Cobertura"
+
+#: includes/class-health.php:611
+msgid "Missing people"
+msgstr "Personas que faltan"
+
+#. translators: %d: number of people without data for this criterion
+#: includes/class-health.php:631
+#, php-format
+msgid "%d person without data"
+msgid_plural "%d people without data"
+msgstr[0] "%d persona sin datos"
+msgstr[1] "%d personas sin datos"
+
+#: includes/class-health.php:641
+msgid "edit"
+msgstr "editar"
+
+#: includes/class-health.php:649
+msgid "Complete"
+msgstr "Completo"
+
+#: includes/class-health.php:657
+msgid "Dates and places of death are only required for people considered deceased. “Average completeness” is the share of filled-in fields among all fields that apply to a given person."
+msgstr "Las fechas y lugares de fallecimiento solo se exigen para las personas consideradas fallecidas. La «integridad media» es la proporción de campos completados entre todos los que se aplican a cada persona."
+
+#: includes/class-health.php:674
+msgid "Death before birth"
+msgstr "Fallecimiento antes del nacimiento"
+
+#: includes/class-health.php:675
+msgid "Implausible age"
+msgstr "Edad inverosímil"
+
+#: includes/class-health.php:676
+msgid "Self-reference"
+msgstr "Autorreferencia"
+
+#: includes/class-health.php:677
+msgid "Reference to a non-existent person"
+msgstr "Referencia a una persona inexistente"
+
+#: includes/class-health.php:678
+msgid "Duplicate child"
+msgstr "Hijo duplicado"
+
+#: includes/class-health.php:679
+msgid "Parent younger than child"
+msgstr "Progenitor más joven que el hijo"
+
+#: includes/class-health.php:680
+msgid "Parent too young"
+msgstr "Progenitor demasiado joven"
+
+#: includes/class-health.php:681
+msgid "Parent too old"
+msgstr "Progenitor demasiado mayor"
+
+#: includes/class-health.php:682
+msgid "Parent died before the child was born"
+msgstr "Progenitor fallecido antes del nacimiento del hijo"
+
+#: includes/class-health.php:683
+msgid "Marriage before birth"
+msgstr "Matrimonio antes del nacimiento"
+
+#: includes/class-health.php:684
+msgid "Marriage at too young an age"
+msgstr "Matrimonio a una edad demasiado temprana"
+
+#: includes/class-health.php:685
+msgid "Marriage after death"
+msgstr "Matrimonio después del fallecimiento"
+
+#: includes/class-health.php:686
+msgid "Marriage ended before it began"
+msgstr "Fin del matrimonio antes de su celebración"
+
+#: includes/class-health.php:687
+msgid "One-sided marriage relation"
+msgstr "Relación matrimonial unilateral"
+
+#: includes/class-health.php:688
+msgid "One-sided parent–child relation"
+msgstr "Relación progenitor–hijo unilateral"
+
+#: includes/class-health.php:689
+msgid "Child points to a different parent"
+msgstr "El hijo indica otro progenitor"
+
+#: includes/class-health.php:690
+msgid "Gender and parent role conflict"
+msgstr "Conflicto entre sexo y papel de progenitor"
+
+#: includes/class-health.php:691
+msgid "Ancestor loop"
+msgstr "Bucle de antepasados"
+
+#: includes/class-health.php:716
+msgid "errors"
+msgstr "errores"
+
+#: includes/class-health.php:720
+msgid "warnings"
+msgstr "avisos"
+
+#: includes/class-health.php:724
+msgid "Great! No inconsistencies were found."
+msgstr "¡Genial! No se ha encontrado ninguna incoherencia."
+
+#: includes/class-health.php:730
+msgid "Errors"
+msgstr "Errores"
+
+#: includes/class-health.php:730
+msgid "Warnings"
+msgstr "Avisos"
+
+#: includes/class-admin.php:1656 includes/class-health.php:748 includes/class-person.php:191 includes/class-suggestions.php:246 includes/class-tree.php:524
+msgid "Person"
+msgstr "Persona"
+
+#: includes/class-health.php:749
+msgid "Problem"
+msgstr "Problema"
+
+#: includes/class-admin.php:1232 includes/class-health.php:764 includes/class-merge.php:1261 includes/class-setup.php:390 includes/class-views.php:172 includes/class-views.php:310
+msgid "Edit"
+msgstr "Editar"
+
+#: includes/class-health.php:778
+msgid "Tip: “one-sided” problems (relations without a reciprocal side) can be fixed automatically with the fix relations button on the tree page."
+msgstr "Consejo: los problemas «unilaterales» (relaciones sin la parte recíproca) se pueden corregir automáticamente con el botón de reparar relaciones de la página del árbol."
+
+#: includes/class-blocks.php:50
+msgid "MyRoots: Family tree"
+msgstr "MyRoots: Árbol genealógico"
+
+#: includes/class-blocks.php:52
+msgid "Starting person ID (0 = automatic)"
+msgstr "ID de la persona inicial (0 = automático)"
+
+#: includes/class-blocks.php:56
+msgid "MyRoots: People list"
+msgstr "MyRoots: Lista de personas"
+
+#: includes/class-blocks.php:62
+msgid "Show search and filters"
+msgstr "Mostrar búsqueda y filtros"
+
+#: includes/class-blocks.php:63 includes/class-blocks.php:82 includes/class-blocks.php:99 includes/class-blocks.php:110
+msgid "Limit to a clan (optional)"
+msgstr "Limitar a un linaje (opcional)"
+
+#: includes/class-blocks.php:68
+msgid "MyRoots: Lifeline"
+msgstr "MyRoots: Línea de vida"
+
+#: includes/class-blocks.php:70
+msgid "Person ID"
+msgstr "ID de la persona"
+
+#: includes/class-blocks.php:74
+msgid "MyRoots: Map"
+msgstr "MyRoots: Mapa"
+
+#: includes/class-blocks.php:76
+msgid "Person ID (0 = main map)"
+msgstr "ID de la persona (0 = mapa principal)"
+
+#: includes/class-blocks.php:80
+msgid "MyRoots: Statistics"
+msgstr "MyRoots: Estadísticas"
+
+#: includes/class-blocks.php:86
+msgid "MyRoots: Pets"
+msgstr "MyRoots: Mascotas"
+
+#: includes/class-blocks.php:92
+msgid "MyRoots: Gallery"
+msgstr "MyRoots: Galería"
+
+#: includes/class-blocks.php:98
+msgid "Include profile photos"
+msgstr "Incluir fotos de perfil"
+
+#: includes/class-blocks.php:104
+msgid "MyRoots: Genealogy book"
+msgstr "MyRoots: Libro genealógico"
+
+#: includes/class-blocks.php:111
+msgid "Include maps"
+msgstr "Incluir mapas"
+
+#: includes/class-blocks.php:116
+msgid "MyRoots: Kinship calculator"
+msgstr "MyRoots: Calculadora de parentesco"
+
+#: includes/class-blocks.php:122
+msgid "MyRoots: Upcoming anniversaries"
+msgstr "MyRoots: Próximos aniversarios"
+
+#: includes/class-blocks.php:128
+msgid "Number of days ahead"
+msgstr "Número de días por delante"
+
+#: includes/class-blocks.php:129
+msgid "Max. number of items (0 = no limit)"
+msgstr "Número máx. de elementos (0 = sin límite)"
+
+#: includes/class-sources.php:329 includes/class-views.php:118
+msgid "Search…"
+msgstr "Buscar…"
+
+#: includes/class-views.php:127
+msgid "Men"
+msgstr "Hombres"
+
+#: includes/class-views.php:128
+msgid "Women"
+msgstr "Mujeres"
+
+#: includes/class-views.php:129
+msgid "Unknown gender"
+msgstr "Sexo desconocido"
+
+#: includes/class-views.php:133
+msgid "Clear filters"
+msgstr "Borrar filtros"
+
+#. translators: %s: year of birth (bold)
+#: includes/class-views.php:140
+#, php-format
+msgid "Filter: year of birth %s"
+msgstr "Filtro: año de nacimiento %s"
+
+#. translators: %s: year of death (bold)
+#: includes/class-views.php:142
+#, php-format
+msgid " | Year of death %s"
+msgstr " | Año de fallecimiento %s"
+
+#: includes/class-views.php:167 includes/class-views.php:305
+msgid "Open profile"
+msgstr "Abrir perfil"
+
+#: includes/class-views.php:205
+msgid "d. (est.)"
+msgstr "f. (est.)"
+
+#: includes/class-sources.php:342 includes/class-views.php:222 includes/class-views.php:347 includes/class-views.php:597
+msgid "No results."
+msgstr "No hay resultados."
+
+#: includes/class-views.php:227
+msgid "Load more"
+msgstr "Cargar más"
+
+#: includes/class-views.php:237
+msgid "Showing"
+msgstr "Mostrando"
+
+#: includes/class-views.php:238
+msgid "of"
+msgstr "de"
+
+#: includes/class-views.php:277
+msgid "Search for a pet…"
+msgstr "Buscar una mascota…"
+
+#: includes/class-views.php:279
+msgid "All species"
+msgstr "Todas las especies"
+
+#: includes/class-views.php:291
+msgid "No pets."
+msgstr "No hay mascotas."
+
+#: includes/class-admin.php:2327 includes/class-lifeline.php:325 includes/class-map.php:148 includes/class-map.php:331 includes/class-views.php:405
+msgid "Birth"
+msgstr "Nacimiento"
+
+#: includes/class-admin.php:768 includes/class-admin.php:2331 includes/class-lifeline.php:498 includes/class-map.php:149 includes/class-map.php:344 includes/class-views.php:422
+msgid "Death"
+msgstr "Fallecimiento"
+
+#. translators: %s: cause of death
+#: includes/class-views.php:433
+#, php-format
+msgid "Cause: %s"
+msgstr "Causa: %s"
+
+#: includes/class-admin.php:2328 includes/class-map.php:150 includes/class-map.php:358 includes/class-views.php:456 includes/class-views.php:975
+msgid "Marriage"
+msgstr "Matrimonio"
+
+#. translators: %s: full name of the spouse
+#: includes/class-views.php:467
+#, php-format
+msgid "With: %s"
+msgstr "Con: %s"
+
+#: includes/class-admin.php:276 includes/class-lifeline.php:342 includes/class-views.php:481
+msgid "Event"
+msgstr "Evento"
+
+#: includes/class-views.php:516
+msgid "Search (person, type, description)…"
+msgstr "Buscar (persona, tipo, descripción)…"
+
+#: includes/class-views.php:518
+msgid "All types"
+msgstr "Todos los tipos"
+
+#: includes/class-views.php:530
+msgid "From year"
+msgstr "Desde el año"
+
+#: includes/class-views.php:532
+msgid "To year"
+msgstr "Hasta el año"
+
+#: includes/class-lifeline.php:189 includes/class-views.php:536
+msgid "No events."
+msgstr "No hay eventos."
+
+#: includes/class-lifeline.php:254 includes/class-person.php:588 includes/class-views.php:578
+msgid "Show description"
+msgstr "Mostrar descripción"
+
+#: includes/class-views.php:652
+msgid "Printed:"
+msgstr "Impreso:"
+
+#: includes/class-views.php:660 includes/class-views.php:1352
+msgid "Back"
+msgstr "Volver"
+
+#: includes/class-views.php:664 includes/class-views.php:1356
+msgid "Print / PDF"
+msgstr "Imprimir / PDF"
+
+#. translators: %d: configured age threshold in years
+#: includes/class-views.php:684
+#, php-format
+msgid "Based on the MyRoots settings, this person is assumed to be deceased (age exceeds %d years)."
+msgstr "Según los ajustes de MyRoots, se presupone que esta persona ha fallecido (su edad supera los %d años)."
+
+#. translators: %s: maiden name
+#: includes/class-views.php:708
+#, php-format
+msgid "née %s"
+msgstr "de soltera %s"
+
+#: includes/class-admin.php:812 includes/class-merge.php:1078 includes/class-tree.php:172 includes/class-tree.php:191 includes/class-tree.php:382 includes/class-tree.php:640 includes/class-views.php:718 includes/class-views.php:885 includes/views/meta-box.php:60
+msgid "Male"
+msgstr "Hombre"
+
+#: includes/class-admin.php:814 includes/class-merge.php:1079 includes/class-tree.php:172 includes/class-tree.php:192 includes/class-tree.php:383 includes/class-tree.php:641 includes/class-views.php:721 includes/class-views.php:886 includes/views/meta-box.php:61
+msgid "Female"
+msgstr "Mujer"
+
+#: includes/class-views.php:724
+msgid "Gender unknown"
+msgstr "Sexo desconocido"
+
+#: includes/class-views.php:754
+msgid "d. (estimated)"
+msgstr "f. (estimado)"
+
+#: includes/class-views.php:761
+msgid "Estimated final age — the date of death is uncertain (presumed based on the settings)."
+msgstr "Edad final estimada: la fecha de fallecimiento es incierta (presupuesta según los ajustes)."
+
+#. translators: %s: age in years
+#: includes/class-views.php:767
+#, php-format
+msgid "approx. %s years"
+msgstr "aprox. %s años"
+
+#: includes/class-views.php:768
+msgid "(uncertain date)"
+msgstr "(fecha incierta)"
+
+#: includes/class-views.php:788
+msgid "Open full profile"
+msgstr "Abrir perfil completo"
+
+#: includes/class-admin.php:1199 includes/class-person.php:193 includes/class-tree.php:255 includes/class-views.php:796
+msgid "Edit person"
+msgstr "Editar persona"
+
+#: includes/class-admin.php:279 includes/class-admin.php:1374 includes/class-views.php:824 includes/class-views.php:1391 includes/views/meta-box-pet.php:78 includes/views/meta-box.php:342
+msgid "Description"
+msgstr "Descripción"
+
+#: includes/class-admin.php:2259 includes/class-admin.php:2324 includes/class-book.php:133 includes/class-views.php:849
+msgid "Lifeline"
+msgstr "Línea de vida"
+
+#: includes/class-admin.php:2198 includes/class-privacy.php:239 includes/class-setup.php:51 includes/class-views.php:857
+msgid "Map"
+msgstr "Mapa"
+
+#: includes/class-history.php:126 includes/class-merge.php:67 includes/class-tree.php:236 includes/class-views.php:877 includes/views/meta-box-pet.php:16 includes/views/meta-box.php:46
+msgid "First name"
+msgstr "Nombre"
+
+#: includes/class-history.php:127 includes/class-merge.php:68 includes/class-tree.php:237 includes/class-views.php:878 includes/views/meta-box.php:51
+msgid "Surname"
+msgstr "Apellido"
+
+#: includes/class-history.php:128 includes/class-merge.php:69 includes/class-views.php:880 includes/views/meta-box.php:99
+msgid "Maiden name"
+msgstr "Apellido de soltera"
+
+#: includes/class-merge.php:1080 includes/class-views.php:887 includes/views/meta-box.php:62
+msgctxt "gender"
+msgid "Unknown"
+msgstr "Desconocido"
+
+#: includes/class-history.php:132 includes/class-merge.php:73 includes/class-views.php:898 includes/class-views.php:1409 includes/views/meta-box-pet.php:73 includes/views/meta-box.php:69 includes/views/meta-box.php:405
+msgid "Date of death"
+msgstr "Fecha de fallecimiento"
+
+#: includes/class-history.php:133 includes/class-merge.php:74 includes/class-views.php:901 includes/views/meta-box.php:73 includes/views/meta-box.php:406
+msgid "Place of death"
+msgstr "Lugar de fallecimiento"
+
+#: includes/class-history.php:134 includes/class-merge.php:75 includes/class-views.php:904 includes/views/meta-box.php:74
+msgid "Cause of death"
+msgstr "Causa de fallecimiento"
+
+#: includes/class-views.php:908
+msgid "Age"
+msgstr "Edad"
+
+#: includes/class-views.php:909
+msgid "Age at death"
+msgstr "Edad al fallecer"
+
+#: includes/class-admin.php:769 includes/class-admin.php:2548 includes/class-tree.php:239 includes/class-views.php:913
+msgid "Clan"
+msgstr "Linaje"
+
+#: includes/class-admin.php:2315 includes/class-history.php:136 includes/class-merge.php:76 includes/class-views.php:917 includes/views/meta-box.php:108 includes/views/meta-box.php:407
+msgid "Occupation"
+msgstr "Profesión"
+
+#: includes/class-history.php:137 includes/class-merge.php:77 includes/class-views.php:918 includes/views/meta-box.php:113 includes/views/meta-box.php:409
+msgid "Education"
+msgstr "Estudios"
+
+#: includes/class-history.php:138 includes/class-merge.php:78 includes/class-views.php:919 includes/views/meta-box.php:130 includes/views/meta-box.php:408
+msgid "Religion"
+msgstr "Religión"
+
+#: includes/class-history.php:139 includes/class-merge.php:79 includes/class-views.php:920
+msgid "Height"
+msgstr "Estatura"
+
+#: includes/class-history.php:140 includes/class-merge.php:80 includes/class-views.php:921 includes/views/meta-box.php:141
+msgid "Eye color"
+msgstr "Color de ojos"
+
+#: includes/class-history.php:141 includes/class-merge.php:81 includes/class-views.php:922 includes/views/meta-box.php:158
+msgid "Blood type"
+msgstr "Grupo sanguíneo"
+
+#: includes/class-admin.php:2312 includes/class-views.php:924
+msgid "Basic information"
+msgstr "Datos básicos"
+
+#: includes/class-views.php:932
+msgid "adoption"
+msgstr "adopción"
+
+#: includes/class-views.php:933
+msgid "foster parent"
+msgstr "progenitor de acogida"
+
+#: includes/class-views.php:934
+msgid "step-parent"
+msgstr "padrastro/madrastra"
+
+#: includes/class-views.php:948 includes/views/meta-box.php:202
+msgid "Parents"
+msgstr "Progenitores"
+
+#: includes/class-views.php:955 includes/class-views.php:957
+msgid "Siblings"
+msgstr "Hermanos"
+
+#: includes/class-views.php:969
+msgid "Partner"
+msgstr "Pareja"
+
+#: includes/class-admin.php:262 includes/class-views.php:970
+msgid "Spouse"
+msgstr "Cónyuge"
+
+#: includes/class-views.php:974
+msgid "Relationship since"
+msgstr "En pareja desde"
+
+#: includes/class-admin.php:266 includes/class-views.php:979 includes/views/meta-box-spouse.php:59 includes/views/meta-box.php:263
+msgid "Place of marriage"
+msgstr "Lugar del matrimonio"
+
+#: includes/class-views.php:982
+msgid "End"
+msgstr "Fin"
+
+#: includes/class-views.php:985
+msgid "Marriages"
+msgstr "Matrimonios"
+
+#: includes/class-tree.php:233 includes/class-views.php:992
+msgid "Child"
+msgstr "Hijo/a"
+
+#: includes/class-history.php:147 includes/class-merge.php:534 includes/class-views.php:994 includes/views/meta-box.php:301
+msgid "Children"
+msgstr "Hijos"
+
+#: includes/class-pet.php:105 includes/class-tree.php:235 includes/class-views.php:1011
+msgid "Pet"
+msgstr "Mascota"
+
+#: includes/class-admin.php:90 includes/class-admin.php:1163 includes/class-pet.php:104 includes/class-setup.php:45 includes/class-views.php:1019
+msgid "Pets"
+msgstr "Mascotas"
+
+#: includes/class-history.php:150 includes/class-privacy.php:241 includes/class-setup.php:75 includes/class-views.php:1089 includes/class-views.php:1440 includes/views/meta-box-pet.php:82 includes/views/meta-box.php:19
+msgid "Gallery"
+msgstr "Galería"
+
+#. translators: %d: which birthday is being celebrated
+#: includes/class-views.php:1171
+#, php-format
+msgid "%d. birthday"
+msgstr "%d.º cumpleaños"
+
+#. translators: %d: which birth anniversary
+#: includes/class-views.php:1173
+#, php-format
+msgid "%d. birth anniversary"
+msgstr "%d.º aniversario de nacimiento"
+
+#. translators: %d: which death anniversary
+#: includes/class-views.php:1189
+#, php-format
+msgid "%d. death anniversary"
+msgstr "%d.º aniversario de fallecimiento"
+
+#. translators: %d: which wedding anniversary
+#: includes/class-views.php:1221
+#, php-format
+msgid "%d. wedding anniversary"
+msgstr "%d.º aniversario de boda"
+
+#: includes/class-views.php:1233
+msgid "No upcoming anniversaries."
+msgstr "No hay aniversarios próximos."
+
+#: includes/class-views.php:1289
+msgid "link"
+msgstr "enlace"
+
+#: includes/class-views.php:1304
+msgid "Sources and documents"
+msgstr "Fuentes y documentos"
+
+#: includes/class-views.php:1318
+msgid "Recordings and media"
+msgstr "Grabaciones y materiales"
+
+#: includes/class-tree.php:223 includes/class-views.php:1401 includes/views/meta-box-pet.php:21
+msgid "Species"
+msgstr "Especie"
+
+#: includes/class-tree.php:224 includes/class-views.php:1402 includes/views/meta-box-pet.php:34
+msgid "Breed"
+msgstr "Raza"
+
+#: includes/class-tree.php:229 includes/class-views.php:1405 includes/views/meta-box-pet.php:49
+msgctxt "pet"
+msgid "Female"
+msgstr "Hembra"
+
+#: includes/class-tree.php:228 includes/class-views.php:1406 includes/views/meta-box-pet.php:48
+msgctxt "pet"
+msgid "Male"
+msgstr "Macho"
+
+#: includes/class-views.php:1411 includes/views/meta-box-pet.php:54
+msgid "Owner"
+msgstr "Dueño"
+
+#: includes/class-views.php:1413
+msgid "Information"
+msgstr "Información"
+
+#: includes/class-sources.php:141 includes/class-views.php:1420
+msgid "Notes"
+msgstr "Notas"
+
+#: includes/class-person.php:534 includes/class-privacy.php:187 includes/class-views.php:1525
+msgid "Private content"
+msgstr "Contenido privado"
+
+#: includes/class-views.php:1527
+msgid "Log in as an administrator to see the details."
+msgstr "Inicia sesión como administrador para ver los detalles."
+
+#: includes/class-suggestions.php:43 includes/class-suggestions.php:197
+msgid "Suggestions"
+msgstr "Sugerencias"
+
+#: includes/class-suggestions.php:44
+msgid "Suggestion"
+msgstr "Sugerencia"
+
+#: includes/class-admin.php:1681 includes/class-suggestions.php:67
+msgid "Sending…"
+msgstr "Enviando…"
+
+#: includes/class-suggestions.php:68 includes/class-suggestions.php:184
+msgid "Thank you! Your suggestion has been sent for moderation."
+msgstr "¡Gracias! Tu sugerencia se ha enviado a moderación."
+
+#: includes/class-suggestions.php:69
+msgid "Sending failed. Please try again."
+msgstr "No se ha podido enviar. Inténtalo de nuevo."
+
+#: includes/class-suggestions.php:70
+msgid "Enter the content of your suggestion."
+msgstr "Escribe el contenido de tu sugerencia."
+
+#: includes/class-suggestions.php:78
+msgid "Suggest a correction"
+msgstr "Sugerir una corrección"
+
+#: includes/class-suggestions.php:84
+msgid "Leave this field empty"
+msgstr "Deja este campo vacío"
+
+#: includes/class-suggestions.php:88
+msgid "Your name (optional)"
+msgstr "Tu nombre (opcional)"
+
+#: includes/class-suggestions.php:92
+msgid "Contact e-mail (optional)"
+msgstr "Correo electrónico de contacto (opcional)"
+
+#: includes/class-suggestions.php:96
+msgid "What should be corrected or added?"
+msgstr "¿Qué habría que corregir o añadir?"
+
+#: includes/class-suggestions.php:98
+msgid "e.g. The date of birth is 12.05.1932, not 1933 — I have a copy of the certificate."
+msgstr "p. ej. La fecha de nacimiento es el 12.05.1932, no 1933; tengo una copia del acta."
+
+#: includes/class-suggestions.php:101
+msgid "Send suggestion"
+msgstr "Enviar sugerencia"
+
+#: includes/class-suggestions.php:118
+msgid "Suggestions are disabled."
+msgstr "Las sugerencias están desactivadas."
+
+#: includes/class-suggestions.php:131
+msgid "Too many suggestions. Please try again later."
+msgstr "Demasiadas sugerencias. Inténtalo más tarde."
+
+#: includes/class-history.php:211 includes/class-suggestions.php:141 includes/class-tree.php:843 includes/class-tree.php:897
+msgid "Invalid person."
+msgstr "Persona no válida."
+
+#: includes/class-suggestions.php:145
+msgid "The suggestion is empty."
+msgstr "La sugerencia está vacía."
+
+#. translators: %s: full name of the person the suggestion is about
+#: includes/class-suggestions.php:152
+#, php-format
+msgid "Suggestion: %s"
+msgstr "Sugerencia: %s"
+
+#: includes/class-suggestions.php:157
+msgid "Error saving the suggestion."
+msgstr "Error al guardar la sugerencia."
+
+#. translators: %s: person's full name
+#: includes/class-suggestions.php:172
+#, php-format
+msgid "[MyRoots] New correction suggestion: %s"
+msgstr "[MyRoots] Nueva sugerencia de corrección: %s"
+
+#: includes/class-suggestions.php:177
+msgid "From:"
+msgstr "De:"
+
+#: includes/class-suggestions.php:178
+msgid "E-mail:"
+msgstr "Correo electrónico:"
+
+#: includes/class-suggestions.php:196 includes/class-suggestions.php:232
+msgid "Correction suggestions"
+msgstr "Sugerencias de corrección"
+
+#: includes/class-suggestions.php:235
+msgid "The suggestion form on profiles is currently disabled. You can enable it in MyRoots → Settings."
+msgstr "El formulario de sugerencias de los perfiles está desactivado. Puedes activarlo en MyRoots → Ajustes."
+
+#: includes/class-suggestions.php:240
+msgid "No suggestions."
+msgstr "No hay sugerencias."
+
+#: includes/class-admin.php:278 includes/class-suggestions.php:245 includes/views/meta-box.php:338
+msgid "Date"
+msgstr "Fecha"
+
+#: includes/class-suggestions.php:247
+msgid "Content"
+msgstr "Contenido"
+
+#: includes/class-suggestions.php:248
+msgid "Submitted by"
+msgstr "Enviado por"
+
+#: includes/class-suggestions.php:249
+msgid "Status / actions"
+msgstr "Estado / acciones"
+
+#: includes/class-suggestions.php:263
+msgid "(profile)"
+msgstr "(perfil)"
+
+#: includes/class-suggestions.php:265
+msgid "(person deleted)"
+msgstr "(persona eliminada)"
+
+#: includes/class-suggestions.php:275
+msgid "Mark as resolved"
+msgstr "Marcar como resuelta"
+
+#: includes/class-suggestions.php:277
+msgid "resolved"
+msgstr "resuelta"
+
+#: includes/class-admin.php:274 includes/class-suggestions.php:279 includes/views/meta-box-pet.php:95 includes/views/meta-box-pet.php:117 includes/views/meta-box.php:292 includes/views/meta-box.php:314 includes/views/meta-box.php:364 includes/views/meta-box.php:386
+msgid "Delete"
+msgstr "Eliminar"
+
+#: includes/class-suggestions.php:288
+msgid "Delete this suggestion?"
+msgstr "¿Eliminar esta sugerencia?"
+
+#: includes/class-admin.php:88 includes/class-admin.php:1162 includes/class-admin.php:2549 includes/class-person.php:190
+msgid "People"
+msgstr "Personas"
+
+#: includes/class-admin.php:1164 includes/class-admin.php:1286 includes/class-person.php:192 includes/class-tree.php:241 includes/class-tree.php:368 includes/class-tree.php:397
+msgid "Add person"
+msgstr "Añadir persona"
+
+#: includes/class-person.php:194 includes/class-pet.php:108
+msgid "Not found"
+msgstr "No encontrado"
+
+#: includes/class-person.php:212
+msgctxt "CPT slug"
+msgid "person"
+msgstr "persona"
+
+#: includes/class-person.php:536
+msgid "Log in as an administrator."
+msgstr "Inicia sesión como administrador."
+
+#: includes/class-person.php:589
+msgid "Hide description"
+msgstr "Ocultar descripción"
+
+#. translators: 1, 2: dates (from / to)
+#: includes/class-person.php:798
+#, php-format
+msgid "between %1$s and %2$s"
+msgstr "entre %1$s y %2$s"
+
+#. translators: %s: date
+#: includes/class-person.php:804
+#, php-format
+msgid "approx. %s"
+msgstr "aprox. %s"
+
+#. translators: %s: date
+#: includes/class-person.php:806
+#, php-format
+msgid "before %s"
+msgstr "antes de %s"
+
+#. translators: %s: date
+#: includes/class-person.php:808
+#, php-format
+msgid "after %s"
+msgstr "después de %s"
+
+#: includes/class-gedcom.php:88
+msgid "GEDCOM — Import / Export"
+msgstr "GEDCOM: Importar / Exportar"
+
+#: includes/class-gedcom.php:90
+msgid "GEDCOM 5.5.1 standard — supported by most genealogy programs (Ancestry, MyHeritage, Gramps, MacFamilyTree and others)."
+msgstr "Estándar GEDCOM 5.5.1, compatible con la mayoría de programas de genealogía (Ancestry, MyHeritage, Gramps, MacFamilyTree y otros)."
+
+#: includes/class-gedcom.php:111
+msgid "Import a GEDCOM file"
+msgstr "Importar un archivo GEDCOM"
+
+#: includes/class-gedcom.php:113
+msgid "Upload a .ged file exported from another program. Choose how to handle people who already exist in the database."
+msgstr "Sube un archivo .ged exportado desde otro programa. Elige cómo tratar a las personas que ya existen en la base de datos."
+
+#: includes/class-gedcom.php:120
+msgid "When a person already exists (same first name, surname and date of birth):"
+msgstr "Si una persona ya existe (mismo nombre, apellido y fecha de nacimiento):"
+
+#: includes/class-gedcom.php:123
+msgid "Update matches (fill in missing fields), add the rest as new"
+msgstr "Actualizar coincidencias (completar campos que faltan), añadir el resto como nuevas"
+
+#: includes/class-gedcom.php:127
+msgid "Skip duplicates — leave existing people unchanged, add only new ones"
+msgstr "Omitir duplicados: dejar sin cambios a las personas existentes y añadir solo las nuevas"
+
+#: includes/class-gedcom.php:131
+msgid "Always add as new people (do not merge)"
+msgstr "Añadir siempre como personas nuevas (no fusionar)"
+
+#: includes/class-gedcom.php:137
+msgid "Preview first without saving (dry run)"
+msgstr "Primero una vista previa sin guardar (simulación)"
+
+#: includes/class-gedcom.php:142
+msgid "Drag a .ged file here or click to choose one"
+msgstr "Arrastra aquí un archivo .ged o haz clic para elegirlo"
+
+#: includes/class-gedcom.php:148 includes/class-gedcom.php:226
+msgid "Import GEDCOM file"
+msgstr "Importar archivo GEDCOM"
+
+#: includes/class-gedcom.php:153
+msgid "What is imported:"
+msgstr "Qué se importa:"
+
+#: includes/class-gedcom.php:155
+msgid "First name, surname, maiden name, gender"
+msgstr "Nombre, apellido, apellido de soltera, sexo"
+
+#: includes/class-gedcom.php:156
+msgid "Birth and death (date, place, cause)"
+msgstr "Nacimiento y fallecimiento (fecha, lugar, causa)"
+
+#: includes/class-gedcom.php:157
+msgid "Occupation, education, religion"
+msgstr "Profesión, estudios, religión"
+
+#: includes/class-gedcom.php:158
+msgid "Physical attributes, events, clans"
+msgstr "Rasgos físicos, eventos, linajes"
+
+#: includes/class-gedcom.php:159
+msgid "Family relations — marriages, parents, children"
+msgstr "Relaciones familiares: matrimonios, progenitores, hijos"
+
+#: includes/class-gedcom.php:160
+msgid "Biographical note"
+msgstr "Nota biográfica"
+
+#: includes/class-gedcom.php:169
+msgid "Export to GEDCOM"
+msgstr "Exportar a GEDCOM"
+
+#. translators: %d: number of people in the database
+#: includes/class-gedcom.php:174
+#, php-format
+msgid "Export the whole database (%d people) to a GEDCOM 5.5.1 file."
+msgstr "Exportar toda la base de datos (%d personas) a un archivo GEDCOM 5.5.1."
+
+#: includes/class-gedcom.php:186
+msgid "Include biographies as NOTE"
+msgstr "Incluir biografías como NOTE"
+
+#: includes/class-gedcom.php:190
+msgid "Include events, clans and physical attributes"
+msgstr "Incluir eventos, linajes y rasgos físicos"
+
+#: includes/class-gedcom.php:194
+msgid "Include the profile photo URL (OBJE/FILE)"
+msgstr "Incluir la URL de la foto de perfil (OBJE/FILE)"
+
+#: includes/class-gedcom.php:199
+msgid "Download GEDCOM file"
+msgstr "Descargar archivo GEDCOM"
+
+#: includes/class-gedcom.php:202
+msgid "The database is empty — add some people first."
+msgstr "La base de datos está vacía: añade primero algunas personas."
+
+#: includes/class-gedcom.php:207
+msgid "What is exported:"
+msgstr "Qué se exporta:"
+
+#: includes/class-gedcom.php:209
+msgid "Every person as an INDI record"
+msgstr "Cada persona como registro INDI"
+
+#: includes/class-gedcom.php:210
+msgid "Every pair of parents as a FAM record (with children)"
+msgstr "Cada pareja de progenitores como registro FAM (con hijos)"
+
+#: includes/class-gedcom.php:211
+msgid "Marriages with date, place and divorce"
+msgstr "Matrimonios con fecha, lugar y divorcio"
+
+#: includes/class-gedcom.php:212
+msgid "HUSB / WIFE / CHIL relations"
+msgstr "Relaciones HUSB / WIFE / CHIL"
+
+#: includes/class-gedcom.php:225
+msgid "Preview (dry run)"
+msgstr "Vista previa (simulación)"
+
+#: includes/class-gedcom.php:454
+msgid "No file selected."
+msgstr "No se ha seleccionado ningún archivo."
+
+#: includes/class-gedcom.php:464
+msgid "The file cannot be read."
+msgstr "No se puede leer el archivo."
+
+#: includes/class-gedcom.php:484
+msgid "The file does not contain any people (INDI)."
+msgstr "El archivo no contiene ninguna persona (INDI)."
+
+#. translators: %s: identifier (xref) of the INDI record in the GEDCOM file
+#: includes/class-gedcom.php:501
+#, php-format
+msgid "Skipped INDI %s: no first name or surname."
+msgstr "INDI %s omitido: sin nombre ni apellido."
+
+#. translators: %s: person's full name
+#: includes/class-gedcom.php:539
+#, php-format
+msgid "Error creating person: %s"
+msgstr "Error al crear la persona: %s"
+
+#: includes/class-gedcom.php:604
+msgid "Preview mode — no data has been saved."
+msgstr "Modo de vista previa: no se ha guardado ningún dato."
+
+#. translators: %d: number of people added
+#: includes/class-gedcom.php:607
+#, php-format
+msgid "People added: %d"
+msgstr "Personas añadidas: %d"
+
+#. translators: %d: number of people updated
+#: includes/class-gedcom.php:609
+#, php-format
+msgid "People updated: %d"
+msgstr "Personas actualizadas: %d"
+
+#. translators: %d: number of skipped duplicates
+#: includes/class-gedcom.php:612
+#, php-format
+msgid "People skipped (duplicates): %d"
+msgstr "Personas omitidas (duplicados): %d"
+
+#. translators: %d: number of families
+#: includes/class-gedcom.php:615
+#, php-format
+msgid "Families (FAM): %d"
+msgstr "Familias (FAM): %d"
+
+#. translators: %d: number of pets added
+#: includes/class-gedcom.php:618
+#, php-format
+msgid "Pets added: %d"
+msgstr "Mascotas añadidas: %d"
+
+#. translators: %d: number of skipped duplicate pets
+#: includes/class-gedcom.php:621
+#, php-format
+msgid "Pets skipped (duplicates): %d"
+msgstr "Mascotas omitidas (duplicados): %d"
+
+#. translators: %d: number of geocoded places
+#: includes/class-gedcom.php:628
+#, php-format
+msgid "New places geocoded: %d"
+msgstr "Lugares nuevos geocodificados: %d"
+
+#. translators: %d: number of places in the geocoding queue
+#: includes/class-gedcom.php:632
+#, php-format
+msgid "Places waiting for background geocoding: %d"
+msgstr "Lugares en espera de geocodificación en segundo plano: %d"
+
+#. translators: %d: number of unrecognized places
+#: includes/class-gedcom.php:636
+#, php-format
+msgid "Places not recognized by the geocoder: %d"
+msgstr "Lugares no reconocidos por el geocodificador: %d"
+
+#: includes/class-gedcom.php:644
+msgid "Import preview (dry run):"
+msgstr "Vista previa de la importación (simulación):"
+
+#: includes/class-gedcom.php:645
+msgid "Import finished:"
+msgstr "Importación finalizada:"
+
+#: includes/class-gedcom.php:1012
+msgid "Skipped _PET record: no pet name."
+msgstr "Registro _PET omitido: sin nombre de mascota."
+
+#. translators: %s: pet name
+#: includes/class-gedcom.php:1064
+#, php-format
+msgid "Error creating pet: %s"
+msgstr "Error al crear la mascota: %s"
+
+#. translators: %d: sequential number of the spouse in the list
+#: includes/views/meta-box-spouse.php:16 includes/views/meta-box.php:247
+#, php-format
+msgid "Spouse %d"
+msgstr "Cónyuge %d"
+
+#: includes/class-admin.php:263 includes/views/meta-box-spouse.php:20 includes/views/meta-box.php:249
+msgid "Person in the database"
+msgstr "Persona en la base de datos"
+
+#: includes/views/meta-box-spouse.php:23
+msgid "— none / not in the database —"
+msgstr "— ninguna / fuera de la base de datos —"
+
+#: includes/views/meta-box-spouse.php:34
+msgid "First name (if not in the database)"
+msgstr "Nombre (si no está en la base de datos)"
+
+#: includes/views/meta-box-spouse.php:42
+msgid "Surname (if not in the database)"
+msgstr "Apellido (si no está en la base de datos)"
+
+#: includes/class-admin.php:265 includes/class-tree.php:238 includes/class-tree.php:388 includes/views/meta-box-spouse.php:50 includes/views/meta-box.php:259
+msgid "Date of marriage"
+msgstr "Fecha del matrimonio"
+
+#: includes/class-admin.php:267 includes/views/meta-box-spouse.php:67 includes/views/meta-box.php:266
+msgid "Marital status"
+msgstr "Estado civil"
+
+#: includes/class-admin.php:268 includes/class-person.php:40
+msgid "Ongoing"
+msgstr "Vigente"
+
+#: includes/class-admin.php:269 includes/class-person.php:41
+msgid "Death of spouse"
+msgstr "Fallecimiento del cónyuge"
+
+#: includes/class-admin.php:270 includes/class-person.php:42
+msgid "Divorce"
+msgstr "Divorcio"
+
+#: includes/class-admin.php:271 includes/class-person.php:43
+msgid "Other/Unknown"
+msgstr "Otro/Desconocido"
+
+#: includes/class-admin.php:272 includes/views/meta-box-spouse.php:86 includes/views/meta-box.php:281
+msgid "End date"
+msgstr "Fecha de fin"
+
+#: includes/views/meta-box-spouse.php:95
+msgid "Remove spouse"
+msgstr "Quitar cónyuge"
+
+#: includes/class-admin.php:275 includes/class-tree.php:221 includes/class-tree.php:381 includes/views/meta-box-pet.php:24 includes/views/meta-box.php:59 includes/views/meta-box.php:116 includes/views/meta-box.php:144 includes/views/meta-box.php:161 includes/views/meta-box.php:306
+msgid "— select —"
+msgstr "— seleccionar —"
+
+#: includes/views/meta-box-pet.php:38
+msgid "Select or type a breed"
+msgstr "Elige o escribe una raza"
+
+#: includes/views/meta-box-pet.php:40
+msgid "The list of suggestions depends on the selected species. You can also type your own breed."
+msgstr "La lista de sugerencias depende de la especie elegida. También puedes escribir tu propia raza."
+
+#: includes/class-tree.php:227 includes/views/meta-box-pet.php:47
+msgid "— unspecified —"
+msgstr "— sin especificar —"
+
+#: includes/class-admin.php:264 includes/class-merge.php:495 includes/class-merge.php:497 includes/class-merge.php:628 includes/views/meta-box-pet.php:57 includes/views/meta-box.php:218 includes/views/meta-box.php:251
+msgid "— none —"
+msgstr "— ninguno —"
+
+#: includes/views/meta-box-pet.php:64
+msgid "The person the pet belongs to. It will appear in their tree and info card."
+msgstr "La persona a la que pertenece la mascota. Aparecerá en su árbol y en su ficha."
+
+#: includes/class-admin.php:288 includes/views/meta-box-pet.php:94 includes/views/meta-box-pet.php:116 includes/views/meta-box.php:385
+msgid "Caption"
+msgstr "Leyenda"
+
+#: includes/class-admin.php:281 includes/views/meta-box-pet.php:100 includes/views/meta-box.php:356 includes/views/meta-box.php:391
+msgid "Add photo"
+msgstr "Añadir foto"
+
+#: includes/views/meta-box-pet.php:115
+msgid "Select photos"
+msgstr "Seleccionar fotos"
+
+#: includes/views/meta-box.php:16
+msgid "Basic"
+msgstr "Básico"
+
+#: includes/views/meta-box.php:17
+msgid "Relations"
+msgstr "Relaciones"
+
+#: includes/class-history.php:148 includes/class-merge.php:551 includes/class-setup.php:63 includes/views/meta-box.php:18
+msgid "Events"
+msgstr "Eventos"
+
+#: includes/class-book.php:134 includes/class-sources.php:57 includes/class-sources.php:82 includes/views/meta-box.php:20
+msgid "Sources"
+msgstr "Fuentes"
+
+#: includes/class-admin.php:1534 includes/class-history.php:151 includes/views/meta-box.php:22
+msgid "Custom fields"
+msgstr "Campos personalizados"
+
+#: includes/views/meta-box.php:84
+msgid "e.g. 1920, 1920-05 or 1920-05-15"
+msgstr "p. ej. 1920, 1920-05 o 1920-05-15"
+
+#: includes/views/meta-box.php:85
+msgid "Enter a year (e.g. 1920), a year and month (e.g. 1920-05) or a full date (e.g. 1920-05-15). You can also pick it from the calendar."
+msgstr "Introduce un año (p. ej. 1920), un año y mes (p. ej. 1920-05) o una fecha completa (p. ej. 1920-05-15). También puedes elegirla en el calendario."
+
+#: includes/views/meta-box.php:103
+msgid "Filled in automatically from the father's surname on first save."
+msgstr "Se rellena automáticamente con el apellido del padre al guardar por primera vez."
+
+#: includes/views/meta-box.php:118
+msgid "Vocational"
+msgstr "Formación profesional"
+
+#: includes/views/meta-box.php:118
+msgid "Secondary"
+msgstr "Secundarios"
+
+#: includes/views/meta-box.php:118
+msgid "Higher"
+msgstr "Superiores"
+
+#: includes/views/meta-box.php:118
+msgctxt "education"
+msgid "Unknown"
+msgstr "Desconocidos"
+
+#: includes/views/meta-box.php:133
+msgid "e.g. Catholic, Orthodox…"
+msgstr "p. ej. católica, ortodoxa…"
+
+#: includes/views/meta-box.php:136
+msgid "Height (cm)"
+msgstr "Estatura (cm)"
+
+#: includes/views/meta-box.php:146
+msgctxt "eye color"
+msgid "Blue"
+msgstr "Azules"
+
+#: includes/views/meta-box.php:146
+msgctxt "eye color"
+msgid "Green"
+msgstr "Verdes"
+
+#: includes/views/meta-box.php:146
+msgctxt "eye color"
+msgid "Brown"
+msgstr "Marrones"
+
+#: includes/views/meta-box.php:146
+msgctxt "eye color"
+msgid "Grey"
+msgstr "Grises"
+
+#: includes/views/meta-box.php:146
+msgctxt "eye color"
+msgid "Hazel"
+msgstr "Avellana"
+
+#: includes/views/meta-box.php:146
+msgctxt "eye color"
+msgid "Black"
+msgstr "Negros"
+
+#: includes/class-pet.php:188 includes/views/meta-box.php:146
+msgid "Other"
+msgstr "Otro"
+
+#: includes/class-tree.php:392 includes/views/meta-box.php:169
+msgid "Clan / Clans"
+msgstr "Linaje / Linajes"
+
+#: includes/views/meta-box.php:184
+msgid "No clans defined."
+msgstr "No hay linajes definidos."
+
+#: includes/views/meta-box.php:186
+msgid "Define clans →"
+msgstr "Definir linajes →"
+
+#: includes/views/meta-box.php:205
+msgid "Biological"
+msgstr "Biológico/a"
+
+#: includes/views/meta-box.php:206
+msgid "Adoption"
+msgstr "Adopción"
+
+#: includes/views/meta-box.php:207
+msgid "Foster parent"
+msgstr "Progenitor de acogida"
+
+#: includes/views/meta-box.php:208
+msgid "Step-parent (stepfather/stepmother)"
+msgstr "Padrastro/madrastra"
+
+#: includes/class-tree.php:231 includes/views/meta-box.php:228
+msgid "Relation type"
+msgstr "Tipo de relación"
+
+#: includes/views/meta-box.php:241
+msgid "Spouses"
+msgstr "Cónyuges"
+
+#: includes/views/meta-box.php:284
+msgid "e.g. 1980-05-15"
+msgstr "p. ej. 1980-05-15"
+
+#: includes/class-admin.php:273 includes/views/meta-box.php:289
+msgid "Informal union (cohabitation)"
+msgstr "Unión de hecho"
+
+#: includes/views/meta-box.php:297
+msgid "Add spouse"
+msgstr "Añadir cónyuge"
+
+#: includes/views/meta-box.php:319
+msgid "Add child"
+msgstr "Añadir hijo/a"
+
+#. translators: %d: sequential number of the event in the list
+#: includes/views/meta-box.php:333
+#, php-format
+msgid "Event %d"
+msgstr "Evento %d"
+
+#: includes/class-admin.php:277 includes/views/meta-box.php:335
+msgid "Name"
+msgstr "Nombre"
+
+#: includes/class-admin.php:280 includes/views/meta-box.php:346
+msgid "Photo"
+msgstr "Foto"
+
+#: includes/class-admin.php:282 includes/views/meta-box.php:356
+msgid "Change photo"
+msgstr "Cambiar foto"
+
+#: includes/class-admin.php:283 includes/class-tree.php:861 includes/views/meta-box.php:360
+msgid "Remove photo"
+msgstr "Quitar foto"
+
+#: includes/views/meta-box.php:369
+msgid "Add event"
+msgstr "Añadir evento"
+
+#: includes/views/meta-box.php:417
+msgid "No sources defined."
+msgstr "No hay fuentes definidas."
+
+#: includes/views/meta-box.php:420
+msgid "Add the first source"
+msgstr "Añadir la primera fuente"
+
+#: includes/views/meta-box.php:426
+msgid "Assign sources to specific facts. One source can confirm many fields."
+msgstr "Asigna fuentes a hechos concretos. Una fuente puede confirmar varios campos."
+
+#: includes/views/meta-box.php:438
+msgid "— no source —"
+msgstr "— sin fuente —"
+
+#: includes/class-merge.php:576 includes/views/meta-box.php:459
+msgid "Linked sources"
+msgstr "Fuentes vinculadas"
+
+#: includes/views/meta-box.php:461
+msgid "A general link between this person and sources (independent of the citations for the facts above). It works both ways — you can set the same thing on the source screen. Sources with an audio/video link will appear in the “Recordings and media” section of the person's profile."
+msgstr "Un vínculo general entre esta persona y las fuentes (independiente de las citas de los hechos anteriores). Funciona en ambos sentidos: puedes configurar lo mismo en la pantalla de la fuente. Las fuentes con un enlace de audio/vídeo aparecerán en la sección «Grabaciones y materiales» del perfil de la persona."
+
+#: includes/views/meta-box.php:468
+msgid "Search for a source…"
+msgstr "Buscar una fuente…"
+
+#: includes/views/meta-box.php:475
+msgid "Add new source"
+msgstr "Añadir nueva fuente"
+
+#: includes/views/meta-box.php:480
+msgid "Manage sources"
+msgstr "Gestionar fuentes"
+
+#: includes/class-privacy.php:188
+msgid "This content is protected by private mode."
+msgstr "Este contenido está protegido por el modo privado."
+
+#: includes/class-privacy.php:236
+msgid "Person profiles"
+msgstr "Perfiles de personas"
+
+#: includes/class-admin.php:1289 includes/class-admin.php:1506 includes/class-privacy.php:237 includes/class-setup.php:39
+msgid "People list"
+msgstr "Lista de personas"
+
+#: includes/class-privacy.php:238 includes/class-setup.php:33
+msgid "Family tree"
+msgstr "Árbol genealógico"
+
+#: includes/class-privacy.php:240 includes/class-setup.php:69
+msgid "Statistics"
+msgstr "Estadísticas"
+
+#: includes/class-privacy.php:244
+msgid "Exact dates (keep only the year)"
+msgstr "Fechas exactas (mantener solo el año)"
+
+#: includes/class-privacy.php:245
+msgid "Places (birth / death / marriage)"
+msgstr "Lugares (nacimiento / fallecimiento / matrimonio)"
+
+#: includes/class-privacy.php:246
+msgid "Biography and events"
+msgstr "Biografía y eventos"
+
+#: includes/class-privacy.php:247
+msgid "Photos and sensitive data (height, eyes, blood, religion)"
+msgstr "Fotos y datos sensibles (estatura, ojos, sangre, religión)"
+
+#: includes/class-privacy.php:251
+msgid "Privacy scope"
+msgstr "Alcance de la privacidad"
+
+#: includes/class-privacy.php:255
+msgid "Full lock of selected sections"
+msgstr "Bloqueo total de las secciones elegidas"
+
+#: includes/class-privacy.php:256
+msgid "— hides whole sections from unauthorized visitors (as before)."
+msgstr "— oculta secciones completas a los visitantes no autorizados (como antes)."
+
+#: includes/class-privacy.php:258
+msgid "Hide living people"
+msgstr "Ocultar personas vivas"
+
+#: includes/class-privacy.php:259
+msgid "— sections are visible, but living people are omitted entirely."
+msgstr "— las secciones son visibles, pero las personas vivas se omiten por completo."
+
+#: includes/class-privacy.php:261
+msgid "Censor data of living people"
+msgstr "Censurar datos de personas vivas"
+
+#: includes/class-privacy.php:262
+msgid "— people are visible, but selected fields of living people are hidden."
+msgstr "— las personas son visibles, pero se ocultan ciertos campos de las personas vivas."
+
+#: includes/class-privacy.php:264
+msgid "Works only when private mode is on. Administrators and genealogy editors always see the full data."
+msgstr "Solo funciona con el modo privado activado. Los administradores y editores de genealogía siempre ven todos los datos."
+
+#: includes/class-privacy.php:269
+msgid "Locked sections"
+msgstr "Secciones bloqueadas"
+
+#: includes/class-privacy.php:280
+msgid "Applies to the “Full lock” level."
+msgstr "Se aplica al nivel «Bloqueo total»."
+
+#: includes/class-privacy.php:285
+msgid "Censored fields of living people"
+msgstr "Campos censurados de personas vivas"
+
+#: includes/class-privacy.php:296
+msgid "Applies to the “Censor data of living people” level."
+msgstr "Se aplica al nivel «Censurar datos de personas vivas»."
+
+#: includes/class-tree.php:180
+msgid "No connected people to display."
+msgstr "No hay personas conectadas que mostrar."
+
+#: includes/class-book.php:88 includes/class-kinship.php:93 includes/class-lifeline.php:74 includes/class-tree.php:181
+msgid "No results"
+msgstr "No hay resultados"
+
+#: includes/class-tree.php:182
+msgid "Error loading data."
+msgstr "Error al cargar los datos."
+
+#: includes/class-tree.php:183 includes/class-tree.php:262
+msgid "Error connecting to the server."
+msgstr "Error al conectar con el servidor."
+
+#: includes/class-tree.php:184
+msgid "Error loading the library. Refresh the page."
+msgstr "Error al cargar la biblioteca. Recarga la página."
+
+#: includes/class-tree.php:185 includes/class-tree.php:355
+msgid "Click a person's card to see the details"
+msgstr "Haz clic en la ficha de una persona para ver los detalles"
+
+#: includes/class-tree.php:186
+msgid "No data to display."
+msgstr "No hay datos que mostrar."
+
+#: includes/class-tree.php:187
+msgid "Whole tree view"
+msgstr "Vista del árbol completo"
+
+#: includes/class-tree.php:188
+msgid "Whole family tree"
+msgstr "Árbol genealógico completo"
+
+#: includes/class-tree.php:189
+msgid "Click a node to go to that person in the main view"
+msgstr "Haz clic en un nodo para ir a esa persona en la vista principal"
+
+#: includes/class-merge.php:420 includes/class-tree.php:190
+msgid "Close"
+msgstr "Cerrar"
+
+#: includes/class-tree.php:193
+msgid "Unspecified"
+msgstr "Sin especificar"
+
+#: includes/class-tree.php:194
+msgctxt "relationship type"
+msgid "Marriage"
+msgstr "Matrimonio"
+
+#: includes/class-tree.php:195
+msgid "Parent–child"
+msgstr "Progenitor–hijo"
+
+#: includes/class-tree.php:196
+msgid "People without connections"
+msgstr "Personas sin conexiones"
+
+#. translators: %d: number of people without connections in the graph
+#: includes/class-tree.php:198
+msgid "person without connections"
+msgstr "persona sin conexiones"
+
+#: includes/class-tree.php:199
+msgid "people without connections"
+msgstr "personas sin conexiones"
+
+#: includes/class-tree.php:202
+msgid "Assign partner / spouse"
+msgstr "Asignar pareja / cónyuge"
+
+#: includes/class-tree.php:203
+msgid "Add partner"
+msgstr "Añadir pareja"
+
+#: includes/class-tree.php:204
+msgid "Unknown partner"
+msgstr "Pareja desconocida"
+
+#: includes/class-tree.php:205
+msgid "Click to assign"
+msgstr "Haz clic para asignar"
+
+#: includes/class-tree.php:206
+msgid "Details"
+msgstr "Detalles"
+
+#: includes/class-tree.php:207
+msgid "Add relation"
+msgstr "Añadir relación"
+
+#: includes/class-tree.php:210
+msgid ""
+"Fix inconsistent relations in the database?\n"
+"All parent/children/spouses mismatches will be aligned."
+msgstr ""
+"¿Reparar las relaciones incoherentes en la base de datos?\n"
+"Se alinearán todas las discrepancias de progenitores/hijos/cónyuges."
+
+#: includes/class-tree.php:211
+msgid "Fixing relations…"
+msgstr "Reparando relaciones…"
+
+#: includes/class-tree.php:212
+msgid "Fixed!"
+msgstr "¡Reparado!"
+
+#: includes/class-tree.php:213
+msgid "Error:"
+msgstr "Error:"
+
+#: includes/class-tree.php:214
+msgid "Unknown"
+msgstr "Desconocido"
+
+#: includes/class-admin.php:252 includes/class-admin.php:1711 includes/class-admin.php:2492 includes/class-lifeline.php:77 includes/class-tree.php:215
+msgid "Connection error."
+msgstr "Error de conexión."
+
+#: includes/class-tree.php:218
+msgid "No clans available"
+msgstr "No hay linajes disponibles"
+
+#: includes/class-tree.php:219
+msgid "— do not assign —"
+msgstr "— no asignar —"
+
+#: includes/class-tree.php:220
+msgid "Other parent"
+msgstr "Otro progenitor"
+
+#: includes/class-tree.php:222
+msgid "Pet name"
+msgstr "Nombre de la mascota"
+
+#: includes/class-tree.php:225
+msgid "Select or type"
+msgstr "Elige o escribe"
+
+#: includes/class-tree.php:232
+msgid "Husband/Wife"
+msgstr "Esposo/Esposa"
+
+#: includes/class-tree.php:234
+msgid "Parent"
+msgstr "Progenitor"
+
+#: includes/class-admin.php:2469 includes/class-tree.php:240 includes/class-tree.php:257 includes/class-tree.php:400
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: includes/class-pet.php:106 includes/class-tree.php:242
+msgid "Add pet"
+msgstr "Añadir mascota"
+
+#: includes/class-tree.php:245 includes/class-tree.php:989
+msgid "Enter the pet's name"
+msgstr "Escribe el nombre de la mascota"
+
+#: includes/class-admin.php:249 includes/class-admin.php:2489 includes/class-tree.php:246 includes/class-tree.php:258
+msgid "Saving…"
+msgstr "Guardando…"
+
+#: includes/class-tree.php:247
+msgid "The pet has been added"
+msgstr "Se ha añadido la mascota"
+
+#: includes/class-tree.php:248
+msgid "Unknown error"
+msgstr "Error desconocido"
+
+#: includes/class-tree.php:249
+msgid "Error connecting to the server"
+msgstr "Error al conectar con el servidor"
+
+#: includes/class-tree.php:250
+msgid "Fill in the first name, surname and gender"
+msgstr "Completa el nombre, el apellido y el sexo"
+
+#: includes/class-tree.php:251
+msgid "The person has been added successfully"
+msgstr "La persona se ha añadido correctamente"
+
+#: includes/class-tree.php:256
+msgid "Save changes"
+msgstr "Guardar cambios"
+
+#: includes/class-tree.php:259 includes/class-tree.php:924
+msgid "Changes saved."
+msgstr "Cambios guardados."
+
+#: includes/class-tree.php:260
+msgid "Save error"
+msgstr "Error al guardar"
+
+#: includes/class-tree.php:261
+msgid "The form could not be loaded."
+msgstr "No se ha podido cargar el formulario."
+
+#: includes/class-tree.php:279
+msgid "Large tree"
+msgstr "Árbol grande"
+
+#: includes/class-tree.php:282
+msgid "Whole graph — all people and connections"
+msgstr "Grafo completo: todas las personas y conexiones"
+
+#: includes/class-tree.php:288
+msgid "Vertical"
+msgstr "Vertical"
+
+#: includes/class-tree.php:291
+msgid "Horizontal"
+msgstr "Horizontal"
+
+#: includes/class-tree.php:297
+msgid "Zoom in"
+msgstr "Acercar"
+
+#: includes/class-tree.php:300
+msgid "Zoom out"
+msgstr "Alejar"
+
+#: includes/class-tree.php:303
+msgid "Center"
+msgstr "Centrar"
+
+#: includes/class-tree.php:309
+msgid "Minimap (overview)"
+msgstr "Minimapa (vista general)"
+
+#: includes/class-tree.php:312
+msgid "Full screen"
+msgstr "Pantalla completa"
+
+#: includes/class-tree.php:315
+msgid "Print graph (SVG, everyone displayed)"
+msgstr "Imprimir grafo (SVG, todos los mostrados)"
+
+#: includes/class-tree.php:322
+msgid "Fix inconsistent relations (tree error)"
+msgstr "Reparar relaciones incoherentes (error del árbol)"
+
+#: includes/class-tree.php:331
+msgid "Search for a person in the tree…"
+msgstr "Buscar una persona en el árbol…"
+
+#: includes/class-tree.php:345
+msgid "Loading tree…"
+msgstr "Cargando árbol…"
+
+#: includes/class-tree.php:375
+msgid "First name *"
+msgstr "Nombre *"
+
+#: includes/class-tree.php:377
+msgid "Surname *"
+msgstr "Apellido *"
+
+#: includes/class-tree.php:379
+msgid "Gender *"
+msgstr "Sexo *"
+
+#: includes/class-tree.php:655
+msgid "Required data is missing."
+msgstr "Faltan datos obligatorios."
+
+#: includes/class-tree.php:786
+msgid "Person added."
+msgstr "Persona añadida."
+
+#: includes/class-tree.php:839 includes/class-tree.php:893
+msgid "Missing person ID."
+msgstr "Falta el ID de la persona."
+
+#: includes/class-tree.php:846 includes/class-tree.php:900 includes/class-tree.php:980
+msgid "You do not have permission to edit."
+msgstr "No tienes permiso para editar."
+
+#: includes/class-tree.php:859
+msgid "Select / change photo"
+msgstr "Seleccionar / cambiar foto"
+
+#: includes/class-tree.php:907
+msgid "Invalid form token. Refresh and try again."
+msgstr "Token del formulario no válido. Recarga e inténtalo de nuevo."
+
+#: includes/class-tree.php:1015
+msgid "Pet added."
+msgstr "Mascota añadida."
+
+#. translators: %d: number of inconsistencies fixed
+#: includes/class-tree.php:1132
+#, php-format
+msgid "Fixed %d inconsistencies."
+msgstr "Se han corregido %d incoherencias."
+
+#. translators: 1: number of days, 2: date
+#: includes/class-notifications.php:138
+#, php-format
+msgid "[MyRoots] Anniversaries in the next %1$d days — %2$s"
+msgstr "[MyRoots] Aniversarios en los próximos %1$d días: %2$s"
+
+#. translators: %d: number of days
+#: includes/class-notifications.php:179
+#, php-format
+msgid "Anniversaries in the next %d day"
+msgid_plural "Anniversaries in the next %d days"
+msgstr[0] "Aniversarios en el próximo %d día"
+msgstr[1] "Aniversarios en los próximos %d días"
+
+#: includes/class-notifications.php:241
+msgid "Digest sent successfully."
+msgstr "Resumen enviado correctamente."
+
+#: includes/class-notifications.php:243
+msgid "No anniversaries to send or invalid recipient address."
+msgstr "No hay aniversarios que enviar o la dirección del destinatario no es válida."
+
+#: includes/class-kinship.php:35 includes/class-kinship.php:36 includes/class-kinship.php:134
+msgid "Kinship"
+msgstr "Parentesco"
+
+#: includes/class-kinship.php:91 includes/class-kinship.php:107
+msgid "First person…"
+msgstr "Primera persona…"
+
+#: includes/class-kinship.php:92 includes/class-kinship.php:114
+msgid "Second person…"
+msgstr "Segunda persona…"
+
+#: includes/class-kinship.php:94
+msgid "Calculating…"
+msgstr "Calculando…"
+
+#: includes/class-kinship.php:95
+msgid "Select both people."
+msgstr "Selecciona ambas personas."
+
+#: includes/class-book.php:82 includes/class-kinship.php:96
+msgid "An error occurred. Please try again."
+msgstr "Se ha producido un error. Inténtalo de nuevo."
+
+#: includes/class-kinship.php:103
+msgid "Kinship calculator"
+msgstr "Calculadora de parentesco"
+
+#: includes/class-kinship.php:119
+msgid "Check kinship"
+msgstr "Comprobar parentesco"
+
+#: includes/class-kinship.php:197
+msgid "This is the same person."
+msgstr "Es la misma persona."
+
+#: includes/class-kinship.php:248
+msgid "No common ancestor — the people are connected by marriages."
+msgstr "No hay un antepasado común: las personas están unidas por matrimonios."
+
+#: includes/class-kinship.php:255
+msgid "No connection"
+msgstr "Sin conexión"
+
+#: includes/class-kinship.php:256
+msgid "No family path was found between these people."
+msgstr "No se ha encontrado ningún camino familiar entre estas personas."
+
+#: includes/class-kinship.php:282 includes/class-kinship.php:438 includes/class-kinship.php:499
+msgid "parent"
+msgstr "progenitor"
+
+#: includes/class-kinship.php:284
+msgid "grandmother"
+msgstr "abuela"
+
+#: includes/class-kinship.php:284
+msgid "grandfather"
+msgstr "abuelo"
+
+#: includes/class-kinship.php:284
+msgid "grandparent"
+msgstr "abuelo/a"
+
+#. translators: Prefix repeated before “grandfather/grandmother” for each further generation (great-grandfather, great-great-…). Include a trailing hyphen or space if your language needs one.
+#: includes/class-kinship.php:286 includes/class-kinship.php:293
+msgctxt "prefix for great-grandparents"
+msgid "great-"
+msgstr "bis"
+
+#: includes/class-kinship.php:291
+msgctxt "genitive"
+msgid "parent"
+msgstr "progenitor"
+
+#. translators: 1, 2: ancestor terms in the genitive case (e.g. great-grandfather / great-grandmother)
+#: includes/class-kinship.php:296
+#, php-format
+msgid "%1$s or %2$s"
+msgstr "%1$s o %2$s"
+
+#: includes/class-kinship.php:297
+msgctxt "genitive"
+msgid "grandfather"
+msgstr "abuelo"
+
+#: includes/class-kinship.php:298
+msgctxt "genitive"
+msgid "grandmother"
+msgstr "abuela"
+
+#: includes/class-kinship.php:305 includes/class-kinship.php:444 includes/class-kinship.php:501
+msgid "daughter"
+msgstr "hija"
+
+#: includes/class-kinship.php:305 includes/class-kinship.php:444 includes/class-kinship.php:501
+msgid "son"
+msgstr "hijo"
+
+#: includes/class-kinship.php:305 includes/class-kinship.php:444 includes/class-kinship.php:501
+msgid "child"
+msgstr "hijo/a"
+
+#: includes/class-kinship.php:307
+msgid "granddaughter"
+msgstr "nieta"
+
+#: includes/class-kinship.php:307
+msgid "grandson"
+msgstr "nieto"
+
+#: includes/class-kinship.php:307
+msgid "grandchild"
+msgstr "nieto/a"
+
+#. translators: 1: full name of the first person, 2: kinship term, 3: full name of the second person
+#: includes/class-kinship.php:325 includes/class-kinship.php:340 includes/class-kinship.php:359 includes/class-kinship.php:386 includes/class-kinship.php:546
+#, php-format
+msgid "%1$s is the %2$s of %3$s"
+msgstr "%1$s es %2$s de %3$s"
+
+#. translators: %d: number of generations apart
+#: includes/class-kinship.php:330 includes/class-kinship.php:345
+#, php-format
+msgid "%d generation apart."
+msgid_plural "%d generations apart."
+msgstr[0] "%d generación de diferencia."
+msgstr[1] "%d generaciones de diferencia."
+
+#: includes/class-kinship.php:352 includes/class-kinship.php:376
+msgid "sister"
+msgstr "hermana"
+
+#: includes/class-kinship.php:352 includes/class-kinship.php:376
+msgid "brother"
+msgstr "hermano"
+
+#: includes/class-kinship.php:352 includes/class-kinship.php:376
+msgid "sibling"
+msgstr "hermano/a"
+
+#. translators: prefix for half-brother / half-sister
+#: includes/class-kinship.php:355
+msgctxt "feminine prefix"
+msgid "half-"
+msgstr "media "
+
+#. translators: prefix for half-brother / half-sister
+#: includes/class-kinship.php:355
+msgctxt "masculine prefix"
+msgid "half-"
+msgstr "medio "
+
+#: includes/class-kinship.php:360
+msgid "Both parents in common."
+msgstr "Ambos progenitores en común."
+
+#: includes/class-kinship.php:360
+msgid "One parent in common."
+msgstr "Un progenitor en común."
+
+#: includes/class-kinship.php:373
+msgid "aunt"
+msgstr "tía"
+
+#: includes/class-kinship.php:373
+msgid "uncle"
+msgstr "tío"
+
+#: includes/class-kinship.php:373
+msgid "aunt/uncle"
+msgstr "tío/a"
+
+#. translators: %d: number of generations
+#: includes/class-kinship.php:389
+#, php-format
+msgid "Sibling of an ancestor; generation difference: %d."
+msgstr "Hermano/a de un antepasado; diferencia de generaciones: %d."
+
+#: includes/class-kinship.php:397
+msgctxt "female"
+msgid "cousin"
+msgstr "prima"
+
+#: includes/class-kinship.php:397
+msgctxt "male"
+msgid "cousin"
+msgstr "primo"
+
+#. translators: 1: person, 2: cousin (male/female), 3: degree, 4: person
+#: includes/class-kinship.php:400
+#, php-format
+msgid "%1$s is a %3$d. degree %2$s of %4$s"
+msgstr "%1$s es %2$s de %3$d.º grado de %4$s"
+
+#. translators: %d: number of generations
+#: includes/class-kinship.php:406
+#, php-format
+msgid "Additionally removed by %d generation(s)."
+msgstr "Desplazamiento adicional de %d generación(es)."
+
+#: includes/class-kinship.php:409
+msgid "Same generation."
+msgstr "Misma generación."
+
+#: includes/class-kinship.php:503 includes/class-kinship.php:524
+msgid "wife"
+msgstr "esposa"
+
+#: includes/class-kinship.php:503 includes/class-kinship.php:524
+msgid "husband"
+msgstr "esposo"
+
+#: includes/class-kinship.php:503 includes/class-kinship.php:524
+msgid "spouse"
+msgstr "cónyuge"
+
+#: includes/class-kinship.php:527
+msgid "mother-in-law"
+msgstr "suegra"
+
+#: includes/class-kinship.php:527
+msgid "father-in-law"
+msgstr "suegro"
+
+#: includes/class-kinship.php:530
+msgid "stepmother"
+msgstr "madrastra"
+
+#: includes/class-kinship.php:530
+msgid "stepfather"
+msgstr "padrastro"
+
+#: includes/class-kinship.php:533
+msgid "stepdaughter"
+msgstr "hijastra"
+
+#: includes/class-kinship.php:533
+msgid "stepson"
+msgstr "hijastro"
+
+#: includes/class-kinship.php:536
+msgid "daughter-in-law"
+msgstr "nuera"
+
+#: includes/class-kinship.php:536
+msgid "son-in-law"
+msgstr "yerno"
+
+#: includes/class-kinship.php:540
+msgid "sister-in-law"
+msgstr "cuñada"
+
+#: includes/class-kinship.php:540
+msgid "brother-in-law"
+msgstr "cuñado"
+
+#. translators: 1, 2: people
+#: includes/class-kinship.php:550
+#, php-format
+msgid "%1$s and %2$s are related by marriage."
+msgstr "%1$s y %2$s son parientes políticos (unidos por matrimonio)."
+
+#: includes/class-lifeline.php:75 includes/class-merge.php:1256
+msgid "Loading…"
+msgstr "Cargando…"
+
+#: includes/class-lifeline.php:76
+msgid "Error fetching data."
+msgstr "Error al obtener los datos."
+
+#: includes/class-lifeline.php:111
+msgid "Type or select a person…"
+msgstr "Escribe o elige una persona…"
+
+#: includes/class-lifeline.php:113 includes/class-map.php:171
+msgid "Clear"
+msgstr "Borrar"
+
+#: includes/class-lifeline.php:183
+msgid "The lifeline of a living person is not available in private mode."
+msgstr "La línea de vida de una persona viva no está disponible en modo privado."
+
+#. translators: 1: number of years, 2: person's full name
+#: includes/class-lifeline.php:302
+#, php-format
+msgid "This event took place %1$d years before %2$s was born"
+msgstr "Este evento tuvo lugar %1$d años antes del nacimiento de %2$s"
+
+#. translators: %s: full name of the spouse
+#: includes/class-lifeline.php:363
+#, php-format
+msgid "Marriage to %s"
+msgstr "Matrimonio con %s"
+
+#. translators: %s: full name of the spouse
+#: includes/class-lifeline.php:376
+#, php-format
+msgid "End of marriage to %s"
+msgstr "Fin del matrimonio con %s"
+
+#. translators: %s: full name of the child
+#: includes/class-lifeline.php:392
+#, php-format
+msgid "Birth of a child: %s"
+msgstr "Nacimiento de un hijo/a: %s"
+
+#. translators: %s: full name of the grandchild
+#: includes/class-lifeline.php:408
+#, php-format
+msgid "Birth of a grandchild: %s"
+msgstr "Nacimiento de un nieto/a: %s"
+
+#. translators: %s: full name of the sibling
+#: includes/class-lifeline.php:428
+#, php-format
+msgid "Birth of a sibling: %s"
+msgstr "Nacimiento de un hermano/a: %s"
+
+#. translators: %s: full name of the sibling
+#: includes/class-lifeline.php:440
+#, php-format
+msgid "Death of a sibling: %s"
+msgstr "Fallecimiento de un hermano/a: %s"
+
+#: includes/class-lifeline.php:458
+msgctxt "genitive, as in “Death of %s”"
+msgid "mother"
+msgstr "de la madre"
+
+#: includes/class-lifeline.php:458
+msgctxt "genitive, as in “Death of %s”"
+msgid "father"
+msgstr "del padre"
+
+#. translators: 1: role (mother/father), 2: full name
+#: includes/class-lifeline.php:462
+#, php-format
+msgid "Death of %1$s: %2$s"
+msgstr "Fallecimiento %1$s: %2$s"
+
+#. translators: %s: full name of the grandparent
+#: includes/class-lifeline.php:484
+#, php-format
+msgid "Death of a grandparent: %s"
+msgstr "Fallecimiento de un abuelo/a: %s"
+
+#: includes/class-admin.php:1481 includes/class-lifeline.php:507
+msgid "Presumed death"
+msgstr "Fallecimiento presunto"
+
+#: includes/class-map.php:68
+msgid "The map uses the external OpenStreetMap service and is disabled by default. An administrator can enable it in the plugin settings."
+msgstr "El mapa usa el servicio externo OpenStreetMap y está desactivado por defecto. Un administrador puede activarlo en los ajustes del plugin."
+
+#: includes/class-map.php:72
+msgid "Open settings"
+msgstr "Abrir ajustes"
+
+#: includes/class-map.php:147
+msgid "Legend"
+msgstr "Leyenda"
+
+#: includes/class-map.php:151
+msgid "Mixed"
+msgstr "Mixto"
+
+#: includes/class-map.php:166
+msgid "Person:"
+msgstr "Persona:"
+
+#: includes/class-map.php:167 includes/class-map.php:168
+msgid "All people"
+msgstr "Todas las personas"
+
+#: includes/class-map.php:173
+msgid "No places for the selected filter."
+msgstr "No hay lugares para el filtro elegido."
+
+#: includes/class-map.php:219
+msgid "No geocoded places. Open the map page to load them."
+msgstr "No hay lugares geocodificados. Abre la página del mapa para cargarlos."
+
+#: includes/class-map.php:569
+msgid "First enable the external map services (OpenStreetMap) in the settings."
+msgstr "Primero activa los servicios externos de mapas (OpenStreetMap) en los ajustes."
+
+#: includes/class-map.php:575
+msgid "All places are already geocoded."
+msgstr "Todos los lugares ya están geocodificados."
+
+#. translators: 1: successful, 2: not recognized, 3: remaining
+#: includes/class-map.php:579
+#, php-format
+msgid "Geocoded: %1$d, not recognized: %2$d, remaining: %3$d."
+msgstr "Geocodificados: %1$d, no reconocidos: %2$d, pendientes: %3$d."
+
+#: includes/class-map.php:583
+msgid "A background task will finish the rest — you can also click again."
+msgstr "Una tarea en segundo plano terminará el resto; también puedes volver a hacer clic."
+
+#: includes/class-admin.php:1200 includes/class-pet.php:107
+msgid "Edit pet"
+msgstr "Editar mascota"
+
+#: includes/class-pet.php:126
+msgctxt "CPT slug"
+msgid "pet"
+msgstr "mascota"
+
+#: includes/class-pet.php:152
+msgid "Dog"
+msgstr "Perro"
+
+#: includes/class-pet.php:154
+msgid "Mixed breed"
+msgstr "Mestizo"
+
+#: includes/class-pet.php:155
+msgid "German Shepherd"
+msgstr "Pastor alemán"
+
+#: includes/class-pet.php:156
+msgid "Labrador Retriever"
+msgstr "Labrador retriever"
+
+#: includes/class-pet.php:157
+msgid "Golden Retriever"
+msgstr "Golden retriever"
+
+#: includes/class-pet.php:158
+msgid "Dachshund"
+msgstr "Teckel"
+
+#: includes/class-pet.php:159
+msgid "Border Collie"
+msgstr "Border collie"
+
+#: includes/class-pet.php:160
+msgid "French Bulldog"
+msgstr "Bulldog francés"
+
+#: includes/class-pet.php:161
+msgid "Yorkshire Terrier"
+msgstr "Yorkshire terrier"
+
+#: includes/class-pet.php:165
+msgid "Cat"
+msgstr "Gato"
+
+#: includes/class-pet.php:167
+msgid "Domestic cat"
+msgstr "Gato común"
+
+#: includes/class-pet.php:168
+msgid "British Shorthair"
+msgstr "Británico de pelo corto"
+
+#: includes/class-pet.php:169
+msgid "Maine Coon"
+msgstr "Maine coon"
+
+#: includes/class-pet.php:170
+msgid "Persian"
+msgstr "Persa"
+
+#: includes/class-pet.php:171
+msgid "Siamese"
+msgstr "Siamés"
+
+#: includes/class-pet.php:172
+msgid "Ragdoll"
+msgstr "Ragdoll"
+
+#: includes/class-pet.php:176
+msgid "Bird"
+msgstr "Pájaro"
+
+#: includes/class-pet.php:178
+msgid "Budgerigar"
+msgstr "Periquito"
+
+#: includes/class-pet.php:179
+msgid "Canary"
+msgstr "Canario"
+
+#: includes/class-pet.php:180
+msgid "Cockatiel"
+msgstr "Ninfa"
+
+#: includes/class-pet.php:184
+msgid "Horse"
+msgstr "Caballo"
+
+#: includes/class-pet.php:272
+msgid "Pet details"
+msgstr "Datos de la mascota"
+
+#: includes/class-history.php:115
+msgid "Change history"
+msgstr "Historial de cambios"
+
+#: includes/class-history.php:144
+msgid "Relation type with the mother"
+msgstr "Tipo de relación con la madre"
+
+#: includes/class-history.php:145
+msgid "Relation type with the father"
+msgstr "Tipo de relación con el padre"
+
+#: includes/class-history.php:146 includes/class-merge.php:540
+msgid "Spouses / partners"
+msgstr "Cónyuges / parejas"
+
+#: includes/class-admin.php:89 includes/class-admin.php:1165 includes/class-admin.php:1264 includes/class-book.php:147 includes/class-history.php:149 includes/class-merge.php:560
+msgid "Clans"
+msgstr "Linajes"
+
+#: includes/class-history.php:152
+msgid "Source citations"
+msgstr "Citas de fuentes"
+
+#: includes/class-history.php:159
+msgid "No saved revisions. The history will start to build with subsequent saves."
+msgstr "No hay revisiones guardadas. El historial empezará a crearse con los próximos guardados."
+
+#: includes/class-history.php:168
+msgid "(unknown)"
+msgstr "(desconocido)"
+
+#: includes/class-history.php:178
+msgid "Changed:"
+msgstr "Cambiado:"
+
+#. translators: %d: number of additional fields
+#: includes/class-history.php:181
+#, php-format
+msgid " and %d more"
+msgstr " y %d más"
+
+#: includes/class-history.php:187
+msgid "Restore this state"
+msgstr "Restaurar este estado"
+
+#: includes/class-history.php:195
+msgid "Restore the person's data to this state? The current state will be kept in the history."
+msgstr "¿Restaurar los datos de la persona a este estado? El estado actual se conservará en el historial."
+
+#: includes/class-history.php:219
+msgid "Revision not found."
+msgstr "No se ha encontrado la revisión."
+
+#: includes/class-history.php:238
+msgid "Restored."
+msgstr "Restaurado."
+
+#: includes/class-admin.php:87 includes/class-admin.php:1161
+msgid "Dashboard"
+msgstr "Escritorio"
+
+#: includes/class-admin.php:93 includes/class-admin.php:1180 assets/js/blocks.js:98
+msgid "Settings"
+msgstr "Ajustes"
+
+#: includes/class-admin.php:94
+msgid "Appearance"
+msgstr "Apariencia"
+
+#: includes/class-admin.php:95 includes/class-admin.php:1181
+msgid "Users"
+msgstr "Usuarios"
+
+#: includes/class-admin.php:96 includes/class-admin.php:1179 includes/class-admin.php:2631
+msgid "GEDCOM"
+msgstr "GEDCOM"
+
+#: includes/class-admin.php:209
+msgid "Like MyRoots? Buy me a pizza!"
+msgstr "¿Te gusta MyRoots? ¡Invítame a una pizza!"
+
+#: includes/class-admin.php:248
+msgid "Are you sure you want to delete this?"
+msgstr "¿Seguro que quieres eliminarlo?"
+
+#: includes/class-admin.php:250
+msgid "Saved."
+msgstr "Guardado."
+
+#: includes/class-admin.php:251 includes/class-admin.php:2491
+msgid "Save error."
+msgstr "Error al guardar."
+
+#: includes/class-admin.php:253
+msgid "Pick a full date from the calendar"
+msgstr "Elige una fecha completa en el calendario"
+
+#: includes/class-admin.php:255
+msgid "exact"
+msgstr "exacta"
+
+#: includes/class-admin.php:256
+msgid "about"
+msgstr "hacia"
+
+#: includes/class-admin.php:257
+msgid "before"
+msgstr "antes de"
+
+#: includes/class-admin.php:258
+msgid "after"
+msgstr "después de"
+
+#: includes/class-admin.php:259
+msgid "between"
+msgstr "entre"
+
+#: includes/class-admin.php:284
+msgid "Select a photo for the event"
+msgstr "Elige una foto para el evento"
+
+#: includes/class-admin.php:286
+msgid "Select photos for the gallery"
+msgstr "Elige fotos para la galería"
+
+#: includes/class-admin.php:287 includes/class-admin.php:1659
+msgid "— select a person —"
+msgstr "— elige una persona —"
+
+#: includes/class-admin.php:739
+msgid "Person details"
+msgstr "Datos de la persona"
+
+#: includes/class-admin.php:767
+msgid "Birthday"
+msgstr "Cumpleaños"
+
+#. translators: List of upcoming anniversaries in the next 14 days
+#: includes/class-admin.php:852
+msgid "MyRoots — anniversaries (14 days):"
+msgstr "MyRoots: aniversarios (14 días):"
+
+#: includes/class-admin.php:870
+msgid "birthday"
+msgstr "cumpleaños"
+
+#: includes/class-admin.php:871
+msgid "death anniversary"
+msgstr "aniversario de fallecimiento"
+
+#. translators: 1: date, 2: full name, 3: label (birthday/anniversary), 4: age in years
+#: includes/class-admin.php:891
+#, php-format
+msgid "%1$s — %2$s (%3$s, %4$d years)"
+msgstr "%1$s — %2$s (%3$s, %4$d años)"
+
+#. translators: %s: author (link)
+#: includes/class-admin.php:1105
+#, php-format
+msgid "Author: %s"
+msgstr "Autor: %s"
+
+#: includes/class-admin.php:1115
+msgid "Plugin website"
+msgstr "Web del plugin"
+
+#: includes/class-admin.php:1120
+msgid "Acknowledgements and open source libraries"
+msgstr "Agradecimientos y bibliotecas de código abierto"
+
+#: includes/class-admin.php:1122
+msgid "MyRoots was also made possible by several open source projects that matter to me. Hats off to their creators."
+msgstr "MyRoots también ha sido posible gracias a varios proyectos de código abierto importantes para mí. Mi reconocimiento a sus creadores."
+
+#: includes/class-admin.php:1156
+msgid "MyRoots — genealogy"
+msgstr "MyRoots: genealogía"
+
+#: includes/class-admin.php:1267
+msgid "M / F"
+msgstr "H / M"
+
+#: includes/class-admin.php:1268
+msgid "Anniversaries (30 days)"
+msgstr "Aniversarios (30 días)"
+
+#: includes/class-admin.php:1274
+msgid "Browse →"
+msgstr "Explorar →"
+
+#: includes/class-admin.php:1292
+msgid "GEDCOM Import/Export"
+msgstr "Importar/Exportar GEDCOM"
+
+#: includes/class-admin.php:1295
+msgid "Tree preview"
+msgstr "Vista previa del árbol"
+
+#: includes/class-admin.php:1308
+msgid "Upcoming anniversaries"
+msgstr "Próximos aniversarios"
+
+#: includes/class-admin.php:1320
+msgid "No anniversaries."
+msgstr "No hay aniversarios."
+
+#: includes/class-admin.php:1324 includes/class-admin.php:1526
+msgid "Recently added"
+msgstr "Añadidos recientemente"
+
+#: includes/class-admin.php:1340
+msgid "No people."
+msgstr "No hay personas."
+
+#: includes/class-admin.php:1348
+msgid "Available shortcodes"
+msgstr "Shortcodes disponibles"
+
+#: includes/class-admin.php:1350
+msgid "Click “Copy” and paste the shortcode on any WordPress page."
+msgstr "Haz clic en «Copiar» y pega el shortcode en cualquier página de WordPress."
+
+#: includes/class-admin.php:1354
+msgid "People list with search and filters"
+msgstr "Lista de personas con búsqueda y filtros"
+
+#: includes/class-admin.php:1355
+msgid "People list without the search bar"
+msgstr "Lista de personas sin barra de búsqueda"
+
+#: includes/class-admin.php:1356
+msgid "List filtered to a specific clan"
+msgstr "Lista filtrada por un linaje concreto"
+
+#: includes/class-admin.php:1357
+msgid "Interactive family tree"
+msgstr "Árbol genealógico interactivo"
+
+#: includes/class-admin.php:1358
+msgid "Lifeline — choose a person from the menu"
+msgstr "Línea de vida: elige la persona en el menú"
+
+#: includes/class-admin.php:1359
+msgid "Lifeline of a specific person"
+msgstr "Línea de vida de una persona concreta"
+
+#: includes/class-admin.php:1360
+msgid "Genealogical map of all places"
+msgstr "Mapa genealógico de todos los lugares"
+
+#: includes/class-admin.php:1361
+msgid "Map of a specific person's places"
+msgstr "Mapa de los lugares de una persona concreta"
+
+#: includes/class-admin.php:1362
+msgid "Statistics with charts"
+msgstr "Estadísticas con gráficos"
+
+#: includes/class-admin.php:1363
+msgid "Timeline of all events"
+msgstr "Cronología de todos los eventos"
+
+#: includes/class-admin.php:1364
+msgid "Timeline of a specific person's events"
+msgstr "Cronología de los eventos de una persona concreta"
+
+#: includes/class-admin.php:1365
+msgid "Latest 20 events"
+msgstr "Los últimos 20 eventos"
+
+#: includes/class-admin.php:1366
+msgid "Upcoming anniversaries (next 30 days)"
+msgstr "Próximos aniversarios (próximos 30 días)"
+
+#: includes/class-admin.php:1367
+msgid "Anniversaries within 90 days, max. 10 items"
+msgstr "Aniversarios en 90 días, máx. 10 elementos"
+
+#: includes/class-admin.php:1373 includes/class-setup.php:359
+msgid "Shortcode"
+msgstr "Shortcode"
+
+#: includes/class-admin.php:1386
+msgid "Copy"
+msgstr "Copiar"
+
+#: includes/class-admin.php:1395
+msgid "Shortcode copied to the clipboard!"
+msgstr "¡Shortcode copiado al portapapeles!"
+
+#: includes/class-admin.php:1406
+msgid "MyRoots — Settings"
+msgstr "MyRoots: Ajustes"
+
+#: includes/class-admin.php:1411
+msgid "Privacy and restrictions"
+msgstr "Privacidad y restricciones"
+
+#: includes/class-admin.php:1414
+msgid "Private mode"
+msgstr "Modo privado"
+
+#: includes/class-admin.php:1418
+msgid "Enable private mode"
+msgstr "Activar el modo privado"
+
+#: includes/class-admin.php:1420
+msgid "Once enabled, specify below how broadly access should be restricted."
+msgstr "Una vez activado, indica abajo hasta qué punto restringir el acceso."
+
+#: includes/class-admin.php:1425
+msgid "External map services"
+msgstr "Servicios externos de mapas"
+
+#: includes/class-admin.php:1429
+msgid "Allow the use of OpenStreetMap and Nominatim"
+msgstr "Permitir el uso de OpenStreetMap y Nominatim"
+
+#: includes/class-admin.php:1432
+msgid "Disabled by default. When enabled, the genealogical map loads tiles from OpenStreetMap servers (the visitor's IP address is sent to OpenStreetMap), and place geocoding sends place names and this site's address to the Nominatim service. Without consent, the map and geocoding are inactive and the plugin sends no data to external services."
+msgstr "Desactivado por defecto. Al activarlo, el mapa genealógico carga teselas de los servidores de OpenStreetMap (la dirección IP del visitante se envía a OpenStreetMap) y la geocodificación de lugares envía sus nombres y la dirección de este sitio al servicio Nominatim. Sin consentimiento, el mapa y la geocodificación están inactivos y el plugin no envía datos al exterior."
+
+#: includes/class-admin.php:1438
+msgid "Google Fonts"
+msgstr "Google Fonts"
+
+#: includes/class-admin.php:1442
+msgid "Allow loading fonts from Google Fonts servers"
+msgstr "Permitir cargar fuentes desde los servidores de Google Fonts"
+
+#: includes/class-admin.php:1445
+msgid "Disabled by default. When enabled, the Google font selected on the “Appearance” tab is loaded from fonts.googleapis.com (the visitor's IP address is sent to Google), and the font preview in the admin panel downloads font stylesheets from that server. Without consent, the plugin sends no requests to Google and the site uses system fonts."
+msgstr "Desactivado por defecto. Al activarlo, la fuente de Google elegida en la pestaña «Apariencia» se carga desde fonts.googleapis.com (la dirección IP del visitante se envía a Google) y la vista previa de fuentes del panel descarga hojas de estilo desde ese servidor. Sin consentimiento, el plugin no envía ninguna solicitud a Google y el sitio usa fuentes del sistema."
+
+#: includes/class-admin.php:1451
+msgid "Visitor suggestions"
+msgstr "Sugerencias de los visitantes"
+
+#: includes/class-admin.php:1455
+msgid "Show the “Suggest a correction” form on person profiles"
+msgstr "Mostrar el formulario «Sugerir una corrección» en los perfiles"
+
+#: includes/class-admin.php:1458
+msgid "Disabled by default. When enabled, visitors (e.g. family members) can submit a correction or additional information about a person without logging in. Suggestions go only to the moderation queue (MyRoots → Suggestions) — nothing changes the data automatically. The form is protected against spam (honeypot, per-IP limit)."
+msgstr "Desactivado por defecto. Al activarlo, los visitantes (p. ej. familiares) pueden enviar sin iniciar sesión una corrección o información adicional sobre una persona. Las sugerencias van solo a la cola de moderación (MyRoots → Sugerencias): nada cambia los datos automáticamente. El formulario está protegido contra el spam (honeypot, límite por IP)."
+
+#: includes/class-admin.php:1463
+msgid "Send an e-mail notification about new suggestions to the administrator's address"
+msgstr "Enviar un aviso por correo electrónico a la dirección del administrador cuando llegue una sugerencia"
+
+#: includes/class-admin.php:1469
+msgid "Public API (REST)"
+msgstr "API pública (REST)"
+
+#: includes/class-admin.php:1473
+msgid "Share data through the public REST API (myroots/v1)"
+msgstr "Compartir los datos mediante la API REST pública (myroots/v1)"
+
+#: includes/class-admin.php:1476
+msgid "Disabled by default. When enabled, genealogical data becomes available at /wp-json/myroots/v1/ (people, profile, tree, statistics) as JSON — convenient for integrating with other applications, but it makes bulk downloading of the data easier. Only publicly visible information is shared: the API applies the same privacy mode as the site (hiding/censoring living people, section lock). When disabled, these addresses do not exist (404)."
+msgstr "Desactivado por defecto. Al activarlo, los datos genealógicos están disponibles en /wp-json/myroots/v1/ (personas, perfil, árbol, estadísticas) como JSON: útil para integrarlos con otras aplicaciones, pero facilita la descarga masiva de datos. Solo se comparte la información visible públicamente: la API aplica el mismo modo privado que el sitio (ocultar/censurar personas vivas, bloqueo de secciones). Si está desactivado, estas direcciones no existen (404)."
+
+#: includes/class-admin.php:1486
+msgid "People above this age without a date of death are treated as presumed deceased. 0 = disabled."
+msgstr "Las personas que superen esta edad sin fecha de fallecimiento se consideran presuntamente fallecidas. 0 = desactivado."
+
+#: includes/class-admin.php:1490
+msgid "Scrolling on phones"
+msgstr "Desplazamiento en el móvil"
+
+#: includes/class-admin.php:1494
+msgid "In the mobile tree view, smoothly scroll to the details panel below after tapping the “about” icon"
+msgstr "En la vista móvil del árbol, desplazarse suavemente al panel de detalles al tocar el icono «sobre mí»"
+
+#: includes/class-admin.php:1507
+msgid "Settings for the people list (cards) generated by the shortcode."
+msgstr "Ajustes de la lista de personas (fichas) generada por el shortcode."
+
+#: includes/class-admin.php:1510
+msgid "Cards per page"
+msgstr "Fichas por página"
+
+#: includes/class-admin.php:1514
+msgid "How many cards one batch of the list loads (6–200). Default: 36."
+msgstr "Cuántas fichas carga cada tanda de la lista (6–200). Por defecto: 36."
+
+#: includes/class-admin.php:1518
+msgid "Default sorting"
+msgstr "Orden predeterminado"
+
+#: includes/class-admin.php:1522
+msgid "Surname (A→Z)"
+msgstr "Apellido (A→Z)"
+
+#: includes/class-admin.php:1523
+msgid "Surname (Z→A)"
+msgstr "Apellido (Z→A)"
+
+#: includes/class-admin.php:1524
+msgid "Date of birth (oldest first)"
+msgstr "Fecha de nacimiento (de mayor a menor edad)"
+
+#: includes/class-admin.php:1525
+msgid "Date of birth (youngest first)"
+msgstr "Fecha de nacimiento (de menor a mayor edad)"
+
+#: includes/class-admin.php:1528
+msgid "People without a date of birth go to the end when sorting by date."
+msgstr "Las personas sin fecha de nacimiento quedan al final al ordenar por fecha."
+
+#: includes/class-admin.php:1535
+msgid "Define additional field groups shown when editing each person."
+msgstr "Define grupos de campos adicionales que se muestran al editar cada persona."
+
+#: includes/class-admin.php:1541
+msgid "Add field group"
+msgstr "Añadir grupo de campos"
+
+#: includes/class-admin.php:1551
+msgid "Show / edit JSON manually"
+msgstr "Mostrar / editar el JSON manualmente"
+
+#: includes/class-admin.php:1556
+msgid "Changes in this field are synchronized with the builder when you click outside the field."
+msgstr "Los cambios en este campo se sincronizan con el constructor al hacer clic fuera del campo."
+
+#: includes/class-admin.php:1564
+msgid "Field:"
+msgstr "Campo:"
+
+#: includes/class-admin.php:1565
+msgid "Field name"
+msgstr "Nombre del campo"
+
+#: includes/class-admin.php:1566
+msgid "Remove field"
+msgstr "Eliminar campo"
+
+#: includes/class-admin.php:1567
+msgid "Comma-separated options…"
+msgstr "Opciones separadas por comas…"
+
+#: includes/class-admin.php:1568
+msgid "Group:"
+msgstr "Grupo:"
+
+#: includes/class-admin.php:1569
+msgid "Group name"
+msgstr "Nombre del grupo"
+
+#: includes/class-admin.php:1570
+msgid "Remove group"
+msgstr "Eliminar grupo"
+
+#: includes/class-admin.php:1571
+msgid "Add field"
+msgstr "Añadir campo"
+
+#: includes/class-admin.php:1572
+msgid "Remove the whole field group?"
+msgstr "¿Eliminar todo el grupo de campos?"
+
+#: includes/class-admin.php:1573
+msgid "No groups. Click “Add field group” to start."
+msgstr "No hay grupos. Haz clic en «Añadir grupo de campos» para empezar."
+
+#: includes/class-admin.php:1587
+msgid "E-mail notifications (anniversaries)"
+msgstr "Avisos por correo electrónico (aniversarios)"
+
+#: includes/class-admin.php:1588
+msgid "An automatic digest with a list of upcoming anniversaries sent every morning."
+msgstr "Un resumen automático con los próximos aniversarios, enviado cada mañana."
+
+#: includes/class-admin.php:1591
+msgid "Enable notifications"
+msgstr "Activar avisos"
+
+#: includes/class-admin.php:1595
+msgid "Send an e-mail digest with anniversaries"
+msgstr "Enviar un resumen de aniversarios por correo electrónico"
+
+#: includes/class-admin.php:1600
+msgid "Lead time (days)"
+msgstr "Antelación (días)"
+
+#: includes/class-admin.php:1604
+msgid "days before the anniversary"
+msgstr "días antes del aniversario"
+
+#: includes/class-admin.php:1608
+msgid "Recipients"
+msgstr "Destinatarios"
+
+#: includes/class-admin.php:1613
+msgid "One e-mail address per line. Default: the admin address."
+msgstr "Una dirección de correo por línea. Por defecto: la dirección del administrador."
+
+#: includes/class-admin.php:1617
+msgid "Test"
+msgstr "Prueba"
+
+#: includes/class-admin.php:1621
+msgid "Send a test digest now"
+msgstr "Enviar ahora un resumen de prueba"
+
+#: includes/class-admin.php:1630
+msgid "Tree — starting person"
+msgstr "Árbol: persona inicial"
+
+#: includes/class-admin.php:1631
+msgid "Who is shown first (centered) when the tree is opened."
+msgstr "Quién se muestra primero (centrado) al abrir el árbol."
+
+#: includes/class-admin.php:1645
+msgid "Selection method"
+msgstr "Método de selección"
+
+#: includes/class-admin.php:1648
+msgid "Automatic — the person with the most data"
+msgstr "Automático: la persona con más datos"
+
+#: includes/class-admin.php:1649
+msgid "Automatic — the most recently added ancestor without parents"
+msgstr "Automático: el antepasado sin progenitores añadido más recientemente"
+
+#: includes/class-admin.php:1650
+msgid "Specific person (select below)"
+msgstr "Persona concreta (elige abajo)"
+
+#: includes/class-admin.php:1652
+msgid "Automatic modes pick the person each time the tree is opened."
+msgstr "Los modos automáticos eligen la persona cada vez que se abre el árbol."
+
+#: includes/class-admin.php:1666
+msgid "Used only in the “Specific person” mode. If the person is deleted, the tree will go back to automatic mode."
+msgstr "Solo se usa en el modo «Persona concreta». Si la persona se elimina, el árbol vuelve al modo automático."
+
+#: includes/class-admin.php:1675
+msgid "Save settings"
+msgstr "Guardar ajustes"
+
+#: includes/class-admin.php:1683
+msgid "Error"
+msgstr "Error"
+
+#: includes/class-admin.php:1692
+msgid "Map — geocoding places"
+msgstr "Mapa: geocodificación de lugares"
+
+#: includes/class-admin.php:1693
+msgid "Determines coordinates for places (births, deaths, marriages) that are not in the cache yet — e.g. after a GEDCOM import. It works in batches (about 1 request per second according to the OpenStreetMap policy); a background task will finish the rest. Click again to process the next batch."
+msgstr "Determina las coordenadas de los lugares (nacimientos, fallecimientos, matrimonios) que aún no están en la caché, p. ej. tras una importación GEDCOM. Funciona por tandas (aprox. 1 solicitud por segundo según la política de OpenStreetMap); una tarea en segundo plano terminará el resto. Vuelve a hacer clic para procesar la siguiente tanda."
+
+#: includes/class-admin.php:1695
+msgid "Geocoding is inactive until you enable the external map services in the “Privacy and restrictions” section above and save the settings."
+msgstr "La geocodificación está inactiva hasta que actives los servicios externos de mapas en la sección «Privacidad y restricciones» de arriba y guardes los ajustes."
+
+#: includes/class-admin.php:1700
+msgid "Refresh place geocoding"
+msgstr "Actualizar la geocodificación de lugares"
+
+#: includes/class-admin.php:1707
+msgid "Processing… (this may take several seconds)"
+msgstr "Procesando… (puede tardar unos segundos)"
+
+#: includes/class-admin.php:1709
+msgid "Done."
+msgstr "Hecho."
+
+#: includes/class-admin.php:1710
+msgid "Error."
+msgstr "Error."
+
+#: includes/class-admin.php:1786
+msgid "Primary color"
+msgstr "Color principal"
+
+#: includes/class-admin.php:1786
+msgid "Headings, buttons, active elements"
+msgstr "Títulos, botones, elementos activos"
+
+#: includes/class-admin.php:1787
+msgid "Accent color"
+msgstr "Color de acento"
+
+#: includes/class-admin.php:1787
+msgid "Births, lifeline accents"
+msgstr "Nacimientos, acentos de la línea de vida"
+
+#: includes/class-admin.php:1788
+msgid "Page background"
+msgstr "Fondo de la página"
+
+#: includes/class-admin.php:1788
+msgid "Section and container background"
+msgstr "Fondo de secciones y del contenedor"
+
+#: includes/class-admin.php:1789
+msgid "Card background"
+msgstr "Fondo de las fichas"
+
+#: includes/class-admin.php:1789
+msgid "Inside of cards and sections"
+msgstr "Interior de fichas y secciones"
+
+#: includes/class-admin.php:1790
+msgid "Text color"
+msgstr "Color del texto"
+
+#: includes/class-admin.php:1790
+msgid "Main content color"
+msgstr "Color principal del contenido"
+
+#: includes/class-admin.php:1791
+msgid "Border"
+msgstr "Borde"
+
+#: includes/class-admin.php:1791
+msgid "Element borders, separators"
+msgstr "Bordes de los elementos, separadores"
+
+#: includes/class-admin.php:1792
+msgid "Event: birth"
+msgstr "Evento: nacimiento"
+
+#: includes/class-admin.php:1792
+msgid "Birth bar, dot and badge"
+msgstr "Barra, punto e insignia de nacimientos"
+
+#: includes/class-admin.php:1793
+msgid "Event: death"
+msgstr "Evento: fallecimiento"
+
+#: includes/class-admin.php:1793
+msgid "Death bar, dot and badge"
+msgstr "Barra, punto e insignia de fallecimientos"
+
+#: includes/class-admin.php:1794
+msgid "Event: marriage"
+msgstr "Evento: matrimonio"
+
+#: includes/class-admin.php:1794
+msgid "Marriage bar, dot and badge"
+msgstr "Barra, punto e insignia de matrimonios"
+
+#: includes/class-admin.php:1795
+msgid "Event: custom"
+msgstr "Evento: personalizado"
+
+#: includes/class-admin.php:1795
+msgid "Custom event bar, dot and badge"
+msgstr "Barra, punto e insignia de eventos propios"
+
+#: includes/class-admin.php:1796
+msgid "Event: end of relationship"
+msgstr "Evento: fin de una relación"
+
+#: includes/class-admin.php:1796
+msgid "Separation/divorce bar and dot"
+msgstr "Barra y punto de separación/divorcio"
+
+#: includes/class-admin.php:1801
+msgid "Theme font (inherit)"
+msgstr "Fuente del tema (inherit)"
+
+#: includes/class-admin.php:1802
+msgid "System (sans-serif)"
+msgstr "Del sistema (sans-serif)"
+
+#: includes/class-admin.php:1809 includes/class-setup.php:379
+msgid "None"
+msgstr "Ninguna"
+
+#: includes/class-admin.php:1810
+msgid "Subtle"
+msgstr "Sutil"
+
+#: includes/class-admin.php:1811
+msgid "Standard"
+msgstr "Estándar"
+
+#: includes/class-admin.php:1812
+msgid "Strong"
+msgstr "Fuerte"
+
+#: includes/class-admin.php:1813
+msgid "Very strong"
+msgstr "Muy fuerte"
+
+#: includes/class-admin.php:1822
+msgid "Classic navy"
+msgstr "Azul marino clásico"
+
+#: includes/class-admin.php:1830
+msgid "Warm sepia"
+msgstr "Sepia cálido"
+
+#: includes/class-admin.php:1838
+msgid "Modern minimal"
+msgstr "Minimalista moderno"
+
+#: includes/class-admin.php:1846
+msgid "Navy and gold"
+msgstr "Azul marino y oro"
+
+#: includes/class-admin.php:1854
+msgid "Forest green"
+msgstr "Verde bosque"
+
+#: includes/class-admin.php:1862
+msgid "Burgundy retro"
+msgstr "Burdeos retro"
+
+#: includes/class-admin.php:1870
+msgid "Light pastel"
+msgstr "Pastel claro"
+
+#: includes/class-admin.php:1878
+msgid "Dark contrast"
+msgstr "Contraste oscuro"
+
+#: includes/class-admin.php:1887
+msgid "Neon night"
+msgstr "Noche neón"
+
+#: includes/class-admin.php:1895
+msgid "Coral and ink"
+msgstr "Coral y tinta"
+
+#: includes/class-admin.php:1903
+msgid "Electric violet"
+msgstr "Violeta eléctrico"
+
+#: includes/class-admin.php:1912
+msgid "Ocean depth"
+msgstr "Profundidad marina"
+
+#: includes/class-admin.php:1920
+msgid "Terracotta"
+msgstr "Terracota"
+
+#: includes/class-admin.php:1928
+msgid "Slate and copper"
+msgstr "Pizarra y cobre"
+
+#: includes/class-admin.php:1936
+msgid "Plum"
+msgstr "Ciruela"
+
+#: includes/class-admin.php:1944
+msgid "Nordic"
+msgstr "Nórdico"
+
+#: includes/class-admin.php:1956
+msgid "MyRoots — Appearance"
+msgstr "MyRoots: Apariencia"
+
+#: includes/class-admin.php:1970
+msgid "Ready-made styles"
+msgstr "Estilos predefinidos"
+
+#: includes/class-admin.php:1973
+msgid "Click a style to set a consistent look. It changes all colors (palette, events, map overlay), the font, the size and weight of titles, the corner radius and the shadow; widths stay unchanged. The controls and preview will update — click “Save changes” to apply."
+msgstr "Haz clic en un estilo para aplicar un aspecto coherente. Cambia todos los colores (paleta, eventos, superposición del mapa), la fuente, el tamaño y el grosor de los títulos, el redondeo y la sombra; los anchos no cambian. Los controles y la vista previa se actualizarán: haz clic en «Guardar cambios» para aplicarlo."
+
+#: includes/class-admin.php:1994
+msgid "Colors"
+msgstr "Colores"
+
+#: includes/class-admin.php:2024
+msgid "Typography"
+msgstr "Tipografía"
+
+#: includes/class-admin.php:2028
+msgid "Font"
+msgstr "Fuente"
+
+#: includes/class-admin.php:2038
+msgid "Custom font…"
+msgstr "Fuente personalizada…"
+
+#: includes/class-admin.php:2042
+msgid "e.g. 'Lato', sans-serif"
+msgstr "p. ej. 'Lato', sans-serif"
+
+#: includes/class-admin.php:2047
+msgid "Sample text — John Smith, 1920–1998"
+msgstr "Texto de ejemplo: Juan García, 1920–1998"
+
+#: includes/class-admin.php:2051
+msgid "Loading Google Fonts is disabled (default). The selected Google font will not be downloaded from Google servers — the site will use a system font. You can give consent in MyRoots → Settings."
+msgstr "La carga de Google Fonts está desactivada (por defecto). La fuente de Google elegida no se descargará de los servidores de Google: el sitio usará una fuente del sistema. Puedes dar tu consentimiento en MyRoots → Ajustes."
+
+#: includes/class-admin.php:2058
+msgid "Font size"
+msgstr "Tamaño de fuente"
+
+#: includes/class-admin.php:2075
+msgid "Title weight"
+msgstr "Grosor de los títulos"
+
+#: includes/class-admin.php:2079
+msgid "Extra light"
+msgstr "Muy fina"
+
+#: includes/class-admin.php:2080
+msgid "Light"
+msgstr "Fina"
+
+#: includes/class-admin.php:2081
+msgid "Normal"
+msgstr "Normal"
+
+#: includes/class-admin.php:2082
+msgid "Semi-bold"
+msgstr "Seminegrita"
+
+#: includes/class-admin.php:2083
+msgid "Bold"
+msgstr "Negrita"
+
+#: includes/class-admin.php:2095
+msgid "Applies to the first name and surname on the person's profile"
+msgstr "Se aplica al nombre y apellido en el perfil de la persona"
+
+#: includes/class-admin.php:2104
+msgid "Widths"
+msgstr "Anchos"
+
+#: includes/class-admin.php:2107
+msgid "Content width"
+msgstr "Ancho del contenido"
+
+#: includes/class-admin.php:2115 includes/class-admin.php:2134
+msgid "Full"
+msgstr "Completo"
+
+#: includes/class-admin.php:2122
+msgid "List, profile, statistics, lifeline, map, events."
+msgstr "Lista, perfil, estadísticas, línea de vida, mapa, eventos."
+
+#: includes/class-admin.php:2126
+msgid "Tree width"
+msgstr "Ancho del árbol"
+
+#: includes/class-admin.php:2141
+msgid "Family tree."
+msgstr "Árbol genealógico."
+
+#: includes/class-admin.php:2150
+msgid "Shape and shadow"
+msgstr "Forma y sombra"
+
+#: includes/class-admin.php:2154
+msgid "Corner radius"
+msgstr "Redondeo de las esquinas"
+
+#: includes/class-admin.php:2164
+msgid "Corner preview"
+msgstr "Vista previa de la esquina"
+
+#: includes/class-admin.php:2174
+msgid "Card shadow"
+msgstr "Sombra de las fichas"
+
+#: includes/class-admin.php:2201
+msgid "Tile overlay color"
+msgstr "Color de superposición de las teselas"
+
+#: includes/class-admin.php:2218
+msgid "The color of the filter applied to the map tiles. Greys → monochrome effect (default). Other colors → tinted map style. Works on the main map and mini-maps."
+msgstr "Color del filtro aplicado a las teselas del mapa. Grises → efecto monocromo (por defecto). Otros colores → estilo de mapa teñido. Funciona en el mapa principal y en los minimapas."
+
+#: includes/class-admin.php:2223
+msgid "Grey (default)"
+msgstr "Gris (por defecto)"
+
+#: includes/class-admin.php:2224
+msgid "Full greyscale"
+msgstr "Escala de grises completa"
+
+#: includes/class-admin.php:2225
+msgid "Blue"
+msgstr "Azul"
+
+#: includes/class-admin.php:2226
+msgid "Sepia"
+msgstr "Sepia"
+
+#: includes/class-admin.php:2227
+msgid "Green"
+msgstr "Verde"
+
+#: includes/class-admin.php:2228
+msgid "Warm red"
+msgstr "Rojo cálido"
+
+#: includes/class-admin.php:2244
+msgid "Save appearance"
+msgstr "Guardar apariencia"
+
+#: includes/class-admin.php:2246
+msgid "Restore defaults"
+msgstr "Restaurar valores predeterminados"
+
+#: includes/class-admin.php:2255
+msgid "Live preview"
+msgstr "Vista previa en vivo"
+
+#: includes/class-admin.php:2257
+msgid "Card"
+msgstr "Ficha"
+
+#: includes/class-admin.php:2258
+msgid "Profile"
+msgstr "Perfil"
+
+#: includes/class-admin.php:2283
+msgid "Person card (list and tree)"
+msgstr "Ficha de persona (lista y árbol)"
+
+#: includes/class-admin.php:2306
+msgid "Smith"
+msgstr "García"
+
+#: includes/class-admin.php:2315
+msgid "Engineer"
+msgstr "Ingeniero"
+
+#: includes/class-admin.php:2317
+msgid "Person profile — hero and table"
+msgstr "Perfil de persona: cabecera y tabla"
+
+#: includes/class-admin.php:2329
+msgid "Promotion"
+msgstr "Ascenso profesional"
+
+#: includes/class-admin.php:2330
+msgid "End of relationship"
+msgstr "Fin de la relación"
+
+#: includes/class-admin.php:2343
+msgid "Person's lifeline"
+msgstr "Línea de vida de la persona"
+
+#: includes/class-admin.php:2366
+msgid "Restore the default appearance settings?"
+msgstr "¿Restaurar los ajustes de apariencia predeterminados?"
+
+#. translators: %s: clan name
+#: includes/class-admin.php:2385
+#, php-format
+msgid "Clan “%s” has been added."
+msgstr "Se ha añadido el linaje «%s»."
+
+#. translators: %d: number of clans added from the database to the definitions
+#: includes/class-admin.php:2401
+#, php-format
+msgid "Added %d clan from the database to the definitions."
+msgid_plural "Added %d clans from the database to the definitions."
+msgstr[0] "Se ha añadido %d linaje de la base de datos a las definiciones."
+msgstr[1] "Se han añadido %d linajes de la base de datos a las definiciones."
+
+#. translators: %s: clan name
+#: includes/class-admin.php:2415
+#, php-format
+msgid "Clan “%s” has been removed from the list of definitions (people keep their assignments)."
+msgstr "El linaje «%s» se ha quitado de la lista de definiciones (las personas conservan sus asignaciones)."
+
+#: includes/class-admin.php:2426
+msgid "Clan list saved."
+msgstr "Lista de linajes guardada."
+
+#: includes/class-admin.php:2438
+msgid "MyRoots — Clans"
+msgstr "MyRoots: Linajes"
+
+#: includes/class-admin.php:2439
+msgid "Define clans in advance — they will be available as checkboxes for every person, even before the first person is assigned to them."
+msgstr "Define los linajes de antemano: estarán disponibles como casillas para cada persona, incluso antes de asignarles la primera persona."
+
+#: includes/class-admin.php:2445
+msgid "Defined clans"
+msgstr "Linajes definidos"
+
+#: includes/class-admin.php:2451
+msgid "Clan name"
+msgstr "Nombre del linaje"
+
+#: includes/class-admin.php:2452 includes/class-admin.php:2770 includes/class-setup.php:361
+msgid "Actions"
+msgstr "Acciones"
+
+#: includes/class-admin.php:2466
+msgid "Rename"
+msgstr "Renombrar"
+
+#: includes/class-admin.php:2468 includes/class-admin.php:2490
+msgid "Save"
+msgstr "Guardar"
+
+#. translators: %s: clan name
+#: includes/class-admin.php:2475
+#, php-format
+msgid "Remove clan %s from the list?"
+msgstr "¿Quitar el linaje %s de la lista?"
+
+#: includes/class-admin.php:2476
+msgid "Remove from the list of definitions"
+msgstr "Quitar de la lista de definiciones"
+
+#: includes/class-admin.php:2488
+msgid "The name cannot be empty."
+msgstr "El nombre no puede estar vacío."
+
+#: includes/class-admin.php:2496
+msgid "No clans defined. Add the first one below."
+msgstr "No hay linajes definidos. Añade el primero abajo."
+
+#: includes/class-admin.php:2504
+msgid "New clan name…"
+msgstr "Nombre del nuevo linaje…"
+
+#: includes/class-admin.php:2506
+msgid "Add clan"
+msgstr "Añadir linaje"
+
+#: includes/class-admin.php:2512
+msgid "Bulk edit (renaming)"
+msgstr "Edición masiva (cambio de nombres)"
+
+#: includes/class-admin.php:2521
+msgid "Save name changes"
+msgstr "Guardar los cambios de nombre"
+
+#: includes/class-admin.php:2522
+msgid "Leave the field empty to remove the clan from the list."
+msgstr "Deja el campo vacío para quitar el linaje de la lista."
+
+#: includes/class-admin.php:2530
+msgid "Clans in the people database"
+msgstr "Linajes en la base de datos de personas"
+
+#: includes/class-admin.php:2531
+msgid "Clans assigned to at least one person. They are shown in filters regardless of the definitions."
+msgstr "Linajes asignados al menos a una persona. Se muestran en los filtros con independencia de las definiciones."
+
+#: includes/class-admin.php:2550 includes/class-setup.php:360
+msgid "Status"
+msgstr "Estado"
+
+#: includes/class-admin.php:2560
+msgid "Defined"
+msgstr "Definido"
+
+#: includes/class-admin.php:2562
+msgid "Only in the database"
+msgstr "Solo en la base de datos"
+
+#: includes/class-admin.php:2570
+msgid "No person has a clan assigned."
+msgstr "Ninguna persona tiene un linaje asignado."
+
+#: includes/class-admin.php:2575
+msgid "Clans in the database without a definition:"
+msgstr "Linajes en la base de datos sin definición:"
+
+#: includes/class-admin.php:2576
+msgid "The clans below are assigned to people but are not on the list of definitions. You can add them so they are visible even with an empty database."
+msgstr "Los siguientes linajes están asignados a personas, pero no figuran en la lista de definiciones. Puedes añadirlos para que se vean incluso con la base de datos vacía."
+
+#. translators: %d: number of clans to add
+#: includes/class-admin.php:2585
+#, php-format
+msgid "Add all (%d)"
+msgid_plural "Add all (%d)"
+msgstr[0] "Añadir todos (%d)"
+msgstr[1] "Añadir todos (%d)"
+
+#: includes/class-admin.php:2589
+msgid "with one click"
+msgstr "con un clic"
+
+#: includes/class-admin.php:2608
+msgid "How does it work?"
+msgstr "¿Cómo funciona?"
+
+#: includes/class-admin.php:2610
+msgid "Defined clans are always visible in the person metabox as checkboxes."
+msgstr "Los linajes definidos siempre se ven como casillas en la caja de datos de la persona."
+
+#: includes/class-admin.php:2611
+msgid "Clans used in the database automatically appear in filters, even if they are not on the list of definitions."
+msgstr "Los linajes usados en la base de datos aparecen automáticamente en los filtros, aunque no estén en la lista de definiciones."
+
+#: includes/class-admin.php:2612
+msgid "Removing a clan from the list of definitions does not remove it from people — it only changes its visibility in the checkboxes."
+msgstr "Quitar un linaje de la lista de definiciones no lo quita de las personas: solo cambia su visibilidad en las casillas."
+
+#. translators: %s: error message
+#: includes/class-admin.php:2627
+#, php-format
+msgid "GEDCOM: %s"
+msgstr "GEDCOM: %s"
+
+#: includes/class-admin.php:2632
+msgid "The GEDCOM module is not loaded."
+msgstr "El módulo GEDCOM no está cargado."
+
+#: includes/class-admin.php:2665
+msgid "Unknown action."
+msgstr "Acción desconocida."
+
+#: includes/class-admin.php:2667
+msgid "No such user was found."
+msgstr "No se ha encontrado ese usuario."
+
+#: includes/class-admin.php:2669
+msgid "You do not have permission to change this user's roles."
+msgstr "No tienes permiso para cambiar los roles de este usuario."
+
+#: includes/class-admin.php:2671
+msgid "You cannot change the roles of your own account from this screen."
+msgstr "No puedes cambiar los roles de tu propia cuenta desde esta pantalla."
+
+#: includes/class-admin.php:2675
+msgid "The roles of an administrator account cannot be changed from this screen."
+msgstr "Los roles de una cuenta de administrador no se pueden cambiar desde esta pantalla."
+
+#: includes/class-admin.php:2678
+msgid "This account already has the “Genealogy Editor” role."
+msgstr "Esta cuenta ya tiene el rol «Editor de genealogía»."
+
+#. translators: %s: account username
+#: includes/class-admin.php:2682
+#, php-format
+msgid "The “Genealogy Editor” role has been granted to the account “%s”."
+msgstr "Se ha asignado el rol «Editor de genealogía» a la cuenta «%s»."
+
+#: includes/class-admin.php:2686
+msgid "This account does not have the “Genealogy Editor” role."
+msgstr "Esta cuenta no tiene el rol «Editor de genealogía»."
+
+#. translators: %s: account username
+#: includes/class-admin.php:2696
+#, php-format
+msgid "The “Genealogy Editor” role has been removed from the account “%s”."
+msgstr "Se ha quitado el rol «Editor de genealogía» a la cuenta «%s»."
+
+#: includes/class-admin.php:2718
+msgid "MyRoots users"
+msgstr "Usuarios de MyRoots"
+
+#: includes/class-admin.php:2720
+msgid "Accounts with the “Genealogy Editor” role can add, edit and delete people and use the MyRoots panel (without Settings, Appearance, GEDCOM and this tab)."
+msgstr "Las cuentas con el rol «Editor de genealogía» pueden añadir, editar y eliminar personas y usar el panel de MyRoots (sin Ajustes, Apariencia, GEDCOM ni esta pestaña)."
+
+#. translators: %s: link to the “Users → Add New” screen
+#: includes/class-admin.php:2726
+#, php-format
+msgid "You create new accounts with the standard WordPress screen: %s. Here you grant or remove the plugin role for existing accounts."
+msgstr "Las cuentas nuevas se crean con la pantalla estándar de WordPress: %s. Aquí asignas o quitas el rol del plugin a las cuentas existentes."
+
+#: includes/class-admin.php:2727
+msgid "Users → Add New"
+msgstr "Usuarios → Añadir nuevo"
+
+#: includes/class-admin.php:2736
+msgid "Grant the “Genealogy Editor” role"
+msgstr "Asignar el rol «Editor de genealogía»"
+
+#: includes/class-admin.php:2738
+msgid "There are no accounts that can be given this role."
+msgstr "No hay cuentas a las que se pueda asignar este rol."
+
+#: includes/class-admin.php:2745
+msgid "Account"
+msgstr "Cuenta"
+
+#: includes/class-admin.php:2748
+msgid "— select an account —"
+msgstr "— elige una cuenta —"
+
+#: includes/class-admin.php:2759
+msgid "Grant role"
+msgstr "Asignar rol"
+
+#: includes/class-admin.php:2764
+msgid "Accounts with the “Genealogy Editor” role"
+msgstr "Cuentas con el rol «Editor de genealogía»"
+
+#: includes/class-admin.php:2768
+msgid "Username"
+msgstr "Nombre de usuario"
+
+#: includes/class-admin.php:2769
+msgid "E-mail"
+msgstr "Correo electrónico"
+
+#: includes/class-admin.php:2775
+msgid "No genealogy editor accounts."
+msgstr "No hay cuentas de editores de genealogía."
+
+#: includes/class-admin.php:2783
+msgid "Edit profile"
+msgstr "Editar perfil"
+
+#: includes/class-admin.php:2789
+msgid "Remove role"
+msgstr "Quitar rol"
+
+#: includes/class-backup.php:32 includes/class-backup.php:33
+msgid "Backup"
+msgstr "Copia de seguridad"
+
+#: includes/class-backup.php:133
+msgid "MyRoots backup"
+msgstr "Copia de seguridad de MyRoots"
+
+#: includes/class-backup.php:142
+msgid "Export"
+msgstr "Exportar"
+
+#: includes/class-backup.php:143
+msgid "Downloads a JSON file with all of the plugin's data: people (with custom fields, galleries and citations), pets, sources and their links, as well as clans and the custom field schema. Unlike GEDCOM, this backup does not simplify anything."
+msgstr "Descarga un archivo JSON con todos los datos del plugin: personas (con campos personalizados, galerías y citas), mascotas, fuentes y sus vínculos, además de los linajes y el esquema de campos personalizados. A diferencia de GEDCOM, esta copia no simplifica nada."
+
+#: includes/class-backup.php:144
+msgid "Media files (photos, scans) are not packed into the backup — they stay in the WordPress media library. The backup stores references to them."
+msgstr "Los archivos multimedia (fotos, escaneos) no se incluyen en la copia: permanecen en la biblioteca de medios de WordPress. La copia guarda referencias a ellos."
+
+#: includes/class-backup.php:147
+msgid "Download backup (JSON)"
+msgstr "Descargar copia de seguridad (JSON)"
+
+#: includes/class-backup.php:152
+msgid "Import"
+msgstr "Importar"
+
+#: includes/class-backup.php:153
+msgid "Loads a JSON backup, creating all entries FROM SCRATCH (with new IDs) and recreating the relations between them. Existing entries are not modified or deleted — importing on a site that already has data will create duplicates."
+msgstr "Carga una copia JSON creando todas las entradas DE NUEVO (con ID nuevos) y recreando las relaciones entre ellas. Las entradas existentes no se modifican ni se eliminan: importar en un sitio con datos creará duplicados."
+
+#: includes/class-backup.php:158
+msgid "I understand that the import will add entries from the backup to the current database."
+msgstr "Entiendo que la importación añadirá las entradas de la copia a la base de datos actual."
+
+#: includes/class-backup.php:159
+msgid "Import backup"
+msgstr "Importar copia"
+
+#: includes/class-backup.php:180
+msgid "Tick the confirmation box to run the import."
+msgstr "Marca la casilla de confirmación para realizar la importación."
+
+#: includes/class-backup.php:192
+msgid "No file was uploaded."
+msgstr "No se ha subido ningún archivo."
+
+#: includes/class-backup.php:195
+msgid "File upload error."
+msgstr "Error al subir el archivo."
+
+#: includes/class-backup.php:198
+msgid "The file is too large (64 MB limit)."
+msgstr "El archivo es demasiado grande (límite de 64 MB)."
+
+#: includes/class-backup.php:204
+msgid "This is not a valid MyRoots backup file."
+msgstr "No es un archivo de copia de seguridad de MyRoots válido."
+
+#. translators: 1: number of people, 2: number of pets, 3: number of sources
+#: includes/class-backup.php:360
+#, php-format
+msgid "Import finished: %1$d people, %2$d pets, %3$d sources."
+msgstr "Importación finalizada: %1$d personas, %2$d mascotas, %3$d fuentes."
+
+#: includes/class-merge.php:93 includes/class-merge.php:105
+msgid "Merging duplicate people"
+msgstr "Fusión de personas duplicadas"
+
+#: includes/class-merge.php:94
+msgid "Merge duplicates"
+msgstr "Fusionar duplicados"
+
+#: includes/class-merge.php:106
+msgid "Select two people who are the same individual and decide which data to keep. The second record will be moved to the trash."
+msgstr "Elige dos personas que sean el mismo individuo y decide qué datos conservar. El segundo registro irá a la papelera."
+
+#: includes/class-merge.php:230
+msgid "Possible duplicates"
+msgstr "Posibles duplicados"
+
+#: includes/class-merge.php:231
+msgid "Found automatically: the same surname, a similar first name and a close year of birth. Click “Compare” to review the pair in the tool below, or dismiss the suggestion if they are different people."
+msgstr "Encontrados automáticamente: mismo apellido, nombre parecido y año de nacimiento cercano. Haz clic en «Comparar» para revisar la pareja en la herramienta de abajo o descarta la sugerencia si son personas distintas."
+
+#: includes/class-merge.php:242
+msgid "Match confidence"
+msgstr "Grado de coincidencia"
+
+#: includes/class-merge.php:244 includes/class-merge.php:350
+msgid "Compare"
+msgstr "Comparar"
+
+#: includes/class-merge.php:245
+msgid "Not a duplicate"
+msgstr "No es un duplicado"
+
+#: includes/class-merge.php:299
+msgid "You do not have permission to merge people. Log in as an administrator or genealogy editor."
+msgstr "No tienes permiso para fusionar personas. Inicia sesión como administrador o editor de genealogía."
+
+#: includes/class-merge.php:332
+msgid "Person A — the one we keep"
+msgstr "Persona A: la que se conserva"
+
+#: includes/class-merge.php:344
+msgid "Person B — the duplicate to merge"
+msgstr "Persona B: el duplicado que se fusiona"
+
+#: includes/class-merge.php:372 includes/class-sources.php:203
+msgid "Search for a person…"
+msgstr "Buscar una persona…"
+
+#: includes/class-merge.php:404
+msgid "Merge person"
+msgstr "Fusionar persona"
+
+#: includes/class-merge.php:419
+msgid "Merge a duplicate person"
+msgstr "Fusionar una persona duplicada"
+
+#: includes/class-merge.php:423
+msgid "Select the person who is a duplicate of the current profile, then choose which data to keep. The duplicate will be moved to the trash."
+msgstr "Indica la persona que es un duplicado del perfil actual y elige qué datos conservar. El duplicado irá a la papelera."
+
+#: includes/class-merge.php:448 includes/class-merge.php:1259
+msgid "Select two different people."
+msgstr "Elige dos personas distintas."
+
+#: includes/class-merge.php:469
+msgid "Which record stays (keeps the URL and ID)?"
+msgstr "¿Qué registro se queda (conserva la URL y el ID)?"
+
+#: includes/class-merge.php:479
+msgid "Field"
+msgstr "Campo"
+
+#: includes/class-merge.php:499
+msgid "no photo"
+msgstr "sin foto"
+
+#: includes/class-merge.php:555
+msgid "Photo gallery"
+msgstr "Galería de fotos"
+
+#: includes/class-merge.php:581
+msgid "Custom fields and citations will be combined automatically (values from the kept record take priority, gaps are filled in from the other one)."
+msgstr "Los campos personalizados y las citas se combinarán automáticamente (los valores del registro conservado tienen prioridad y los huecos se completan con el otro)."
+
+#: includes/class-merge.php:586
+msgid "Merge people"
+msgstr "Fusionar personas"
+
+#: includes/class-merge.php:610
+msgid "none"
+msgstr "ninguno"
+
+#: includes/class-merge.php:665
+msgid "Invalid people."
+msgstr "Personas no válidas."
+
+#: includes/class-merge.php:677
+msgid "The people have been merged. The duplicate was moved to the trash."
+msgstr "Las personas se han fusionado. El duplicado se ha enviado a la papelera."
+
+#: includes/class-merge.php:1257
+msgid "Merging…"
+msgstr "Fusionando…"
+
+#: includes/class-merge.php:1258
+msgid "Are you sure you want to merge these people? The second record will be moved to the trash and the operation will change links in the database."
+msgstr "¿Seguro que quieres fusionar estas personas? El segundo registro irá a la papelera y la operación cambiará vínculos en la base de datos."
+
+#: includes/class-merge.php:1260
+msgid "An error occurred."
+msgstr "Se ha producido un error."
+
+#: includes/class-merge.php:1262
+msgid "View profile"
+msgstr "Ver perfil"
+
+#: includes/class-book.php:81
+msgid "Generating the book…"
+msgstr "Generando el libro…"
+
+#: includes/class-book.php:83
+msgid "Select a starting person."
+msgstr "Elige una persona inicial."
+
+#: includes/class-book.php:84
+msgid "Table of contents"
+msgstr "Índice"
+
+#: includes/class-book.php:85 includes/class-book.php:137
+msgid "Index of surnames"
+msgstr "Índice de apellidos"
+
+#: includes/class-book.php:86
+msgid "p."
+msgstr "pág."
+
+#: includes/class-book.php:87
+msgid "people"
+msgstr "personas"
+
+#: includes/class-book.php:89 includes/class-book.php:99 includes/class-book.php:110 includes/class-setup.php:81
+msgid "Genealogy book"
+msgstr "Libro genealógico"
+
+#: includes/class-book.php:90
+msgid "Chapter"
+msgstr "Capítulo"
+
+#: includes/class-book.php:108
+msgid "Book title"
+msgstr "Título del libro"
+
+#: includes/class-book.php:114
+msgid "Dedication (optional)"
+msgstr "Dedicatoria (opcional)"
+
+#: includes/class-book.php:116
+msgid "e.g. In memory of our ancestors…"
+msgstr "p. ej. En memoria de nuestros antepasados…"
+
+#: includes/class-book.php:120
+msgid "Chapters"
+msgstr "Capítulos"
+
+#: includes/class-book.php:122
+msgid "By generation (chronologically)"
+msgstr "Por generaciones (cronológicamente)"
+
+#: includes/class-book.php:123
+msgid "By clan"
+msgstr "Por linajes"
+
+#: includes/class-book.php:124
+msgid "By family branch (family = chapter)"
+msgstr "Por ramas familiares (familia = capítulo)"
+
+#: includes/class-book.php:129
+msgid "Elements"
+msgstr "Elementos"
+
+#: includes/class-book.php:131
+msgid "Photos"
+msgstr "Fotos"
+
+#: includes/class-book.php:132
+msgid "Maps"
+msgstr "Mapas"
+
+#: includes/class-book.php:135
+msgid "Biographies"
+msgstr "Biografías"
+
+#: includes/class-book.php:136
+msgid "Chapter tree"
+msgstr "Árbol del capítulo"
+
+#: includes/class-book.php:145
+msgid "Scope"
+msgstr "Alcance"
+
+#: includes/class-book.php:148
+msgid "Ancestors of a person"
+msgstr "Antepasados de una persona"
+
+#: includes/class-book.php:149
+msgid "Descendants of a person"
+msgstr "Descendientes de una persona"
+
+#: includes/class-book.php:158
+msgid "If you select nothing, all people will be included."
+msgstr "Si no marcas nada, se incluirán todas las personas."
+
+#: includes/class-book.php:164
+msgid "Starting person…"
+msgstr "Persona inicial…"
+
+#: includes/class-book.php:169
+msgid "Max. generations (0 = no limit):"
+msgstr "Máx. generaciones (0 = sin límite):"
+
+#: includes/class-book.php:175
+msgid "Born from year:"
+msgstr "Nacidos desde el año:"
+
+#: includes/class-book.php:177
+msgid "to year:"
+msgstr "hasta el año:"
+
+#: includes/class-book.php:183
+msgid "Generate book"
+msgstr "Generar libro"
+
+#: includes/class-book.php:184
+msgid "Print / save as PDF"
+msgstr "Imprimir / guardar como PDF"
+
+#. translators: %s: clan name
+#: includes/class-book.php:390
+#, php-format
+msgid "Clan %s"
+msgstr "Linaje %s"
+
+#: includes/class-book.php:393
+msgid "Without an assigned clan"
+msgstr "Sin linaje asignado"
+
+#. translators: %s: full names of the parents joined with “and”
+#: includes/class-book.php:454
+#, php-format
+msgid "Family: %s"
+msgstr "Familia: %s"
+
+#. translators: %s: full names of the parents joined with “and”
+#: includes/class-book.php:454
+msgid "and"
+msgstr "y"
+
+#: includes/class-book.php:459
+msgid "Other people"
+msgstr "Otras personas"
+
+#. translators: %s: generation number (Roman numeral)
+#: includes/class-book.php:475
+#, php-format
+msgid "Generation %s"
+msgstr "Generación %s"
+
+#: includes/class-sources.php:58
+msgid "Source"
+msgstr "Fuente"
+
+#: includes/class-sources.php:59
+msgid "Add source"
+msgstr "Añadir fuente"
+
+#: includes/class-sources.php:60
+msgid "New source"
+msgstr "Nueva fuente"
+
+#: includes/class-sources.php:61
+msgid "Edit source"
+msgstr "Editar fuente"
+
+#: includes/class-sources.php:62
+msgid "Search sources"
+msgstr "Buscar fuentes"
+
+#: includes/class-sources.php:63
+msgid "No sources."
+msgstr "No hay fuentes."
+
+#: includes/class-sources.php:81
+msgid "Genealogical sources"
+msgstr "Fuentes genealógicas"
+
+#: includes/class-sources.php:97
+msgid "Source details"
+msgstr "Detalles de la fuente"
+
+#: includes/class-sources.php:111
+msgid "Source date / year"
+msgstr "Fecha / año de la fuente"
+
+#: includes/class-sources.php:116
+msgid "e.g. 1892 or 1892-05-15"
+msgstr "p. ej. 1892 o 1892-05-15"
+
+#: includes/class-sources.php:120
+msgid "URL / Link"
+msgstr "URL / Enlace"
+
+#: includes/class-sources.php:129
+msgid "Audio / video link"
+msgstr "Enlace de audio / vídeo"
+
+#: includes/class-sources.php:136
+msgid "An audio or video recording (YouTube, Vimeo, SoundCloud, Spotify etc.). It will be embedded on the profile of every linked person."
+msgstr "Una grabación de audio o vídeo (YouTube, Vimeo, SoundCloud, Spotify, etc.). Se incrustará en el perfil de cada persona vinculada."
+
+#: includes/class-sources.php:145
+msgid "Archival reference, record number, document description etc."
+msgstr "Signatura de archivo, número de acta, descripción del documento, etc."
+
+#: includes/class-sources.php:149
+msgid "Scan gallery"
+msgstr "Galería de escaneos"
+
+#: includes/class-sources.php:158
+msgid "Remove scan"
+msgstr "Quitar escaneo"
+
+#: includes/class-sources.php:165
+msgid "Add scans"
+msgstr "Añadir escaneos"
+
+#: includes/class-sources.php:166
+msgid "Multi-page records and documents: add further pages of the scan. They will be visible in the sources section of the linked people's profiles (with zoom)."
+msgstr "Actas y documentos de varias páginas: añade las siguientes páginas del escaneo. Se verán en la sección de fuentes de los perfiles de las personas vinculadas (con ampliación)."
+
+#: includes/class-sources.php:171
+msgid "Scan / photo of the document: set it as the “Featured image” on the right."
+msgstr "Escaneo / foto del documento: establécelo como «Imagen destacada» a la derecha."
+
+#: includes/class-sources.php:176
+msgid "Select document scans"
+msgstr "Elegir escaneos del documento"
+
+#: includes/class-sources.php:177
+msgid "Add to gallery"
+msgstr "Añadir a la galería"
+
+#: includes/class-sources.php:191
+msgid "Linked people"
+msgstr "Personas vinculadas"
+
+#: includes/class-sources.php:193
+msgid "People linked to this source. The link works both ways — you can also set it when editing a person (the “Sources” tab)."
+msgstr "Personas vinculadas a esta fuente. El vínculo funciona en ambos sentidos: también puedes establecerlo al editar una persona (pestaña «Fuentes»)."
+
+#: includes/class-gallery.php:142
+msgid "Search by person…"
+msgstr "Buscar por persona…"
+
+#: includes/class-gallery.php:153
+msgid "Show avatars"
+msgstr "Mostrar avatares"
+
+#. translators: %d: number of photos in the gallery
+#: includes/class-gallery.php:159
+#, php-format
+msgid "%d photo"
+msgid_plural "%d photos"
+msgstr[0] "%d foto"
+msgstr[1] "%d fotos"
+
+#: includes/class-gallery.php:165
+msgid "No photos to display."
+msgstr "No hay fotos que mostrar."
+
+#: includes/class-gallery.php:205
+msgid "photos"
+msgstr "fotos"
+
+#: includes/class-setup.php:57
+msgid "Timeline"
+msgstr "Cronología"
+
+#: includes/class-setup.php:180
+msgid "MyRoots Menu"
+msgstr "Menú MyRoots"
+
+#. Plugin Name of the plugin
+#: my-roots.php includes/class-setup.php:192
+msgid "MyRoots"
+msgstr "MyRoots"
+
+#: includes/class-setup.php:313
+msgid "MyRoots created the “MyRoots Menu” menu (a “MyRoots” item with the plugin's subpages) and assigned it to the theme's primary location."
+msgstr "MyRoots ha creado el menú «Menú MyRoots» (elemento «MyRoots» con las subpáginas del plugin) y lo ha asignado a la ubicación principal del tema."
+
+#: includes/class-setup.php:315
+msgid "MyRoots created the “MyRoots Menu” menu (a “MyRoots” item with the plugin's subpages). Assign it to a theme location in Appearance → Menus."
+msgstr "MyRoots ha creado el menú «Menú MyRoots» (elemento «MyRoots» con las subpáginas del plugin). Asígnalo a una ubicación del tema en Apariencia → Menús."
+
+#: includes/class-setup.php:321
+msgid "Open menu"
+msgstr "Abrir menú"
+
+#. translators: %s: title of the created page
+#: includes/class-setup.php:343
+#, php-format
+msgid "The “%s” page has been created."
+msgstr "Se ha creado la página «%s»."
+
+#: includes/class-setup.php:350
+msgid "Plugin pages"
+msgstr "Páginas del plugin"
+
+#: includes/class-setup.php:352
+msgid "The pages were created automatically when the plugin was activated."
+msgstr "Las páginas se crearon automáticamente al activar el plugin."
+
+#: includes/class-setup.php:358
+msgid "Page"
+msgstr "Página"
+
+#: includes/class-setup.php:375
+msgid "Published"
+msgstr "Publicada"
+
+#: includes/class-setup.php:386
+msgid "Preview"
+msgstr "Vista previa"
+
+#: includes/class-setup.php:400
+msgid "Create"
+msgstr "Crear"
+
+#: includes/class-setup.php:421
+msgid "Verification error. Please try again."
+msgstr "Error de verificación. Inténtalo de nuevo."
+
+#: includes/class-rest.php:122
+msgid "Person not found."
+msgstr "No se ha encontrado la persona."
+
+#: includes/class-tree.php:981
+msgid "The pets module is not available."
+msgstr "El módulo de mascotas no está disponible."
+
+#: includes/class-tree.php:986
+msgid "The owner is missing."
+msgstr "Falta el dueño."
+
+#: includes/class-tree.php:1000
+msgid "The pet could not be created."
+msgstr "No se ha podido crear la mascota."
+
+#: includes/class-notifications.php:188
+msgid "MyRoots — Anniversaries"
+msgstr "MyRoots: Aniversarios"
+
+#: includes/views/meta-box.php:118
+msgctxt "education"
+msgid "Primary"
+msgstr "Primarios"
+
+#: includes/views/meta-box.php:138
+msgid "e.g. 175"
+msgstr "p. ej. 175"
+
+#: includes/class-admin.php:1575
+msgctxt "custom field type"
+msgid "Text"
+msgstr "Texto"
+
+#: includes/class-admin.php:1576
+msgctxt "custom field type"
+msgid "Text area"
+msgstr "Área de texto"
+
+#: includes/class-admin.php:1577
+msgctxt "custom field type"
+msgid "Date"
+msgstr "Fecha"
+
+#: includes/class-admin.php:1578
+msgctxt "custom field type"
+msgid "Select list"
+msgstr "Lista de selección"
+
+#: includes/class-admin.php:1111
+msgid "Contact the author"
+msgstr "Contactar con el autor"
+
+#. Plugin URI of the plugin
+#: my-roots.php
+msgid "https://myroots.pl/"
+msgstr "https://myroots.pl/"
+
+#. Description of the plugin
+#: my-roots.php
+msgid "A modern genealogy plugin: interactive family tree, lifeline, map, statistics, GEDCOM import/export, and profile cards for people and pets."
+msgstr "Un plugin de genealogía moderno: árbol interactivo, línea de vida, mapa, estadísticas, importación/exportación GEDCOM y fichas de perfil para personas y mascotas."
+
+#. Author of the plugin
+#: my-roots.php
+msgid "Jarek Hirsch"
+msgstr "Jarek Hirsch"
+
+#. Author URI of the plugin
+#: my-roots.php
+msgid "https://hirsch.fi/"
+msgstr "https://hirsch.fi/"
+
+#. translators: 1: sibling term (e.g. brother), 2: ancestor term in the genitive case (e.g. grandfather or grandmother).
+#: includes/class-kinship.php:379
+#, php-format
+msgctxt "kinship: sibling of an ancestor"
+msgid "%1$s of a %2$s"
+msgstr "%1$s de %2$s"
+
+#. translators: 1: woman's full name, 2: age in years
+#: includes/class-lifeline.php:305
+#, php-format
+msgctxt "female"
+msgid "%1$s was %2$d years old at the time"
+msgstr "%1$s tenía entonces %2$d años"
+
+#. translators: 1: man's (or person's) full name, 2: age in years
+#: includes/class-lifeline.php:308
+#, php-format
+msgctxt "male"
+msgid "%1$s was %2$d years old at the time"
+msgstr "%1$s tenía entonces %2$d años"
+
+#. translators: Prefix repeated before “grandson/granddaughter” for each further generation (great-grandson, great-great-…). Include a trailing hyphen or space if your language needs one.
+#: includes/class-kinship.php:309
+msgctxt "prefix for great-grandchildren"
+msgid "great-"
+msgstr "bis"

@@ -1,0 +1,91 @@
+# Builds the installers when a version tag is pushed (git tag v3.0.0 && git push --tags)
+# and puts them on a draft GitHub release, together with the browser version.
+# Signing is optional: add the secrets below in the repository settings
+# (Settings -> Secrets and variables -> Actions) when you have the certificates.
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  desktop:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            args: --target universal-apple-darwin
+          - platform: windows-latest
+            args: ''
+          - platform: ubuntu-22.04
+            args: ''
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+      - name: Linux libraries
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+      - run: npm ci
+      - name: Apple signing and notarization (only when the secrets are set)
+        if: matrix.platform == 'macos-latest'
+        env:
+          CERT: ${{ secrets.APPLE_CERTIFICATE }}
+          CERT_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          TEAM: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          if [ -n "$CERT" ]; then
+            {
+              echo "APPLE_CERTIFICATE=$CERT"
+              echo "APPLE_CERTIFICATE_PASSWORD=$CERT_PASSWORD"
+              echo "APPLE_SIGNING_IDENTITY=$IDENTITY"
+              echo "APPLE_ID=$APPLE_ID"
+              echo "APPLE_PASSWORD=$APPLE_PASSWORD"
+              echo "APPLE_TEAM_ID=$TEAM"
+            } >> "$GITHUB_ENV"
+          else
+            echo "No Apple certificate: the macOS build is not signed."
+          fi
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: 'MyRoots ${{ github.ref_name }}'
+          releaseBody: 'See CHANGELOG.md. Installers for macOS, Windows and Linux, and the browser version (myroots-web.zip).'
+          releaseDraft: true
+          prerelease: false
+          args: ${{ matrix.args }}
+
+  web:
+    needs: desktop
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build:viewer && npm run build:app
+      - run: cd dist && zip -r ../myroots-web-${{ github.ref_name }}.zip .
+      - name: Attach to the draft release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ github.ref_name }}" "myroots-web-${{ github.ref_name }}.zip" --clobber

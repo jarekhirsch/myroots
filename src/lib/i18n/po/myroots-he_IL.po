@@ -1,0 +1,4427 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: MyRoots 2.6.0\n"
+"Report-Msgid-Bugs-To: Jarek Hirsch <jarekhirsz.biz@gmail.com>\n"
+"POT-Creation-Date: 2026-10-14T09:25:34+00:00\n"
+"PO-Revision-Date: 2026-10-14 09:26+0000\n"
+"Last-Translator: Jarek Hirsch <jarekhirsz.biz@gmail.com>\n"
+"Language-Team: Hebrew <jarekhirsz.biz@gmail.com>\n"
+"Language: he_IL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Domain: myroots\n"
+"X-Generator: MyRoots build\n"
+
+#: my-roots.php:309
+msgid "Genealogy Editor"
+msgstr "עורך גנאלוגיה"
+
+#: includes/class-book.php:57 includes/class-gallery.php:51 includes/class-kinship.php:81 includes/class-lifeline.php:55 includes/class-map.php:101 includes/class-person.php:513 includes/class-person.php:530 includes/class-rest.php:90 includes/class-rest.php:127 includes/class-rest.php:134 includes/class-rest.php:181 includes/class-rest.php:189 includes/class-stats.php:60 includes/class-tree.php:70 includes/class-tree.php:813 includes/class-tree.php:950
+msgid "Private content."
+msgstr "תוכן פרטי."
+
+#: includes/class-stats.php:85
+msgid "Family statistics"
+msgstr "סטטיסטיקת משפחה"
+
+#: includes/class-map.php:162 includes/class-stats.php:89
+msgid "Clan:"
+msgstr "שושלת:"
+
+#: includes/class-gallery.php:144 includes/class-gallery.php:145 includes/class-map.php:163 includes/class-map.php:164 includes/class-stats.php:90 includes/class-views.php:119 includes/class-views.php:120 includes/class-views.php:523 includes/class-views.php:524
+msgid "All clans"
+msgstr "כל השושלות"
+
+#: includes/class-stats.php:91
+msgid "All"
+msgstr "הכול"
+
+#: includes/class-admin.php:1263 includes/class-stats.php:171
+msgid "People in the database"
+msgstr "אנשים במסד הנתונים"
+
+#: includes/class-stats.php:172
+msgid "Women / men"
+msgstr "נשים / גברים"
+
+#: includes/class-stats.php:174
+msgid "Pets (living / deceased)"
+msgstr "חיות מחמד (חיות / מתות)"
+
+#: includes/class-admin.php:1266 includes/class-stats.php:175
+msgid "Average age"
+msgstr "גיל ממוצע"
+
+#: includes/class-admin.php:1485 includes/class-stats.php:175 includes/class-stats.php:180 includes/class-views.php:770 includes/class-views.php:910
+msgid "years"
+msgstr "שנים"
+
+#: includes/class-admin.php:1265 includes/class-stats.php:176
+msgctxt "statistics count"
+msgid "Marriages"
+msgstr "נישואים"
+
+#: includes/class-stats.php:177
+msgid "Avg. number of children"
+msgstr "ממוצע ילדים"
+
+#: includes/class-stats.php:178
+msgid "Avg. age at marriage (M)"
+msgstr "גיל נישואים ממוצע (ז)"
+
+#: includes/class-stats.php:179
+msgid "Avg. age at marriage (F)"
+msgstr "גיל נישואים ממוצע (נ)"
+
+#: includes/class-stats.php:180
+msgid "Avg. generation gap"
+msgstr "פער דורות ממוצע"
+
+#: includes/class-stats.php:181
+msgid "Oldest person"
+msgstr "האדם המבוגר ביותר"
+
+#: includes/class-stats.php:182
+msgid "Youngest person"
+msgstr "האדם הצעיר ביותר"
+
+#: includes/class-stats.php:250
+msgid "Age distribution"
+msgstr "התפלגות גילים"
+
+#: includes/class-stats.php:252
+msgid "No age data."
+msgstr "אין נתוני גיל."
+
+#: includes/class-stats.php:259
+msgid "Most popular first names"
+msgstr "השמות הפרטיים הנפוצים ביותר"
+
+#: includes/class-stats.php:261
+msgid "No first name data."
+msgstr "אין נתונים על שמות פרטיים."
+
+#: includes/class-stats.php:268
+msgid "Most popular surnames"
+msgstr "שמות המשפחה הנפוצים ביותר"
+
+#: includes/class-stats.php:270
+msgid "No surname data."
+msgstr "אין נתונים על שמות משפחה."
+
+#: includes/class-stats.php:277
+msgid "Number of children per person"
+msgstr "מספר ילדים לאדם"
+
+#: includes/class-stats.php:279
+msgid "No data on children."
+msgstr "אין נתונים על ילדים."
+
+#: includes/class-stats.php:286
+msgid "Birth decades"
+msgstr "עשורי לידה"
+
+#: includes/class-stats.php:288
+msgid "No birth date data."
+msgstr "אין תאריכי לידה."
+
+#: includes/class-stats.php:295
+msgid "Most common places of birth"
+msgstr "מקומות הלידה השכיחים ביותר"
+
+#: includes/class-stats.php:297
+msgid "No place of birth data."
+msgstr "אין מקומות לידה."
+
+#: includes/class-stats.php:304
+msgid "Death decades"
+msgstr "עשורי פטירה"
+
+#: includes/class-stats.php:306
+msgid "No death date data."
+msgstr "אין תאריכי פטירה."
+
+#: includes/class-health.php:41 includes/class-health.php:42 includes/class-health.php:546
+msgid "Data consistency"
+msgstr "עקביות הנתונים"
+
+#: includes/class-admin.php:2313 includes/class-health.php:107 includes/class-history.php:130 includes/class-merge.php:71 includes/class-tree.php:230 includes/class-tree.php:385 includes/class-views.php:892 includes/class-views.php:1408 includes/views/meta-box-pet.php:68 includes/views/meta-box.php:68 includes/views/meta-box.php:403
+msgid "Date of birth"
+msgstr "תאריך לידה"
+
+#: includes/class-admin.php:2314 includes/class-health.php:108 includes/class-history.php:131 includes/class-merge.php:72 includes/class-views.php:895 includes/views/meta-box.php:72 includes/views/meta-box.php:404
+msgid "Place of birth"
+msgstr "מקום לידה"
+
+#: includes/class-admin.php:766 includes/class-health.php:109 includes/class-history.php:129 includes/class-merge.php:70 includes/class-tree.php:226 includes/class-views.php:126 includes/class-views.php:889 includes/class-views.php:1404 includes/views/meta-box-pet.php:44 includes/views/meta-box.php:56
+msgid "Gender"
+msgstr "מגדר"
+
+#: includes/class-health.php:110
+msgid "Date of death (deceased people)"
+msgstr "תאריך פטירה (אנשים שנפטרו)"
+
+#: includes/class-health.php:111
+msgid "Place of death (deceased people)"
+msgstr "מקום פטירה (אנשים שנפטרו)"
+
+#: includes/class-health.php:112 includes/class-history.php:135 includes/class-merge.php:82 includes/class-views.php:807 includes/views/meta-box.php:193 includes/views/meta-box.php:410
+msgid "Biography"
+msgstr "ביוגרפיה"
+
+#: includes/class-admin.php:285 includes/class-health.php:113 includes/class-merge.php:493 includes/class-tree.php:854
+msgid "Profile photo"
+msgstr "תמונת פרופיל"
+
+#: includes/class-health.php:114
+msgid "Linked source"
+msgstr "מקור מקושר"
+
+#: includes/class-health.php:115
+msgid "At least one parent"
+msgstr "לפחות הורה אחד"
+
+#. translators: 1: year of death, 2: year of birth
+#: includes/class-health.php:215
+#, php-format
+msgid "The date of death (%1$d) is earlier than the date of birth (%2$d)."
+msgstr "תאריך הפטירה (%1$d) מוקדם מתאריך הלידה (%2$d)."
+
+#. translators: %d: age in years
+#: includes/class-health.php:221
+#, php-format
+msgid "A lifespan of %d years exceeds a plausible threshold — check the dates."
+msgstr "תוחלת חיים של %d שנים חורגת מסף סביר — יש לבדוק את התאריכים."
+
+#: includes/class-health.php:239
+msgid "The person is set as their own parent."
+msgstr "האדם מוגדר כהורה של עצמו."
+
+#. translators: 1: field, 2: ID
+#: includes/class-health.php:243
+#, php-format
+msgid "The “%1$s” field points to a person that does not exist or is not published (ID %2$d)."
+msgstr "השדה „%1$s” מפנה לאדם שאינו קיים או שאינו מפורסם (מזהה %2$d)."
+
+#: includes/class-health.php:244 includes/class-kinship.php:282 includes/class-kinship.php:438 includes/class-kinship.php:499
+msgid "father"
+msgstr "אב"
+
+#: includes/class-health.php:244 includes/class-kinship.php:282 includes/class-kinship.php:438 includes/class-kinship.php:499
+msgid "mother"
+msgstr "אם"
+
+#: includes/class-health.php:255
+msgid "The person is set as their own child."
+msgstr "האדם מוגדר כילד של עצמו."
+
+#. translators: %s: full name
+#: includes/class-health.php:261
+#, php-format
+msgid "Child “%s” appears in the list of children more than once."
+msgstr "הילד „%s” מופיע יותר מפעם אחת ברשימת הילדים."
+
+#. translators: %d: ID
+#: includes/class-health.php:269
+#, php-format
+msgid "The list of children points to a person that does not exist or is not published (ID %d)."
+msgstr "רשימת הילדים מפנה לאדם שאינו קיים או שאינו מפורסם (מזהה %d)."
+
+#: includes/class-health.php:280
+msgid "The person is set as their own spouse."
+msgstr "האדם מוגדר כבן הזוג של עצמו."
+
+#. translators: %d: ID
+#: includes/class-health.php:284
+#, php-format
+msgid "The list of spouses points to a person that does not exist or is not published (ID %d)."
+msgstr "רשימת בני הזוג מפנה לאדם שאינו קיים או שאינו מפורסם (מזהה %d)."
+
+#: includes/class-health.php:297 includes/class-history.php:143 includes/class-merge.php:523 includes/class-views.php:946 includes/views/meta-box.php:210
+msgid "Father"
+msgstr "אב"
+
+#: includes/class-health.php:297 includes/class-history.php:142 includes/class-merge.php:522 includes/class-views.php:943 includes/views/meta-box.php:210
+msgid "Mother"
+msgstr "אם"
+
+#. translators: 1: role, 2: full name of the parent
+#: includes/class-health.php:312
+#, php-format
+msgid "%1$s (%2$s) was born in the same year as the child or later."
+msgstr "%1$s (%2$s) נולד/ה באותה שנה שבה נולד הילד או מאוחר יותר."
+
+#. translators: 1: role, 2: full name, 3: age
+#: includes/class-health.php:318
+#, php-format
+msgid "%1$s (%2$s) was only %3$d years old when the child was born."
+msgstr "%1$s (%2$s) היה/הייתה רק בן/בת %3$d בלידת הילד."
+
+#. translators: 1: role, 2: full name, 3: age
+#: includes/class-health.php:324
+#, php-format
+msgid "%1$s (%2$s) was as old as %3$d when the child was born — check the dates."
+msgstr "%1$s (%2$s) היה/הייתה כבר בן/בת %3$d בלידת הילד — יש לבדוק את התאריכים."
+
+#. translators: 1: role, 2: full name, 3: year of death, 4: child's year of birth
+#: includes/class-health.php:336
+#, php-format
+msgid "%1$s (%2$s) died in %3$d, before the child was born (%4$d)."
+msgstr "%1$s (%2$s) נפטר/ה ב־%3$d, לפני לידת הילד (%4$d)."
+
+#. translators: 1: year of marriage, 2: spouse, 3: year of birth
+#: includes/class-health.php:360
+#, php-format
+msgid "Marriage in %1$d (to %2$s) before the person was born (%3$d)."
+msgstr "נישואים ב־%1$d (עם %2$s) לפני לידת האדם (%3$d)."
+
+#. translators: 1: age, 2: spouse
+#: includes/class-health.php:366
+#, php-format
+msgid "Age at marriage: %1$d years (to %2$s) — check the dates."
+msgstr "גיל בנישואים: %1$d שנים (עם %2$s) — יש לבדוק את התאריכים."
+
+#. translators: 1: year of marriage, 2: spouse, 3: year of death
+#: includes/class-health.php:374
+#, php-format
+msgid "Marriage in %1$d (to %2$s) after the person's death (%3$d)."
+msgstr "נישואים ב־%1$d (עם %2$s) לאחר פטירת האדם (%3$d)."
+
+#. translators: 1: year the marriage ended, 2: year of marriage, 3: spouse
+#: includes/class-health.php:381
+#, php-format
+msgid "Marriage ended (%1$d) before it began (%2$d) — with %3$s."
+msgstr "הנישואים הסתיימו (%1$d) לפני שנערכו (%2$d) — עם %3$s."
+
+#. translators: %s: full name
+#: includes/class-health.php:402
+#, php-format
+msgid "Spouse “%s” has no reciprocal relation — use the “Fix relations” button."
+msgstr "לבן/בת הזוג „%s” אין קשר הדדי — יש להשתמש בכפתור „תיקון קשרים”."
+
+#. translators: %s: full name
+#: includes/class-health.php:415
+#, php-format
+msgid "Parent “%s” does not have this person in their list of children — use the “Fix relations” button."
+msgstr "להורה „%s” אין את האדם הזה ברשימת הילדים — יש להשתמש בכפתור „תיקון קשרים”."
+
+#. translators: 1: child, 2: actual parent
+#: includes/class-health.php:429
+#, php-format
+msgid "Child “%1$s” points to a different person (%2$s) in this parent role."
+msgstr "הילד „%1$s” מפנה לאדם אחר (%2$s) בתפקיד ההורה הזה."
+
+#. translators: %s: full name
+#: includes/class-health.php:444
+#, php-format
+msgid "Person “%s” is set as the father but is female."
+msgstr "האדם „%s” מוגדר כאב אך מגדרו נקבה."
+
+#. translators: %s: full name
+#: includes/class-health.php:451
+#, php-format
+msgid "Person “%s” is set as the mother but is male."
+msgstr "האדם „%s” מוגדר כאם אך מגדרו זכר."
+
+#. translators: %s: chain of people
+#: includes/class-health.php:497
+#, php-format
+msgid "Ancestor loop: %s — the person is their own ancestor. The tree will not render correctly."
+msgstr "לולאת אבות: %s — האדם הוא אב קדמון של עצמו. העץ לא יוצג כראוי."
+
+#: includes/class-admin.php:2646 includes/class-backup.php:123 includes/class-backup.php:176 includes/class-gedcom.php:1129 includes/class-health.php:527 includes/class-history.php:214 includes/class-kinship.php:131 includes/class-map.php:565 includes/class-merge.php:313 includes/class-merge.php:439 includes/class-merge.php:656 includes/class-notifications.php:235 includes/class-suggestions.php:219
+msgid "You do not have permission to do this."
+msgstr "אין לך הרשאה לבצע פעולה זו."
+
+#: includes/class-health.php:543
+msgid "Data consistency and completeness"
+msgstr "עקביות ושלמות הנתונים"
+
+#: includes/class-health.php:547
+msgid "Data completeness"
+msgstr "שלמות הנתונים"
+
+#. translators: 1: number of people, 2: date/time
+#: includes/class-health.php:579 includes/class-health.php:703
+#, php-format
+msgid "Analyzed %1$d people. Report from: %2$s."
+msgstr "נותחו %1$d אנשים. דוח מתאריך: %2$s."
+
+#: includes/class-health.php:585 includes/class-health.php:709
+msgid "Check again"
+msgstr "בדיקה חוזרת"
+
+#: includes/class-health.php:590 includes/class-sources.php:196 includes/class-tree.php:179
+msgid "There are no people in the database."
+msgstr "אין אנשים במסד הנתונים."
+
+#: includes/class-health.php:597
+msgid "average completeness"
+msgstr "שלמות ממוצעת"
+
+#: includes/class-health.php:608
+msgid "Criterion"
+msgstr "קריטריון"
+
+#: includes/class-health.php:609
+msgid "Filled in"
+msgstr "מולאו"
+
+#: includes/class-health.php:610
+msgid "Coverage"
+msgstr "כיסוי"
+
+#: includes/class-health.php:611
+msgid "Missing people"
+msgstr "אנשים חסרים"
+
+#. translators: %d: number of people without data for this criterion
+#: includes/class-health.php:631
+#, php-format
+msgid "%d person without data"
+msgid_plural "%d people without data"
+msgstr[0] "%d אדם ללא נתונים"
+msgstr[1] "%d אנשים ללא נתונים"
+
+#: includes/class-health.php:641
+msgid "edit"
+msgstr "עריכה"
+
+#: includes/class-health.php:649
+msgid "Complete"
+msgstr "מלא"
+
+#: includes/class-health.php:657
+msgid "Dates and places of death are only required for people considered deceased. “Average completeness” is the share of filled-in fields among all fields that apply to a given person."
+msgstr "תאריכי ומקומות פטירה נדרשים רק עבור אנשים שנחשבים כנפטרים. „שלמות ממוצעת” היא שיעור השדות שמולאו מתוך כל השדות הרלוונטיים לאדם."
+
+#: includes/class-health.php:674
+msgid "Death before birth"
+msgstr "פטירה לפני לידה"
+
+#: includes/class-health.php:675
+msgid "Implausible age"
+msgstr "גיל לא סביר"
+
+#: includes/class-health.php:676
+msgid "Self-reference"
+msgstr "הפניה עצמית"
+
+#: includes/class-health.php:677
+msgid "Reference to a non-existent person"
+msgstr "הפניה לאדם שאינו קיים"
+
+#: includes/class-health.php:678
+msgid "Duplicate child"
+msgstr "ילד כפול"
+
+#: includes/class-health.php:679
+msgid "Parent younger than child"
+msgstr "הורה צעיר מהילד"
+
+#: includes/class-health.php:680
+msgid "Parent too young"
+msgstr "הורה צעיר מדי"
+
+#: includes/class-health.php:681
+msgid "Parent too old"
+msgstr "הורה מבוגר מדי"
+
+#: includes/class-health.php:682
+msgid "Parent died before the child was born"
+msgstr "ההורה נפטר לפני לידת הילד"
+
+#: includes/class-health.php:683
+msgid "Marriage before birth"
+msgstr "נישואים לפני הלידה"
+
+#: includes/class-health.php:684
+msgid "Marriage at too young an age"
+msgstr "נישואים בגיל צעיר מדי"
+
+#: includes/class-health.php:685
+msgid "Marriage after death"
+msgstr "נישואים לאחר הפטירה"
+
+#: includes/class-health.php:686
+msgid "Marriage ended before it began"
+msgstr "סיום נישואים לפני הנישואים"
+
+#: includes/class-health.php:687
+msgid "One-sided marriage relation"
+msgstr "קשר נישואים חד־צדדי"
+
+#: includes/class-health.php:688
+msgid "One-sided parent–child relation"
+msgstr "קשר הורה–ילד חד־צדדי"
+
+#: includes/class-health.php:689
+msgid "Child points to a different parent"
+msgstr "הילד מפנה להורה אחר"
+
+#: includes/class-health.php:690
+msgid "Gender and parent role conflict"
+msgstr "סתירה בין מגדר לתפקיד ההורה"
+
+#: includes/class-health.php:691
+msgid "Ancestor loop"
+msgstr "לולאת אבות"
+
+#: includes/class-health.php:716
+msgid "errors"
+msgstr "שגיאות"
+
+#: includes/class-health.php:720
+msgid "warnings"
+msgstr "אזהרות"
+
+#: includes/class-health.php:724
+msgid "Great! No inconsistencies were found."
+msgstr "מצוין! לא נמצאו אי־התאמות."
+
+#: includes/class-health.php:730
+msgid "Errors"
+msgstr "שגיאות"
+
+#: includes/class-health.php:730
+msgid "Warnings"
+msgstr "אזהרות"
+
+#: includes/class-admin.php:1656 includes/class-health.php:748 includes/class-person.php:191 includes/class-suggestions.php:246 includes/class-tree.php:524
+msgid "Person"
+msgstr "אדם"
+
+#: includes/class-health.php:749
+msgid "Problem"
+msgstr "בעיה"
+
+#: includes/class-admin.php:1232 includes/class-health.php:764 includes/class-merge.php:1261 includes/class-setup.php:390 includes/class-views.php:172 includes/class-views.php:310
+msgid "Edit"
+msgstr "עריכה"
+
+#: includes/class-health.php:778
+msgid "Tip: “one-sided” problems (relations without a reciprocal side) can be fixed automatically with the fix relations button on the tree page."
+msgstr "טיפ: בעיות „חד־צדדיות” (קשרים ללא צד מקביל) ניתן לתקן אוטומטית בעזרת כפתור תיקון הקשרים בדף העץ."
+
+#: includes/class-blocks.php:50
+msgid "MyRoots: Family tree"
+msgstr "MyRoots: עץ משפחה"
+
+#: includes/class-blocks.php:52
+msgid "Starting person ID (0 = automatic)"
+msgstr "מזהה אדם התחלתי (0 = אוטומטי)"
+
+#: includes/class-blocks.php:56
+msgid "MyRoots: People list"
+msgstr "MyRoots: רשימת אנשים"
+
+#: includes/class-blocks.php:62
+msgid "Show search and filters"
+msgstr "הצגת חיפוש ומסננים"
+
+#: includes/class-blocks.php:63 includes/class-blocks.php:82 includes/class-blocks.php:99 includes/class-blocks.php:110
+msgid "Limit to a clan (optional)"
+msgstr "הגבלה לשושלת (אופציונלי)"
+
+#: includes/class-blocks.php:68
+msgid "MyRoots: Lifeline"
+msgstr "MyRoots: קו חיים"
+
+#: includes/class-blocks.php:70
+msgid "Person ID"
+msgstr "מזהה אדם"
+
+#: includes/class-blocks.php:74
+msgid "MyRoots: Map"
+msgstr "MyRoots: מפה"
+
+#: includes/class-blocks.php:76
+msgid "Person ID (0 = main map)"
+msgstr "מזהה אדם (0 = מפה ראשית)"
+
+#: includes/class-blocks.php:80
+msgid "MyRoots: Statistics"
+msgstr "MyRoots: סטטיסטיקה"
+
+#: includes/class-blocks.php:86
+msgid "MyRoots: Pets"
+msgstr "MyRoots: חיות מחמד"
+
+#: includes/class-blocks.php:92
+msgid "MyRoots: Gallery"
+msgstr "MyRoots: גלריה"
+
+#: includes/class-blocks.php:98
+msgid "Include profile photos"
+msgstr "לכלול תמונות פרופיל"
+
+#: includes/class-blocks.php:104
+msgid "MyRoots: Genealogy book"
+msgstr "MyRoots: ספר גנאלוגי"
+
+#: includes/class-blocks.php:111
+msgid "Include maps"
+msgstr "לכלול מפות"
+
+#: includes/class-blocks.php:116
+msgid "MyRoots: Kinship calculator"
+msgstr "MyRoots: מחשבון קרבה"
+
+#: includes/class-blocks.php:122
+msgid "MyRoots: Upcoming anniversaries"
+msgstr "MyRoots: ימי שנה קרובים"
+
+#: includes/class-blocks.php:128
+msgid "Number of days ahead"
+msgstr "מספר ימים קדימה"
+
+#: includes/class-blocks.php:129
+msgid "Max. number of items (0 = no limit)"
+msgstr "מספר פריטים מרבי (0 = ללא הגבלה)"
+
+#: includes/class-sources.php:329 includes/class-views.php:118
+msgid "Search…"
+msgstr "חיפוש…"
+
+#: includes/class-views.php:127
+msgid "Men"
+msgstr "גברים"
+
+#: includes/class-views.php:128
+msgid "Women"
+msgstr "נשים"
+
+#: includes/class-views.php:129
+msgid "Unknown gender"
+msgstr "מגדר לא ידוע"
+
+#: includes/class-views.php:133
+msgid "Clear filters"
+msgstr "ניקוי מסננים"
+
+#. translators: %s: year of birth (bold)
+#: includes/class-views.php:140
+#, php-format
+msgid "Filter: year of birth %s"
+msgstr "מסנן: שנת לידה %s"
+
+#. translators: %s: year of death (bold)
+#: includes/class-views.php:142
+#, php-format
+msgid " | Year of death %s"
+msgstr " | שנת פטירה %s"
+
+#: includes/class-views.php:167 includes/class-views.php:305
+msgid "Open profile"
+msgstr "פתיחת פרופיל"
+
+#: includes/class-views.php:205
+msgid "d. (est.)"
+msgstr "נפ׳ (משוער)"
+
+#: includes/class-sources.php:342 includes/class-views.php:222 includes/class-views.php:347 includes/class-views.php:597
+msgid "No results."
+msgstr "אין תוצאות."
+
+#: includes/class-views.php:227
+msgid "Load more"
+msgstr "טעינת עוד"
+
+#: includes/class-views.php:237
+msgid "Showing"
+msgstr "מוצגים"
+
+#: includes/class-views.php:238
+msgid "of"
+msgstr "מתוך"
+
+#: includes/class-views.php:277
+msgid "Search for a pet…"
+msgstr "חיפוש חיית מחמד…"
+
+#: includes/class-views.php:279
+msgid "All species"
+msgstr "כל המינים"
+
+#: includes/class-views.php:291
+msgid "No pets."
+msgstr "אין חיות מחמד."
+
+#: includes/class-admin.php:2327 includes/class-lifeline.php:325 includes/class-map.php:148 includes/class-map.php:331 includes/class-views.php:405
+msgid "Birth"
+msgstr "לידה"
+
+#: includes/class-admin.php:768 includes/class-admin.php:2331 includes/class-lifeline.php:498 includes/class-map.php:149 includes/class-map.php:344 includes/class-views.php:422
+msgid "Death"
+msgstr "פטירה"
+
+#. translators: %s: cause of death
+#: includes/class-views.php:433
+#, php-format
+msgid "Cause: %s"
+msgstr "סיבה: %s"
+
+#: includes/class-admin.php:2328 includes/class-map.php:150 includes/class-map.php:358 includes/class-views.php:456 includes/class-views.php:975
+msgid "Marriage"
+msgstr "נישואים"
+
+#. translators: %s: full name of the spouse
+#: includes/class-views.php:467
+#, php-format
+msgid "With: %s"
+msgstr "עם: %s"
+
+#: includes/class-admin.php:276 includes/class-lifeline.php:342 includes/class-views.php:481
+msgid "Event"
+msgstr "אירוע"
+
+#: includes/class-views.php:516
+msgid "Search (person, type, description)…"
+msgstr "חיפוש (אדם, סוג, תיאור)…"
+
+#: includes/class-views.php:518
+msgid "All types"
+msgstr "כל הסוגים"
+
+#: includes/class-views.php:530
+msgid "From year"
+msgstr "משנת"
+
+#: includes/class-views.php:532
+msgid "To year"
+msgstr "עד שנת"
+
+#: includes/class-lifeline.php:189 includes/class-views.php:536
+msgid "No events."
+msgstr "אין אירועים."
+
+#: includes/class-lifeline.php:254 includes/class-person.php:588 includes/class-views.php:578
+msgid "Show description"
+msgstr "הצגת תיאור"
+
+#: includes/class-views.php:652
+msgid "Printed:"
+msgstr "הודפס:"
+
+#: includes/class-views.php:660 includes/class-views.php:1352
+msgid "Back"
+msgstr "חזרה"
+
+#: includes/class-views.php:664 includes/class-views.php:1356
+msgid "Print / PDF"
+msgstr "הדפסה / PDF"
+
+#. translators: %d: configured age threshold in years
+#: includes/class-views.php:684
+#, php-format
+msgid "Based on the MyRoots settings, this person is assumed to be deceased (age exceeds %d years)."
+msgstr "על פי הגדרות MyRoots, ההנחה היא שאדם זה נפטר (הגיל עולה על %d שנים)."
+
+#. translators: %s: maiden name
+#: includes/class-views.php:708
+#, php-format
+msgid "née %s"
+msgstr "לבית %s"
+
+#: includes/class-admin.php:812 includes/class-merge.php:1078 includes/class-tree.php:172 includes/class-tree.php:191 includes/class-tree.php:382 includes/class-tree.php:640 includes/class-views.php:718 includes/class-views.php:885 includes/views/meta-box.php:60
+msgid "Male"
+msgstr "זכר"
+
+#: includes/class-admin.php:814 includes/class-merge.php:1079 includes/class-tree.php:172 includes/class-tree.php:192 includes/class-tree.php:383 includes/class-tree.php:641 includes/class-views.php:721 includes/class-views.php:886 includes/views/meta-box.php:61
+msgid "Female"
+msgstr "נקבה"
+
+#: includes/class-views.php:724
+msgid "Gender unknown"
+msgstr "מגדר לא ידוע"
+
+#: includes/class-views.php:754
+msgid "d. (estimated)"
+msgstr "נפ׳ (משוער)"
+
+#: includes/class-views.php:761
+msgid "Estimated final age — the date of death is uncertain (presumed based on the settings)."
+msgstr "גיל סופי משוער — תאריך הפטירה אינו ודאי (משוער לפי ההגדרות)."
+
+#. translators: %s: age in years
+#: includes/class-views.php:767
+#, php-format
+msgid "approx. %s years"
+msgstr "כ־%s שנים"
+
+#: includes/class-views.php:768
+msgid "(uncertain date)"
+msgstr "(תאריך לא ודאי)"
+
+#: includes/class-views.php:788
+msgid "Open full profile"
+msgstr "פתיחת הפרופיל המלא"
+
+#: includes/class-admin.php:1199 includes/class-person.php:193 includes/class-tree.php:255 includes/class-views.php:796
+msgid "Edit person"
+msgstr "עריכת אדם"
+
+#: includes/class-admin.php:279 includes/class-admin.php:1374 includes/class-views.php:824 includes/class-views.php:1391 includes/views/meta-box-pet.php:78 includes/views/meta-box.php:342
+msgid "Description"
+msgstr "תיאור"
+
+#: includes/class-admin.php:2259 includes/class-admin.php:2324 includes/class-book.php:133 includes/class-views.php:849
+msgid "Lifeline"
+msgstr "קו חיים"
+
+#: includes/class-admin.php:2198 includes/class-privacy.php:239 includes/class-setup.php:51 includes/class-views.php:857
+msgid "Map"
+msgstr "מפה"
+
+#: includes/class-history.php:126 includes/class-merge.php:67 includes/class-tree.php:236 includes/class-views.php:877 includes/views/meta-box-pet.php:16 includes/views/meta-box.php:46
+msgid "First name"
+msgstr "שם פרטי"
+
+#: includes/class-history.php:127 includes/class-merge.php:68 includes/class-tree.php:237 includes/class-views.php:878 includes/views/meta-box.php:51
+msgid "Surname"
+msgstr "שם משפחה"
+
+#: includes/class-history.php:128 includes/class-merge.php:69 includes/class-views.php:880 includes/views/meta-box.php:99
+msgid "Maiden name"
+msgstr "שם נעורים"
+
+#: includes/class-merge.php:1080 includes/class-views.php:887 includes/views/meta-box.php:62
+msgctxt "gender"
+msgid "Unknown"
+msgstr "לא ידוע"
+
+#: includes/class-history.php:132 includes/class-merge.php:73 includes/class-views.php:898 includes/class-views.php:1409 includes/views/meta-box-pet.php:73 includes/views/meta-box.php:69 includes/views/meta-box.php:405
+msgid "Date of death"
+msgstr "תאריך פטירה"
+
+#: includes/class-history.php:133 includes/class-merge.php:74 includes/class-views.php:901 includes/views/meta-box.php:73 includes/views/meta-box.php:406
+msgid "Place of death"
+msgstr "מקום פטירה"
+
+#: includes/class-history.php:134 includes/class-merge.php:75 includes/class-views.php:904 includes/views/meta-box.php:74
+msgid "Cause of death"
+msgstr "סיבת פטירה"
+
+#: includes/class-views.php:908
+msgid "Age"
+msgstr "גיל"
+
+#: includes/class-views.php:909
+msgid "Age at death"
+msgstr "גיל בפטירה"
+
+#: includes/class-admin.php:769 includes/class-admin.php:2548 includes/class-tree.php:239 includes/class-views.php:913
+msgid "Clan"
+msgstr "שושלת"
+
+#: includes/class-admin.php:2315 includes/class-history.php:136 includes/class-merge.php:76 includes/class-views.php:917 includes/views/meta-box.php:108 includes/views/meta-box.php:407
+msgid "Occupation"
+msgstr "מקצוע"
+
+#: includes/class-history.php:137 includes/class-merge.php:77 includes/class-views.php:918 includes/views/meta-box.php:113 includes/views/meta-box.php:409
+msgid "Education"
+msgstr "השכלה"
+
+#: includes/class-history.php:138 includes/class-merge.php:78 includes/class-views.php:919 includes/views/meta-box.php:130 includes/views/meta-box.php:408
+msgid "Religion"
+msgstr "דת"
+
+#: includes/class-history.php:139 includes/class-merge.php:79 includes/class-views.php:920
+msgid "Height"
+msgstr "גובה"
+
+#: includes/class-history.php:140 includes/class-merge.php:80 includes/class-views.php:921 includes/views/meta-box.php:141
+msgid "Eye color"
+msgstr "צבע עיניים"
+
+#: includes/class-history.php:141 includes/class-merge.php:81 includes/class-views.php:922 includes/views/meta-box.php:158
+msgid "Blood type"
+msgstr "סוג דם"
+
+#: includes/class-admin.php:2312 includes/class-views.php:924
+msgid "Basic information"
+msgstr "נתונים בסיסיים"
+
+#: includes/class-views.php:932
+msgid "adoption"
+msgstr "אימוץ"
+
+#: includes/class-views.php:933
+msgid "foster parent"
+msgstr "הורה אומנה"
+
+#: includes/class-views.php:934
+msgid "step-parent"
+msgstr "הורה חורג"
+
+#: includes/class-views.php:948 includes/views/meta-box.php:202
+msgid "Parents"
+msgstr "הורים"
+
+#: includes/class-views.php:955 includes/class-views.php:957
+msgid "Siblings"
+msgstr "אחים"
+
+#: includes/class-views.php:969
+msgid "Partner"
+msgstr "בן/בת זוג"
+
+#: includes/class-admin.php:262 includes/class-views.php:970
+msgid "Spouse"
+msgstr "בן/בת זוג"
+
+#: includes/class-views.php:974
+msgid "Relationship since"
+msgstr "בזוגיות מאז"
+
+#: includes/class-admin.php:266 includes/class-views.php:979 includes/views/meta-box-spouse.php:59 includes/views/meta-box.php:263
+msgid "Place of marriage"
+msgstr "מקום הנישואים"
+
+#: includes/class-views.php:982
+msgid "End"
+msgstr "סיום"
+
+#: includes/class-views.php:985
+msgid "Marriages"
+msgstr "נישואים"
+
+#: includes/class-tree.php:233 includes/class-views.php:992
+msgid "Child"
+msgstr "ילד/ה"
+
+#: includes/class-history.php:147 includes/class-merge.php:534 includes/class-views.php:994 includes/views/meta-box.php:301
+msgid "Children"
+msgstr "ילדים"
+
+#: includes/class-pet.php:105 includes/class-tree.php:235 includes/class-views.php:1011
+msgid "Pet"
+msgstr "חיית מחמד"
+
+#: includes/class-admin.php:90 includes/class-admin.php:1163 includes/class-pet.php:104 includes/class-setup.php:45 includes/class-views.php:1019
+msgid "Pets"
+msgstr "חיות מחמד"
+
+#: includes/class-history.php:150 includes/class-privacy.php:241 includes/class-setup.php:75 includes/class-views.php:1089 includes/class-views.php:1440 includes/views/meta-box-pet.php:82 includes/views/meta-box.php:19
+msgid "Gallery"
+msgstr "גלריה"
+
+#. translators: %d: which birthday is being celebrated
+#: includes/class-views.php:1171
+#, php-format
+msgid "%d. birthday"
+msgstr "יום הולדת %d"
+
+#. translators: %d: which birth anniversary
+#: includes/class-views.php:1173
+#, php-format
+msgid "%d. birth anniversary"
+msgstr "%d שנים להולדת"
+
+#. translators: %d: which death anniversary
+#: includes/class-views.php:1189
+#, php-format
+msgid "%d. death anniversary"
+msgstr "%d שנים לפטירה"
+
+#. translators: %d: which wedding anniversary
+#: includes/class-views.php:1221
+#, php-format
+msgid "%d. wedding anniversary"
+msgstr "%d שנים לנישואים"
+
+#: includes/class-views.php:1233
+msgid "No upcoming anniversaries."
+msgstr "אין ימי שנה קרובים."
+
+#: includes/class-views.php:1289
+msgid "link"
+msgstr "קישור"
+
+#: includes/class-views.php:1304
+msgid "Sources and documents"
+msgstr "מקורות ומסמכים"
+
+#: includes/class-views.php:1318
+msgid "Recordings and media"
+msgstr "הקלטות וחומרים"
+
+#: includes/class-tree.php:223 includes/class-views.php:1401 includes/views/meta-box-pet.php:21
+msgid "Species"
+msgstr "מין"
+
+#: includes/class-tree.php:224 includes/class-views.php:1402 includes/views/meta-box-pet.php:34
+msgid "Breed"
+msgstr "גזע"
+
+#: includes/class-tree.php:229 includes/class-views.php:1405 includes/views/meta-box-pet.php:49
+msgctxt "pet"
+msgid "Female"
+msgstr "נקבה"
+
+#: includes/class-tree.php:228 includes/class-views.php:1406 includes/views/meta-box-pet.php:48
+msgctxt "pet"
+msgid "Male"
+msgstr "זכר"
+
+#: includes/class-views.php:1411 includes/views/meta-box-pet.php:54
+msgid "Owner"
+msgstr "בעלים"
+
+#: includes/class-views.php:1413
+msgid "Information"
+msgstr "מידע"
+
+#: includes/class-sources.php:141 includes/class-views.php:1420
+msgid "Notes"
+msgstr "הערות"
+
+#: includes/class-person.php:534 includes/class-privacy.php:187 includes/class-views.php:1525
+msgid "Private content"
+msgstr "תוכן פרטי"
+
+#: includes/class-views.php:1527
+msgid "Log in as an administrator to see the details."
+msgstr "יש להתחבר כמנהל כדי לראות את הפרטים."
+
+#: includes/class-suggestions.php:43 includes/class-suggestions.php:197
+msgid "Suggestions"
+msgstr "הצעות"
+
+#: includes/class-suggestions.php:44
+msgid "Suggestion"
+msgstr "הצעה"
+
+#: includes/class-admin.php:1681 includes/class-suggestions.php:67
+msgid "Sending…"
+msgstr "שולח…"
+
+#: includes/class-suggestions.php:68 includes/class-suggestions.php:184
+msgid "Thank you! Your suggestion has been sent for moderation."
+msgstr "תודה! ההצעה נשלחה לבדיקה."
+
+#: includes/class-suggestions.php:69
+msgid "Sending failed. Please try again."
+msgstr "השליחה נכשלה. נא לנסות שוב."
+
+#: includes/class-suggestions.php:70
+msgid "Enter the content of your suggestion."
+msgstr "נא להזין את תוכן ההצעה."
+
+#: includes/class-suggestions.php:78
+msgid "Suggest a correction"
+msgstr "הצעת תיקון"
+
+#: includes/class-suggestions.php:84
+msgid "Leave this field empty"
+msgstr "יש להשאיר שדה זה ריק"
+
+#: includes/class-suggestions.php:88
+msgid "Your name (optional)"
+msgstr "השם שלך (אופציונלי)"
+
+#: includes/class-suggestions.php:92
+msgid "Contact e-mail (optional)"
+msgstr "דוא״ל ליצירת קשר (אופציונלי)"
+
+#: includes/class-suggestions.php:96
+msgid "What should be corrected or added?"
+msgstr "מה יש לתקן או להוסיף?"
+
+#: includes/class-suggestions.php:98
+msgid "e.g. The date of birth is 12.05.1932, not 1933 — I have a copy of the certificate."
+msgstr "למשל: תאריך הלידה הוא 12.05.1932 ולא 1933 — יש לי העתק של התעודה."
+
+#: includes/class-suggestions.php:101
+msgid "Send suggestion"
+msgstr "שליחת הצעה"
+
+#: includes/class-suggestions.php:118
+msgid "Suggestions are disabled."
+msgstr "ההצעות מושבתות."
+
+#: includes/class-suggestions.php:131
+msgid "Too many suggestions. Please try again later."
+msgstr "יותר מדי הצעות. נא לנסות מאוחר יותר."
+
+#: includes/class-history.php:211 includes/class-suggestions.php:141 includes/class-tree.php:843 includes/class-tree.php:897
+msgid "Invalid person."
+msgstr "אדם לא תקין."
+
+#: includes/class-suggestions.php:145
+msgid "The suggestion is empty."
+msgstr "ההצעה ריקה."
+
+#. translators: %s: full name of the person the suggestion is about
+#: includes/class-suggestions.php:152
+#, php-format
+msgid "Suggestion: %s"
+msgstr "הצעה: %s"
+
+#: includes/class-suggestions.php:157
+msgid "Error saving the suggestion."
+msgstr "שגיאה בשמירת ההצעה."
+
+#. translators: %s: person's full name
+#: includes/class-suggestions.php:172
+#, php-format
+msgid "[MyRoots] New correction suggestion: %s"
+msgstr "[MyRoots] הצעת תיקון חדשה: %s"
+
+#: includes/class-suggestions.php:177
+msgid "From:"
+msgstr "מאת:"
+
+#: includes/class-suggestions.php:178
+msgid "E-mail:"
+msgstr "דוא״ל:"
+
+#: includes/class-suggestions.php:196 includes/class-suggestions.php:232
+msgid "Correction suggestions"
+msgstr "הצעות תיקון"
+
+#: includes/class-suggestions.php:235
+msgid "The suggestion form on profiles is currently disabled. You can enable it in MyRoots → Settings."
+msgstr "טופס ההצעות בפרופילים מושבת כעת. ניתן להפעיל אותו ב־MyRoots ← הגדרות."
+
+#: includes/class-suggestions.php:240
+msgid "No suggestions."
+msgstr "אין הצעות."
+
+#: includes/class-admin.php:278 includes/class-suggestions.php:245 includes/views/meta-box.php:338
+msgid "Date"
+msgstr "תאריך"
+
+#: includes/class-suggestions.php:247
+msgid "Content"
+msgstr "תוכן"
+
+#: includes/class-suggestions.php:248
+msgid "Submitted by"
+msgstr "נשלח על ידי"
+
+#: includes/class-suggestions.php:249
+msgid "Status / actions"
+msgstr "סטטוס / פעולות"
+
+#: includes/class-suggestions.php:263
+msgid "(profile)"
+msgstr "(פרופיל)"
+
+#: includes/class-suggestions.php:265
+msgid "(person deleted)"
+msgstr "(האדם נמחק)"
+
+#: includes/class-suggestions.php:275
+msgid "Mark as resolved"
+msgstr "סימון כטופל"
+
+#: includes/class-suggestions.php:277
+msgid "resolved"
+msgstr "טופל"
+
+#: includes/class-admin.php:274 includes/class-suggestions.php:279 includes/views/meta-box-pet.php:95 includes/views/meta-box-pet.php:117 includes/views/meta-box.php:292 includes/views/meta-box.php:314 includes/views/meta-box.php:364 includes/views/meta-box.php:386
+msgid "Delete"
+msgstr "מחיקה"
+
+#: includes/class-suggestions.php:288
+msgid "Delete this suggestion?"
+msgstr "למחוק הצעה זו?"
+
+#: includes/class-admin.php:88 includes/class-admin.php:1162 includes/class-admin.php:2549 includes/class-person.php:190
+msgid "People"
+msgstr "אנשים"
+
+#: includes/class-admin.php:1164 includes/class-admin.php:1286 includes/class-person.php:192 includes/class-tree.php:241 includes/class-tree.php:368 includes/class-tree.php:397
+msgid "Add person"
+msgstr "הוספת אדם"
+
+#: includes/class-person.php:194 includes/class-pet.php:108
+msgid "Not found"
+msgstr "לא נמצא"
+
+#: includes/class-person.php:212
+msgctxt "CPT slug"
+msgid "person"
+msgstr "person"
+
+#: includes/class-person.php:536
+msgid "Log in as an administrator."
+msgstr "יש להתחבר כמנהל."
+
+#: includes/class-person.php:589
+msgid "Hide description"
+msgstr "הסתרת תיאור"
+
+#. translators: 1, 2: dates (from / to)
+#: includes/class-person.php:798
+#, php-format
+msgid "between %1$s and %2$s"
+msgstr "בין %1$s ל־%2$s"
+
+#. translators: %s: date
+#: includes/class-person.php:804
+#, php-format
+msgid "approx. %s"
+msgstr "בערך %s"
+
+#. translators: %s: date
+#: includes/class-person.php:806
+#, php-format
+msgid "before %s"
+msgstr "לפני %s"
+
+#. translators: %s: date
+#: includes/class-person.php:808
+#, php-format
+msgid "after %s"
+msgstr "אחרי %s"
+
+#: includes/class-gedcom.php:88
+msgid "GEDCOM — Import / Export"
+msgstr "GEDCOM — ייבוא / ייצוא"
+
+#: includes/class-gedcom.php:90
+msgid "GEDCOM 5.5.1 standard — supported by most genealogy programs (Ancestry, MyHeritage, Gramps, MacFamilyTree and others)."
+msgstr "תקן GEDCOM 5.5.1 — נתמך ברוב תוכנות הגנאלוגיה (Ancestry, MyHeritage, Gramps, MacFamilyTree ואחרות)."
+
+#: includes/class-gedcom.php:111
+msgid "Import a GEDCOM file"
+msgstr "ייבוא קובץ GEDCOM"
+
+#: includes/class-gedcom.php:113
+msgid "Upload a .ged file exported from another program. Choose how to handle people who already exist in the database."
+msgstr "יש להעלות קובץ ‎.ged שיוצא מתוכנה אחרת. יש לבחור כיצד לטפל באנשים שכבר קיימים במסד הנתונים."
+
+#: includes/class-gedcom.php:120
+msgid "When a person already exists (same first name, surname and date of birth):"
+msgstr "כאשר אדם כבר קיים (אותו שם פרטי, שם משפחה ותאריך לידה):"
+
+#: includes/class-gedcom.php:123
+msgid "Update matches (fill in missing fields), add the rest as new"
+msgstr "עדכון ההתאמות (השלמת שדות חסרים), הוספת השאר כחדשים"
+
+#: includes/class-gedcom.php:127
+msgid "Skip duplicates — leave existing people unchanged, add only new ones"
+msgstr "דילוג על כפילויות — השארת האנשים הקיימים ללא שינוי, הוספת חדשים בלבד"
+
+#: includes/class-gedcom.php:131
+msgid "Always add as new people (do not merge)"
+msgstr "הוספה תמיד כאנשים חדשים (ללא מיזוג)"
+
+#: includes/class-gedcom.php:137
+msgid "Preview first without saving (dry run)"
+msgstr "תצוגה מקדימה תחילה ללא שמירה (הרצת ניסיון)"
+
+#: includes/class-gedcom.php:142
+msgid "Drag a .ged file here or click to choose one"
+msgstr "יש לגרור לכאן קובץ ‎.ged או ללחוץ לבחירה"
+
+#: includes/class-gedcom.php:148 includes/class-gedcom.php:226
+msgid "Import GEDCOM file"
+msgstr "ייבוא קובץ GEDCOM"
+
+#: includes/class-gedcom.php:153
+msgid "What is imported:"
+msgstr "מה מיובא:"
+
+#: includes/class-gedcom.php:155
+msgid "First name, surname, maiden name, gender"
+msgstr "שם פרטי, שם משפחה, שם נעורים, מגדר"
+
+#: includes/class-gedcom.php:156
+msgid "Birth and death (date, place, cause)"
+msgstr "לידה ופטירה (תאריך, מקום, סיבה)"
+
+#: includes/class-gedcom.php:157
+msgid "Occupation, education, religion"
+msgstr "מקצוע, השכלה, דת"
+
+#: includes/class-gedcom.php:158
+msgid "Physical attributes, events, clans"
+msgstr "תכונות גופניות, אירועים, שושלות"
+
+#: includes/class-gedcom.php:159
+msgid "Family relations — marriages, parents, children"
+msgstr "קשרי משפחה — נישואים, הורים, ילדים"
+
+#: includes/class-gedcom.php:160
+msgid "Biographical note"
+msgstr "הערה ביוגרפית"
+
+#: includes/class-gedcom.php:169
+msgid "Export to GEDCOM"
+msgstr "ייצוא ל־GEDCOM"
+
+#. translators: %d: number of people in the database
+#: includes/class-gedcom.php:174
+#, php-format
+msgid "Export the whole database (%d people) to a GEDCOM 5.5.1 file."
+msgstr "ייצוא כל מסד הנתונים (%d אנשים) לקובץ GEDCOM 5.5.1."
+
+#: includes/class-gedcom.php:186
+msgid "Include biographies as NOTE"
+msgstr "לכלול ביוגרפיות כ־NOTE"
+
+#: includes/class-gedcom.php:190
+msgid "Include events, clans and physical attributes"
+msgstr "לכלול אירועים, שושלות ותכונות גופניות"
+
+#: includes/class-gedcom.php:194
+msgid "Include the profile photo URL (OBJE/FILE)"
+msgstr "לכלול את כתובת תמונת הפרופיל (OBJE/FILE)"
+
+#: includes/class-gedcom.php:199
+msgid "Download GEDCOM file"
+msgstr "הורדת קובץ GEDCOM"
+
+#: includes/class-gedcom.php:202
+msgid "The database is empty — add some people first."
+msgstr "מסד הנתונים ריק — יש להוסיף אנשים תחילה."
+
+#: includes/class-gedcom.php:207
+msgid "What is exported:"
+msgstr "מה מיוצא:"
+
+#: includes/class-gedcom.php:209
+msgid "Every person as an INDI record"
+msgstr "כל אדם כרשומת INDI"
+
+#: includes/class-gedcom.php:210
+msgid "Every pair of parents as a FAM record (with children)"
+msgstr "כל זוג הורים כרשומת FAM (עם הילדים)"
+
+#: includes/class-gedcom.php:211
+msgid "Marriages with date, place and divorce"
+msgstr "נישואים עם תאריך, מקום וגירושין"
+
+#: includes/class-gedcom.php:212
+msgid "HUSB / WIFE / CHIL relations"
+msgstr "קשרים HUSB / WIFE / CHIL"
+
+#: includes/class-gedcom.php:225
+msgid "Preview (dry run)"
+msgstr "תצוגה מקדימה (הרצת ניסיון)"
+
+#: includes/class-gedcom.php:454
+msgid "No file selected."
+msgstr "לא נבחר קובץ."
+
+#: includes/class-gedcom.php:464
+msgid "The file cannot be read."
+msgstr "לא ניתן לקרוא את הקובץ."
+
+#: includes/class-gedcom.php:484
+msgid "The file does not contain any people (INDI)."
+msgstr "הקובץ אינו מכיל אנשים (INDI)."
+
+#. translators: %s: identifier (xref) of the INDI record in the GEDCOM file
+#: includes/class-gedcom.php:501
+#, php-format
+msgid "Skipped INDI %s: no first name or surname."
+msgstr "דילוג על INDI %s: אין שם פרטי או שם משפחה."
+
+#. translators: %s: person's full name
+#: includes/class-gedcom.php:539
+#, php-format
+msgid "Error creating person: %s"
+msgstr "שגיאה ביצירת האדם: %s"
+
+#: includes/class-gedcom.php:604
+msgid "Preview mode — no data has been saved."
+msgstr "מצב תצוגה מקדימה — לא נשמרו נתונים."
+
+#. translators: %d: number of people added
+#: includes/class-gedcom.php:607
+#, php-format
+msgid "People added: %d"
+msgstr "אנשים שנוספו: %d"
+
+#. translators: %d: number of people updated
+#: includes/class-gedcom.php:609
+#, php-format
+msgid "People updated: %d"
+msgstr "אנשים שעודכנו: %d"
+
+#. translators: %d: number of skipped duplicates
+#: includes/class-gedcom.php:612
+#, php-format
+msgid "People skipped (duplicates): %d"
+msgstr "אנשים שדולגו (כפילויות): %d"
+
+#. translators: %d: number of families
+#: includes/class-gedcom.php:615
+#, php-format
+msgid "Families (FAM): %d"
+msgstr "משפחות (FAM): %d"
+
+#. translators: %d: number of pets added
+#: includes/class-gedcom.php:618
+#, php-format
+msgid "Pets added: %d"
+msgstr "חיות מחמד שנוספו: %d"
+
+#. translators: %d: number of skipped duplicate pets
+#: includes/class-gedcom.php:621
+#, php-format
+msgid "Pets skipped (duplicates): %d"
+msgstr "חיות מחמד שדולגו (כפילויות): %d"
+
+#. translators: %d: number of geocoded places
+#: includes/class-gedcom.php:628
+#, php-format
+msgid "New places geocoded: %d"
+msgstr "מקומות חדשים שקודדו גאוגרפית: %d"
+
+#. translators: %d: number of places in the geocoding queue
+#: includes/class-gedcom.php:632
+#, php-format
+msgid "Places waiting for background geocoding: %d"
+msgstr "מקומות הממתינים לקידוד גאוגרפי ברקע: %d"
+
+#. translators: %d: number of unrecognized places
+#: includes/class-gedcom.php:636
+#, php-format
+msgid "Places not recognized by the geocoder: %d"
+msgstr "מקומות שלא זוהו על ידי שירות הקידוד: %d"
+
+#: includes/class-gedcom.php:644
+msgid "Import preview (dry run):"
+msgstr "תצוגה מקדימה של הייבוא (הרצת ניסיון):"
+
+#: includes/class-gedcom.php:645
+msgid "Import finished:"
+msgstr "הייבוא הסתיים:"
+
+#: includes/class-gedcom.php:1012
+msgid "Skipped _PET record: no pet name."
+msgstr "דילוג על רשומת _PET: אין שם לחיית המחמד."
+
+#. translators: %s: pet name
+#: includes/class-gedcom.php:1064
+#, php-format
+msgid "Error creating pet: %s"
+msgstr "שגיאה ביצירת חיית המחמד: %s"
+
+#. translators: %d: sequential number of the spouse in the list
+#: includes/views/meta-box-spouse.php:16 includes/views/meta-box.php:247
+#, php-format
+msgid "Spouse %d"
+msgstr "בן/בת זוג %d"
+
+#: includes/class-admin.php:263 includes/views/meta-box-spouse.php:20 includes/views/meta-box.php:249
+msgid "Person in the database"
+msgstr "אדם במסד הנתונים"
+
+#: includes/views/meta-box-spouse.php:23
+msgid "— none / not in the database —"
+msgstr "— אין / מחוץ למסד הנתונים —"
+
+#: includes/views/meta-box-spouse.php:34
+msgid "First name (if not in the database)"
+msgstr "שם פרטי (אם מחוץ למסד הנתונים)"
+
+#: includes/views/meta-box-spouse.php:42
+msgid "Surname (if not in the database)"
+msgstr "שם משפחה (אם מחוץ למסד הנתונים)"
+
+#: includes/class-admin.php:265 includes/class-tree.php:238 includes/class-tree.php:388 includes/views/meta-box-spouse.php:50 includes/views/meta-box.php:259
+msgid "Date of marriage"
+msgstr "תאריך הנישואים"
+
+#: includes/class-admin.php:267 includes/views/meta-box-spouse.php:67 includes/views/meta-box.php:266
+msgid "Marital status"
+msgstr "מצב משפחתי"
+
+#: includes/class-admin.php:268 includes/class-person.php:40
+msgid "Ongoing"
+msgstr "נמשכים"
+
+#: includes/class-admin.php:269 includes/class-person.php:41
+msgid "Death of spouse"
+msgstr "פטירת בן/בת הזוג"
+
+#: includes/class-admin.php:270 includes/class-person.php:42
+msgid "Divorce"
+msgstr "גירושין"
+
+#: includes/class-admin.php:271 includes/class-person.php:43
+msgid "Other/Unknown"
+msgstr "אחר/לא ידוע"
+
+#: includes/class-admin.php:272 includes/views/meta-box-spouse.php:86 includes/views/meta-box.php:281
+msgid "End date"
+msgstr "תאריך סיום"
+
+#: includes/views/meta-box-spouse.php:95
+msgid "Remove spouse"
+msgstr "הסרת בן/בת זוג"
+
+#: includes/class-admin.php:275 includes/class-tree.php:221 includes/class-tree.php:381 includes/views/meta-box-pet.php:24 includes/views/meta-box.php:59 includes/views/meta-box.php:116 includes/views/meta-box.php:144 includes/views/meta-box.php:161 includes/views/meta-box.php:306
+msgid "— select —"
+msgstr "— בחירה —"
+
+#: includes/views/meta-box-pet.php:38
+msgid "Select or type a breed"
+msgstr "יש לבחור או להקליד גזע"
+
+#: includes/views/meta-box-pet.php:40
+msgid "The list of suggestions depends on the selected species. You can also type your own breed."
+msgstr "רשימת ההצעות תלויה במין שנבחר. אפשר גם להקליד גזע משלך."
+
+#: includes/class-tree.php:227 includes/views/meta-box-pet.php:47
+msgid "— unspecified —"
+msgstr "— לא צוין —"
+
+#: includes/class-admin.php:264 includes/class-merge.php:495 includes/class-merge.php:497 includes/class-merge.php:628 includes/views/meta-box-pet.php:57 includes/views/meta-box.php:218 includes/views/meta-box.php:251
+msgid "— none —"
+msgstr "— אין —"
+
+#: includes/views/meta-box-pet.php:64
+msgid "The person the pet belongs to. It will appear in their tree and info card."
+msgstr "האדם שחיית המחמד שייכת לו. היא תופיע בעץ ובכרטיס המידע שלו."
+
+#: includes/class-admin.php:288 includes/views/meta-box-pet.php:94 includes/views/meta-box-pet.php:116 includes/views/meta-box.php:385
+msgid "Caption"
+msgstr "כיתוב"
+
+#: includes/class-admin.php:281 includes/views/meta-box-pet.php:100 includes/views/meta-box.php:356 includes/views/meta-box.php:391
+msgid "Add photo"
+msgstr "הוספת תמונה"
+
+#: includes/views/meta-box-pet.php:115
+msgid "Select photos"
+msgstr "בחירת תמונות"
+
+#: includes/views/meta-box.php:16
+msgid "Basic"
+msgstr "בסיסי"
+
+#: includes/views/meta-box.php:17
+msgid "Relations"
+msgstr "קשרים"
+
+#: includes/class-history.php:148 includes/class-merge.php:551 includes/class-setup.php:63 includes/views/meta-box.php:18
+msgid "Events"
+msgstr "אירועים"
+
+#: includes/class-book.php:134 includes/class-sources.php:57 includes/class-sources.php:82 includes/views/meta-box.php:20
+msgid "Sources"
+msgstr "מקורות"
+
+#: includes/class-admin.php:1534 includes/class-history.php:151 includes/views/meta-box.php:22
+msgid "Custom fields"
+msgstr "שדות מותאמים"
+
+#: includes/views/meta-box.php:84
+msgid "e.g. 1920, 1920-05 or 1920-05-15"
+msgstr "למשל 1920, ‏1920-05 או 1920-05-15"
+
+#: includes/views/meta-box.php:85
+msgid "Enter a year (e.g. 1920), a year and month (e.g. 1920-05) or a full date (e.g. 1920-05-15). You can also pick it from the calendar."
+msgstr "יש להזין שנה (למשל 1920), שנה וחודש (למשל 1920-05) או תאריך מלא (למשל 1920-05-15). אפשר גם לבחור מלוח השנה."
+
+#: includes/views/meta-box.php:103
+msgid "Filled in automatically from the father's surname on first save."
+msgstr "ממולא אוטומטית משם המשפחה של האב בשמירה הראשונה."
+
+#: includes/views/meta-box.php:118
+msgid "Vocational"
+msgstr "מקצועית"
+
+#: includes/views/meta-box.php:118
+msgid "Secondary"
+msgstr "תיכונית"
+
+#: includes/views/meta-box.php:118
+msgid "Higher"
+msgstr "גבוהה"
+
+#: includes/views/meta-box.php:118
+msgctxt "education"
+msgid "Unknown"
+msgstr "לא ידועה"
+
+#: includes/views/meta-box.php:133
+msgid "e.g. Catholic, Orthodox…"
+msgstr "למשל קתולית, אורתודוקסית…"
+
+#: includes/views/meta-box.php:136
+msgid "Height (cm)"
+msgstr "גובה (ס״מ)"
+
+#: includes/views/meta-box.php:146
+msgctxt "eye color"
+msgid "Blue"
+msgstr "כחולות"
+
+#: includes/views/meta-box.php:146
+msgctxt "eye color"
+msgid "Green"
+msgstr "ירוקות"
+
+#: includes/views/meta-box.php:146
+msgctxt "eye color"
+msgid "Brown"
+msgstr "חומות"
+
+#: includes/views/meta-box.php:146
+msgctxt "eye color"
+msgid "Grey"
+msgstr "אפורות"
+
+#: includes/views/meta-box.php:146
+msgctxt "eye color"
+msgid "Hazel"
+msgstr "בצבע לוז"
+
+#: includes/views/meta-box.php:146
+msgctxt "eye color"
+msgid "Black"
+msgstr "שחורות"
+
+#: includes/class-pet.php:188 includes/views/meta-box.php:146
+msgid "Other"
+msgstr "אחר"
+
+#: includes/class-tree.php:392 includes/views/meta-box.php:169
+msgid "Clan / Clans"
+msgstr "שושלת / שושלות"
+
+#: includes/views/meta-box.php:184
+msgid "No clans defined."
+msgstr "לא הוגדרו שושלות."
+
+#: includes/views/meta-box.php:186
+msgid "Define clans →"
+msgstr "הגדרת שושלות ←"
+
+#: includes/views/meta-box.php:205
+msgid "Biological"
+msgstr "ביולוגי/ת"
+
+#: includes/views/meta-box.php:206
+msgid "Adoption"
+msgstr "אימוץ"
+
+#: includes/views/meta-box.php:207
+msgid "Foster parent"
+msgstr "הורה אומנה"
+
+#: includes/views/meta-box.php:208
+msgid "Step-parent (stepfather/stepmother)"
+msgstr "הורה חורג (אב חורג/אם חורגת)"
+
+#: includes/class-tree.php:231 includes/views/meta-box.php:228
+msgid "Relation type"
+msgstr "סוג הקשר"
+
+#: includes/views/meta-box.php:241
+msgid "Spouses"
+msgstr "בני זוג"
+
+#: includes/views/meta-box.php:284
+msgid "e.g. 1980-05-15"
+msgstr "למשל 1980-05-15"
+
+#: includes/class-admin.php:273 includes/views/meta-box.php:289
+msgid "Informal union (cohabitation)"
+msgstr "ידועים בציבור"
+
+#: includes/views/meta-box.php:297
+msgid "Add spouse"
+msgstr "הוספת בן/בת זוג"
+
+#: includes/views/meta-box.php:319
+msgid "Add child"
+msgstr "הוספת ילד/ה"
+
+#. translators: %d: sequential number of the event in the list
+#: includes/views/meta-box.php:333
+#, php-format
+msgid "Event %d"
+msgstr "אירוע %d"
+
+#: includes/class-admin.php:277 includes/views/meta-box.php:335
+msgid "Name"
+msgstr "שם"
+
+#: includes/class-admin.php:280 includes/views/meta-box.php:346
+msgid "Photo"
+msgstr "תמונה"
+
+#: includes/class-admin.php:282 includes/views/meta-box.php:356
+msgid "Change photo"
+msgstr "החלפת תמונה"
+
+#: includes/class-admin.php:283 includes/class-tree.php:861 includes/views/meta-box.php:360
+msgid "Remove photo"
+msgstr "הסרת תמונה"
+
+#: includes/views/meta-box.php:369
+msgid "Add event"
+msgstr "הוספת אירוע"
+
+#: includes/views/meta-box.php:417
+msgid "No sources defined."
+msgstr "לא הוגדרו מקורות."
+
+#: includes/views/meta-box.php:420
+msgid "Add the first source"
+msgstr "הוספת המקור הראשון"
+
+#: includes/views/meta-box.php:426
+msgid "Assign sources to specific facts. One source can confirm many fields."
+msgstr "יש לשייך מקורות לעובדות מסוימות. מקור אחד יכול לאשר שדות רבים."
+
+#: includes/views/meta-box.php:438
+msgid "— no source —"
+msgstr "— ללא מקור —"
+
+#: includes/class-merge.php:576 includes/views/meta-box.php:459
+msgid "Linked sources"
+msgstr "מקורות מקושרים"
+
+#: includes/views/meta-box.php:461
+msgid "A general link between this person and sources (independent of the citations for the facts above). It works both ways — you can set the same thing on the source screen. Sources with an audio/video link will appear in the “Recordings and media” section of the person's profile."
+msgstr "קישור כללי בין אדם זה לבין מקורות (בלתי תלוי בציטוטים לעובדות שלמעלה). הקישור פועל בשני הכיוונים — אפשר להגדיר אותו גם במסך המקור. מקורות עם קישור שמע/וידאו יופיעו בסעיף „הקלטות וחומרים” בפרופיל האדם."
+
+#: includes/views/meta-box.php:468
+msgid "Search for a source…"
+msgstr "חיפוש מקור…"
+
+#: includes/views/meta-box.php:475
+msgid "Add new source"
+msgstr "הוספת מקור חדש"
+
+#: includes/views/meta-box.php:480
+msgid "Manage sources"
+msgstr "ניהול מקורות"
+
+#: includes/class-privacy.php:188
+msgid "This content is protected by private mode."
+msgstr "תוכן זה מוגן על ידי המצב הפרטי."
+
+#: includes/class-privacy.php:236
+msgid "Person profiles"
+msgstr "פרופילי אנשים"
+
+#: includes/class-admin.php:1289 includes/class-admin.php:1506 includes/class-privacy.php:237 includes/class-setup.php:39
+msgid "People list"
+msgstr "רשימת אנשים"
+
+#: includes/class-privacy.php:238 includes/class-setup.php:33
+msgid "Family tree"
+msgstr "עץ משפחה"
+
+#: includes/class-privacy.php:240 includes/class-setup.php:69
+msgid "Statistics"
+msgstr "סטטיסטיקה"
+
+#: includes/class-privacy.php:244
+msgid "Exact dates (keep only the year)"
+msgstr "תאריכים מדויקים (להשאיר רק את השנה)"
+
+#: includes/class-privacy.php:245
+msgid "Places (birth / death / marriage)"
+msgstr "מקומות (לידה / פטירה / נישואים)"
+
+#: includes/class-privacy.php:246
+msgid "Biography and events"
+msgstr "ביוגרפיה ואירועים"
+
+#: includes/class-privacy.php:247
+msgid "Photos and sensitive data (height, eyes, blood, religion)"
+msgstr "תמונות ונתונים רגישים (גובה, עיניים, דם, דת)"
+
+#: includes/class-privacy.php:251
+msgid "Privacy scope"
+msgstr "היקף הפרטיות"
+
+#: includes/class-privacy.php:255
+msgid "Full lock of selected sections"
+msgstr "חסימה מלאה של הסעיפים שנבחרו"
+
+#: includes/class-privacy.php:256
+msgid "— hides whole sections from unauthorized visitors (as before)."
+msgstr "— מסתיר סעיפים שלמים ממי שאינו מורשה (כמו קודם)."
+
+#: includes/class-privacy.php:258
+msgid "Hide living people"
+msgstr "הסתרת אנשים חיים"
+
+#: includes/class-privacy.php:259
+msgid "— sections are visible, but living people are omitted entirely."
+msgstr "— הסעיפים גלויים, אך אנשים חיים מושמטים לגמרי."
+
+#: includes/class-privacy.php:261
+msgid "Censor data of living people"
+msgstr "צנזור נתונים של אנשים חיים"
+
+#: includes/class-privacy.php:262
+msgid "— people are visible, but selected fields of living people are hidden."
+msgstr "— האנשים גלויים, אך שדות נבחרים של אנשים חיים מוסתרים."
+
+#: includes/class-privacy.php:264
+msgid "Works only when private mode is on. Administrators and genealogy editors always see the full data."
+msgstr "פועל רק כשהמצב הפרטי מופעל. מנהלים ועורכי גנאלוגיה רואים תמיד את כל הנתונים."
+
+#: includes/class-privacy.php:269
+msgid "Locked sections"
+msgstr "סעיפים חסומים"
+
+#: includes/class-privacy.php:280
+msgid "Applies to the “Full lock” level."
+msgstr "חל על הרמה „חסימה מלאה”."
+
+#: includes/class-privacy.php:285
+msgid "Censored fields of living people"
+msgstr "שדות מצונזרים של אנשים חיים"
+
+#: includes/class-privacy.php:296
+msgid "Applies to the “Censor data of living people” level."
+msgstr "חל על הרמה „צנזור נתונים של אנשים חיים”."
+
+#: includes/class-tree.php:180
+msgid "No connected people to display."
+msgstr "אין אנשים מקושרים להצגה."
+
+#: includes/class-book.php:88 includes/class-kinship.php:93 includes/class-lifeline.php:74 includes/class-tree.php:181
+msgid "No results"
+msgstr "אין תוצאות"
+
+#: includes/class-tree.php:182
+msgid "Error loading data."
+msgstr "שגיאה בטעינת הנתונים."
+
+#: includes/class-tree.php:183 includes/class-tree.php:262
+msgid "Error connecting to the server."
+msgstr "שגיאה בהתחברות לשרת."
+
+#: includes/class-tree.php:184
+msgid "Error loading the library. Refresh the page."
+msgstr "שגיאה בטעינת הספרייה. יש לרענן את הדף."
+
+#: includes/class-tree.php:185 includes/class-tree.php:355
+msgid "Click a person's card to see the details"
+msgstr "יש ללחוץ על כרטיס של אדם כדי לראות את הפרטים"
+
+#: includes/class-tree.php:186
+msgid "No data to display."
+msgstr "אין נתונים להצגה."
+
+#: includes/class-tree.php:187
+msgid "Whole tree view"
+msgstr "תצוגת העץ כולו"
+
+#: includes/class-tree.php:188
+msgid "Whole family tree"
+msgstr "עץ המשפחה המלא"
+
+#: includes/class-tree.php:189
+msgid "Click a node to go to that person in the main view"
+msgstr "יש ללחוץ על צומת כדי לעבור לאדם בתצוגה הראשית"
+
+#: includes/class-merge.php:420 includes/class-tree.php:190
+msgid "Close"
+msgstr "סגירה"
+
+#: includes/class-tree.php:193
+msgid "Unspecified"
+msgstr "לא צוין"
+
+#: includes/class-tree.php:194
+msgctxt "relationship type"
+msgid "Marriage"
+msgstr "נישואים"
+
+#: includes/class-tree.php:195
+msgid "Parent–child"
+msgstr "הורה–ילד"
+
+#: includes/class-tree.php:196
+msgid "People without connections"
+msgstr "אנשים ללא קשרים"
+
+#. translators: %d: number of people without connections in the graph
+#: includes/class-tree.php:198
+msgid "person without connections"
+msgstr "אדם ללא קשרים"
+
+#: includes/class-tree.php:199
+msgid "people without connections"
+msgstr "אנשים ללא קשרים"
+
+#: includes/class-tree.php:202
+msgid "Assign partner / spouse"
+msgstr "שיוך בן/בת זוג"
+
+#: includes/class-tree.php:203
+msgid "Add partner"
+msgstr "הוספת בן/בת זוג"
+
+#: includes/class-tree.php:204
+msgid "Unknown partner"
+msgstr "בן/בת זוג לא ידוע/ה"
+
+#: includes/class-tree.php:205
+msgid "Click to assign"
+msgstr "יש ללחוץ כדי לשייך"
+
+#: includes/class-tree.php:206
+msgid "Details"
+msgstr "פרטים"
+
+#: includes/class-tree.php:207
+msgid "Add relation"
+msgstr "הוספת קשר"
+
+#: includes/class-tree.php:210
+msgid ""
+"Fix inconsistent relations in the database?\n"
+"All parent/children/spouses mismatches will be aligned."
+msgstr ""
+"לתקן קשרים לא עקביים במסד הנתונים?\n"
+"כל אי־ההתאמות של הורים/ילדים/בני זוג יתואמו."
+
+#: includes/class-tree.php:211
+msgid "Fixing relations…"
+msgstr "מתקן קשרים…"
+
+#: includes/class-tree.php:212
+msgid "Fixed!"
+msgstr "תוקן!"
+
+#: includes/class-tree.php:213
+msgid "Error:"
+msgstr "שגיאה:"
+
+#: includes/class-tree.php:214
+msgid "Unknown"
+msgstr "לא ידוע"
+
+#: includes/class-admin.php:252 includes/class-admin.php:1711 includes/class-admin.php:2492 includes/class-lifeline.php:77 includes/class-tree.php:215
+msgid "Connection error."
+msgstr "שגיאת חיבור."
+
+#: includes/class-tree.php:218
+msgid "No clans available"
+msgstr "אין שושלות זמינות"
+
+#: includes/class-tree.php:219
+msgid "— do not assign —"
+msgstr "— ללא שיוך —"
+
+#: includes/class-tree.php:220
+msgid "Other parent"
+msgstr "ההורה השני"
+
+#: includes/class-tree.php:222
+msgid "Pet name"
+msgstr "שם חיית המחמד"
+
+#: includes/class-tree.php:225
+msgid "Select or type"
+msgstr "יש לבחור או להקליד"
+
+#: includes/class-tree.php:232
+msgid "Husband/Wife"
+msgstr "בעל/אישה"
+
+#: includes/class-tree.php:234
+msgid "Parent"
+msgstr "הורה"
+
+#: includes/class-admin.php:2469 includes/class-tree.php:240 includes/class-tree.php:257 includes/class-tree.php:400
+msgid "Cancel"
+msgstr "ביטול"
+
+#: includes/class-pet.php:106 includes/class-tree.php:242
+msgid "Add pet"
+msgstr "הוספת חיית מחמד"
+
+#: includes/class-tree.php:245 includes/class-tree.php:989
+msgid "Enter the pet's name"
+msgstr "יש להזין את שם חיית המחמד"
+
+#: includes/class-admin.php:249 includes/class-admin.php:2489 includes/class-tree.php:246 includes/class-tree.php:258
+msgid "Saving…"
+msgstr "שומר…"
+
+#: includes/class-tree.php:247
+msgid "The pet has been added"
+msgstr "חיית המחמד נוספה"
+
+#: includes/class-tree.php:248
+msgid "Unknown error"
+msgstr "שגיאה לא ידועה"
+
+#: includes/class-tree.php:249
+msgid "Error connecting to the server"
+msgstr "שגיאה בהתחברות לשרת"
+
+#: includes/class-tree.php:250
+msgid "Fill in the first name, surname and gender"
+msgstr "יש למלא שם פרטי, שם משפחה ומגדר"
+
+#: includes/class-tree.php:251
+msgid "The person has been added successfully"
+msgstr "האדם נוסף בהצלחה"
+
+#: includes/class-tree.php:256
+msgid "Save changes"
+msgstr "שמירת שינויים"
+
+#: includes/class-tree.php:259 includes/class-tree.php:924
+msgid "Changes saved."
+msgstr "השינויים נשמרו."
+
+#: includes/class-tree.php:260
+msgid "Save error"
+msgstr "שגיאת שמירה"
+
+#: includes/class-tree.php:261
+msgid "The form could not be loaded."
+msgstr "לא ניתן היה לטעון את הטופס."
+
+#: includes/class-tree.php:279
+msgid "Large tree"
+msgstr "עץ גדול"
+
+#: includes/class-tree.php:282
+msgid "Whole graph — all people and connections"
+msgstr "הגרף המלא — כל האנשים והקשרים"
+
+#: includes/class-tree.php:288
+msgid "Vertical"
+msgstr "אנכי"
+
+#: includes/class-tree.php:291
+msgid "Horizontal"
+msgstr "אופקי"
+
+#: includes/class-tree.php:297
+msgid "Zoom in"
+msgstr "הגדלה"
+
+#: includes/class-tree.php:300
+msgid "Zoom out"
+msgstr "הקטנה"
+
+#: includes/class-tree.php:303
+msgid "Center"
+msgstr "מרכוז"
+
+#: includes/class-tree.php:309
+msgid "Minimap (overview)"
+msgstr "מפה מוקטנת (סקירה)"
+
+#: includes/class-tree.php:312
+msgid "Full screen"
+msgstr "מסך מלא"
+
+#: includes/class-tree.php:315
+msgid "Print graph (SVG, everyone displayed)"
+msgstr "הדפסת הגרף (SVG, כל המוצגים)"
+
+#: includes/class-tree.php:322
+msgid "Fix inconsistent relations (tree error)"
+msgstr "תיקון קשרים לא עקביים (שגיאת עץ)"
+
+#: includes/class-tree.php:331
+msgid "Search for a person in the tree…"
+msgstr "חיפוש אדם בעץ…"
+
+#: includes/class-tree.php:345
+msgid "Loading tree…"
+msgstr "טוען את העץ…"
+
+#: includes/class-tree.php:375
+msgid "First name *"
+msgstr "שם פרטי *"
+
+#: includes/class-tree.php:377
+msgid "Surname *"
+msgstr "שם משפחה *"
+
+#: includes/class-tree.php:379
+msgid "Gender *"
+msgstr "מגדר *"
+
+#: includes/class-tree.php:655
+msgid "Required data is missing."
+msgstr "חסרים נתוני חובה."
+
+#: includes/class-tree.php:786
+msgid "Person added."
+msgstr "האדם נוסף."
+
+#: includes/class-tree.php:839 includes/class-tree.php:893
+msgid "Missing person ID."
+msgstr "חסר מזהה אדם."
+
+#: includes/class-tree.php:846 includes/class-tree.php:900 includes/class-tree.php:980
+msgid "You do not have permission to edit."
+msgstr "אין לך הרשאה לערוך."
+
+#: includes/class-tree.php:859
+msgid "Select / change photo"
+msgstr "בחירה / החלפת תמונה"
+
+#: includes/class-tree.php:907
+msgid "Invalid form token. Refresh and try again."
+msgstr "אסימון טופס לא תקין. יש לרענן ולנסות שוב."
+
+#: includes/class-tree.php:1015
+msgid "Pet added."
+msgstr "חיית המחמד נוספה."
+
+#. translators: %d: number of inconsistencies fixed
+#: includes/class-tree.php:1132
+#, php-format
+msgid "Fixed %d inconsistencies."
+msgstr "תוקנו %d אי־עקביויות."
+
+#. translators: 1: number of days, 2: date
+#: includes/class-notifications.php:138
+#, php-format
+msgid "[MyRoots] Anniversaries in the next %1$d days — %2$s"
+msgstr "[MyRoots] ימי שנה ב־%1$d הימים הקרובים — %2$s"
+
+#. translators: %d: number of days
+#: includes/class-notifications.php:179
+#, php-format
+msgid "Anniversaries in the next %d day"
+msgid_plural "Anniversaries in the next %d days"
+msgstr[0] "ימי שנה ביום הקרוב (%d)"
+msgstr[1] "ימי שנה ב־%d הימים הקרובים"
+
+#: includes/class-notifications.php:241
+msgid "Digest sent successfully."
+msgstr "הסיכום נשלח בהצלחה."
+
+#: includes/class-notifications.php:243
+msgid "No anniversaries to send or invalid recipient address."
+msgstr "אין ימי שנה לשליחה או שכתובת הנמען אינה תקינה."
+
+#: includes/class-kinship.php:35 includes/class-kinship.php:36 includes/class-kinship.php:134
+msgid "Kinship"
+msgstr "קרבה משפחתית"
+
+#: includes/class-kinship.php:91 includes/class-kinship.php:107
+msgid "First person…"
+msgstr "אדם ראשון…"
+
+#: includes/class-kinship.php:92 includes/class-kinship.php:114
+msgid "Second person…"
+msgstr "אדם שני…"
+
+#: includes/class-kinship.php:94
+msgid "Calculating…"
+msgstr "מחשב…"
+
+#: includes/class-kinship.php:95
+msgid "Select both people."
+msgstr "יש לבחור את שני האנשים."
+
+#: includes/class-book.php:82 includes/class-kinship.php:96
+msgid "An error occurred. Please try again."
+msgstr "אירעה שגיאה. נא לנסות שוב."
+
+#: includes/class-kinship.php:103
+msgid "Kinship calculator"
+msgstr "מחשבון קרבה"
+
+#: includes/class-kinship.php:119
+msgid "Check kinship"
+msgstr "בדיקת קרבה"
+
+#: includes/class-kinship.php:197
+msgid "This is the same person."
+msgstr "זה אותו אדם."
+
+#: includes/class-kinship.php:248
+msgid "No common ancestor — the people are connected by marriages."
+msgstr "אין אב קדמון משותף — האנשים מחוברים באמצעות נישואים."
+
+#: includes/class-kinship.php:255
+msgid "No connection"
+msgstr "אין קשר"
+
+#: includes/class-kinship.php:256
+msgid "No family path was found between these people."
+msgstr "לא נמצא מסלול משפחתי בין האנשים האלה."
+
+#: includes/class-kinship.php:282 includes/class-kinship.php:438 includes/class-kinship.php:499
+msgid "parent"
+msgstr "הורה"
+
+#: includes/class-kinship.php:284
+msgid "grandmother"
+msgstr "סבתא"
+
+#: includes/class-kinship.php:284
+msgid "grandfather"
+msgstr "סבא"
+
+#: includes/class-kinship.php:284
+msgid "grandparent"
+msgstr "סבא/סבתא"
+
+#. translators: Prefix repeated before “grandfather/grandmother” for each further generation (great-grandfather, great-great-…). Include a trailing hyphen or space if your language needs one.
+#: includes/class-kinship.php:286 includes/class-kinship.php:293
+msgctxt "prefix for great-grandparents"
+msgid "great-"
+msgstr "סב־"
+
+#: includes/class-kinship.php:291
+msgctxt "genitive"
+msgid "parent"
+msgstr "הורה"
+
+#. translators: 1, 2: ancestor terms in the genitive case (e.g. great-grandfather / great-grandmother)
+#: includes/class-kinship.php:296
+#, php-format
+msgid "%1$s or %2$s"
+msgstr "%1$s או %2$s"
+
+#: includes/class-kinship.php:297
+msgctxt "genitive"
+msgid "grandfather"
+msgstr "סבא"
+
+#: includes/class-kinship.php:298
+msgctxt "genitive"
+msgid "grandmother"
+msgstr "סבתא"
+
+#: includes/class-kinship.php:305 includes/class-kinship.php:444 includes/class-kinship.php:501
+msgid "daughter"
+msgstr "בת"
+
+#: includes/class-kinship.php:305 includes/class-kinship.php:444 includes/class-kinship.php:501
+msgid "son"
+msgstr "בן"
+
+#: includes/class-kinship.php:305 includes/class-kinship.php:444 includes/class-kinship.php:501
+msgid "child"
+msgstr "ילד/ה"
+
+#: includes/class-kinship.php:307
+msgid "granddaughter"
+msgstr "נכדה"
+
+#: includes/class-kinship.php:307
+msgid "grandson"
+msgstr "נכד"
+
+#: includes/class-kinship.php:307
+msgid "grandchild"
+msgstr "נכד/ה"
+
+#. translators: 1: full name of the first person, 2: kinship term, 3: full name of the second person
+#: includes/class-kinship.php:325 includes/class-kinship.php:340 includes/class-kinship.php:359 includes/class-kinship.php:386 includes/class-kinship.php:546
+#, php-format
+msgid "%1$s is the %2$s of %3$s"
+msgstr "%1$s: %2$s של %3$s"
+
+#. translators: %d: number of generations apart
+#: includes/class-kinship.php:330 includes/class-kinship.php:345
+#, php-format
+msgid "%d generation apart."
+msgid_plural "%d generations apart."
+msgstr[0] "הפרש של דור %d."
+msgstr[1] "הפרש של %d דורות."
+
+#: includes/class-kinship.php:352 includes/class-kinship.php:376
+msgid "sister"
+msgstr "אחות"
+
+#: includes/class-kinship.php:352 includes/class-kinship.php:376
+msgid "brother"
+msgstr "אח"
+
+#: includes/class-kinship.php:352 includes/class-kinship.php:376
+msgid "sibling"
+msgstr "אח/אחות"
+
+#. translators: prefix for half-brother / half-sister
+#: includes/class-kinship.php:355
+msgctxt "feminine prefix"
+msgid "half-"
+msgstr "(למחצה) "
+
+#. translators: prefix for half-brother / half-sister
+#: includes/class-kinship.php:355
+msgctxt "masculine prefix"
+msgid "half-"
+msgstr "(למחצה) "
+
+#: includes/class-kinship.php:360
+msgid "Both parents in common."
+msgstr "שני ההורים משותפים."
+
+#: includes/class-kinship.php:360
+msgid "One parent in common."
+msgstr "הורה אחד משותף."
+
+#: includes/class-kinship.php:373
+msgid "aunt"
+msgstr "דודה"
+
+#: includes/class-kinship.php:373
+msgid "uncle"
+msgstr "דוד"
+
+#: includes/class-kinship.php:373
+msgid "aunt/uncle"
+msgstr "דוד/דודה"
+
+#. translators: %d: number of generations
+#: includes/class-kinship.php:389
+#, php-format
+msgid "Sibling of an ancestor; generation difference: %d."
+msgstr "אח/אחות של אב קדמון; הפרש דורות: %d."
+
+#: includes/class-kinship.php:397
+msgctxt "female"
+msgid "cousin"
+msgstr "בת דודה"
+
+#: includes/class-kinship.php:397
+msgctxt "male"
+msgid "cousin"
+msgstr "בן דוד"
+
+#. translators: 1: person, 2: cousin (male/female), 3: degree, 4: person
+#: includes/class-kinship.php:400
+#, php-format
+msgid "%1$s is a %3$d. degree %2$s of %4$s"
+msgstr "%1$s: %2$s מדרגה %3$d של %4$s"
+
+#. translators: %d: number of generations
+#: includes/class-kinship.php:406
+#, php-format
+msgid "Additionally removed by %d generation(s)."
+msgstr "בנוסף, הסטה של %d דורות."
+
+#: includes/class-kinship.php:409
+msgid "Same generation."
+msgstr "אותו דור."
+
+#: includes/class-kinship.php:503 includes/class-kinship.php:524
+msgid "wife"
+msgstr "אישה"
+
+#: includes/class-kinship.php:503 includes/class-kinship.php:524
+msgid "husband"
+msgstr "בעל"
+
+#: includes/class-kinship.php:503 includes/class-kinship.php:524
+msgid "spouse"
+msgstr "בן/בת זוג"
+
+#: includes/class-kinship.php:527
+msgid "mother-in-law"
+msgstr "חמות"
+
+#: includes/class-kinship.php:527
+msgid "father-in-law"
+msgstr "חם"
+
+#: includes/class-kinship.php:530
+msgid "stepmother"
+msgstr "אם חורגת"
+
+#: includes/class-kinship.php:530
+msgid "stepfather"
+msgstr "אב חורג"
+
+#: includes/class-kinship.php:533
+msgid "stepdaughter"
+msgstr "בת חורגת"
+
+#: includes/class-kinship.php:533
+msgid "stepson"
+msgstr "בן חורג"
+
+#: includes/class-kinship.php:536
+msgid "daughter-in-law"
+msgstr "כלה"
+
+#: includes/class-kinship.php:536
+msgid "son-in-law"
+msgstr "חתן"
+
+#: includes/class-kinship.php:540
+msgid "sister-in-law"
+msgstr "גיסה"
+
+#: includes/class-kinship.php:540
+msgid "brother-in-law"
+msgstr "גיס"
+
+#. translators: 1, 2: people
+#: includes/class-kinship.php:550
+#, php-format
+msgid "%1$s and %2$s are related by marriage."
+msgstr "%1$s ו־%2$s קרובים מנישואים."
+
+#: includes/class-lifeline.php:75 includes/class-merge.php:1256
+msgid "Loading…"
+msgstr "טוען…"
+
+#: includes/class-lifeline.php:76
+msgid "Error fetching data."
+msgstr "שגיאה באחזור הנתונים."
+
+#: includes/class-lifeline.php:111
+msgid "Type or select a person…"
+msgstr "יש להקליד או לבחור אדם…"
+
+#: includes/class-lifeline.php:113 includes/class-map.php:171
+msgid "Clear"
+msgstr "ניקוי"
+
+#: includes/class-lifeline.php:183
+msgid "The lifeline of a living person is not available in private mode."
+msgstr "קו החיים של אדם חי אינו זמין במצב פרטי."
+
+#. translators: 1: number of years, 2: person's full name
+#: includes/class-lifeline.php:302
+#, php-format
+msgid "This event took place %1$d years before %2$s was born"
+msgstr "אירוע זה התרחש %1$d שנים לפני לידת %2$s"
+
+#. translators: %s: full name of the spouse
+#: includes/class-lifeline.php:363
+#, php-format
+msgid "Marriage to %s"
+msgstr "נישואים עם %s"
+
+#. translators: %s: full name of the spouse
+#: includes/class-lifeline.php:376
+#, php-format
+msgid "End of marriage to %s"
+msgstr "סיום הנישואים עם %s"
+
+#. translators: %s: full name of the child
+#: includes/class-lifeline.php:392
+#, php-format
+msgid "Birth of a child: %s"
+msgstr "לידת ילד/ה: %s"
+
+#. translators: %s: full name of the grandchild
+#: includes/class-lifeline.php:408
+#, php-format
+msgid "Birth of a grandchild: %s"
+msgstr "לידת נכד/ה: %s"
+
+#. translators: %s: full name of the sibling
+#: includes/class-lifeline.php:428
+#, php-format
+msgid "Birth of a sibling: %s"
+msgstr "לידת אח/אחות: %s"
+
+#. translators: %s: full name of the sibling
+#: includes/class-lifeline.php:440
+#, php-format
+msgid "Death of a sibling: %s"
+msgstr "פטירת אח/אחות: %s"
+
+#: includes/class-lifeline.php:458
+msgctxt "genitive, as in “Death of %s”"
+msgid "mother"
+msgstr "האם"
+
+#: includes/class-lifeline.php:458
+msgctxt "genitive, as in “Death of %s”"
+msgid "father"
+msgstr "האב"
+
+#. translators: 1: role (mother/father), 2: full name
+#: includes/class-lifeline.php:462
+#, php-format
+msgid "Death of %1$s: %2$s"
+msgstr "פטירת %1$s: %2$s"
+
+#. translators: %s: full name of the grandparent
+#: includes/class-lifeline.php:484
+#, php-format
+msgid "Death of a grandparent: %s"
+msgstr "פטירת סבא/סבתא: %s"
+
+#: includes/class-admin.php:1481 includes/class-lifeline.php:507
+msgid "Presumed death"
+msgstr "פטירה משוערת"
+
+#: includes/class-map.php:68
+msgid "The map uses the external OpenStreetMap service and is disabled by default. An administrator can enable it in the plugin settings."
+msgstr "המפה משתמשת בשירות החיצוני OpenStreetMap ומושבתת כברירת מחדל. מנהל יכול להפעיל אותה בהגדרות התוסף."
+
+#: includes/class-map.php:72
+msgid "Open settings"
+msgstr "פתיחת ההגדרות"
+
+#: includes/class-map.php:147
+msgid "Legend"
+msgstr "מקרא"
+
+#: includes/class-map.php:151
+msgid "Mixed"
+msgstr "מעורב"
+
+#: includes/class-map.php:166
+msgid "Person:"
+msgstr "אדם:"
+
+#: includes/class-map.php:167 includes/class-map.php:168
+msgid "All people"
+msgstr "כל האנשים"
+
+#: includes/class-map.php:173
+msgid "No places for the selected filter."
+msgstr "אין מקומות עבור המסנן שנבחר."
+
+#: includes/class-map.php:219
+msgid "No geocoded places. Open the map page to load them."
+msgstr "אין מקומות מקודדים גאוגרפית. יש לפתוח את דף המפה כדי לטעון אותם."
+
+#: includes/class-map.php:569
+msgid "First enable the external map services (OpenStreetMap) in the settings."
+msgstr "יש להפעיל תחילה את שירותי המפות החיצוניים (OpenStreetMap) בהגדרות."
+
+#: includes/class-map.php:575
+msgid "All places are already geocoded."
+msgstr "כל המקומות כבר מקודדים גאוגרפית."
+
+#. translators: 1: successful, 2: not recognized, 3: remaining
+#: includes/class-map.php:579
+#, php-format
+msgid "Geocoded: %1$d, not recognized: %2$d, remaining: %3$d."
+msgstr "קודדו: %1$d, לא זוהו: %2$d, נותרו: %3$d."
+
+#: includes/class-map.php:583
+msgid "A background task will finish the rest — you can also click again."
+msgstr "משימת רקע תשלים את השאר — אפשר גם ללחוץ שוב."
+
+#: includes/class-admin.php:1200 includes/class-pet.php:107
+msgid "Edit pet"
+msgstr "עריכת חיית מחמד"
+
+#: includes/class-pet.php:126
+msgctxt "CPT slug"
+msgid "pet"
+msgstr "pet"
+
+#: includes/class-pet.php:152
+msgid "Dog"
+msgstr "כלב"
+
+#: includes/class-pet.php:154
+msgid "Mixed breed"
+msgstr "מעורב"
+
+#: includes/class-pet.php:155
+msgid "German Shepherd"
+msgstr "רועה גרמני"
+
+#: includes/class-pet.php:156
+msgid "Labrador Retriever"
+msgstr "לברדור רטריבר"
+
+#: includes/class-pet.php:157
+msgid "Golden Retriever"
+msgstr "גולדן רטריבר"
+
+#: includes/class-pet.php:158
+msgid "Dachshund"
+msgstr "תחש"
+
+#: includes/class-pet.php:159
+msgid "Border Collie"
+msgstr "בורדר קולי"
+
+#: includes/class-pet.php:160
+msgid "French Bulldog"
+msgstr "בולדוג צרפתי"
+
+#: includes/class-pet.php:161
+msgid "Yorkshire Terrier"
+msgstr "יורקשייר טרייר"
+
+#: includes/class-pet.php:165
+msgid "Cat"
+msgstr "חתול"
+
+#: includes/class-pet.php:167
+msgid "Domestic cat"
+msgstr "חתול רחוב"
+
+#: includes/class-pet.php:168
+msgid "British Shorthair"
+msgstr "בריטי קצר שיער"
+
+#: includes/class-pet.php:169
+msgid "Maine Coon"
+msgstr "מיין קון"
+
+#: includes/class-pet.php:170
+msgid "Persian"
+msgstr "פרסי"
+
+#: includes/class-pet.php:171
+msgid "Siamese"
+msgstr "סיאמי"
+
+#: includes/class-pet.php:172
+msgid "Ragdoll"
+msgstr "ראגדול"
+
+#: includes/class-pet.php:176
+msgid "Bird"
+msgstr "ציפור"
+
+#: includes/class-pet.php:178
+msgid "Budgerigar"
+msgstr "תוכי בדג׳י"
+
+#: includes/class-pet.php:179
+msgid "Canary"
+msgstr "קנרית"
+
+#: includes/class-pet.php:180
+msgid "Cockatiel"
+msgstr "קוקטייל"
+
+#: includes/class-pet.php:184
+msgid "Horse"
+msgstr "סוס"
+
+#: includes/class-pet.php:272
+msgid "Pet details"
+msgstr "פרטי חיית המחמד"
+
+#: includes/class-history.php:115
+msgid "Change history"
+msgstr "היסטוריית שינויים"
+
+#: includes/class-history.php:144
+msgid "Relation type with the mother"
+msgstr "סוג הקשר עם האם"
+
+#: includes/class-history.php:145
+msgid "Relation type with the father"
+msgstr "סוג הקשר עם האב"
+
+#: includes/class-history.php:146 includes/class-merge.php:540
+msgid "Spouses / partners"
+msgstr "בני זוג / שותפים"
+
+#: includes/class-admin.php:89 includes/class-admin.php:1165 includes/class-admin.php:1264 includes/class-book.php:147 includes/class-history.php:149 includes/class-merge.php:560
+msgid "Clans"
+msgstr "שושלות"
+
+#: includes/class-history.php:152
+msgid "Source citations"
+msgstr "ציטוטי מקורות"
+
+#: includes/class-history.php:159
+msgid "No saved revisions. The history will start to build with subsequent saves."
+msgstr "אין גרסאות שמורות. ההיסטוריה תתחיל להיבנות בשמירות הבאות."
+
+#: includes/class-history.php:168
+msgid "(unknown)"
+msgstr "(לא ידוע)"
+
+#: includes/class-history.php:178
+msgid "Changed:"
+msgstr "שונו:"
+
+#. translators: %d: number of additional fields
+#: includes/class-history.php:181
+#, php-format
+msgid " and %d more"
+msgstr " ועוד %d"
+
+#: includes/class-history.php:187
+msgid "Restore this state"
+msgstr "שחזור מצב זה"
+
+#: includes/class-history.php:195
+msgid "Restore the person's data to this state? The current state will be kept in the history."
+msgstr "לשחזר את נתוני האדם למצב זה? המצב הנוכחי יישמר בהיסטוריה."
+
+#: includes/class-history.php:219
+msgid "Revision not found."
+msgstr "הגרסה לא נמצאה."
+
+#: includes/class-history.php:238
+msgid "Restored."
+msgstr "שוחזר."
+
+#: includes/class-admin.php:87 includes/class-admin.php:1161
+msgid "Dashboard"
+msgstr "לוח בקרה"
+
+#: includes/class-admin.php:93 includes/class-admin.php:1180 assets/js/blocks.js:98
+msgid "Settings"
+msgstr "הגדרות"
+
+#: includes/class-admin.php:94
+msgid "Appearance"
+msgstr "מראה"
+
+#: includes/class-admin.php:95 includes/class-admin.php:1181
+msgid "Users"
+msgstr "משתמשים"
+
+#: includes/class-admin.php:96 includes/class-admin.php:1179 includes/class-admin.php:2631
+msgid "GEDCOM"
+msgstr "GEDCOM"
+
+#: includes/class-admin.php:209
+msgid "Like MyRoots? Buy me a pizza!"
+msgstr "אוהבים את MyRoots? קנו לי פיצה!"
+
+#: includes/class-admin.php:248
+msgid "Are you sure you want to delete this?"
+msgstr "האם בוודאות למחוק?"
+
+#: includes/class-admin.php:250
+msgid "Saved."
+msgstr "נשמר."
+
+#: includes/class-admin.php:251 includes/class-admin.php:2491
+msgid "Save error."
+msgstr "שגיאת שמירה."
+
+#: includes/class-admin.php:253
+msgid "Pick a full date from the calendar"
+msgstr "יש לבחור תאריך מלא מלוח השנה"
+
+#: includes/class-admin.php:255
+msgid "exact"
+msgstr "מדויק"
+
+#: includes/class-admin.php:256
+msgid "about"
+msgstr "בערך"
+
+#: includes/class-admin.php:257
+msgid "before"
+msgstr "לפני"
+
+#: includes/class-admin.php:258
+msgid "after"
+msgstr "אחרי"
+
+#: includes/class-admin.php:259
+msgid "between"
+msgstr "בין"
+
+#: includes/class-admin.php:284
+msgid "Select a photo for the event"
+msgstr "בחירת תמונה לאירוע"
+
+#: includes/class-admin.php:286
+msgid "Select photos for the gallery"
+msgstr "בחירת תמונות לגלריה"
+
+#: includes/class-admin.php:287 includes/class-admin.php:1659
+msgid "— select a person —"
+msgstr "— בחירת אדם —"
+
+#: includes/class-admin.php:739
+msgid "Person details"
+msgstr "פרטי האדם"
+
+#: includes/class-admin.php:767
+msgid "Birthday"
+msgstr "יום הולדת"
+
+#. translators: List of upcoming anniversaries in the next 14 days
+#: includes/class-admin.php:852
+msgid "MyRoots — anniversaries (14 days):"
+msgstr "MyRoots — ימי שנה (14 יום):"
+
+#: includes/class-admin.php:870
+msgid "birthday"
+msgstr "יום הולדת"
+
+#: includes/class-admin.php:871
+msgid "death anniversary"
+msgstr "יום השנה לפטירה"
+
+#. translators: 1: date, 2: full name, 3: label (birthday/anniversary), 4: age in years
+#: includes/class-admin.php:891
+#, php-format
+msgid "%1$s — %2$s (%3$s, %4$d years)"
+msgstr "%1$s — %2$s (%3$s, %4$d שנים)"
+
+#. translators: %s: author (link)
+#: includes/class-admin.php:1105
+#, php-format
+msgid "Author: %s"
+msgstr "מחבר: %s"
+
+#: includes/class-admin.php:1115
+msgid "Plugin website"
+msgstr "אתר התוסף"
+
+#: includes/class-admin.php:1120
+msgid "Acknowledgements and open source libraries"
+msgstr "תודות וספריות קוד פתוח"
+
+#: includes/class-admin.php:1122
+msgid "MyRoots was also made possible by several open source projects that matter to me. Hats off to their creators."
+msgstr "MyRoots נוצר גם בזכות כמה פרויקטים של קוד פתוח שחשובים לי. כל הכבוד ליוצריהם."
+
+#: includes/class-admin.php:1156
+msgid "MyRoots — genealogy"
+msgstr "MyRoots — גנאלוגיה"
+
+#: includes/class-admin.php:1267
+msgid "M / F"
+msgstr "ז / נ"
+
+#: includes/class-admin.php:1268
+msgid "Anniversaries (30 days)"
+msgstr "ימי שנה (30 יום)"
+
+#: includes/class-admin.php:1274
+msgid "Browse →"
+msgstr "עיון ←"
+
+#: includes/class-admin.php:1292
+msgid "GEDCOM Import/Export"
+msgstr "ייבוא/ייצוא GEDCOM"
+
+#: includes/class-admin.php:1295
+msgid "Tree preview"
+msgstr "תצוגה מקדימה של העץ"
+
+#: includes/class-admin.php:1308
+msgid "Upcoming anniversaries"
+msgstr "ימי שנה קרובים"
+
+#: includes/class-admin.php:1320
+msgid "No anniversaries."
+msgstr "אין ימי שנה."
+
+#: includes/class-admin.php:1324 includes/class-admin.php:1526
+msgid "Recently added"
+msgstr "נוספו לאחרונה"
+
+#: includes/class-admin.php:1340
+msgid "No people."
+msgstr "אין אנשים."
+
+#: includes/class-admin.php:1348
+msgid "Available shortcodes"
+msgstr "קודים מקוצרים זמינים"
+
+#: includes/class-admin.php:1350
+msgid "Click “Copy” and paste the shortcode on any WordPress page."
+msgstr "יש ללחוץ על „העתקה” ולהדביק את הקוד המקוצר בכל דף וורדפרס."
+
+#: includes/class-admin.php:1354
+msgid "People list with search and filters"
+msgstr "רשימת אנשים עם חיפוש ומסננים"
+
+#: includes/class-admin.php:1355
+msgid "People list without the search bar"
+msgstr "רשימת אנשים ללא שורת חיפוש"
+
+#: includes/class-admin.php:1356
+msgid "List filtered to a specific clan"
+msgstr "רשימה מסוננת לשושלת מסוימת"
+
+#: includes/class-admin.php:1357
+msgid "Interactive family tree"
+msgstr "עץ משפחה אינטראקטיבי"
+
+#: includes/class-admin.php:1358
+msgid "Lifeline — choose a person from the menu"
+msgstr "קו חיים — בחירת האדם מהתפריט"
+
+#: includes/class-admin.php:1359
+msgid "Lifeline of a specific person"
+msgstr "קו החיים של אדם מסוים"
+
+#: includes/class-admin.php:1360
+msgid "Genealogical map of all places"
+msgstr "מפה גנאלוגית של כל המקומות"
+
+#: includes/class-admin.php:1361
+msgid "Map of a specific person's places"
+msgstr "מפת המקומות של אדם מסוים"
+
+#: includes/class-admin.php:1362
+msgid "Statistics with charts"
+msgstr "סטטיסטיקה עם תרשימים"
+
+#: includes/class-admin.php:1363
+msgid "Timeline of all events"
+msgstr "ציר זמן של כל האירועים"
+
+#: includes/class-admin.php:1364
+msgid "Timeline of a specific person's events"
+msgstr "ציר זמן של אירועי אדם מסוים"
+
+#: includes/class-admin.php:1365
+msgid "Latest 20 events"
+msgstr "20 האירועים האחרונים"
+
+#: includes/class-admin.php:1366
+msgid "Upcoming anniversaries (next 30 days)"
+msgstr "ימי שנה קרובים (30 הימים הבאים)"
+
+#: includes/class-admin.php:1367
+msgid "Anniversaries within 90 days, max. 10 items"
+msgstr "ימי שנה ב־90 יום, עד 10 פריטים"
+
+#: includes/class-admin.php:1373 includes/class-setup.php:359
+msgid "Shortcode"
+msgstr "קוד מקוצר"
+
+#: includes/class-admin.php:1386
+msgid "Copy"
+msgstr "העתקה"
+
+#: includes/class-admin.php:1395
+msgid "Shortcode copied to the clipboard!"
+msgstr "הקוד המקוצר הועתק ללוח!"
+
+#: includes/class-admin.php:1406
+msgid "MyRoots — Settings"
+msgstr "MyRoots — הגדרות"
+
+#: includes/class-admin.php:1411
+msgid "Privacy and restrictions"
+msgstr "פרטיות והגבלות"
+
+#: includes/class-admin.php:1414
+msgid "Private mode"
+msgstr "מצב פרטי"
+
+#: includes/class-admin.php:1418
+msgid "Enable private mode"
+msgstr "הפעלת מצב פרטי"
+
+#: includes/class-admin.php:1420
+msgid "Once enabled, specify below how broadly access should be restricted."
+msgstr "לאחר ההפעלה יש לקבוע למטה באיזו מידה להגביל את הגישה."
+
+#: includes/class-admin.php:1425
+msgid "External map services"
+msgstr "שירותי מפות חיצוניים"
+
+#: includes/class-admin.php:1429
+msgid "Allow the use of OpenStreetMap and Nominatim"
+msgstr "לאפשר שימוש ב־OpenStreetMap וב־Nominatim"
+
+#: includes/class-admin.php:1432
+msgid "Disabled by default. When enabled, the genealogical map loads tiles from OpenStreetMap servers (the visitor's IP address is sent to OpenStreetMap), and place geocoding sends place names and this site's address to the Nominatim service. Without consent, the map and geocoding are inactive and the plugin sends no data to external services."
+msgstr "מושבת כברירת מחדל. לאחר ההפעלה, המפה הגנאלוגית טוענת אריחים משרתי OpenStreetMap (כתובת ה־IP של המבקר נשלחת ל־OpenStreetMap), וקידוד המקומות שולח את שמות המקומות ואת כתובת האתר לשירות Nominatim. ללא הסכמה, המפה והקידוד אינם פעילים והתוסף אינו שולח נתונים החוצה."
+
+#: includes/class-admin.php:1438
+msgid "Google Fonts"
+msgstr "Google Fonts"
+
+#: includes/class-admin.php:1442
+msgid "Allow loading fonts from Google Fonts servers"
+msgstr "לאפשר טעינת גופנים משרתי Google Fonts"
+
+#: includes/class-admin.php:1445
+msgid "Disabled by default. When enabled, the Google font selected on the “Appearance” tab is loaded from fonts.googleapis.com (the visitor's IP address is sent to Google), and the font preview in the admin panel downloads font stylesheets from that server. Without consent, the plugin sends no requests to Google and the site uses system fonts."
+msgstr "מושבת כברירת מחדל. לאחר ההפעלה, גופן Google שנבחר בלשונית „מראה” נטען מ־fonts.googleapis.com (כתובת ה־IP של המבקר נשלחת ל־Google), ותצוגת הגופנים בלוח הניהול מורידה גיליונות סגנון מהשרת הזה. ללא הסכמה, התוסף אינו שולח בקשות ל־Google והאתר משתמש בגופני מערכת."
+
+#: includes/class-admin.php:1451
+msgid "Visitor suggestions"
+msgstr "הצעות ממבקרים"
+
+#: includes/class-admin.php:1455
+msgid "Show the “Suggest a correction” form on person profiles"
+msgstr "הצגת הטופס „הצעת תיקון” בפרופילי האנשים"
+
+#: includes/class-admin.php:1458
+msgid "Disabled by default. When enabled, visitors (e.g. family members) can submit a correction or additional information about a person without logging in. Suggestions go only to the moderation queue (MyRoots → Suggestions) — nothing changes the data automatically. The form is protected against spam (honeypot, per-IP limit)."
+msgstr "מושבת כברירת מחדל. לאחר ההפעלה, מבקרים (למשל בני משפחה) יכולים ללא התחברות להציע תיקון או השלמה לנתוני אדם. ההצעות מגיעות רק לתור הבדיקה (MyRoots ← הצעות) — דבר אינו משנה את הנתונים אוטומטית. הטופס מוגן מפני ספאם (מלכודת דבש, הגבלה לכל כתובת IP)."
+
+#: includes/class-admin.php:1463
+msgid "Send an e-mail notification about new suggestions to the administrator's address"
+msgstr "שליחת התראה בדוא״ל לכתובת המנהל על הצעות חדשות"
+
+#: includes/class-admin.php:1469
+msgid "Public API (REST)"
+msgstr "API ציבורי (REST)"
+
+#: includes/class-admin.php:1473
+msgid "Share data through the public REST API (myroots/v1)"
+msgstr "שיתוף הנתונים דרך ה־REST API הציבורי (myroots/v1)"
+
+#: includes/class-admin.php:1476
+msgid "Disabled by default. When enabled, genealogical data becomes available at /wp-json/myroots/v1/ (people, profile, tree, statistics) as JSON — convenient for integrating with other applications, but it makes bulk downloading of the data easier. Only publicly visible information is shared: the API applies the same privacy mode as the site (hiding/censoring living people, section lock). When disabled, these addresses do not exist (404)."
+msgstr "מושבת כברירת מחדל. לאחר ההפעלה, הנתונים הגנאלוגיים זמינים בכתובת ‎/wp-json/myroots/v1/‎ (אנשים, פרופיל, עץ, סטטיסטיקה) כ־JSON — נוח לשילוב עם יישומים אחרים, אך מקל על הורדה המונית של הנתונים. משותף רק מידע הגלוי לציבור: ה־API מחיל את אותו מצב פרטי כמו האתר (הסתרה/צנזור של אנשים חיים, חסימת סעיפים). כשהאפשרות מושבתת, הכתובות האלה אינן קיימות (404)."
+
+#: includes/class-admin.php:1486
+msgid "People above this age without a date of death are treated as presumed deceased. 0 = disabled."
+msgstr "אנשים מעל גיל זה ללא תאריך פטירה נחשבים כנפטרים משוערים. 0 = מושבת."
+
+#: includes/class-admin.php:1490
+msgid "Scrolling on phones"
+msgstr "גלילה בטלפון"
+
+#: includes/class-admin.php:1494
+msgid "In the mobile tree view, smoothly scroll to the details panel below after tapping the “about” icon"
+msgstr "בתצוגת העץ בנייד, גלילה חלקה אל לוח הפרטים שמתחת לאחר הקשה על הסמל „אודות”"
+
+#: includes/class-admin.php:1507
+msgid "Settings for the people list (cards) generated by the shortcode."
+msgstr "הגדרות רשימת האנשים (כרטיסים) שנוצרת על ידי הקוד המקוצר."
+
+#: includes/class-admin.php:1510
+msgid "Cards per page"
+msgstr "כרטיסים לעמוד"
+
+#: includes/class-admin.php:1514
+msgid "How many cards one batch of the list loads (6–200). Default: 36."
+msgstr "כמה כרטיסים נטענים בכל מנה של הרשימה (6–200). ברירת מחדל: 36."
+
+#: includes/class-admin.php:1518
+msgid "Default sorting"
+msgstr "מיון ברירת מחדל"
+
+#: includes/class-admin.php:1522
+msgid "Surname (A→Z)"
+msgstr "שם משפחה (א←ת)"
+
+#: includes/class-admin.php:1523
+msgid "Surname (Z→A)"
+msgstr "שם משפחה (ת←א)"
+
+#: includes/class-admin.php:1524
+msgid "Date of birth (oldest first)"
+msgstr "תאריך לידה (מהמבוגרים)"
+
+#: includes/class-admin.php:1525
+msgid "Date of birth (youngest first)"
+msgstr "תאריך לידה (מהצעירים)"
+
+#: includes/class-admin.php:1528
+msgid "People without a date of birth go to the end when sorting by date."
+msgstr "אנשים ללא תאריך לידה מוצבים בסוף במיון לפי תאריך."
+
+#: includes/class-admin.php:1535
+msgid "Define additional field groups shown when editing each person."
+msgstr "הגדרת קבוצות שדות נוספות שמוצגות בעריכת כל אדם."
+
+#: includes/class-admin.php:1541
+msgid "Add field group"
+msgstr "הוספת קבוצת שדות"
+
+#: includes/class-admin.php:1551
+msgid "Show / edit JSON manually"
+msgstr "הצגה / עריכה ידנית של JSON"
+
+#: includes/class-admin.php:1556
+msgid "Changes in this field are synchronized with the builder when you click outside the field."
+msgstr "שינויים בשדה זה מסונכרנים עם הבונה בלחיצה מחוץ לשדה."
+
+#: includes/class-admin.php:1564
+msgid "Field:"
+msgstr "שדה:"
+
+#: includes/class-admin.php:1565
+msgid "Field name"
+msgstr "שם השדה"
+
+#: includes/class-admin.php:1566
+msgid "Remove field"
+msgstr "הסרת השדה"
+
+#: includes/class-admin.php:1567
+msgid "Comma-separated options…"
+msgstr "אפשרויות מופרדות בפסיקים…"
+
+#: includes/class-admin.php:1568
+msgid "Group:"
+msgstr "קבוצה:"
+
+#: includes/class-admin.php:1569
+msgid "Group name"
+msgstr "שם הקבוצה"
+
+#: includes/class-admin.php:1570
+msgid "Remove group"
+msgstr "הסרת הקבוצה"
+
+#: includes/class-admin.php:1571
+msgid "Add field"
+msgstr "הוספת שדה"
+
+#: includes/class-admin.php:1572
+msgid "Remove the whole field group?"
+msgstr "להסיר את כל קבוצת השדות?"
+
+#: includes/class-admin.php:1573
+msgid "No groups. Click “Add field group” to start."
+msgstr "אין קבוצות. יש ללחוץ על „הוספת קבוצת שדות” כדי להתחיל."
+
+#: includes/class-admin.php:1587
+msgid "E-mail notifications (anniversaries)"
+msgstr "התראות בדוא״ל (ימי שנה)"
+
+#: includes/class-admin.php:1588
+msgid "An automatic digest with a list of upcoming anniversaries sent every morning."
+msgstr "סיכום אוטומטי של ימי השנה הקרובים, נשלח בכל בוקר."
+
+#: includes/class-admin.php:1591
+msgid "Enable notifications"
+msgstr "הפעלת התראות"
+
+#: includes/class-admin.php:1595
+msgid "Send an e-mail digest with anniversaries"
+msgstr "שליחת סיכום ימי שנה בדוא״ל"
+
+#: includes/class-admin.php:1600
+msgid "Lead time (days)"
+msgstr "הקדמה (ימים)"
+
+#: includes/class-admin.php:1604
+msgid "days before the anniversary"
+msgstr "ימים לפני יום השנה"
+
+#: includes/class-admin.php:1608
+msgid "Recipients"
+msgstr "נמענים"
+
+#: includes/class-admin.php:1613
+msgid "One e-mail address per line. Default: the admin address."
+msgstr "כתובת דוא״ל אחת בכל שורה. ברירת מחדל: כתובת המנהל."
+
+#: includes/class-admin.php:1617
+msgid "Test"
+msgstr "בדיקה"
+
+#: includes/class-admin.php:1621
+msgid "Send a test digest now"
+msgstr "שליחת סיכום בדיקה עכשיו"
+
+#: includes/class-admin.php:1630
+msgid "Tree — starting person"
+msgstr "עץ — אדם התחלתי"
+
+#: includes/class-admin.php:1631
+msgid "Who is shown first (centered) when the tree is opened."
+msgstr "מי מוצג ראשון (במרכז) בפתיחת העץ."
+
+#: includes/class-admin.php:1645
+msgid "Selection method"
+msgstr "שיטת הבחירה"
+
+#: includes/class-admin.php:1648
+msgid "Automatic — the person with the most data"
+msgstr "אוטומטי — האדם עם הכי הרבה נתונים"
+
+#: includes/class-admin.php:1649
+msgid "Automatic — the most recently added ancestor without parents"
+msgstr "אוטומטי — האב הקדמון ללא הורים שנוסף לאחרונה"
+
+#: includes/class-admin.php:1650
+msgid "Specific person (select below)"
+msgstr "אדם מסוים (בחירה למטה)"
+
+#: includes/class-admin.php:1652
+msgid "Automatic modes pick the person each time the tree is opened."
+msgstr "המצבים האוטומטיים בוחרים את האדם בכל פתיחה של העץ."
+
+#: includes/class-admin.php:1666
+msgid "Used only in the “Specific person” mode. If the person is deleted, the tree will go back to automatic mode."
+msgstr "בשימוש רק במצב „אדם מסוים”. אם האדם יימחק, העץ יחזור למצב אוטומטי."
+
+#: includes/class-admin.php:1675
+msgid "Save settings"
+msgstr "שמירת ההגדרות"
+
+#: includes/class-admin.php:1683
+msgid "Error"
+msgstr "שגיאה"
+
+#: includes/class-admin.php:1692
+msgid "Map — geocoding places"
+msgstr "מפה — קידוד גאוגרפי של מקומות"
+
+#: includes/class-admin.php:1693
+msgid "Determines coordinates for places (births, deaths, marriages) that are not in the cache yet — e.g. after a GEDCOM import. It works in batches (about 1 request per second according to the OpenStreetMap policy); a background task will finish the rest. Click again to process the next batch."
+msgstr "קובע קואורדינטות למקומות (לידות, פטירות, נישואים) שעדיין אינם במטמון — למשל אחרי ייבוא GEDCOM. פועל במנות (כבקשה אחת בשנייה לפי מדיניות OpenStreetMap); משימת רקע תשלים את השאר. יש ללחוץ שוב כדי לעבד את המנה הבאה."
+
+#: includes/class-admin.php:1695
+msgid "Geocoding is inactive until you enable the external map services in the “Privacy and restrictions” section above and save the settings."
+msgstr "הקידוד הגאוגרפי אינו פעיל עד שתפעילו את שירותי המפות החיצוניים בסעיף „פרטיות והגבלות” שלמעלה ותשמרו את ההגדרות."
+
+#: includes/class-admin.php:1700
+msgid "Refresh place geocoding"
+msgstr "רענון הקידוד הגאוגרפי של המקומות"
+
+#: includes/class-admin.php:1707
+msgid "Processing… (this may take several seconds)"
+msgstr "מעבד… (עשוי להימשך כמה שניות)"
+
+#: includes/class-admin.php:1709
+msgid "Done."
+msgstr "בוצע."
+
+#: includes/class-admin.php:1710
+msgid "Error."
+msgstr "שגיאה."
+
+#: includes/class-admin.php:1786
+msgid "Primary color"
+msgstr "צבע ראשי"
+
+#: includes/class-admin.php:1786
+msgid "Headings, buttons, active elements"
+msgstr "כותרות, כפתורים, רכיבים פעילים"
+
+#: includes/class-admin.php:1787
+msgid "Accent color"
+msgstr "צבע הדגשה"
+
+#: includes/class-admin.php:1787
+msgid "Births, lifeline accents"
+msgstr "לידות, הדגשות בקו החיים"
+
+#: includes/class-admin.php:1788
+msgid "Page background"
+msgstr "רקע העמוד"
+
+#: includes/class-admin.php:1788
+msgid "Section and container background"
+msgstr "רקע הסעיפים והמכל"
+
+#: includes/class-admin.php:1789
+msgid "Card background"
+msgstr "רקע הכרטיסים"
+
+#: includes/class-admin.php:1789
+msgid "Inside of cards and sections"
+msgstr "פנים הכרטיסים והסעיפים"
+
+#: includes/class-admin.php:1790
+msgid "Text color"
+msgstr "צבע הטקסט"
+
+#: includes/class-admin.php:1790
+msgid "Main content color"
+msgstr "הצבע הראשי של התוכן"
+
+#: includes/class-admin.php:1791
+msgid "Border"
+msgstr "מסגרת"
+
+#: includes/class-admin.php:1791
+msgid "Element borders, separators"
+msgstr "מסגרות רכיבים, מפרידים"
+
+#: includes/class-admin.php:1792
+msgid "Event: birth"
+msgstr "אירוע: לידה"
+
+#: includes/class-admin.php:1792
+msgid "Birth bar, dot and badge"
+msgstr "פס, נקודה ותג של לידות"
+
+#: includes/class-admin.php:1793
+msgid "Event: death"
+msgstr "אירוע: פטירה"
+
+#: includes/class-admin.php:1793
+msgid "Death bar, dot and badge"
+msgstr "פס, נקודה ותג של פטירות"
+
+#: includes/class-admin.php:1794
+msgid "Event: marriage"
+msgstr "אירוע: נישואים"
+
+#: includes/class-admin.php:1794
+msgid "Marriage bar, dot and badge"
+msgstr "פס, נקודה ותג של נישואים"
+
+#: includes/class-admin.php:1795
+msgid "Event: custom"
+msgstr "אירוע: מותאם אישית"
+
+#: includes/class-admin.php:1795
+msgid "Custom event bar, dot and badge"
+msgstr "פס, נקודה ותג של אירועים מותאמים"
+
+#: includes/class-admin.php:1796
+msgid "Event: end of relationship"
+msgstr "אירוע: סיום קשר"
+
+#: includes/class-admin.php:1796
+msgid "Separation/divorce bar and dot"
+msgstr "פס ונקודה של פרידה/גירושין"
+
+#: includes/class-admin.php:1801
+msgid "Theme font (inherit)"
+msgstr "גופן ערכת העיצוב (inherit)"
+
+#: includes/class-admin.php:1802
+msgid "System (sans-serif)"
+msgstr "מערכת (sans-serif)"
+
+#: includes/class-admin.php:1809 includes/class-setup.php:379
+msgid "None"
+msgstr "ללא"
+
+#: includes/class-admin.php:1810
+msgid "Subtle"
+msgstr "עדין"
+
+#: includes/class-admin.php:1811
+msgid "Standard"
+msgstr "רגיל"
+
+#: includes/class-admin.php:1812
+msgid "Strong"
+msgstr "חזק"
+
+#: includes/class-admin.php:1813
+msgid "Very strong"
+msgstr "חזק מאוד"
+
+#: includes/class-admin.php:1822
+msgid "Classic navy"
+msgstr "כחול נייבי קלאסי"
+
+#: includes/class-admin.php:1830
+msgid "Warm sepia"
+msgstr "ספיה חמה"
+
+#: includes/class-admin.php:1838
+msgid "Modern minimal"
+msgstr "מינימליסטי מודרני"
+
+#: includes/class-admin.php:1846
+msgid "Navy and gold"
+msgstr "נייבי וזהב"
+
+#: includes/class-admin.php:1854
+msgid "Forest green"
+msgstr "ירוק יער"
+
+#: includes/class-admin.php:1862
+msgid "Burgundy retro"
+msgstr "בורדו רטרו"
+
+#: includes/class-admin.php:1870
+msgid "Light pastel"
+msgstr "פסטל בהיר"
+
+#: includes/class-admin.php:1878
+msgid "Dark contrast"
+msgstr "ניגודיות כהה"
+
+#: includes/class-admin.php:1887
+msgid "Neon night"
+msgstr "לילה ניאון"
+
+#: includes/class-admin.php:1895
+msgid "Coral and ink"
+msgstr "אלמוג ודיו"
+
+#: includes/class-admin.php:1903
+msgid "Electric violet"
+msgstr "סגול חשמלי"
+
+#: includes/class-admin.php:1912
+msgid "Ocean depth"
+msgstr "מעמקי הים"
+
+#: includes/class-admin.php:1920
+msgid "Terracotta"
+msgstr "טרקוטה"
+
+#: includes/class-admin.php:1928
+msgid "Slate and copper"
+msgstr "צפחה ונחושת"
+
+#: includes/class-admin.php:1936
+msgid "Plum"
+msgstr "שזיף"
+
+#: includes/class-admin.php:1944
+msgid "Nordic"
+msgstr "נורדי"
+
+#: includes/class-admin.php:1956
+msgid "MyRoots — Appearance"
+msgstr "MyRoots — מראה"
+
+#: includes/class-admin.php:1970
+msgid "Ready-made styles"
+msgstr "סגנונות מוכנים"
+
+#: includes/class-admin.php:1973
+msgid "Click a style to set a consistent look. It changes all colors (palette, events, map overlay), the font, the size and weight of titles, the corner radius and the shadow; widths stay unchanged. The controls and preview will update — click “Save changes” to apply."
+msgstr "יש ללחוץ על סגנון כדי לקבוע מראה אחיד. הוא משנה את כל הצבעים (פלטה, אירועים, שכבת המפה), את הגופן, את גודל הכותרות ועוביין, את עיגול הפינות ואת הצל; הרוחבים נשארים ללא שינוי. הפקדים והתצוגה המקדימה יתעדכנו — יש ללחוץ על „שמירת שינויים” כדי להחיל."
+
+#: includes/class-admin.php:1994
+msgid "Colors"
+msgstr "צבעים"
+
+#: includes/class-admin.php:2024
+msgid "Typography"
+msgstr "טיפוגרפיה"
+
+#: includes/class-admin.php:2028
+msgid "Font"
+msgstr "גופן"
+
+#: includes/class-admin.php:2038
+msgid "Custom font…"
+msgstr "גופן מותאם…"
+
+#: includes/class-admin.php:2042
+msgid "e.g. 'Lato', sans-serif"
+msgstr "למשל 'Lato', sans-serif"
+
+#: includes/class-admin.php:2047
+msgid "Sample text — John Smith, 1920–1998"
+msgstr "טקסט לדוגמה — ישראל ישראלי, 1920–1998"
+
+#: includes/class-admin.php:2051
+msgid "Loading Google Fonts is disabled (default). The selected Google font will not be downloaded from Google servers — the site will use a system font. You can give consent in MyRoots → Settings."
+msgstr "טעינת Google Fonts מושבתת (ברירת מחדל). גופן Google שנבחר לא יורד משרתי Google — האתר ישתמש בגופן מערכת. ניתן לתת הסכמה ב־MyRoots ← הגדרות."
+
+#: includes/class-admin.php:2058
+msgid "Font size"
+msgstr "גודל גופן"
+
+#: includes/class-admin.php:2075
+msgid "Title weight"
+msgstr "עובי הכותרות"
+
+#: includes/class-admin.php:2079
+msgid "Extra light"
+msgstr "דק מאוד"
+
+#: includes/class-admin.php:2080
+msgid "Light"
+msgstr "דק"
+
+#: includes/class-admin.php:2081
+msgid "Normal"
+msgstr "רגיל"
+
+#: includes/class-admin.php:2082
+msgid "Semi-bold"
+msgstr "בינוני־מודגש"
+
+#: includes/class-admin.php:2083
+msgid "Bold"
+msgstr "מודגש"
+
+#: includes/class-admin.php:2095
+msgid "Applies to the first name and surname on the person's profile"
+msgstr "חל על השם הפרטי ושם המשפחה בפרופיל האדם"
+
+#: includes/class-admin.php:2104
+msgid "Widths"
+msgstr "רוחבים"
+
+#: includes/class-admin.php:2107
+msgid "Content width"
+msgstr "רוחב התוכן"
+
+#: includes/class-admin.php:2115 includes/class-admin.php:2134
+msgid "Full"
+msgstr "מלא"
+
+#: includes/class-admin.php:2122
+msgid "List, profile, statistics, lifeline, map, events."
+msgstr "רשימה, פרופיל, סטטיסטיקה, קו חיים, מפה, אירועים."
+
+#: includes/class-admin.php:2126
+msgid "Tree width"
+msgstr "רוחב העץ"
+
+#: includes/class-admin.php:2141
+msgid "Family tree."
+msgstr "עץ משפחה."
+
+#: includes/class-admin.php:2150
+msgid "Shape and shadow"
+msgstr "צורה וצל"
+
+#: includes/class-admin.php:2154
+msgid "Corner radius"
+msgstr "עיגול פינות"
+
+#: includes/class-admin.php:2164
+msgid "Corner preview"
+msgstr "תצוגת הפינה"
+
+#: includes/class-admin.php:2174
+msgid "Card shadow"
+msgstr "צל הכרטיסים"
+
+#: includes/class-admin.php:2201
+msgid "Tile overlay color"
+msgstr "צבע השכבה על אריחי המפה"
+
+#: includes/class-admin.php:2218
+msgid "The color of the filter applied to the map tiles. Greys → monochrome effect (default). Other colors → tinted map style. Works on the main map and mini-maps."
+msgstr "צבע המסנן שמונח על אריחי המפה. גוני אפור ← אפקט מונוכרומטי (ברירת מחדל). צבעים אחרים ← סגנון מפה צבוע. חל על המפה הראשית ועל המפות המוקטנות."
+
+#: includes/class-admin.php:2223
+msgid "Grey (default)"
+msgstr "אפור (ברירת מחדל)"
+
+#: includes/class-admin.php:2224
+msgid "Full greyscale"
+msgstr "גווני אפור מלאים"
+
+#: includes/class-admin.php:2225
+msgid "Blue"
+msgstr "כחול"
+
+#: includes/class-admin.php:2226
+msgid "Sepia"
+msgstr "ספיה"
+
+#: includes/class-admin.php:2227
+msgid "Green"
+msgstr "ירוק"
+
+#: includes/class-admin.php:2228
+msgid "Warm red"
+msgstr "אדום חם"
+
+#: includes/class-admin.php:2244
+msgid "Save appearance"
+msgstr "שמירת המראה"
+
+#: includes/class-admin.php:2246
+msgid "Restore defaults"
+msgstr "שחזור ברירות המחדל"
+
+#: includes/class-admin.php:2255
+msgid "Live preview"
+msgstr "תצוגה מקדימה חיה"
+
+#: includes/class-admin.php:2257
+msgid "Card"
+msgstr "כרטיס"
+
+#: includes/class-admin.php:2258
+msgid "Profile"
+msgstr "פרופיל"
+
+#: includes/class-admin.php:2283
+msgid "Person card (list and tree)"
+msgstr "כרטיס אדם (רשימה ועץ)"
+
+#: includes/class-admin.php:2306
+msgid "Smith"
+msgstr "ישראלי"
+
+#: includes/class-admin.php:2315
+msgid "Engineer"
+msgstr "מהנדס"
+
+#: includes/class-admin.php:2317
+msgid "Person profile — hero and table"
+msgstr "פרופיל אדם — כותרת וטבלה"
+
+#: includes/class-admin.php:2329
+msgid "Promotion"
+msgstr "קידום בעבודה"
+
+#: includes/class-admin.php:2330
+msgid "End of relationship"
+msgstr "סיום הקשר"
+
+#: includes/class-admin.php:2343
+msgid "Person's lifeline"
+msgstr "קו החיים של האדם"
+
+#: includes/class-admin.php:2366
+msgid "Restore the default appearance settings?"
+msgstr "לשחזר את הגדרות המראה המוגדרות כברירת מחדל?"
+
+#. translators: %s: clan name
+#: includes/class-admin.php:2385
+#, php-format
+msgid "Clan “%s” has been added."
+msgstr "השושלת „%s” נוספה."
+
+#. translators: %d: number of clans added from the database to the definitions
+#: includes/class-admin.php:2401
+#, php-format
+msgid "Added %d clan from the database to the definitions."
+msgid_plural "Added %d clans from the database to the definitions."
+msgstr[0] "נוספה שושלת %d ממסד הנתונים להגדרות."
+msgstr[1] "נוספו %d שושלות ממסד הנתונים להגדרות."
+
+#. translators: %s: clan name
+#: includes/class-admin.php:2415
+#, php-format
+msgid "Clan “%s” has been removed from the list of definitions (people keep their assignments)."
+msgstr "השושלת „%s” הוסרה מרשימת ההגדרות (האנשים שומרים על השיוך)."
+
+#: includes/class-admin.php:2426
+msgid "Clan list saved."
+msgstr "רשימת השושלות נשמרה."
+
+#: includes/class-admin.php:2438
+msgid "MyRoots — Clans"
+msgstr "MyRoots — שושלות"
+
+#: includes/class-admin.php:2439
+msgid "Define clans in advance — they will be available as checkboxes for every person, even before the first person is assigned to them."
+msgstr "ניתן להגדיר שושלות מראש — הן יהיו זמינות כתיבות סימון לכל אדם, עוד לפני שישויך אליהן האדם הראשון."
+
+#: includes/class-admin.php:2445
+msgid "Defined clans"
+msgstr "שושלות מוגדרות"
+
+#: includes/class-admin.php:2451
+msgid "Clan name"
+msgstr "שם השושלת"
+
+#: includes/class-admin.php:2452 includes/class-admin.php:2770 includes/class-setup.php:361
+msgid "Actions"
+msgstr "פעולות"
+
+#: includes/class-admin.php:2466
+msgid "Rename"
+msgstr "שינוי שם"
+
+#: includes/class-admin.php:2468 includes/class-admin.php:2490
+msgid "Save"
+msgstr "שמירה"
+
+#. translators: %s: clan name
+#: includes/class-admin.php:2475
+#, php-format
+msgid "Remove clan %s from the list?"
+msgstr "להסיר את השושלת %s מהרשימה?"
+
+#: includes/class-admin.php:2476
+msgid "Remove from the list of definitions"
+msgstr "הסרה מרשימת ההגדרות"
+
+#: includes/class-admin.php:2488
+msgid "The name cannot be empty."
+msgstr "השם לא יכול להיות ריק."
+
+#: includes/class-admin.php:2496
+msgid "No clans defined. Add the first one below."
+msgstr "לא הוגדרו שושלות. יש להוסיף את הראשונה למטה."
+
+#: includes/class-admin.php:2504
+msgid "New clan name…"
+msgstr "שם השושלת החדשה…"
+
+#: includes/class-admin.php:2506
+msgid "Add clan"
+msgstr "הוספת שושלת"
+
+#: includes/class-admin.php:2512
+msgid "Bulk edit (renaming)"
+msgstr "עריכה מרוכזת (שינוי שמות)"
+
+#: includes/class-admin.php:2521
+msgid "Save name changes"
+msgstr "שמירת שינויי השמות"
+
+#: includes/class-admin.php:2522
+msgid "Leave the field empty to remove the clan from the list."
+msgstr "יש להשאיר את השדה ריק כדי להסיר את השושלת מהרשימה."
+
+#: includes/class-admin.php:2530
+msgid "Clans in the people database"
+msgstr "שושלות במסד הנתונים של האנשים"
+
+#: includes/class-admin.php:2531
+msgid "Clans assigned to at least one person. They are shown in filters regardless of the definitions."
+msgstr "שושלות המשויכות לאדם אחד לפחות. הן מופיעות במסננים ללא תלות בהגדרות."
+
+#: includes/class-admin.php:2550 includes/class-setup.php:360
+msgid "Status"
+msgstr "סטטוס"
+
+#: includes/class-admin.php:2560
+msgid "Defined"
+msgstr "מוגדרת"
+
+#: includes/class-admin.php:2562
+msgid "Only in the database"
+msgstr "רק במסד הנתונים"
+
+#: includes/class-admin.php:2570
+msgid "No person has a clan assigned."
+msgstr "לאף אדם אין שושלת משויכת."
+
+#: includes/class-admin.php:2575
+msgid "Clans in the database without a definition:"
+msgstr "שושלות במסד הנתונים ללא הגדרה:"
+
+#: includes/class-admin.php:2576
+msgid "The clans below are assigned to people but are not on the list of definitions. You can add them so they are visible even with an empty database."
+msgstr "השושלות שלהלן משויכות לאנשים אך אינן ברשימת ההגדרות. ניתן להוסיף אותן כדי שיופיעו גם כשמסד הנתונים ריק."
+
+#. translators: %d: number of clans to add
+#: includes/class-admin.php:2585
+#, php-format
+msgid "Add all (%d)"
+msgid_plural "Add all (%d)"
+msgstr[0] "הוספת הכול (%d)"
+msgstr[1] "הוספת הכול (%d)"
+
+#: includes/class-admin.php:2589
+msgid "with one click"
+msgstr "בלחיצה אחת"
+
+#: includes/class-admin.php:2608
+msgid "How does it work?"
+msgstr "איך זה עובד?"
+
+#: includes/class-admin.php:2610
+msgid "Defined clans are always visible in the person metabox as checkboxes."
+msgstr "שושלות מוגדרות מופיעות תמיד כתיבות סימון בתיבת הנתונים של האדם."
+
+#: includes/class-admin.php:2611
+msgid "Clans used in the database automatically appear in filters, even if they are not on the list of definitions."
+msgstr "שושלות שבשימוש במסד הנתונים מופיעות אוטומטית במסננים, גם אם אינן ברשימת ההגדרות."
+
+#: includes/class-admin.php:2612
+msgid "Removing a clan from the list of definitions does not remove it from people — it only changes its visibility in the checkboxes."
+msgstr "הסרה מרשימת ההגדרות אינה מסירה את השיוך מהאנשים — היא משנה רק את הנראות בתיבות הסימון."
+
+#. translators: %s: error message
+#: includes/class-admin.php:2627
+#, php-format
+msgid "GEDCOM: %s"
+msgstr "GEDCOM: %s"
+
+#: includes/class-admin.php:2632
+msgid "The GEDCOM module is not loaded."
+msgstr "מודול GEDCOM אינו טעון."
+
+#: includes/class-admin.php:2665
+msgid "Unknown action."
+msgstr "פעולה לא ידועה."
+
+#: includes/class-admin.php:2667
+msgid "No such user was found."
+msgstr "המשתמש לא נמצא."
+
+#: includes/class-admin.php:2669
+msgid "You do not have permission to change this user's roles."
+msgstr "אין לך הרשאה לשנות את התפקידים של משתמש זה."
+
+#: includes/class-admin.php:2671
+msgid "You cannot change the roles of your own account from this screen."
+msgstr "לא ניתן לשנות את התפקידים של החשבון שלך ממסך זה."
+
+#: includes/class-admin.php:2675
+msgid "The roles of an administrator account cannot be changed from this screen."
+msgstr "לא ניתן לשנות את התפקידים של חשבון מנהל ממסך זה."
+
+#: includes/class-admin.php:2678
+msgid "This account already has the “Genealogy Editor” role."
+msgstr "לחשבון זה כבר יש את התפקיד „עורך גנאלוגיה”."
+
+#. translators: %s: account username
+#: includes/class-admin.php:2682
+#, php-format
+msgid "The “Genealogy Editor” role has been granted to the account “%s”."
+msgstr "התפקיד „עורך גנאלוגיה” הוענק לחשבון „%s”."
+
+#: includes/class-admin.php:2686
+msgid "This account does not have the “Genealogy Editor” role."
+msgstr "לחשבון זה אין את התפקיד „עורך גנאלוגיה”."
+
+#. translators: %s: account username
+#: includes/class-admin.php:2696
+#, php-format
+msgid "The “Genealogy Editor” role has been removed from the account “%s”."
+msgstr "התפקיד „עורך גנאלוגיה” נשלל מהחשבון „%s”."
+
+#: includes/class-admin.php:2718
+msgid "MyRoots users"
+msgstr "משתמשי MyRoots"
+
+#: includes/class-admin.php:2720
+msgid "Accounts with the “Genealogy Editor” role can add, edit and delete people and use the MyRoots panel (without Settings, Appearance, GEDCOM and this tab)."
+msgstr "חשבונות עם התפקיד „עורך גנאלוגיה” יכולים להוסיף, לערוך ולמחוק אנשים ולהשתמש בלוח MyRoots (ללא הגדרות, מראה, GEDCOM ולשונית זו)."
+
+#. translators: %s: link to the “Users → Add New” screen
+#: includes/class-admin.php:2726
+#, php-format
+msgid "You create new accounts with the standard WordPress screen: %s. Here you grant or remove the plugin role for existing accounts."
+msgstr "חשבונות חדשים יוצרים במסך הסטנדרטי של וורדפרס: %s. כאן מעניקים לחשבונות קיימים את תפקיד התוסף או שוללים אותו."
+
+#: includes/class-admin.php:2727
+msgid "Users → Add New"
+msgstr "משתמשים ← הוספת משתמש"
+
+#: includes/class-admin.php:2736
+msgid "Grant the “Genealogy Editor” role"
+msgstr "הענקת התפקיד „עורך גנאלוגיה”"
+
+#: includes/class-admin.php:2738
+msgid "There are no accounts that can be given this role."
+msgstr "אין חשבונות שניתן להעניק להם תפקיד זה."
+
+#: includes/class-admin.php:2745
+msgid "Account"
+msgstr "חשבון"
+
+#: includes/class-admin.php:2748
+msgid "— select an account —"
+msgstr "— בחירת חשבון —"
+
+#: includes/class-admin.php:2759
+msgid "Grant role"
+msgstr "הענקת תפקיד"
+
+#: includes/class-admin.php:2764
+msgid "Accounts with the “Genealogy Editor” role"
+msgstr "חשבונות עם התפקיד „עורך גנאלוגיה”"
+
+#: includes/class-admin.php:2768
+msgid "Username"
+msgstr "שם משתמש"
+
+#: includes/class-admin.php:2769
+msgid "E-mail"
+msgstr "דוא״ל"
+
+#: includes/class-admin.php:2775
+msgid "No genealogy editor accounts."
+msgstr "אין חשבונות של עורכי גנאלוגיה."
+
+#: includes/class-admin.php:2783
+msgid "Edit profile"
+msgstr "עריכת פרופיל"
+
+#: includes/class-admin.php:2789
+msgid "Remove role"
+msgstr "שלילת תפקיד"
+
+#: includes/class-backup.php:32 includes/class-backup.php:33
+msgid "Backup"
+msgstr "גיבוי"
+
+#: includes/class-backup.php:133
+msgid "MyRoots backup"
+msgstr "גיבוי MyRoots"
+
+#: includes/class-backup.php:142
+msgid "Export"
+msgstr "ייצוא"
+
+#: includes/class-backup.php:143
+msgid "Downloads a JSON file with all of the plugin's data: people (with custom fields, galleries and citations), pets, sources and their links, as well as clans and the custom field schema. Unlike GEDCOM, this backup does not simplify anything."
+msgstr "מוריד קובץ JSON עם כל נתוני התוסף: אנשים (עם שדות מותאמים, גלריות וציטוטים), חיות מחמד, מקורות והקישורים שלהם, וכן שושלות ותבנית השדות המותאמים. בניגוד ל־GEDCOM, הגיבוי הזה אינו מפשט דבר."
+
+#: includes/class-backup.php:144
+msgid "Media files (photos, scans) are not packed into the backup — they stay in the WordPress media library. The backup stores references to them."
+msgstr "קובצי מדיה (תמונות, סריקות) אינם נארזים בגיבוי — הם נשארים בספריית המדיה של וורדפרס. הגיבוי שומר הפניות אליהם."
+
+#: includes/class-backup.php:147
+msgid "Download backup (JSON)"
+msgstr "הורדת גיבוי (JSON)"
+
+#: includes/class-backup.php:152
+msgid "Import"
+msgstr "ייבוא"
+
+#: includes/class-backup.php:153
+msgid "Loads a JSON backup, creating all entries FROM SCRATCH (with new IDs) and recreating the relations between them. Existing entries are not modified or deleted — importing on a site that already has data will create duplicates."
+msgstr "טוען גיבוי JSON ויוצר את כל הרשומות מחדש (עם מזהים חדשים), תוך שחזור הקשרים ביניהן. רשומות קיימות אינן משתנות ואינן נמחקות — ייבוא לאתר שכבר יש בו נתונים ייצור כפילויות."
+
+#: includes/class-backup.php:158
+msgid "I understand that the import will add entries from the backup to the current database."
+msgstr "ידוע לי שהייבוא יוסיף את הרשומות מהגיבוי למסד הנתונים הנוכחי."
+
+#: includes/class-backup.php:159
+msgid "Import backup"
+msgstr "ייבוא גיבוי"
+
+#: includes/class-backup.php:180
+msgid "Tick the confirmation box to run the import."
+msgstr "יש לסמן את תיבת האישור כדי לבצע את הייבוא."
+
+#: includes/class-backup.php:192
+msgid "No file was uploaded."
+msgstr "לא הועלה קובץ."
+
+#: includes/class-backup.php:195
+msgid "File upload error."
+msgstr "שגיאה בהעלאת הקובץ."
+
+#: includes/class-backup.php:198
+msgid "The file is too large (64 MB limit)."
+msgstr "הקובץ גדול מדי (מגבלה של 64MB)."
+
+#: includes/class-backup.php:204
+msgid "This is not a valid MyRoots backup file."
+msgstr "זה אינו קובץ גיבוי תקין של MyRoots."
+
+#. translators: 1: number of people, 2: number of pets, 3: number of sources
+#: includes/class-backup.php:360
+#, php-format
+msgid "Import finished: %1$d people, %2$d pets, %3$d sources."
+msgstr "הייבוא הסתיים: %1$d אנשים, %2$d חיות מחמד, %3$d מקורות."
+
+#: includes/class-merge.php:93 includes/class-merge.php:105
+msgid "Merging duplicate people"
+msgstr "מיזוג אנשים כפולים"
+
+#: includes/class-merge.php:94
+msgid "Merge duplicates"
+msgstr "מיזוג כפילויות"
+
+#: includes/class-merge.php:106
+msgid "Select two people who are the same individual and decide which data to keep. The second record will be moved to the trash."
+msgstr "יש לבחור שני אנשים שהם אותו אדם ולהחליט אילו נתונים לשמור. הרשומה השנייה תועבר לפח."
+
+#: includes/class-merge.php:230
+msgid "Possible duplicates"
+msgstr "כפילויות אפשריות"
+
+#: includes/class-merge.php:231
+msgid "Found automatically: the same surname, a similar first name and a close year of birth. Click “Compare” to review the pair in the tool below, or dismiss the suggestion if they are different people."
+msgstr "נמצאו אוטומטית: אותו שם משפחה, שם פרטי דומה ושנת לידה קרובה. יש ללחוץ על „השוואה” כדי לבחון את הזוג בכלי שלמטה, או לדחות את ההצעה אם מדובר באנשים שונים."
+
+#: includes/class-merge.php:242
+msgid "Match confidence"
+msgstr "רמת ההתאמה"
+
+#: includes/class-merge.php:244 includes/class-merge.php:350
+msgid "Compare"
+msgstr "השוואה"
+
+#: includes/class-merge.php:245
+msgid "Not a duplicate"
+msgstr "לא כפילות"
+
+#: includes/class-merge.php:299
+msgid "You do not have permission to merge people. Log in as an administrator or genealogy editor."
+msgstr "אין לך הרשאה למזג אנשים. יש להתחבר כמנהל או כעורך גנאלוגיה."
+
+#: includes/class-merge.php:332
+msgid "Person A — the one we keep"
+msgstr "אדם א׳ — זה שנשמר"
+
+#: includes/class-merge.php:344
+msgid "Person B — the duplicate to merge"
+msgstr "אדם ב׳ — הכפילות למיזוג"
+
+#: includes/class-merge.php:372 includes/class-sources.php:203
+msgid "Search for a person…"
+msgstr "חיפוש אדם…"
+
+#: includes/class-merge.php:404
+msgid "Merge person"
+msgstr "מיזוג אדם"
+
+#: includes/class-merge.php:419
+msgid "Merge a duplicate person"
+msgstr "מיזוג אדם כפול"
+
+#: includes/class-merge.php:423
+msgid "Select the person who is a duplicate of the current profile, then choose which data to keep. The duplicate will be moved to the trash."
+msgstr "יש לציין את האדם שהוא כפילות של הפרופיל הנוכחי, ולאחר מכן לבחור אילו נתונים לשמור. הכפילות תועבר לפח."
+
+#: includes/class-merge.php:448 includes/class-merge.php:1259
+msgid "Select two different people."
+msgstr "יש לבחור שני אנשים שונים."
+
+#: includes/class-merge.php:469
+msgid "Which record stays (keeps the URL and ID)?"
+msgstr "איזו רשומה נשארת (שומרת על הכתובת והמזהה)?"
+
+#: includes/class-merge.php:479
+msgid "Field"
+msgstr "שדה"
+
+#: includes/class-merge.php:499
+msgid "no photo"
+msgstr "ללא תמונה"
+
+#: includes/class-merge.php:555
+msgid "Photo gallery"
+msgstr "גלריית תמונות"
+
+#: includes/class-merge.php:581
+msgid "Custom fields and citations will be combined automatically (values from the kept record take priority, gaps are filled in from the other one)."
+msgstr "שדות מותאמים וציטוטים ימוזגו אוטומטית (לערכים מהרשומה הנשמרת יש עדיפות, חוסרים יושלמו מהשנייה)."
+
+#: includes/class-merge.php:586
+msgid "Merge people"
+msgstr "מיזוג אנשים"
+
+#: includes/class-merge.php:610
+msgid "none"
+msgstr "אין"
+
+#: includes/class-merge.php:665
+msgid "Invalid people."
+msgstr "אנשים לא תקינים."
+
+#: includes/class-merge.php:677
+msgid "The people have been merged. The duplicate was moved to the trash."
+msgstr "האנשים מוזגו. הכפילות הועברה לפח."
+
+#: includes/class-merge.php:1257
+msgid "Merging…"
+msgstr "ממזג…"
+
+#: includes/class-merge.php:1258
+msgid "Are you sure you want to merge these people? The second record will be moved to the trash and the operation will change links in the database."
+msgstr "למזג את האנשים האלה? הרשומה השנייה תועבר לפח והפעולה תשנה קישורים במסד הנתונים."
+
+#: includes/class-merge.php:1260
+msgid "An error occurred."
+msgstr "אירעה שגיאה."
+
+#: includes/class-merge.php:1262
+msgid "View profile"
+msgstr "הצגת פרופיל"
+
+#: includes/class-book.php:81
+msgid "Generating the book…"
+msgstr "יוצר את הספר…"
+
+#: includes/class-book.php:83
+msgid "Select a starting person."
+msgstr "יש לבחור אדם התחלתי."
+
+#: includes/class-book.php:84
+msgid "Table of contents"
+msgstr "תוכן העניינים"
+
+#: includes/class-book.php:85 includes/class-book.php:137
+msgid "Index of surnames"
+msgstr "מפתח שמות משפחה"
+
+#: includes/class-book.php:86
+msgid "p."
+msgstr "עמ׳"
+
+#: includes/class-book.php:87
+msgid "people"
+msgstr "אנשים"
+
+#: includes/class-book.php:89 includes/class-book.php:99 includes/class-book.php:110 includes/class-setup.php:81
+msgid "Genealogy book"
+msgstr "ספר גנאלוגי"
+
+#: includes/class-book.php:90
+msgid "Chapter"
+msgstr "פרק"
+
+#: includes/class-book.php:108
+msgid "Book title"
+msgstr "כותרת הספר"
+
+#: includes/class-book.php:114
+msgid "Dedication (optional)"
+msgstr "הקדשה (אופציונלי)"
+
+#: includes/class-book.php:116
+msgid "e.g. In memory of our ancestors…"
+msgstr "למשל לזכר אבותינו…"
+
+#: includes/class-book.php:120
+msgid "Chapters"
+msgstr "פרקים"
+
+#: includes/class-book.php:122
+msgid "By generation (chronologically)"
+msgstr "לפי דורות (כרונולוגית)"
+
+#: includes/class-book.php:123
+msgid "By clan"
+msgstr "לפי שושלות"
+
+#: includes/class-book.php:124
+msgid "By family branch (family = chapter)"
+msgstr "לפי ענפי משפחה (משפחה = פרק)"
+
+#: includes/class-book.php:129
+msgid "Elements"
+msgstr "רכיבים"
+
+#: includes/class-book.php:131
+msgid "Photos"
+msgstr "תמונות"
+
+#: includes/class-book.php:132
+msgid "Maps"
+msgstr "מפות"
+
+#: includes/class-book.php:135
+msgid "Biographies"
+msgstr "ביוגרפיות"
+
+#: includes/class-book.php:136
+msgid "Chapter tree"
+msgstr "עץ הפרק"
+
+#: includes/class-book.php:145
+msgid "Scope"
+msgstr "היקף"
+
+#: includes/class-book.php:148
+msgid "Ancestors of a person"
+msgstr "אבות של אדם"
+
+#: includes/class-book.php:149
+msgid "Descendants of a person"
+msgstr "צאצאים של אדם"
+
+#: includes/class-book.php:158
+msgid "If you select nothing, all people will be included."
+msgstr "אם לא יסומן דבר, ייכללו כל האנשים."
+
+#: includes/class-book.php:164
+msgid "Starting person…"
+msgstr "אדם התחלתי…"
+
+#: includes/class-book.php:169
+msgid "Max. generations (0 = no limit):"
+msgstr "מספר דורות מרבי (0 = ללא הגבלה):"
+
+#: includes/class-book.php:175
+msgid "Born from year:"
+msgstr "ילידי שנת:"
+
+#: includes/class-book.php:177
+msgid "to year:"
+msgstr "עד שנת:"
+
+#: includes/class-book.php:183
+msgid "Generate book"
+msgstr "יצירת הספר"
+
+#: includes/class-book.php:184
+msgid "Print / save as PDF"
+msgstr "הדפסה / שמירה כ־PDF"
+
+#. translators: %s: clan name
+#: includes/class-book.php:390
+#, php-format
+msgid "Clan %s"
+msgstr "שושלת %s"
+
+#: includes/class-book.php:393
+msgid "Without an assigned clan"
+msgstr "ללא שושלת משויכת"
+
+#. translators: %s: full names of the parents joined with “and”
+#: includes/class-book.php:454
+#, php-format
+msgid "Family: %s"
+msgstr "משפחה: %s"
+
+#. translators: %s: full names of the parents joined with “and”
+#: includes/class-book.php:454
+msgid "and"
+msgstr "ו"
+
+#: includes/class-book.php:459
+msgid "Other people"
+msgstr "אנשים נוספים"
+
+#. translators: %s: generation number (Roman numeral)
+#: includes/class-book.php:475
+#, php-format
+msgid "Generation %s"
+msgstr "דור %s"
+
+#: includes/class-sources.php:58
+msgid "Source"
+msgstr "מקור"
+
+#: includes/class-sources.php:59
+msgid "Add source"
+msgstr "הוספת מקור"
+
+#: includes/class-sources.php:60
+msgid "New source"
+msgstr "מקור חדש"
+
+#: includes/class-sources.php:61
+msgid "Edit source"
+msgstr "עריכת מקור"
+
+#: includes/class-sources.php:62
+msgid "Search sources"
+msgstr "חיפוש מקורות"
+
+#: includes/class-sources.php:63
+msgid "No sources."
+msgstr "אין מקורות."
+
+#: includes/class-sources.php:81
+msgid "Genealogical sources"
+msgstr "מקורות גנאלוגיים"
+
+#: includes/class-sources.php:97
+msgid "Source details"
+msgstr "פרטי המקור"
+
+#: includes/class-sources.php:111
+msgid "Source date / year"
+msgstr "תאריך / שנת המקור"
+
+#: includes/class-sources.php:116
+msgid "e.g. 1892 or 1892-05-15"
+msgstr "למשל 1892 או 1892-05-15"
+
+#: includes/class-sources.php:120
+msgid "URL / Link"
+msgstr "כתובת / קישור"
+
+#: includes/class-sources.php:129
+msgid "Audio / video link"
+msgstr "קישור שמע / וידאו"
+
+#: includes/class-sources.php:136
+msgid "An audio or video recording (YouTube, Vimeo, SoundCloud, Spotify etc.). It will be embedded on the profile of every linked person."
+msgstr "הקלטת שמע או וידאו (YouTube,‏ Vimeo,‏ SoundCloud,‏ Spotify וכו׳). היא תוטמע בפרופיל של כל אדם מקושר."
+
+#: includes/class-sources.php:145
+msgid "Archival reference, record number, document description etc."
+msgstr "סימול ארכיוני, מספר תעודה, תיאור המסמך וכו׳."
+
+#: includes/class-sources.php:149
+msgid "Scan gallery"
+msgstr "גלריית סריקות"
+
+#: includes/class-sources.php:158
+msgid "Remove scan"
+msgstr "הסרת סריקה"
+
+#: includes/class-sources.php:165
+msgid "Add scans"
+msgstr "הוספת סריקות"
+
+#: includes/class-sources.php:166
+msgid "Multi-page records and documents: add further pages of the scan. They will be visible in the sources section of the linked people's profiles (with zoom)."
+msgstr "תעודות ומסמכים מרובי עמודים: יש להוסיף את העמודים הבאים של הסריקה. הם יוצגו בסעיף המקורות בפרופילים של האנשים המקושרים (עם הגדלה)."
+
+#: includes/class-sources.php:171
+msgid "Scan / photo of the document: set it as the “Featured image” on the right."
+msgstr "סריקה / צילום של המסמך: יש להגדיר אותו כ„תמונה ראשית” מימין."
+
+#: includes/class-sources.php:176
+msgid "Select document scans"
+msgstr "בחירת סריקות המסמך"
+
+#: includes/class-sources.php:177
+msgid "Add to gallery"
+msgstr "הוספה לגלריה"
+
+#: includes/class-sources.php:191
+msgid "Linked people"
+msgstr "אנשים מקושרים"
+
+#: includes/class-sources.php:193
+msgid "People linked to this source. The link works both ways — you can also set it when editing a person (the “Sources” tab)."
+msgstr "אנשים המקושרים למקור זה. הקישור פועל בשני הכיוונים — ניתן להגדיר אותו גם בעריכת אדם (לשונית „מקורות”)."
+
+#: includes/class-gallery.php:142
+msgid "Search by person…"
+msgstr "חיפוש לפי אדם…"
+
+#: includes/class-gallery.php:153
+msgid "Show avatars"
+msgstr "הצגת אווטרים"
+
+#. translators: %d: number of photos in the gallery
+#: includes/class-gallery.php:159
+#, php-format
+msgid "%d photo"
+msgid_plural "%d photos"
+msgstr[0] "תמונה %d"
+msgstr[1] "%d תמונות"
+
+#: includes/class-gallery.php:165
+msgid "No photos to display."
+msgstr "אין תמונות להצגה."
+
+#: includes/class-gallery.php:205
+msgid "photos"
+msgstr "תמונות"
+
+#: includes/class-setup.php:57
+msgid "Timeline"
+msgstr "ציר זמן"
+
+#: includes/class-setup.php:180
+msgid "MyRoots Menu"
+msgstr "תפריט MyRoots"
+
+#. Plugin Name of the plugin
+#: my-roots.php includes/class-setup.php:192
+msgid "MyRoots"
+msgstr "MyRoots"
+
+#: includes/class-setup.php:313
+msgid "MyRoots created the “MyRoots Menu” menu (a “MyRoots” item with the plugin's subpages) and assigned it to the theme's primary location."
+msgstr "MyRoots יצר את התפריט „תפריט MyRoots” (פריט „MyRoots” עם דפי המשנה של התוסף) ושייך אותו למיקום הראשי של ערכת העיצוב."
+
+#: includes/class-setup.php:315
+msgid "MyRoots created the “MyRoots Menu” menu (a “MyRoots” item with the plugin's subpages). Assign it to a theme location in Appearance → Menus."
+msgstr "MyRoots יצר את התפריט „תפריט MyRoots” (פריט „MyRoots” עם דפי המשנה של התוסף). יש לשייך אותו למיקום בערכת העיצוב ב־מראה ← תפריטים."
+
+#: includes/class-setup.php:321
+msgid "Open menu"
+msgstr "פתיחת התפריט"
+
+#. translators: %s: title of the created page
+#: includes/class-setup.php:343
+#, php-format
+msgid "The “%s” page has been created."
+msgstr "הדף „%s” נוצר."
+
+#: includes/class-setup.php:350
+msgid "Plugin pages"
+msgstr "דפי התוסף"
+
+#: includes/class-setup.php:352
+msgid "The pages were created automatically when the plugin was activated."
+msgstr "הדפים נוצרו אוטומטית בעת הפעלת התוסף."
+
+#: includes/class-setup.php:358
+msgid "Page"
+msgstr "דף"
+
+#: includes/class-setup.php:375
+msgid "Published"
+msgstr "פורסם"
+
+#: includes/class-setup.php:386
+msgid "Preview"
+msgstr "תצוגה מקדימה"
+
+#: includes/class-setup.php:400
+msgid "Create"
+msgstr "יצירה"
+
+#: includes/class-setup.php:421
+msgid "Verification error. Please try again."
+msgstr "שגיאת אימות. נא לנסות שוב."
+
+#: includes/class-rest.php:122
+msgid "Person not found."
+msgstr "האדם לא נמצא."
+
+#: includes/class-tree.php:981
+msgid "The pets module is not available."
+msgstr "מודול חיות המחמד אינו זמין."
+
+#: includes/class-tree.php:986
+msgid "The owner is missing."
+msgstr "חסר בעלים."
+
+#: includes/class-tree.php:1000
+msgid "The pet could not be created."
+msgstr "לא ניתן היה ליצור את חיית המחמד."
+
+#: includes/class-notifications.php:188
+msgid "MyRoots — Anniversaries"
+msgstr "MyRoots — ימי שנה"
+
+#: includes/views/meta-box.php:118
+msgctxt "education"
+msgid "Primary"
+msgstr "יסודית"
+
+#: includes/views/meta-box.php:138
+msgid "e.g. 175"
+msgstr "למשל 175"
+
+#: includes/class-admin.php:1575
+msgctxt "custom field type"
+msgid "Text"
+msgstr "טקסט"
+
+#: includes/class-admin.php:1576
+msgctxt "custom field type"
+msgid "Text area"
+msgstr "אזור טקסט"
+
+#: includes/class-admin.php:1577
+msgctxt "custom field type"
+msgid "Date"
+msgstr "תאריך"
+
+#: includes/class-admin.php:1578
+msgctxt "custom field type"
+msgid "Select list"
+msgstr "רשימת בחירה"
+
+#: includes/class-admin.php:1111
+msgid "Contact the author"
+msgstr "יצירת קשר עם המחבר"
+
+#. Plugin URI of the plugin
+#: my-roots.php
+msgid "https://myroots.pl/"
+msgstr "https://myroots.pl/"
+
+#. Description of the plugin
+#: my-roots.php
+msgid "A modern genealogy plugin: interactive family tree, lifeline, map, statistics, GEDCOM import/export, and profile cards for people and pets."
+msgstr "תוסף גנאלוגיה מודרני: עץ משפחה אינטראקטיבי, קו חיים, מפה, סטטיסטיקה, ייבוא/ייצוא GEDCOM וכרטיסי פרופיל לאנשים ולחיות מחמד."
+
+#. Author of the plugin
+#: my-roots.php
+msgid "Jarek Hirsch"
+msgstr "Jarek Hirsch"
+
+#. Author URI of the plugin
+#: my-roots.php
+msgid "https://hirsch.fi/"
+msgstr "https://hirsch.fi/"
+
+#. translators: 1: sibling term (e.g. brother), 2: ancestor term in the genitive case (e.g. grandfather or grandmother).
+#: includes/class-kinship.php:379
+#, php-format
+msgctxt "kinship: sibling of an ancestor"
+msgid "%1$s of a %2$s"
+msgstr "%1$s של %2$s"
+
+#. translators: 1: woman's full name, 2: age in years
+#: includes/class-lifeline.php:305
+#, php-format
+msgctxt "female"
+msgid "%1$s was %2$d years old at the time"
+msgstr "%1$s הייתה אז בת %2$d"
+
+#. translators: 1: man's (or person's) full name, 2: age in years
+#: includes/class-lifeline.php:308
+#, php-format
+msgctxt "male"
+msgid "%1$s was %2$d years old at the time"
+msgstr "%1$s היה אז בן %2$d"
+
+#. translators: Prefix repeated before “grandson/granddaughter” for each further generation (great-grandson, great-great-…). Include a trailing hyphen or space if your language needs one.
+#: includes/class-kinship.php:309
+msgctxt "prefix for great-grandchildren"
+msgid "great-"
+msgstr "נין־"

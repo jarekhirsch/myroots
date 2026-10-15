@@ -1,0 +1,15 @@
+[package]
+name = "myroots-store"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Native storage of a MyRoots tree: SQLite records + media files (desktop and mobile apps)."
+
+[dependencies]
+myroots-core = { path = "../myroots-core" }
+serde.workspace = true
+serde_json.workspace = true
+rusqlite = { version = "0.37", features = ["bundled"] }
+
+[dev-dependencies]
+chrono = { version = "0.4", default-features = false, features = ["std"] }

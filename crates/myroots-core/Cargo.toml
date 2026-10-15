@@ -1,0 +1,13 @@
+[package]
+name = "myroots-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "MyRoots genealogy engine: data model, relations, privacy, kinship, statistics, GEDCOM, archives."
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+chrono = { version = "0.4", default-features = false, features = ["std"] }
+zip = { version = "2", default-features = false, features = ["deflate"] }
+base64 = "0.22"

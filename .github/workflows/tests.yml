@@ -1,0 +1,28 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Engine tests (incl. robustness tests)
+        run: cargo test -p myroots-core -p myroots-store
+      - name: Translations
+        run: node scripts/build-app-strings.mjs
+      - name: Type check
+        run: npm run check
+      - name: Build (browser app and family website template)
+        run: npm run build:viewer && npm run build:app
+      - name: Audit
+        run: npm audit --omit=dev

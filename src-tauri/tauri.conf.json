@@ -1,0 +1,79 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "MyRoots",
+  "version": "3.0.0",
+  "identifier": "pl.myroots.app",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build:viewer && npm run build:app",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "MyRoots",
+        "width": 1280,
+        "height": 860,
+        "minWidth": 380,
+        "minHeight": 560,
+        "dragDropEnabled": false
+      }
+    ],
+    "security": {
+      "csp": {
+        "default-src": "'self'",
+        "script-src": "'self' 'wasm-unsafe-eval'",
+        "style-src": "'self' 'unsafe-inline'",
+        "font-src": "'self' data:",
+        "img-src": "'self' data: blob: media: http://media.localhost https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://*.basemaps.cartocdn.com https://*.tile.opentopomap.org",
+        "media-src": "'self' blob: media: http://media.localhost",
+        "connect-src": "'self' ipc: http://ipc.localhost",
+        "object-src": "'none'",
+        "base-uri": "'self'",
+        "form-action": "'none'",
+        "frame-src": "'none'"
+      }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "category": "Lifestyle",
+    "shortDescription": "Family tree, photos and stories on your own device",
+    "longDescription": "MyRoots keeps your family history on your own device: people, relations, photos, sources, a family tree, a map, a lifeline and a printable family book. Import GEDCOM or a MyRoots WordPress backup and export a read-only family website.",
+    "copyright": "© 2026 Jarek Hirsch",
+    "publisher": "Jarek Hirsch",
+    "license": "GPL-3.0-or-later",
+    "homepage": "https://myroots.pl",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "fileAssociations": [
+      {
+        "ext": [
+          "myroots"
+        ],
+        "name": "MyRoots backup",
+        "description": "MyRoots family tree backup",
+        "role": "Editor",
+        "mimeType": "application/x-myroots"
+      }
+    ],
+    "macOS": {
+      "minimumSystemVersion": "11.0",
+      "entitlements": "Entitlements.plist",
+      "hardenedRuntime": true
+    },
+    "iOS": {
+      "minimumSystemVersion": "15.0"
+    },
+    "android": {
+      "minSdkVersion": 26
+    }
+  }
+}
