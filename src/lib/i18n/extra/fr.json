@@ -579,5 +579,18 @@
  "The licence gives no rights to the name and logo of MyRoots: modified versions use their own.": "La licence ne donne aucun droit sur le nom et le logo de MyRoots : les versions modifiées utilisent les leurs.",
  "It is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.": "Il est distribué dans l’espoir qu’il sera utile, mais SANS AUCUNE GARANTIE, sans même la garantie implicite de QUALITÉ MARCHANDE ou d’ADÉQUATION À UN USAGE PARTICULIER.",
  "Built with": "Conçu avec",
- "Your family data is kept on your device, not on a MyRoots server.": "Les données de votre famille sont conservées sur votre appareil, pas sur un serveur MyRoots."
+ "Your family data is kept on your device, not on a MyRoots server.": "Les données de votre famille sont conservées sur votre appareil, pas sur un serveur MyRoots.",
+ "Added: %s": "Ajouté : %s",
+ "These photos could not be added: %s": "Ces photos n’ont pas pu être ajoutées : %s",
+ "Save HEIC photos as JPEG or use the desktop app.": "Enregistrez les photos HEIC en JPEG ou utilisez l’application de bureau.",
+ "The map search service did not answer. Try again in a moment.": "Le service de recherche de la carte n’a pas répondu. Réessayez dans un instant.",
+ "Correct": "Corriger",
+ "Click on the map where %s is.": "Cliquez sur la carte à l’endroit où se trouve %s.",
+ "Places without coordinates": "Lieux sans coordonnées",
+ "Search with a different name (e.g. with the region or the old name) or point the place on the map.": "Cherchez sous un autre nom (par ex. avec la région ou l’ancien nom) ou indiquez le lieu sur la carte.",
+ "Search on the map": "Chercher sur la carte",
+ "Point on the map": "Indiquer sur la carte",
+ "Nothing found. Try another spelling or point the place on the map.": "Rien trouvé. Essayez une autre orthographe ou indiquez le lieu sur la carte.",
+ "All places are on the map.": "Tous les lieux sont sur la carte.",
+ "All places": "Tous les lieux"
 }

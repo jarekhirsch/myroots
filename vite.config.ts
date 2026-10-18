@@ -7,8 +7,8 @@ import { svelte } from '@sveltejs/vite-plugin-svelte';
 //              script (works on any hosting and from a local disk) (dist-viewer/)
 // Content-Security-Policy of the built pages (defence in depth: no inline
 // scripts, no plugins, no foreign frames). The desktop app sets its own in
-// src-tauri/tauri.conf.json. MYROOTS_NO_CSP=1 leaves it out (preview hosts
-// that add their own scripts).
+// src-tauri/tauri.conf.json (the app page built for Tauri gets no meta policy).
+// MYROOTS_NO_CSP=1 leaves it out (preview hosts that add their own scripts).
 const CSP_APP = [
   "default-src 'self'",
   "script-src 'self' 'wasm-unsafe-eval'",
@@ -40,7 +40,9 @@ function csp(viewer: boolean): Plugin {
     name: 'myroots-csp',
     apply: 'build',
     transformIndexHtml(html) {
-      if (process.env.MYROOTS_NO_CSP) return html;
+      // The desktop/mobile app gets its policy from Tauri (which also allows its
+      // ipc: and media: protocols); a second policy here would block them.
+      if (process.env.MYROOTS_NO_CSP || (!viewer && process.env.TAURI_ENV_PLATFORM)) return html;
       return html.replace('<meta charset="UTF-8" />', `<meta charset="UTF-8" />\n    <meta http-equiv="Content-Security-Policy" content="${viewer ? CSP_VIEWER : CSP_APP}" />`);
     },
   };

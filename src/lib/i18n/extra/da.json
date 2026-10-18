@@ -579,5 +579,18 @@
  "The licence gives no rights to the name and logo of MyRoots: modified versions use their own.": "Licensen giver ingen rettigheder til navnet og logoet MyRoots: ændrede versioner bruger deres egne.",
  "It is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.": "Den distribueres i håb om, at den er nyttig, men UDEN NOGEN GARANTI, heller ikke underforstået garanti for SALGBARHED eller EGNETHED TIL ET BESTEMT FORMÅL.",
  "Built with": "Bygget med",
- "Your family data is kept on your device, not on a MyRoots server.": "Din families data gemmes på din enhed, ikke på en MyRoots-server."
+ "Your family data is kept on your device, not on a MyRoots server.": "Din families data gemmes på din enhed, ikke på en MyRoots-server.",
+ "Added: %s": "Tilføjet: %s",
+ "These photos could not be added: %s": "Billederne kunne ikke tilføjes: %s",
+ "Save HEIC photos as JPEG or use the desktop app.": "Gem HEIC-billeder som JPEG, eller brug computerappen.",
+ "The map search service did not answer. Try again in a moment.": "Kortsøgningen svarede ikke. Prøv igen om lidt.",
+ "Correct": "Ret",
+ "Click on the map where %s is.": "Klik på kortet, hvor %s ligger.",
+ "Places without coordinates": "Steder uden koordinater",
+ "Search with a different name (e.g. with the region or the old name) or point the place on the map.": "Søg med et andet navn (fx med regionen eller det gamle navn), eller udpeg stedet på kortet.",
+ "Search on the map": "Søg på kortet",
+ "Point on the map": "Udpeg på kortet",
+ "Nothing found. Try another spelling or point the place on the map.": "Intet fundet. Prøv en anden stavemåde, eller udpeg stedet på kortet.",
+ "All places are on the map.": "Alle steder er på kortet.",
+ "All places": "Alle steder"
 }

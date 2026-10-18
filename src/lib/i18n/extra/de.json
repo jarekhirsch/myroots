@@ -579,5 +579,18 @@
  "The licence gives no rights to the name and logo of MyRoots: modified versions use their own.": "Die Lizenz gewährt keine Rechte am Namen und Logo von MyRoots: geänderte Versionen verwenden eigene.",
  "It is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.": "Sie wird in der Hoffnung verbreitet, dass sie nützlich ist, aber OHNE JEDE GEWÄHRLEISTUNG, sogar ohne die implizite Gewährleistung der MARKTGÄNGIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK.",
  "Built with": "Erstellt mit",
- "Your family data is kept on your device, not on a MyRoots server.": "Ihre Familiendaten werden auf Ihrem Gerät gespeichert, nicht auf einem MyRoots-Server."
+ "Your family data is kept on your device, not on a MyRoots server.": "Ihre Familiendaten werden auf Ihrem Gerät gespeichert, nicht auf einem MyRoots-Server.",
+ "Added: %s": "Hinzugefügt: %s",
+ "These photos could not be added: %s": "Diese Fotos konnten nicht hinzugefügt werden: %s",
+ "Save HEIC photos as JPEG or use the desktop app.": "Speichern Sie HEIC-Fotos als JPEG oder verwenden Sie die Desktop-App.",
+ "The map search service did not answer. Try again in a moment.": "Die Kartensuche hat nicht geantwortet. Versuchen Sie es gleich noch einmal.",
+ "Correct": "Korrigieren",
+ "Click on the map where %s is.": "Klicken Sie auf der Karte dorthin, wo %s liegt.",
+ "Places without coordinates": "Orte ohne Koordinaten",
+ "Search with a different name (e.g. with the region or the old name) or point the place on the map.": "Suchen Sie mit einem anderen Namen (z. B. mit Region oder altem Namen) oder zeigen Sie den Ort auf der Karte.",
+ "Search on the map": "Auf der Karte suchen",
+ "Point on the map": "Auf der Karte zeigen",
+ "Nothing found. Try another spelling or point the place on the map.": "Nichts gefunden. Versuchen Sie eine andere Schreibweise oder zeigen Sie den Ort auf der Karte.",
+ "All places are on the map.": "Alle Orte sind auf der Karte.",
+ "All places": "Alle Orte"
 }

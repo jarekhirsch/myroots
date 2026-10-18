@@ -579,5 +579,18 @@
  "The licence gives no rights to the name and logo of MyRoots: modified versions use their own.": "הרישיון אינו מעניק זכויות בשם ובלוגו של MyRoots: גרסאות משונות משתמשות בשלהן.",
  "It is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.": "היא מופצת בתקווה שתהיה שימושית, אך ללא כל אחריות, אף לא אחריות משתמעת לסחירות או להתאמה למטרה מסוימת.",
  "Built with": "נבנה בעזרת",
- "Your family data is kept on your device, not on a MyRoots server.": "נתוני המשפחה נשמרים במכשיר שלכם, לא בשרת של MyRoots."
+ "Your family data is kept on your device, not on a MyRoots server.": "נתוני המשפחה נשמרים במכשיר שלכם, לא בשרת של MyRoots.",
+ "Added: %s": "נוסף: %s",
+ "These photos could not be added: %s": "לא ניתן להוסיף את התמונות: %s",
+ "Save HEIC photos as JPEG or use the desktop app.": "שמרו תמונות HEIC כ-JPEG או השתמשו באפליקציה למחשב.",
+ "The map search service did not answer. Try again in a moment.": "שירות החיפוש של המפה לא ענה. נסו שוב בעוד רגע.",
+ "Correct": "תיקון",
+ "Click on the map where %s is.": "לחצו על המפה במקום שבו נמצא %s.",
+ "Places without coordinates": "מקומות ללא קואורדינטות",
+ "Search with a different name (e.g. with the region or the old name) or point the place on the map.": "חפשו בשם אחר (למשל עם האזור או השם הישן) או סמנו את המקום על המפה.",
+ "Search on the map": "חיפוש במפה",
+ "Point on the map": "סימון במפה",
+ "Nothing found. Try another spelling or point the place on the map.": "לא נמצא דבר. נסו איות אחר או סמנו את המקום על המפה.",
+ "All places are on the map.": "כל המקומות נמצאים במפה.",
+ "All places": "כל המקומות"
 }

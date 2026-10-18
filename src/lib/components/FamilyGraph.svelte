@@ -1,7 +1,8 @@
 <script lang="ts">
   // The whole family on one board: every person and every connection.
   // Drag to move, scroll or pinch to zoom. Pointing at a person lights up
-  // their partners, parents and children; a click selects them.
+  // their partners, parents and children; a click selects them and lights up
+  // all their ancestors until you click on an empty spot.
   import { select } from 'd3-selection';
   import { zoom as d3zoom, zoomIdentity, type ZoomBehavior } from 'd3-zoom';
   import 'd3-transition';
@@ -30,7 +31,36 @@
   let transform = $state('translate(0,0) scale(1)');
   let z: ZoomBehavior<SVGSVGElement, unknown> | null = null;
   let hover = $state<string | null>(null);
-  const lit = $derived(hover ? related.get(hover) : null);
+  // the clicked person and all their ancestors (stays until a click on an empty spot)
+  let line = $state<string | null>(null);
+  const byId = $derived(new Map(nodes.map((n) => [n.id, n])));
+  const lineage = $derived.by(() => {
+    if (!line) return null;
+    const out = new Set<string>([line]);
+    const queue = [line];
+    while (queue.length) {
+      const n = byId.get(queue.pop()!);
+      for (const p of n?.rels.parents || []) {
+        if (!out.has(p) && byId.has(p)) {
+          out.add(p);
+          queue.push(p);
+        }
+      }
+    }
+    return out;
+  });
+  const lit = $derived(lineage ?? (hover ? related.get(hover) : null));
+  function edgeOn(ids: string[], kind: string): boolean {
+    if (lineage) {
+      if (kind === 'couple') return ids.every((x) => lineage.has(x));
+      // parents → children: the line between two generations of the lineage
+      return ids.some((x) => lineage.has(x) && !!byId.get(x)?.rels.parents.some((p) => ids.includes(p) && lineage.has(p)));
+    }
+    return !!hover && ids.includes(hover);
+  }
+  export function clearLine() {
+    line = null;
+  }
 
   $effect(() => {
     if (!svg) return;
@@ -122,18 +152,26 @@
     return s.slice(0, n).trimEnd() + '…';
   }
   function pick(n: GNode) {
-    if (!n.anon) selected = n.id;
+    if (n.anon) return;
+    selected = n.id;
+    line = n.id;
+  }
+  // a click on an empty spot (not after dragging: d3-zoom swallows that click)
+  function background(e: MouseEvent) {
+    if (!(e.target as Element)?.closest?.('.card')) line = null;
   }
 </script>
 
-<svg class="fg" bind:this={svg} role="application" aria-label={tx('tree mode', 'Whole family')}>
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<svg class="fg" class:lineage={!!lineage} bind:this={svg} role="application" aria-label={tx('tree mode', 'Whole family')} onclick={background} onkeydown={(e) => e.key === 'Escape' && (line = null)}>
   <defs>
     <clipPath id="fg-av" clipPathUnits="objectBoundingBox"><rect width="1" height="1" rx="0.3" ry="0.3" /></clipPath>
   </defs>
   <g class="board" {transform}>
     <g class="edges">
       {#each graph.edges as e, i (i)}
-        <path d={e.d} class={e.kind} class:odd={e.odd} class:dim={lit && !e.ids.some((x) => x === hover)} class:on={lit && e.ids.includes(hover!)} />
+        {@const on = !!lit && edgeOn(e.ids, e.kind)}
+        <path d={e.d} class={e.kind} class:odd={e.odd} class:dim={!!lit && !on} class:on />
       {/each}
     </g>
     {#each graph.nodes as n (n.id)}
@@ -143,6 +181,7 @@
         class="card"
         class:anon={n.anon}
         class:sel={selected === n.id}
+        class:anc={!!lineage && lineage.has(n.id) && n.id !== line}
         class:dim={lit && !lit.has(n.id)}
         transform="translate({n.x},{n.y})"
         role="button"
@@ -220,6 +259,19 @@
   .card.sel .bg {
     stroke: var(--ink);
     stroke-width: 3;
+  }
+  /* ancestors of the clicked person */
+  .card.anc .bg {
+    stroke: var(--heirloom);
+    stroke-width: 2.5;
+    fill: color-mix(in srgb, var(--heirloom) 9%, var(--surface));
+  }
+  .lineage path.on {
+    stroke: var(--heirloom);
+    stroke-width: 3.5;
+  }
+  .lineage .card.dim {
+    opacity: 0.22;
   }
   .card.dim {
     opacity: 0.3;

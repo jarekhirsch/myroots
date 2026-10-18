@@ -603,5 +603,18 @@
  "The licence gives no rights to the name and logo of MyRoots: modified versions use their own.": "Licencja nie daje praw do nazwy i logo MyRoots: zmienione wersje używają własnych.",
  "It is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.": "Jest rozpowszechniane w nadziei, że będzie użyteczne, ale BEZ JAKIEJKOLWIEK GWARANCJI, nawet domyślnej gwarancji PRZYDATNOŚCI HANDLOWEJ albo PRZYDATNOŚCI DO OKREŚLONYCH ZASTOSOWAŃ.",
  "Built with": "Zbudowane z użyciem",
- "Your family data is kept on your device, not on a MyRoots server.": "Dane Twojej rodziny są przechowywane na Twoim urządzeniu, a nie na serwerze MyRoots."
+ "Your family data is kept on your device, not on a MyRoots server.": "Dane Twojej rodziny są przechowywane na Twoim urządzeniu, a nie na serwerze MyRoots.",
+ "Added: %s": "Dodano: %s",
+ "These photos could not be added: %s": "Nie udało się dodać zdjęć: %s",
+ "Save HEIC photos as JPEG or use the desktop app.": "Zapisz zdjęcia HEIC jako JPEG albo użyj aplikacji na komputer.",
+ "The map search service did not answer. Try again in a moment.": "Wyszukiwarka mapy nie odpowiedziała. Spróbuj za chwilę.",
+ "Correct": "Popraw",
+ "Click on the map where %s is.": "Kliknij na mapie, gdzie leży %s.",
+ "Places without coordinates": "Miejsca bez współrzędnych",
+ "Search with a different name (e.g. with the region or the old name) or point the place on the map.": "Wyszukaj pod inną nazwą (np. z regionem albo dawną nazwą) albo wskaż miejsce na mapie.",
+ "Search on the map": "Szukaj na mapie",
+ "Point on the map": "Wskaż na mapie",
+ "Nothing found. Try another spelling or point the place on the map.": "Nic nie znaleziono. Spróbuj innej pisowni albo wskaż miejsce na mapie.",
+ "All places are on the map.": "Wszystkie miejsca są na mapie.",
+ "All places": "Wszystkie miejsca"
 }

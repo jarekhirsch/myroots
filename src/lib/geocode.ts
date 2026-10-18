@@ -25,6 +25,18 @@ export async function geocodeOne(name: string): Promise<{ lat: number; lng: numb
   return Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : null;
 }
 
+/** Up to `limit` matches for a search text (for correcting a place by hand). */
+export async function searchPlaces(q: string, limit = 5): Promise<{ label: string; lat: number; lng: number }[]> {
+  const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=${limit}&accept-language=${encodeURIComponent(lang())}&q=${encodeURIComponent(q)}`;
+  const r = await backend.fetchBytes(url, { Accept: 'application/json' });
+  if (r.status !== 200) throw new Error(r.status === 429 ? 'rate' : 'http');
+  const v = JSON.parse(new TextDecoder().decode(r.bytes));
+  if (!Array.isArray(v)) return [];
+  return v
+    .map((x: any) => ({ label: String(x.display_name || ''), lat: Number(x.lat), lng: Number(x.lon) }))
+    .filter((x) => x.label && Number.isFinite(x.lat) && Number.isFinite(x.lng));
+}
+
 export interface GeoProgress {
   done: number;
   total: number;

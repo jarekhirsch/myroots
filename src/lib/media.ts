@@ -1,5 +1,7 @@
 // Image processing before storing: downscale very large photos and make a thumbnail.
 import { backend } from './backend';
+import { toast } from './ui.svelte';
+import { t } from './i18n/index.svelte';
 import type { MediaInput } from './backend/types';
 
 const MAX_SIDE = 2400;
@@ -72,12 +74,19 @@ export function pickImages(multiple = true): Promise<number[]> {
     input.multiple = multiple;
     input.onchange = async () => {
       const ids: number[] = [];
+      const failed: string[] = [];
       for (const f of Array.from(input.files || [])) {
         try {
           ids.push(await backend.addMedia(await prepareImage(f, f.name)));
         } catch (e) {
           console.warn('skipped', f.name, e);
+          failed.push(f.name);
         }
+      }
+      if (failed.length) {
+        // HEIC (iPhone) is not shown by every browser
+        const heic = failed.some((n) => /\.(heic|heif)$/i.test(n));
+        toast(t('These photos could not be added: %s', failed.join(', ')) + (heic ? ' ' + t('Save HEIC photos as JPEG or use the desktop app.') : ''), 'error');
       }
       resolve(ids);
     };

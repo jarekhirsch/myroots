@@ -579,5 +579,18 @@
  "The licence gives no rights to the name and logo of MyRoots: modified versions use their own.": "Lisenssi ei anna oikeuksia MyRootsin nimeen ja logoon: muokatut versiot käyttävät omiaan.",
  "It is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.": "Sitä levitetään siinä toivossa, että se on hyödyllinen, mutta ILMAN MITÄÄN TAKUUTA, edes oletettua takuuta KAUPALLISESTA KELPOISUUDESTA tai SOPIVUUDESTA TIETTYYN TARKOITUKSEEN.",
  "Built with": "Rakennettu käyttäen",
- "Your family data is kept on your device, not on a MyRoots server.": "Suvun tiedot tallennetaan laitteellesi, eivät MyRootsin palvelimelle."
+ "Your family data is kept on your device, not on a MyRoots server.": "Suvun tiedot tallennetaan laitteellesi, eivät MyRootsin palvelimelle.",
+ "Added: %s": "Lisätty: %s",
+ "These photos could not be added: %s": "Kuvia ei voitu lisätä: %s",
+ "Save HEIC photos as JPEG or use the desktop app.": "Tallenna HEIC-kuvat JPEG-muodossa tai käytä työpöytäsovellusta.",
+ "The map search service did not answer. Try again in a moment.": "Karttahaku ei vastannut. Yritä hetken päästä uudelleen.",
+ "Correct": "Korjaa",
+ "Click on the map where %s is.": "Napsauta karttaa kohdasta, jossa %s on.",
+ "Places without coordinates": "Paikat ilman koordinaatteja",
+ "Search with a different name (e.g. with the region or the old name) or point the place on the map.": "Hae toisella nimellä (esim. alueen tai vanhan nimen kanssa) tai osoita paikka kartalta.",
+ "Search on the map": "Hae kartalta",
+ "Point on the map": "Osoita kartalta",
+ "Nothing found. Try another spelling or point the place on the map.": "Mitään ei löytynyt. Kokeile toista kirjoitusasua tai osoita paikka kartalta.",
+ "All places are on the map.": "Kaikki paikat ovat kartalla.",
+ "All places": "Kaikki paikat"
 }

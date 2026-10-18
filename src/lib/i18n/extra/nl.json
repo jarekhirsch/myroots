@@ -579,5 +579,18 @@
  "The licence gives no rights to the name and logo of MyRoots: modified versions use their own.": "De licentie geeft geen rechten op de naam en het logo van MyRoots: gewijzigde versies gebruiken hun eigen.",
  "It is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.": "Het wordt verspreid in de hoop dat het nuttig is, maar ZONDER ENIGE GARANTIE, zelfs zonder de impliciete garantie van VERKOOPBAARHEID of GESCHIKTHEID VOOR EEN BEPAALD DOEL.",
  "Built with": "Gebouwd met",
- "Your family data is kept on your device, not on a MyRoots server.": "Je familiegegevens staan op je eigen apparaat, niet op een server van MyRoots."
+ "Your family data is kept on your device, not on a MyRoots server.": "Je familiegegevens staan op je eigen apparaat, niet op een server van MyRoots.",
+ "Added: %s": "Toegevoegd: %s",
+ "These photos could not be added: %s": "Deze foto’s konden niet worden toegevoegd: %s",
+ "Save HEIC photos as JPEG or use the desktop app.": "Sla HEIC-foto’s op als JPEG of gebruik de desktop-app.",
+ "The map search service did not answer. Try again in a moment.": "De kaartzoekdienst reageerde niet. Probeer het zo opnieuw.",
+ "Correct": "Corrigeren",
+ "Click on the map where %s is.": "Klik op de kaart waar %s ligt.",
+ "Places without coordinates": "Plaatsen zonder coördinaten",
+ "Search with a different name (e.g. with the region or the old name) or point the place on the map.": "Zoek met een andere naam (bijv. met de regio of de oude naam) of wijs de plaats aan op de kaart.",
+ "Search on the map": "Zoeken op de kaart",
+ "Point on the map": "Aanwijzen op de kaart",
+ "Nothing found. Try another spelling or point the place on the map.": "Niets gevonden. Probeer een andere spelling of wijs de plaats aan op de kaart.",
+ "All places are on the map.": "Alle plaatsen staan op de kaart.",
+ "All places": "Alle plaatsen"
 }

@@ -579,5 +579,18 @@
  "The licence gives no rights to the name and logo of MyRoots: modified versions use their own.": "Licensen ger inga rättigheter till namnet och logotypen MyRoots: ändrade versioner använder egna.",
  "It is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.": "Den sprids i hopp om att den ska vara användbar, men UTAN NÅGON GARANTI, inte ens underförstådd garanti om SÄLJBARHET eller LÄMPLIGHET FÖR ETT VISST SYFTE.",
  "Built with": "Byggd med",
- "Your family data is kept on your device, not on a MyRoots server.": "Familjens data sparas på din enhet, inte på någon MyRoots-server."
+ "Your family data is kept on your device, not on a MyRoots server.": "Familjens data sparas på din enhet, inte på någon MyRoots-server.",
+ "Added: %s": "Tillagd: %s",
+ "These photos could not be added: %s": "Fotona kunde inte läggas till: %s",
+ "Save HEIC photos as JPEG or use the desktop app.": "Spara HEIC-foton som JPEG eller använd skrivbordsappen.",
+ "The map search service did not answer. Try again in a moment.": "Kartsökningen svarade inte. Försök igen om en stund.",
+ "Correct": "Rätta",
+ "Click on the map where %s is.": "Klicka på kartan där %s ligger.",
+ "Places without coordinates": "Platser utan koordinater",
+ "Search with a different name (e.g. with the region or the old name) or point the place on the map.": "Sök med ett annat namn (t.ex. med regionen eller det gamla namnet) eller peka ut platsen på kartan.",
+ "Search on the map": "Sök på kartan",
+ "Point on the map": "Peka ut på kartan",
+ "Nothing found. Try another spelling or point the place on the map.": "Inget hittades. Prova en annan stavning eller peka ut platsen på kartan.",
+ "All places are on the map.": "Alla platser finns på kartan.",
+ "All places": "Alla platser"
 }

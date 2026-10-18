@@ -256,7 +256,7 @@
           <div class="form-grid">
             <div class="field">
               <span class="lbl">{t('Father')}</span>
-              <PersonPicker bind:value={person.father} exclude={self} gender="M" />
+              <PersonPicker bind:value={person.father} exclude={self} gender="M" create={{ gender: 'M', last_name: person.last_name }} />
               {#if person.father}
                 <select bind:value={person.father_rel} aria-label={t('Relation')}>
                   {#each ['bio', 'adopted', 'foster', 'step'] as r}<option value={r}>{relLabel(r)}</option>{/each}
@@ -265,7 +265,7 @@
             </div>
             <div class="field">
               <span class="lbl">{t('Mother')}</span>
-              <PersonPicker bind:value={person.mother} exclude={self} gender="F" />
+              <PersonPicker bind:value={person.mother} exclude={self} gender="F" create={{ gender: 'F' }} />
               {#if person.mother}
                 <select bind:value={person.mother_rel} aria-label={t('Relation')}>
                   {#each ['bio', 'adopted', 'foster', 'step'] as r}<option value={r}>{relLabel(r)}</option>{/each}
@@ -288,7 +288,7 @@
                       <input type="text" placeholder={t('Surname')} bind:value={u.partner_last_name} />
                     </div>
                   {:else}
-                    <PersonPicker bind:value={u.b} exclude={self} />
+                    <PersonPicker bind:value={u.b} exclude={self} create={{ gender: person.gender === 'M' ? 'F' : person.gender === 'F' ? 'M' : '' }} />
                   {/if}
                   <label class="check small"><input type="checkbox" bind:checked={u.external} /> {t('Not in the tree (name only)')}</label>
                 </div>
@@ -322,7 +322,7 @@
           <p class="hint">{t('The other parent is set on the child\'s own page.')}</p>
           {#each children as c, i (i)}
             <div class="urow">
-              <div class="grow"><PersonPicker bind:value={children[i]} exclude={[...self, ...children.filter((x, k) => x && k !== i) as number[]]} /></div>
+              <div class="grow"><PersonPicker bind:value={children[i]} exclude={[...self, ...children.filter((x, k) => x && k !== i) as number[]]} create={{ last_name: person.gender === 'M' ? person.last_name : '' }} /></div>
               <button type="button" class="btn ghost icon" onclick={() => (children = children.filter((_, k) => k !== i))} aria-label={t('Remove')}><X size={16} /></button>
             </div>
           {/each}

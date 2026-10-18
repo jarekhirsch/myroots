@@ -4,7 +4,11 @@
   import { backend } from '../lib/backend';
   import { t, tn } from '../lib/i18n/index.svelte';
   import { fmtDate, initials } from '../lib/format';
-  import { TILES, geocodeMissing, type GeoProgress } from '../lib/geocode';
+  import { TILES, geocodeMissing, searchPlaces, type GeoProgress } from '../lib/geocode';
+  import MapPinned from '@lucide/svelte/icons/map-pin-plus';
+  import SearchIcon from '@lucide/svelte/icons/search';
+  import X from '@lucide/svelte/icons/x';
+  import type { PlaceUse } from '../lib/types';
   import { toast } from '../lib/ui.svelte';
   import NotFound from './NotFound.svelte';
   import BackButton from '../lib/components/BackButton.svelte';
@@ -93,6 +97,10 @@
       L.control.zoom({ position: 'bottomright', zoomInTitle: t('Zoom in'), zoomOutTitle: t('Zoom out') }).addTo(map);
       const style = TILES[app.settings?.appearance?.map_style || 'osm'] || TILES.osm;
       L.tileLayer(style.url, { attribution: style.attribution, subdomains: style.sub || 'abc', maxZoom: style.max || 19 }).addTo(map);
+      // placing a missing place by hand: click on the map
+      map.on('click', (e: any) => {
+        if (picking) saveCoords(picking, e.latlng.lat, e.latlng.lng, 'manual');
+      });
     }
     if (cluster) cluster.remove();
     cluster = (L as any).markerClusterGroup({
@@ -120,7 +128,10 @@
     }
     await backend.ensureMedia?.([...ids]);
     map.addLayer(cluster);
-    if (bounds.length) map.fitBounds(bounds, { padding: [40, 40], maxZoom: person ? 9 : 7 });
+    if (focusOn) {
+      map.setView(focusOn, Math.max(map.getZoom(), 9));
+      focusOn = null;
+    } else if (bounds.length) map.fitBounds(bounds, { padding: [40, 40], maxZoom: person ? 9 : 7 });
     setTimeout(() => map?.invalidateSize(), 50);
   }
 
@@ -156,6 +167,47 @@
   }
 
   const pending = $derived(data ? data.uncached.length : 0);
+
+  /* ---------- places without coordinates: search by hand or point on the map ---------- */
+  let fixOpen = $state(false);
+  let picking = $state<string | null>(null);
+  let focusOn: [number, number] | null = null;
+  let origins = $state<Record<string, string>>({});
+  let queries = $state<Record<string, string>>({});
+  let found = $state<Record<string, { label: string; lat: number; lng: number }[] | 'none' | 'busy'>>({});
+  const untried = $derived(data ? data.uncached.filter((p) => origins[p.place] !== 'failed').length : 0);
+
+  $effect(() => {
+    if (!fixOpen || viewer) return;
+    call<PlaceUse[]>('places.list').then((v) => (origins = Object.fromEntries(v.map((p) => [p.name, p.origin]))));
+  });
+
+  async function search(name: string) {
+    const q = (queries[name] ?? name).trim();
+    if (!q) return;
+    found[name] = 'busy';
+    try {
+      const r = await searchPlaces(q);
+      found[name] = r.length ? r : 'none';
+    } catch {
+      found[name] = 'none';
+      toast(t('The map search service did not answer. Try again in a moment.'), 'error');
+    }
+  }
+
+  async function saveCoords(name: string, lat: number, lng: number, origin: string) {
+    await call('places.set', { name, lat, lng, origin });
+    picking = null;
+    delete found[name];
+    focusOn = [lat, lng];
+    toast(t('Saved: %s', name));
+    await load();
+  }
+
+  function who(p: MapPlace): string {
+    const names = [...new Set(p.events.map((e) => e.name))];
+    return names.slice(0, 3).join(', ') + (names.length > 3 ? ` +${names.length - 3}` : '');
+  }
   const shownCount = $derived(data ? data.geocoded.filter((p) => filtered(p).length).length : 0);
 </script>
 
@@ -205,14 +257,60 @@
               <button class="btn sm ghost" onclick={() => (cancelled = true)}>{t('Stop')}</button>
             {:else}
               <span>{tn('%d place has no coordinates yet.', '%d places have no coordinates yet.', pending)}</span>
-              <button class="btn sm primary" onclick={geocode}>{t('Find on the map')}</button>
+              <button class="btn sm" onclick={() => (fixOpen = !fixOpen)} aria-expanded={fixOpen}>{t('Correct')}</button>
+              {#if untried}<button class="btn sm primary" onclick={geocode}>{t('Find on the map')}</button>{/if}
             {/if}
           </div>
         {/if}
         {#if data}<span class="count">{tn('%d place', '%d places', shownCount)}</span>{/if}
       </div>
     </div>
-    <div class="map" bind:this={el}></div>
+    <div class="map" class:picking bind:this={el}></div>
+
+    {#if picking}
+      <div class="pick-banner no-print" role="status">
+        <MapPinned size={17} />
+        <span>{t('Click on the map where %s is.', picking)}</span>
+        <button class="btn sm ghost" onclick={() => (picking = null)}>{t('Cancel')}</button>
+      </div>
+    {/if}
+
+    {#if fixOpen && !viewer && data}
+      <aside class="fix no-print" aria-label={t('Places without coordinates')}>
+        <header>
+          <h2>{t('Places without coordinates')} <span class="muted">{data.uncached.length}</span></h2>
+          <button class="btn ghost icon sm" onclick={() => (fixOpen = false)} aria-label={t('Close')}><X size={16} /></button>
+        </header>
+        <p class="small muted">{t('Search with a different name (e.g. with the region or the old name) or point the place on the map.')}</p>
+        {#each data.uncached as p (p.place)}
+          {@const f = found[p.place]}
+          <div class="fx">
+            <div class="fx-h">
+              <b>{p.place}</b>
+              {#if origins[p.place] === 'failed'}<span class="tag">{t('not found')}</span>{/if}
+            </div>
+            <div class="small muted">{who(p)}</div>
+            <form class="fx-q" onsubmit={(e) => { e.preventDefault(); search(p.place); }}>
+              <input type="search" value={queries[p.place] ?? p.place} oninput={(e) => (queries[p.place] = (e.target as HTMLInputElement).value)} aria-label={t('Search on the map')} />
+              <button class="btn sm" type="submit" disabled={f === 'busy'} aria-label={t('Search on the map')}><SearchIcon size={15} /></button>
+              <button class="btn sm ghost" type="button" onclick={() => (picking = p.place)} title={t('Point on the map')}><MapPinned size={15} /> {t('Point on the map')}</button>
+            </form>
+            {#if f === 'none'}
+              <p class="small muted">{t('Nothing found. Try another spelling or point the place on the map.')}</p>
+            {:else if Array.isArray(f)}
+              <ul class="res">
+                {#each f as r, i (i)}
+                  <li><button type="button" onclick={() => saveCoords(p.place, r.lat, r.lng, 'nominatim')}>{r.label}</button></li>
+                {/each}
+              </ul>
+            {/if}
+          </div>
+        {:else}
+          <p class="small muted">{t('All places are on the map.')}</p>
+        {/each}
+        <a class="small" href="#/places">{t('All places')}</a>
+      </aside>
+    {/if}
   </div>
 {/if}
 
@@ -392,6 +490,105 @@
     }
     .count {
       display: none;
+    }
+  }
+  .map.picking {
+    cursor: crosshair;
+  }
+  .map.picking :global(.leaflet-grab) {
+    cursor: crosshair;
+  }
+  .pick-banner {
+    position: absolute;
+    left: 50%;
+    bottom: 28px;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--ink);
+    color: var(--surface);
+    border-radius: 999px;
+    padding: 6px 6px 6px 16px;
+    box-shadow: var(--shadow);
+    font-size: 0.9rem;
+  }
+  .pick-banner .btn {
+    color: var(--surface);
+  }
+  .fix {
+    position: absolute;
+    top: 70px;
+    right: 18px;
+    bottom: 18px;
+    width: 360px;
+    z-index: 1000;
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    padding: 14px 16px;
+    overflow: auto;
+  }
+  .fix header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .fix h2 {
+    font-size: 1rem;
+    margin: 0;
+  }
+  .fx {
+    border-top: 1px solid var(--line);
+    padding: 10px 0;
+  }
+  .fx-h {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+  .fx-q {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+    flex-wrap: wrap;
+  }
+  .fx-q input {
+    flex: 1 1 150px;
+    min-width: 0;
+  }
+  .res {
+    list-style: none;
+    margin: 6px 0 0;
+    padding: 0;
+  }
+  .res button {
+    display: block;
+    width: 100%;
+    text-align: start;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 0.85rem;
+    padding: 6px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--ink);
+  }
+  .res button:hover,
+  .res button:focus-visible {
+    background: color-mix(in srgb, var(--ink) 8%, transparent);
+  }
+  @media (max-width: 640px) {
+    .fix {
+      left: 10px;
+      right: 10px;
+      width: auto;
+      top: auto;
+      max-height: 60%;
     }
   }
 </style>

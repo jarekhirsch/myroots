@@ -1,5 +1,7 @@
 <script lang="ts">
-  import { summaries } from '../api.svelte';
+  import { summaries, call } from '../api.svelte';
+  import { toast } from '../ui.svelte';
+  import { errorText } from '../errors';
   import { t } from '../i18n/index.svelte';
   import Avatar from './Avatar.svelte';
   import X from '@lucide/svelte/icons/x';
@@ -12,6 +14,7 @@
     gender = '',
     onchange,
     oncreate,
+    create = undefined,
     id = undefined,
   }: {
     value?: number | null;
@@ -20,6 +23,8 @@
     gender?: string;
     onchange?: (id: number | null) => void;
     oncreate?: (name: string) => void;
+    /** Offer "Add new person": creates the person right away and picks them. */
+    create?: { gender?: string; last_name?: string };
     id?: string;
   } = $props();
 
@@ -62,6 +67,25 @@
     q = '';
     open = false;
     onchange?.(value);
+  }
+
+  let creating = $state(false);
+  async function createPerson(name: string) {
+    if (oncreate) return oncreate(name);
+    const parts = name.trim().split(/\s+/);
+    const first = parts.length > 1 ? parts.slice(0, -1).join(' ') : parts[0];
+    const last = parts.length > 1 ? parts[parts.length - 1] : create?.last_name || '';
+    creating = true;
+    try {
+      const r = await call<{ id: number }>('person.create', { person: { first_name: first, last_name: last, gender: create?.gender || '', status: 'published' } });
+      all = await summaries();
+      pick(all.find((p) => p.id === r.id) || null);
+      toast(t('Added: %s', [first, last].filter(Boolean).join(' ')));
+    } catch (e) {
+      toast(errorText(e), 'error');
+    } finally {
+      creating = false;
+    }
   }
 
   function key(e: KeyboardEvent) {
@@ -123,9 +147,9 @@
       {:else}
         <li class="none muted small">{t('No results')}</li>
       {/each}
-      {#if oncreate && q.trim()}
+      {#if (oncreate || create) && q.trim()}
         <li>
-          <button type="button" class="create" onmousedown={(e) => e.preventDefault()} onclick={() => { const n = q.trim(); open = false; q = ''; oncreate?.(n); }}>
+          <button type="button" class="create" disabled={creating} onmousedown={(e) => e.preventDefault()} onclick={() => { const n = q.trim(); open = false; q = ''; createPerson(n); }}>
             + {t('Add new person: %s', q.trim())}
           </button>
         </li>

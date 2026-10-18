@@ -13,7 +13,13 @@ Pierwsze samodzielne wydanie MyRoots, bez WordPressa. Ta sama aplikacja działa 
 - Przycisk „Powrót” i skróty (Alt+←, Cmd+[, przycisk „wstecz” myszy).
 - GEDCOM: obsługa ANSEL, Windows-1250/1252, ISO-8859-2, Mac Roman, GEDCOM 7 i spakowanych plików (.gdz, .zip); nazwiska po mężu i rodowe, wiele nowych zdarzeń, źródła wpisane w treści, daty z innych programów; eksport zgodny z GEDCOM 5.5.1.
 - „Nie żyje, data śmierci nieznana” dla osób bez daty śmierci.
+- Edycja osoby: nowego rodzica, małżonka lub dziecko można utworzyć od razu z pola wyboru („+ Dodaj nową osobę”).
+- Mapa: lista miejsc bez współrzędnych (przycisk „Popraw”) z wyszukiwaniem pod inną nazwą albo wskazaniem miejsca kliknięciem na mapie.
+- „Cała rodzina”: kliknięta osoba podświetla wszystkich swoich przodków do kliknięcia w tło lub klawisza Esc.
 - Okno „O aplikacji” z licencją i listą użytych bibliotek.
+
+**Poprawki**
+- Aplikacja na komputer: dodawanie zdjęć (druga polityka bezpieczeństwa z wersji przeglądarkowej blokowała pliki); czytelny komunikat, gdy zdjęcia nie da się dodać (np. HEIC w przeglądarce).
 
 **Bezpieczeństwo i prywatność**
 - Strona rodzinna nie zawiera ukrytych danych zdjęć (położenie GPS, aparat, komentarze).

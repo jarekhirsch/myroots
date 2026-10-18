@@ -579,5 +579,18 @@
  "The licence gives no rights to the name and logo of MyRoots: modified versions use their own.": "La licenza non concede diritti sul nome e sul logo di MyRoots: le versioni modificate usano i propri.",
  "It is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.": "È distribuito nella speranza che sia utile, ma SENZA ALCUNA GARANZIA, nemmeno la garanzia implicita di COMMERCIABILITÀ o IDONEITÀ PER UN PARTICOLARE SCOPO.",
  "Built with": "Realizzato con",
- "Your family data is kept on your device, not on a MyRoots server.": "I dati della tua famiglia sono conservati sul tuo dispositivo, non su un server di MyRoots."
+ "Your family data is kept on your device, not on a MyRoots server.": "I dati della tua famiglia sono conservati sul tuo dispositivo, non su un server di MyRoots.",
+ "Added: %s": "Aggiunto: %s",
+ "These photos could not be added: %s": "Impossibile aggiungere queste foto: %s",
+ "Save HEIC photos as JPEG or use the desktop app.": "Salva le foto HEIC come JPEG o usa l’app desktop.",
+ "The map search service did not answer. Try again in a moment.": "Il servizio di ricerca della mappa non ha risposto. Riprova tra poco.",
+ "Correct": "Correggi",
+ "Click on the map where %s is.": "Fai clic sulla mappa dove si trova %s.",
+ "Places without coordinates": "Luoghi senza coordinate",
+ "Search with a different name (e.g. with the region or the old name) or point the place on the map.": "Cerca con un altro nome (ad es. con la regione o il vecchio nome) o indica il luogo sulla mappa.",
+ "Search on the map": "Cerca sulla mappa",
+ "Point on the map": "Indica sulla mappa",
+ "Nothing found. Try another spelling or point the place on the map.": "Nessun risultato. Prova un’altra grafia o indica il luogo sulla mappa.",
+ "All places are on the map.": "Tutti i luoghi sono sulla mappa.",
+ "All places": "Tutti i luoghi"
 }
