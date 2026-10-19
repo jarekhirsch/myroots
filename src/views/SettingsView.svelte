@@ -8,12 +8,25 @@
   import { slug } from '../lib/backend/util';
   import { TILES } from '../lib/geocode';
   import PersonPicker from '../lib/components/PersonPicker.svelte';
+  import DateInput from '../lib/components/DateInput.svelte';
+  import { POLAND } from '../lib/history';
+  import { fmtDate } from '../lib/format';
   import Plus from '@lucide/svelte/icons/plus';
   import X from '@lucide/svelte/icons/x';
   import type { Settings, CustomGroup } from '../lib/types';
 
-  let tab = $state(['general', 'appearance', 'fields', 'notifications'].includes(route.query.tab) ? route.query.tab : 'general');
+  let tab = $state(['general', 'appearance', 'fields', 'notifications', 'history'].includes(route.query.tab) ? route.query.tab : 'general');
   let s = $state<Settings>(JSON.parse(JSON.stringify(app.settings)));
+  if (!s.history) s.history = { off: [], own: [] };
+  function toggleBuiltIn(id: string, on: boolean) {
+    const off = new Set(s.history!.off);
+    if (on) off.delete(id);
+    else off.add(id);
+    s.history!.off = [...off];
+  }
+  function addOwn() {
+    s.history!.own = [...s.history!.own, { id: 'own-' + Date.now().toString(36), date: '', title: '' }];
+  }
   let busy = $state(false);
   const dirty = $derived(JSON.stringify(s) !== JSON.stringify(app.settings));
 
@@ -95,6 +108,7 @@
     <button role="tab" aria-selected={tab === 'appearance'} onclick={() => (tab = 'appearance')}>{t('Appearance')}</button>
     <button role="tab" aria-selected={tab === 'fields'} onclick={() => (tab = 'fields')}>{t('Custom fields')}</button>
     <button role="tab" aria-selected={tab === 'notifications'} onclick={() => (tab = 'notifications')}>{t('Notifications')}</button>
+    <button role="tab" aria-selected={tab === 'history'} onclick={() => (tab = 'history')}>{t('Historical background')}</button>
   </div>
 
   {#if tab === 'general'}
@@ -252,6 +266,35 @@
       </div>
     {/each}
     <button class="btn" onclick={addGroup}><Plus size={16} /> {t('Add section')}</button>
+  {:else if tab === 'history' && s.history}
+    <div class="panel">
+      <h2>{t('Your own events')}</h2>
+      <p class="hint">{t('Events of your town, region or family history (a fire, a flood, the resettlement of a village…). They appear in the lifelines of everyone alive at the time, also on the family website.')}</p>
+      {#each s.history.own as e, i (e.id)}
+        <div class="hrow">
+          <div class="hdate"><DateInput bind:value={e.date} /></div>
+          <input type="text" class="htitle" bind:value={e.title} placeholder={t('What happened')} aria-label={t('What happened')} />
+          <button class="btn ghost icon" onclick={() => (s.history!.own = s.history!.own.filter((_, k) => k !== i))} aria-label={t('Remove')} title={t('Remove')}><X size={16} /></button>
+        </div>
+      {/each}
+      <button class="btn sm" onclick={addOwn}><Plus size={15} /> {t('Add an event')}</button>
+    </div>
+    <div class="panel">
+      <h2>{t('History of Poland')} <span class="muted small">({POLAND.length - s.history.off.length} / {POLAND.length})</span></h2>
+      <p class="hint">{t('Built-in events. Untick the ones you do not want to see; to word one differently, untick it and add your own.')}</p>
+      <ul class="builtin">
+        {#each POLAND as e (e.date)}
+          <li>
+            <label class="check">
+              <input type="checkbox" checked={!s.history.off.includes(e.date)} onchange={(ev) => toggleBuiltIn(e.date, ev.currentTarget.checked)} />
+              <span class="bd">{fmtDate(e.date)}</span>
+              <span>{e.title()}</span>
+            </label>
+          </li>
+        {/each}
+      </ul>
+      {#if s.history.off.length}<button class="btn sm ghost" onclick={() => (s.history!.off = [])}>{t('Turn all on')}</button>{/if}
+    </div>
   {:else if tab === 'notifications'}
     <div class="panel">
       <label class="check"><input type="checkbox" bind:checked={s.notifications.enabled} /> {t('Remind me about birthdays and anniversaries')}</label>
@@ -273,6 +316,41 @@
 {#if about}<AboutDialog onclose={() => (about = false)} />{/if}
 
 <style>
+  .hrow {
+    display: grid;
+    grid-template-columns: minmax(250px, auto) minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .builtin {
+    list-style: none;
+    margin: 0 0 10px;
+    padding: 0;
+    columns: 2 420px;
+    column-gap: 28px;
+  }
+  .builtin li {
+    break-inside: avoid;
+    padding: 3px 0;
+  }
+  .builtin .check {
+    align-items: baseline;
+  }
+  .bd {
+    color: var(--muted);
+    font-size: 0.85rem;
+    min-width: 9.5em;
+    font-variant-numeric: tabular-nums;
+  }
+  @media (max-width: 700px) {
+    .hrow {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+    .hdate {
+      grid-column: 1 / -1;
+    }
+  }
   .panel {
     margin-bottom: 14px;
   }

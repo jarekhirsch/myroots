@@ -136,6 +136,20 @@ fn archive_import(app: AppHandle, state: State<AppState>, request: Request) -> R
 }
 
 /// The read-only family website as a ZIP (viewer template + public data + media).
+/// The print dialog for the page (window.print() does nothing in WKWebView).
+#[tauri::command]
+fn print_page(webview: tauri::Webview) -> Result<(), String> {
+    #[cfg(desktop)]
+    {
+        webview.print().map_err(|e| e.to_string())
+    }
+    #[cfg(not(desktop))]
+    {
+        let _ = webview;
+        Err("not supported".into())
+    }
+}
+
 #[tauri::command]
 fn site_bytes(app: AppHandle, state: State<AppState>) -> Result<Response, String> {
     let resolver = app.asset_resolver();
@@ -201,7 +215,7 @@ pub fn run() {
             *state.0.lock().unwrap() = Some(inner);
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![engine_open, engine_call, media_put, media_get, archive_bytes, archive_import, site_bytes])
+        .invoke_handler(tauri::generate_handler![engine_open, engine_call, media_put, media_get, archive_bytes, archive_import, site_bytes, print_page])
         .run(tauri::generate_context!())
         .expect("error while running MyRoots");
 }

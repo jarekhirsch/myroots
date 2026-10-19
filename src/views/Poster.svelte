@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { printPage } from '../lib/print';
   // A poster to print in a large format: a fan of ancestors or a tree of
   // descendants, as vector graphics (print to PDF, or save SVG / PNG).
   import { app, call } from '../lib/api.svelte';
@@ -15,6 +16,9 @@
   import Tree from '@lucide/svelte/icons/network';
   import fontLatin from '@fontsource-variable/literata/files/literata-latin-wght-normal.woff2?url';
   import fontExt from '@fontsource-variable/literata/files/literata-latin-ext-wght-normal.woff2?url';
+  import { svgToPdf } from '../lib/pdf';
+  import { AUTHOR } from '../lib/credits';
+  import FileDown from '@lucide/svelte/icons/file-down';
   import type { TreeNode } from '../lib/types';
 
   let { id = null }: { id?: number | null } = $props();
@@ -119,6 +123,23 @@
       busy = false;
     }
   }
+  let progress = $state('');
+  async function savePdf() {
+    busy = true;
+    try {
+      // print quality for small formats, still sharp on large ones
+      const dpi = W * H <= 420 * 594 ? 300 : 200;
+      const pdf = await svgToPdf(await standalone(), W, H, dpi, (d, n) => (progress = `${d}/${n}`));
+      await backend.saveFile(`${fileBase}.pdf`, pdf, 'application/pdf');
+    } catch (e) {
+      toast(errorText(e), 'error');
+    } finally {
+      busy = false;
+      progress = '';
+    }
+  }
+  const credit = `© MyRoots · ${AUTHOR}`;
+
   async function savePng() {
     busy = true;
     try {
@@ -174,12 +195,13 @@
       <input type="text" bind:value={title} placeholder={heading} />
     </label>
     <div class="acts">
-      <button class="btn primary" onclick={() => print()} disabled={!F && !D}><Printer size={16} /> {t('Print / PDF')}</button>
+      <button class="btn primary" onclick={savePdf} disabled={busy || (!F && !D)}><FileDown size={16} /> {progress ? `PDF ${progress}` : 'PDF'}</button>
+      <button class="btn" onclick={printPage} disabled={!F && !D}><Printer size={16} /> {t('Print')}</button>
       <button class="btn" onclick={saveSvg} disabled={busy || (!F && !D)}><Download size={16} /> SVG</button>
       <button class="btn" onclick={savePng} disabled={busy || (!F && !D)}><Download size={16} /> PNG</button>
     </div>
     {#if tooSmall}<p class="warn small">{t('There are many people for this paper: the names will be very small. Choose a larger paper or fewer generations.')}</p>{/if}
-    <p class="hint small">{t('For a print shop, save the SVG or print to PDF at the chosen paper size (in the print window: Save as PDF).')}</p>
+    <p class="hint small">{t('For a print shop, save the PDF (exactly the chosen paper size) or the SVG.')}</p>
   </div>
 
   <div class="stage">
@@ -223,6 +245,7 @@
         {/if}
         <text x={F.W / 2} y={F.titleY} font-size={F.H * 0.042} text-anchor="middle" fill="#2a2420" font-weight="600">{heading}</text>
         <text x={F.W / 2} y={F.titleY + F.H * 0.035} font-size={F.H * 0.017} text-anchor="middle" fill="#6b6259">{subtitle}</text>
+        <text x={F.W - F.W * 0.02} y={F.H - F.H * 0.02} font-size={Math.max(1.6, F.H * 0.009)} text-anchor="end" fill="#a39a8f">{credit}</text>
       </svg>
     {:else if D}
       {@const s = D.scale}
@@ -246,6 +269,7 @@
             {/if}
           </g>
         {/each}
+        <text x={D.W - Math.min(D.W, D.H) * 0.02} y={D.H - Math.min(D.W, D.H) * 0.02} font-size={Math.max(1.6, Math.min(D.W, D.H) * 0.009)} text-anchor="end" fill="#a39a8f">{credit}</text>
       </svg>
     {:else if nodes.length === 0}
       <div class="panel empty">{t('No people yet.')}</div>

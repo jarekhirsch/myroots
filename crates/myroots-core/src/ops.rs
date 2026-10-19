@@ -1249,6 +1249,22 @@ pub fn save_settings(db: &mut Database, mut s: Settings) {
     s.suggestions.endpoint = if ep.to_ascii_lowercase().starts_with("https://") { ep } else { String::new() };
     s.clans = dedup_strings(&s.clans);
     s.clans.sort_by_key(|c| crate::model::norm(c));
+    s.history.off = dedup_strings(&s.history.off).into_iter().filter(|x| x.len() <= 40).take(500).collect();
+    let mut own: Vec<HistoryEvent> = s
+        .history
+        .own
+        .iter()
+        .map(|e| HistoryEvent { id: clean(&e.id).chars().take(40).collect(), date: date::sanitize(&e.date), title: clean(&e.title).chars().take(300).collect() })
+        .filter(|e| !e.title.is_empty() && !e.date.is_empty())
+        .take(1000)
+        .collect();
+    for (i, e) in own.iter_mut().enumerate() {
+        if e.id.is_empty() {
+            e.id = format!("own-{i}");
+        }
+    }
+    own.sort_by(|a, b| date::sort_key(&a.date).cmp(&date::sort_key(&b.date)));
+    s.history.own = own;
     s.tree_start_person = s.tree_start_person.filter(|p| db.persons.contains_key(p));
     s.privacy.sections.retain(|x| crate::privacy::SECTIONS.contains(&x.as_str()));
     s.privacy.fields.retain(|x| crate::privacy::FIELDS.contains(&x.as_str()));

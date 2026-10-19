@@ -91,9 +91,18 @@ export class TauriBackend implements Backend {
     return this.saveAs(name, ext, ext.toUpperCase(), async () => (typeof data === 'string' ? new TextEncoder().encode(data) : data));
   }
 
+  async print() {
+    try {
+      await invoke('print_page');
+    } catch {
+      window.print();
+    }
+  }
+
   async fetchBytes(url: string, headers?: Record<string, string>) {
     const { fetch } = await import('@tauri-apps/plugin-http');
-    const r = await fetch(url, { headers });
+    // map services (OpenStreetMap Nominatim) refuse requests without an identification
+    const r = await fetch(url, { headers: { 'User-Agent': 'MyRoots/3 (family tree app; https://hirsch.fi)', ...headers } });
     return { status: r.status, bytes: new Uint8Array(await r.arrayBuffer()), type: r.headers.get('content-type') || '' };
   }
 

@@ -43,6 +43,8 @@ export interface Backend {
   exportSite(): Promise<string | null>;
   /** Saves a text / binary file chosen by the user. */
   saveFile(name: string, data: Uint8Array | string, mime: string): Promise<string | null>;
+  /** The system print dialog (the desktop app cannot use window.print()). */
+  print?(): Promise<void>;
   /** HTTP GET without CORS limits where possible (Tauri). */
   fetchBytes(url: string, headers?: Record<string, string>): Promise<{ status: number; bytes: Uint8Array; type: string }>;
   /** System notification (anniversaries). */

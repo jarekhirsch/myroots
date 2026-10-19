@@ -435,4 +435,23 @@ mod tests {
         assert!(!data_js(&pubdb, &c, "t").contains("0.2,0.01"));
         assert_eq!(pubdb.persons[&gran].grave.photo, Some(photo));
     }
+
+    #[test]
+    fn own_history_events() {
+        let mut db = Database::new(0);
+        let mut s = db.settings.clone();
+        s.history.off = vec!["1939-09-01".into(), "1939-09-01".into()];
+        s.history.own = vec![
+            HistoryEvent { id: String::new(), date: "1934-07-15".into(), title: " Pożar Kolbuszowej ".into() },
+            HistoryEvent { id: "x".into(), date: "1910".into(), title: "".into() },
+            HistoryEvent { id: "y".into(), date: "1905".into(), title: "Powódź".into() },
+        ];
+        ops::save_settings(&mut db, s);
+        let h = &db.settings.history;
+        assert_eq!(h.off, vec!["1939-09-01".to_string()]);
+        assert_eq!(h.own.len(), 2);
+        assert_eq!(h.own[0].title, "Powódź");
+        assert_eq!(h.own[1].title, "Pożar Kolbuszowej");
+        assert!(!h.own[1].id.is_empty());
+    }
 }

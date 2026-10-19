@@ -281,6 +281,7 @@
       {/if}
     </main>
 
+    <div class="print-credit" aria-hidden="true">© MyRoots · {AUTHOR}</div>
     <nav class="tabbar no-print" aria-label={t('Menu')}>
       {#each tabs as item (item!.path)}
         {@const Icon = item!.icon}
@@ -727,9 +728,26 @@
       max-width: none;
     }
   }
+  .print-credit {
+    display: none;
+  }
   @media print {
     .shell {
       padding: 0 !important;
+    }
+    /* on every printed page, quietly */
+    .print-credit {
+      display: block;
+      position: fixed;
+      bottom: 3mm;
+      right: 5mm;
+      font-size: 7pt;
+      color: #9a9a9a;
+      letter-spacing: 0.02em;
+    }
+    /* the poster carries its own */
+    :global(body:has(.poster-page)) .print-credit {
+      display: none;
     }
   }
 </style>

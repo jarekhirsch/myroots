@@ -9,7 +9,7 @@
   import Weather from './Weather.svelte';
   import { app } from '../api.svelte';
   import { exactDay, refreshPlaces } from '../weather';
-  import { POLAND, historyShown, setHistoryShown, type HistoryEvent } from '../history';
+  import { backgroundEvents, historyShown, setHistoryShown, type Background } from '../history';
   import Landmark from '@lucide/svelte/icons/landmark';
   import type { Lifeline, LEvent } from '../types';
 
@@ -61,7 +61,7 @@
 
   const own = new Set(['birth', 'death', 'presumed_death', 'event', 'marriage', 'marriage_end']);
 
-  type Row = { tick: number; gap: number } | { e: LEvent; i: number; gap: number } | { h: HistoryEvent; age: number; gap: number };
+  type Row = { tick: number; gap: number } | { e: LEvent; i: number; gap: number } | { h: Background; age: number; gap: number };
 
   // "YYYY-MM-DD" sort key of a (qualified) date; null when it has no year
   function keyOf(v: string): string | null {
@@ -77,7 +77,7 @@
   }
   // events of the history of Poland within this life
   const background = $derived.by(() => {
-    if (!history) return [] as { h: HistoryEvent; key: string; age: number }[];
+    if (!history) return [] as { h: Background; key: string; age: number }[];
     const birth = data.events.find((e) => e.kind === 'birth');
     const from = birth ? keyOf(birth.date) : null;
     if (!from) return [];
@@ -86,7 +86,11 @@
     if (!to && data.living) to = new Date().toISOString().slice(0, 10);
     if (!to) to = data.events.filter((e) => own.has(e.kind)).map((e) => keyOf(e.date)).filter((k): k is string => !!k).sort().pop() || null;
     if (!to || to <= from) return [];
-    return POLAND.map((h) => ({ h, key: keyOf(h.date)! })).filter((x) => x.key > from && x.key <= to!).map((x) => ({ ...x, age: yearsBetween(from, x.key) }));
+    return backgroundEvents(app.settings?.history)
+      .map((h) => ({ h, key: keyOf(h.date) }))
+      .filter((x): x is { h: Background; key: string } => !!x.key && x.key > from && x.key <= to!)
+      .sort((a, b) => a.key.localeCompare(b.key))
+      .map((x) => ({ ...x, age: yearsBetween(from, x.key) }));
   });
 
   const rows = $derived.by(() => {
@@ -143,7 +147,7 @@
           <span class="dot" aria-hidden="true"></span>
           <div class="when"><span class="d">{tn('%d year', '%d years', r.age)}</span></div>
           <div class="what">
-            <div class="ttl">{r.h.title()}</div>
+            <div class="ttl">{r.h.title}</div>
             <div class="pl small muted">{fmtDate(r.h.date)}</div>
           </div>
         </li>
@@ -187,8 +191,9 @@
   </ol>
   {#if background.length}
     <button type="button" class="btn ghost sm hist-on no-print" onclick={() => setHistoryShown((histOn = !histOn))} aria-pressed={histOn}>
-      <Landmark size={15} /> {histOn ? t('Hide the history of Poland') : t('Show the history of Poland in the background')}
+      <Landmark size={15} /> {histOn ? t('Hide the historical background') : t('Show the historical background')}
     </button>
+    {#if !viewer}<a class="small hist-edit no-print" href="#/settings?tab=history">{t('Edit the historical events')}</a>{/if}
   {/if}
 {/if}
 
@@ -212,6 +217,9 @@
   .hist-on {
     margin-top: 12px;
     margin-inline-end: 8px;
+  }
+  .hist-edit {
+    margin-inline-start: 4px;
   }
   .pl :global(.wx) {
     margin-inline-start: 6px;

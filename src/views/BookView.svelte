@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { printPage } from '../lib/print';
   // Printable family book: cover, table of contents, one page per person, index of surnames.
   import { app, call } from '../lib/api.svelte';
   import { backend } from '../lib/backend';
@@ -167,7 +168,7 @@
         </div>
         <div class="actions go">
           <button class="btn primary" onclick={generate} disabled={busy}>{busy ? t('Generating the book…') : t('Generate book')}</button>
-          {#if book}<button class="btn" onclick={() => print()}><Printer size={16} /> {t('Print / save as PDF')}</button>{/if}
+          {#if book}<button class="btn" onclick={printPage}><Printer size={16} /> {t('Print / save as PDF')}</button>{/if}
         </div>
       </div>
     </div>

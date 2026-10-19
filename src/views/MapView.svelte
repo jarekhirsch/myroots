@@ -266,6 +266,8 @@
   let focusOn: [number, number] | null = null;
   let origins = $state<Record<string, string>>({});
   let queries = $state<Record<string, string>>({});
+  // the name typed in the search replaces the (misspelled) name in the tree
+  let renames = $state<Record<string, boolean>>({});
   let found = $state<Record<string, { label: string; lat: number; lng: number }[] | 'none' | 'busy'>>({});
   const untried = $derived(data ? data.uncached.filter((p) => origins[p.place] !== 'failed').length : 0);
 
@@ -288,11 +290,18 @@
   }
 
   async function saveCoords(name: string, lat: number, lng: number, origin: string) {
-    await call('places.set', { name, lat, lng, origin });
+    let target = name;
+    const typed = (queries[name] ?? '').trim();
+    if (renames[name] && typed && typed !== name) {
+      await call('places.rename', { from: name, to: typed });
+      target = typed;
+    }
+    await call('places.set', { name: target, lat, lng, origin });
     picking = null;
     delete found[name];
+    delete renames[name];
     focusOn = [lat, lng];
-    toast(t('Saved: %s', name));
+    toast(t('Saved: %s', target));
     await load();
   }
 
@@ -416,6 +425,9 @@
             {#if f === 'none'}
               <p class="small muted">{t('Nothing found. Try another spelling or point the place on the map.')}</p>
             {:else if Array.isArray(f)}
+              {#if (queries[p.place] ?? p.place).trim() && (queries[p.place] ?? p.place).trim() !== p.place}
+                <label class="check small ren"><input type="checkbox" bind:checked={renames[p.place]} /> {t('Also change the name in the tree to “%s”', (queries[p.place] ?? '').trim())}</label>
+              {/if}
               <ul class="res">
                 {#each f as r, i (i)}
                   <li><button type="button" onclick={() => saveCoords(p.place, r.lat, r.lng, 'nominatim')}>{r.label}</button></li>
@@ -535,6 +547,12 @@
   }
   .off {
     max-width: 640px;
+  }
+  .ren {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+    margin: 6px 0 2px;
   }
   .map {
     flex: 1;

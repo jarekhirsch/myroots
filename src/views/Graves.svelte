@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { printPage } from '../lib/print';
   // Graves of the family: by cemetery, on a map, and a route for a visit
   // (All Saints' Day) opened in Google Maps.
   import { app, call } from '../lib/api.svelte';
@@ -174,7 +175,7 @@
     </div>
     <div class="acts no-print">
       <input type="search" placeholder={t('Search…')} bind:value={q} aria-label={t('Search')} />
-      <button class="btn" onclick={() => print()}><Printer size={16} /> {t('Print the list')}</button>
+      <button class="btn" onclick={printPage}><Printer size={16} /> {t('Print the list')}</button>
       <button class="btn primary" onclick={route} disabled={!stops.length || planning}><Route size={16} /> {t('Route of the visit')}</button>
     </div>
   </div>

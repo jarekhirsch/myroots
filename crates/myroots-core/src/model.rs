@@ -651,6 +651,24 @@ impl Default for SiteSettings {
     }
 }
 
+/// An event of history added by the user (shown in the background of lifelines).
+#[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]
+#[serde(default)]
+pub struct HistoryEvent {
+    pub id: String,
+    /// Qualified date (usually exact).
+    pub date: String,
+    pub title: String,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]
+#[serde(default)]
+pub struct HistorySettings {
+    /// Built-in events (by id) that are not shown.
+    pub off: Vec<String>,
+    pub own: Vec<HistoryEvent>,
+}
+
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(default)]
 pub struct Settings {
@@ -678,6 +696,8 @@ pub struct Settings {
     pub notifications: NotificationSettings,
     pub suggestions: SuggestionSettings,
     pub site: SiteSettings,
+    /// Historical background of lifelines: built-in events turned off, own events.
+    pub history: HistorySettings,
     /// UI language ("" = system).
     pub language: String,
 }
@@ -701,6 +721,7 @@ impl Default for Settings {
             notifications: NotificationSettings::default(),
             suggestions: SuggestionSettings::default(),
             site: SiteSettings::default(),
+            history: HistorySettings::default(),
             language: String::new(),
         }
     }

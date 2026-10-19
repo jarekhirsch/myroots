@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { printPage } from '../lib/print';
   import { app, call } from '../lib/api.svelte';
   import { useLoad } from '../lib/load.svelte';
   import { go } from '../lib/router.svelte';
@@ -179,7 +180,7 @@
             {#if !viewer || (p.aging?.length || 0) >= 2}<a class="btn ghost icon" href="#/person/{id}/years" title={t('Through the years')} aria-label={t('Through the years')}><Film size={18} /></a>{/if}
             {#if !viewer && P.revisions}<a class="btn ghost icon" href="#/person/{id}/history" title="{t('History')} ({P.revisions})" aria-label={t('History')}><Clock size={18} /></a>{/if}
             {#if sec.tree !== false}<a class="btn ghost icon" href="#/poster/{id}" title={t('Poster')} aria-label={t('Poster')}><Frame size={18} /></a>{/if}
-            <button class="btn ghost icon" onclick={() => print()} aria-label={t('Print / PDF')} title={t('Print / PDF')}><Printer size={18} /></button>
+            <button class="btn ghost icon" onclick={printPage} aria-label={t('Print / PDF')} title={t('Print / PDF')}><Printer size={18} /></button>
           </span>
           {#if viewer && app.info?.suggestions?.enabled}
             <button class="btn ghost" onclick={() => (suggest = true)}><Flag size={16} /> {t('Suggest a correction')}</button>

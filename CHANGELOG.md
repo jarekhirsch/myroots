@@ -17,7 +17,7 @@ Pierwsze samodzielne wydanie MyRoots, bez WordPressa. Ta sama aplikacja działa 
 - Mapa: lista miejsc bez współrzędnych (przycisk „Popraw”) z wyszukiwaniem pod inną nazwą albo wskazaniem miejsca kliknięciem na mapie.
 - „Cała rodzina”: kliknięta osoba podświetla wszystkich swoich przodków do kliknięcia w tło lub klawisza Esc.
 - Osoby na wspólnych zdjęciach: przycisk „Oznacz osoby” w podglądzie zdjęcia wyszukuje twarze na urządzeniu; twarz (albo zaznaczony obszar) można przypisać osobie z drzewa, nowej osobie albo tylko podpisać. Imiona są pod zdjęciem, a w profilu osoby pojawia się sekcja „Także na zdjęciach”. Na stronie rodzinnej oznaczenia respektują ustawienia prywatności.
-- Tło historyczne: w linii życia najważniejsze wydarzenia z historii Polski (od Konstytucji 3 maja po 2022 r.) z wiekiem osoby w tamtej chwili; można je ukryć.
+- Tło historyczne: w linii życia ok. 160 najważniejszych wydarzeń z historii Polski od 1600 r. (wojny, rozbiory, powstania, reformy, epidemie dżumy i cholery, emigracja) z wiekiem osoby w tamtej chwili. W Ustawieniach (zakładka „Tło historyczne”) można wyłączyć dowolne wbudowane wydarzenie i dodać własne, np. lokalne.
 - Groby: cmentarz, miejsce (kwatera, rząd, numer), położenie (z mapy, z telefonu przy grobie albo samo ze zdjęcia nagrobka), zdjęcie i link do wyszukiwarki grobów. Strona „Groby” grupuje je według cmentarzy, pokazuje na mapie i układa trasę odwiedzin (np. na 1 listopada) w Mapach Google. Grób jest eksportowany do GEDCOM jako pochówek.
 - Zdjęcia: podpowiedzi, kto jest na zdjęciu (rozpoznawanie twarzy na urządzeniu na podstawie wcześniejszych oznaczeń; dane twarzy nie trafiają na stronę rodzinną), „Przyjmij wszystkie podpowiedzi”.
 - Zdjęcia: „Kiedy zrobiono?”: data zdjęcia, szacowana z wieku oznaczonych twarzy i dat ich urodzenia oraz śmierci.
@@ -28,6 +28,10 @@ Pierwsze samodzielne wydanie MyRoots, bez WordPressa. Ta sama aplikacja działa 
 - Okno „O aplikacji” z licencją i listą użytych bibliotek.
 
 **Poprawki**
+- Aplikacja na Maca: drukowanie (profil, księga, lista grobów, plakat) otwiera systemowe okno druku.
+- Plakat: przycisk PDF zapisuje plik dokładnie w wybranym formacie papieru.
+- Mapa: wyszukiwanie miejsc przedstawia się serwisowi OpenStreetMap (wcześniej odrzucał zapytania z aplikacji) i w razie braku wyników pyta drugi serwis (Photon); przy poprawianiu można od razu zmienić błędną nazwę miejsca w całym drzewie.
+- Wydruki, plakaty i film „Przez lata” mają dyskretny dopisek „© MyRoots · Jarek Hirsch”.
 - Aplikacja na komputer: dodawanie zdjęć (druga polityka bezpieczeństwa z wersji przeglądarkowej blokowała pliki); czytelny komunikat, gdy zdjęcia nie da się dodać (np. HEIC w przeglądarce).
 
 **Bezpieczeństwo i prywatność**

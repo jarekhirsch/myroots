@@ -4,6 +4,9 @@ import { backend } from './backend';
 import type { AgingFrame } from './types';
 import { year as yearOf } from './format';
 
+import { AUTHOR } from './credits';
+const CREDIT = `© MyRoots · ${AUTHOR}`;
+
 export const W = 720;
 export const H = 900;
 /** Where the eyes land on the canvas (fractions). */
@@ -171,5 +174,11 @@ export function drawCaptions(ctx: CanvasRenderingContext2D, a: AgingFrame, b: Ag
   };
   one(a, 1 - mix);
   if (b) one(b, mix);
+  // a quiet credit in the corner (also in the saved video)
+  ctx.globalAlpha = 0.5;
+  ctx.font = `400 ${Math.round(cw * 0.018)}px Onest, system-ui, sans-serif`;
+  ctx.textAlign = 'right';
+  ctx.fillText(CREDIT, cw - pad * 0.6, ch - pad * 0.45);
+  ctx.textAlign = 'left';
   ctx.globalAlpha = 1;
 }

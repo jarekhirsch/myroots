@@ -13,20 +13,9 @@ export const TILES: Record<string, { url: string; attribution: string; sub?: str
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-export async function geocodeOne(name: string): Promise<{ lat: number; lng: number } | null> {
-  const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&accept-language=${encodeURIComponent(lang())}&q=${encodeURIComponent(name)}`;
-  const r = await backend.fetchBytes(url, { Accept: 'application/json' });
-  if (r.status === 429) throw new Error('rate');
-  if (r.status !== 200) return null;
-  const v = JSON.parse(new TextDecoder().decode(r.bytes));
-  if (!Array.isArray(v) || !v.length) return null;
-  const lat = Number(v[0].lat);
-  const lng = Number(v[0].lon);
-  return Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : null;
-}
+type Hit = { label: string; lat: number; lng: number };
 
-/** Up to `limit` matches for a search text (for correcting a place by hand). */
-export async function searchPlaces(q: string, limit = 5): Promise<{ label: string; lat: number; lng: number }[]> {
+async function nominatim(q: string, limit: number): Promise<Hit[]> {
   const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=${limit}&accept-language=${encodeURIComponent(lang())}&q=${encodeURIComponent(q)}`;
   const r = await backend.fetchBytes(url, { Accept: 'application/json' });
   if (r.status !== 200) throw new Error(r.status === 429 ? 'rate' : 'http');
@@ -35,6 +24,51 @@ export async function searchPlaces(q: string, limit = 5): Promise<{ label: strin
   return v
     .map((x: any) => ({ label: String(x.display_name || ''), lat: Number(x.lat), lng: Number(x.lon) }))
     .filter((x) => x.label && Number.isFinite(x.lat) && Number.isFinite(x.lng));
+}
+
+// Photon (komoot): the same OpenStreetMap data, more forgiving with spelling
+// and small villages; asked when Nominatim finds nothing or does not answer.
+async function photon(q: string, limit: number): Promise<Hit[]> {
+  const l = ['de', 'en', 'fr', 'it'].includes(lang()) ? `&lang=${lang()}` : '';
+  const r = await backend.fetchBytes(`https://photon.komoot.io/api/?limit=${limit}${l}&q=${encodeURIComponent(q)}`, { Accept: 'application/json' });
+  if (r.status !== 200) throw new Error(r.status === 429 ? 'rate' : 'http');
+  const v = JSON.parse(new TextDecoder().decode(r.bytes));
+  return (Array.isArray(v?.features) ? v.features : [])
+    .map((f: any) => {
+      const p = f.properties || {};
+      const label = [p.name, p.city !== p.name ? p.city : '', p.county, p.state, p.country].filter(Boolean).join(', ');
+      return { label, lat: Number(f.geometry?.coordinates?.[1]), lng: Number(f.geometry?.coordinates?.[0]) };
+    })
+    .filter((x: Hit) => x.label && Number.isFinite(x.lat) && Number.isFinite(x.lng));
+}
+
+/** Matches for a place name: OpenStreetMap Nominatim, then Photon. */
+async function lookup(q: string, limit: number): Promise<Hit[]> {
+  let first: unknown = null;
+  try {
+    const r = await nominatim(q, limit);
+    if (r.length) return r;
+  } catch (e) {
+    first = e;
+  }
+  try {
+    return await photon(q, limit);
+  } catch (e) {
+    throw first || e;
+  }
+}
+
+export async function geocodeOne(name: string): Promise<{ lat: number; lng: number } | null> {
+  const r = await lookup(name, 1).catch((e) => {
+    if ((e as Error)?.message === 'rate') throw e;
+    return [];
+  });
+  return r[0] ? { lat: r[0].lat, lng: r[0].lng } : null;
+}
+
+/** Up to `limit` matches for a search text (for correcting a place by hand). */
+export async function searchPlaces(q: string, limit = 5): Promise<Hit[]> {
+  return lookup(q, limit);
 }
 
 export interface GeoProgress {
