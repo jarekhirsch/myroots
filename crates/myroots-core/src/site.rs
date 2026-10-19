@@ -442,9 +442,9 @@ mod tests {
         let mut s = db.settings.clone();
         s.history.off = vec!["1939-09-01".into(), "1939-09-01".into()];
         s.history.own = vec![
-            HistoryEvent { id: String::new(), date: "1934-07-15".into(), title: " Pożar Kolbuszowej ".into() },
-            HistoryEvent { id: "x".into(), date: "1910".into(), title: "".into() },
-            HistoryEvent { id: "y".into(), date: "1905".into(), title: "Powódź".into() },
+            HistoryEvent { id: String::new(), date: "1934-07-15".into(), title: " Pożar Kolbuszowej ".into(), place: "Kolbuszowa".into() },
+            HistoryEvent { id: "x".into(), date: "1910".into(), title: "".into(), place: String::new() },
+            HistoryEvent { id: "y".into(), date: "1905".into(), title: "Powódź".into(), place: String::new() },
         ];
         ops::save_settings(&mut db, s);
         let h = &db.settings.history;

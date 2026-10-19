@@ -10,6 +10,8 @@
   import PersonPicker from '../lib/components/PersonPicker.svelte';
   import DateInput from '../lib/components/DateInput.svelte';
   import { POLAND } from '../lib/history';
+  import { REGIONS } from '../lib/regions';
+  import PlaceInput from '../lib/components/PlaceInput.svelte';
   import { fmtDate } from '../lib/format';
   import Plus from '@lucide/svelte/icons/plus';
   import X from '@lucide/svelte/icons/x';
@@ -25,7 +27,7 @@
     s.history!.off = [...off];
   }
   function addOwn() {
-    s.history!.own = [...s.history!.own, { id: 'own-' + Date.now().toString(36), date: '', title: '' }];
+    s.history!.own = [...s.history!.own, { id: 'own-' + Date.now().toString(36), date: '', title: '', place: '' }];
   }
   let busy = $state(false);
   const dirty = $derived(JSON.stringify(s) !== JSON.stringify(app.settings));
@@ -269,11 +271,12 @@
   {:else if tab === 'history' && s.history}
     <div class="panel">
       <h2>{t('Your own events')}</h2>
-      <p class="hint">{t('Events of your town, region or family history (a fire, a flood, the resettlement of a village…). They appear in the lifelines of everyone alive at the time, also on the family website.')}</p>
+      <p class="hint">{t('Events of your town, region or family history (a fire, a flood, the resettlement of a village…). With a place, an event is shown only to people connected with that place (or living within 50 km); without one, to everyone alive at the time. Also on the family website.')}</p>
       {#each s.history.own as e, i (e.id)}
         <div class="hrow">
           <div class="hdate"><DateInput bind:value={e.date} /></div>
           <input type="text" class="htitle" bind:value={e.title} placeholder={t('What happened')} aria-label={t('What happened')} />
+          <div class="hplace"><PlaceInput bind:value={e.place} /></div>
           <button class="btn ghost icon" onclick={() => (s.history!.own = s.history!.own.filter((_, k) => k !== i))} aria-label={t('Remove')} title={t('Remove')}><X size={16} /></button>
         </div>
       {/each}
@@ -281,14 +284,14 @@
     </div>
     <div class="panel">
       <h2>{t('History of Poland')} <span class="muted small">({POLAND.length - s.history.off.length} / {POLAND.length})</span></h2>
-      <p class="hint">{t('Built-in events. Untick the ones you do not want to see; to word one differently, untick it and add your own.')}</p>
+      <p class="hint">{t('Built-in events. Untick the ones you do not want to see; to word one differently, untick it and add your own.')} {t('Local events (marked “only”) appear for people whose places on the map lie in that region.')}</p>
       <ul class="builtin">
         {#each POLAND as e (e.date)}
           <li>
             <label class="check">
               <input type="checkbox" checked={!s.history.off.includes(e.date)} onchange={(ev) => toggleBuiltIn(e.date, ev.currentTarget.checked)} />
               <span class="bd">{fmtDate(e.date)}</span>
-              <span>{e.title()}</span>
+              <span>{e.title()}{#if e.region && REGIONS[e.region]}<span class="reg"> · {t('only: %s', REGIONS[e.region].label())}</span>{/if}</span>
             </label>
           </li>
         {/each}
@@ -316,9 +319,13 @@
 {#if about}<AboutDialog onclose={() => (about = false)} />{/if}
 
 <style>
+  .reg {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
   .hrow {
     display: grid;
-    grid-template-columns: minmax(250px, auto) minmax(0, 1fr) auto;
+    grid-template-columns: minmax(250px, auto) minmax(0, 1.3fr) minmax(0, 1fr) auto;
     gap: 8px;
     align-items: center;
     margin-bottom: 8px;

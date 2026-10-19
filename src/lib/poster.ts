@@ -111,22 +111,35 @@ export function midArc(cx: number, cy: number, c: FanCell, r: number): string {
 
 /* ---------------- tree of descendants ---------------- */
 
-export interface DNode {
+/** Cards as in the family tree of the app (design units, like the screen). */
+export const CARD_W = 210;
+export const CARD_H = 64;
+const COUPLE_GAP = 26;
+const UNIT_GAP = 22;
+const FAMILY_GAP = 64;
+const ROW_GAP = 96;
+
+export interface DUnit {
+  /** left edge and top of the person's card (design units) */
   x: number;
   y: number;
   person: Who;
-  partners: string[];
-  depth: number;
+  spouse: Who | null;
+  /** further partners, not drawn */
+  more: number;
 }
 export interface Desc {
   W: number;
   H: number;
-  nodes: DNode[];
-  links: { x1: number; y1: number; x2: number; y2: number }[];
-  box: [number, number];
+  units: DUnit[];
+  /** connectors in design units: couples and parents → children */
+  couples: string[];
+  links: string[];
+  /** design units → millimetres */
   scale: number;
+  ox: number;
+  oy: number;
   titleY: number;
-  /** the paper is landscape */
   landscape: boolean;
   count: number;
 }
@@ -135,32 +148,32 @@ export function descendants(nodes: TreeNode[], rootId: string, gens: number, pap
   const byId = new Map(nodes.map((n) => [n.id, n]));
   const start = byId.get(rootId);
   if (!start) return null;
-  type T = { n: TreeNode; children: T[] };
+  type T = { n: TreeNode; spouse: TreeNode | null; more: number; w: number; children: T[] };
   const seen = new Set<string>();
   const build = (n: TreeNode, d: number): T => {
     seen.add(n.id);
+    const sp = n.rels.spouses.map((x) => byId.get(x)).filter((x): x is TreeNode => !!x);
+    const spouse = sp.find((x) => !seen.has(x.id)) || null;
+    if (spouse) seen.add(spouse.id);
     const kids = d + 1 < gens ? n.rels.children.map((c) => byId.get(c)).filter((x): x is TreeNode => !!x && !seen.has(x.id)) : [];
     kids.sort((a, b) => (a.data.birthday || '').localeCompare(b.data.birthday || ''));
-    return { n, children: kids.map((k) => build(k, d + 1)) };
+    return { n, spouse, more: Math.max(0, sp.length - 1), w: spouse ? 2 * CARD_W + COUPLE_GAP : CARD_W, children: kids.map((k) => build(k, d + 1)) };
   };
   const root = hierarchy<T>(build(start, 0));
-  // design units: a box of 52 × 17
-  const bw = 52;
-  const bh = 17;
-  d3tree<T>().nodeSize([bw + 6, bh + 16])(root);
+  d3tree<T>()
+    .nodeSize([1, CARD_H + ROW_GAP])
+    .separation((a, b) => (a.data.w + b.data.w) / 2 + (a.parent === b.parent ? UNIT_GAP : FAMILY_GAP))(root);
   const all = root.descendants();
-  const xs = all.map((d) => d.x!);
-  const ys = all.map((d) => d.y!);
-  const minX = Math.min(...xs) - bw / 2;
-  const maxX = Math.max(...xs) + bw / 2;
-  const minY = Math.min(...ys);
-  const maxY = Math.max(...ys) + bh;
+  const left = (d: (typeof all)[number]) => d.x! - d.data.w / 2;
+  const minX = Math.min(...all.map(left));
+  const maxX = Math.max(...all.map((d) => d.x! + d.data.w / 2));
+  const minY = Math.min(...all.map((d) => d.y!));
+  const maxY = Math.max(...all.map((d) => d.y!)) + CARD_H;
   const tw = maxX - minX;
   const th = maxY - minY;
-  // the orientation that gives bigger boxes
   const fit = (W: number, H: number) => {
     const m = Math.min(W, H) * 0.05;
-    return Math.min((W - 2 * m) / tw, (H - 2 * m - H * 0.09) / th);
+    return Math.min((W - 2 * m) / tw, (H - 2 * m - H * 0.1) / th);
   };
   const [a, b] = paper;
   const land = fit(Math.max(a, b), Math.min(a, b)) > fit(Math.min(a, b), Math.max(a, b));
@@ -168,19 +181,25 @@ export function descendants(nodes: TreeNode[], rootId: string, gens: number, pap
   const H = land ? Math.min(a, b) : Math.max(a, b);
   const s = fit(W, H);
   const m = Math.min(W, H) * 0.05;
-  const ox = (W - tw * s) / 2 - minX * s;
-  const oy = m + H * 0.09 - minY * s;
-  const name = (id: string) => {
-    const n = byId.get(id);
-    return n ? [n.data['first name'], n.data['last name']].filter(Boolean).join(' ') : '';
-  };
-  const out: DNode[] = all.map((d) => ({
-    x: ox + d.x! * s,
-    y: oy + d.y! * s,
-    person: who(d.data.n)!,
-    partners: d.data.n.rels.spouses.map(name).filter(Boolean),
-    depth: d.depth,
-  }));
-  const links = root.links().map((l) => ({ x1: ox + l.source.x! * s, y1: oy + (l.source.y! + bh) * s, x2: ox + l.target.x! * s, y2: oy + l.target.y! * s }));
-  return { W, H, nodes: out, links, box: [bw * s, bh * s], scale: s, titleY: m + H * 0.05, landscape: land, count: all.length };
+  const units: DUnit[] = all.map((d) => ({ x: left(d) - minX, y: d.y! - minY, person: who(d.data.n)!, spouse: who(d.data.spouse ?? undefined), more: d.data.more }));
+  const couples: string[] = [];
+  const links: string[] = [];
+  for (const d of all) {
+    const x0 = left(d) - minX;
+    const y0 = d.y! - minY;
+    let fromX = x0 + CARD_W / 2;
+    let fromY = y0 + CARD_H;
+    if (d.data.spouse) {
+      couples.push(`M ${x0 + CARD_W} ${y0 + CARD_H / 2} L ${x0 + CARD_W + COUPLE_GAP} ${y0 + CARD_H / 2}`);
+      fromX = x0 + CARD_W + COUPLE_GAP / 2;
+      fromY = y0 + CARD_H / 2;
+    }
+    for (const c of d.children || []) {
+      const cx = left(c) - minX + CARD_W / 2;
+      const cy = c.y! - minY;
+      const mid = cy - ROW_GAP / 2;
+      links.push(`M ${fromX} ${fromY} L ${fromX} ${mid} L ${cx} ${mid} L ${cx} ${cy}`);
+    }
+  }
+  return { W, H, units, couples, links, scale: s, ox: (W - tw * s) / 2, oy: m + H * 0.1, titleY: m + H * 0.05, landscape: land, count: all.length + all.filter((d) => d.data.spouse).length };
 }

@@ -1254,7 +1254,7 @@ pub fn save_settings(db: &mut Database, mut s: Settings) {
         .history
         .own
         .iter()
-        .map(|e| HistoryEvent { id: clean(&e.id).chars().take(40).collect(), date: date::sanitize(&e.date), title: clean(&e.title).chars().take(300).collect() })
+        .map(|e| HistoryEvent { id: clean(&e.id).chars().take(40).collect(), date: date::sanitize(&e.date), title: clean(&e.title).chars().take(300).collect(), place: clean(&e.place).chars().take(200).collect() })
         .filter(|e| !e.title.is_empty() && !e.date.is_empty())
         .take(1000)
         .collect();

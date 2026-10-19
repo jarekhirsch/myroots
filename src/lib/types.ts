@@ -86,7 +86,7 @@ export interface Settings {
   notifications: { enabled: boolean; days_before: number };
   suggestions: { enabled: boolean; email: string; endpoint: string };
   site: { title: string; subtitle: string; intro: string; language: string; full_photos: boolean };
-  history?: { off: string[]; own: { id: string; date: string; title: string }[] };
+  history?: { off: string[]; own: { id: string; date: string; title: string; place?: string }[] };
   language: string;
 }
 

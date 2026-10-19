@@ -7,7 +7,8 @@
   import Html from './Html.svelte';
   import Img from './Img.svelte';
   import Weather from './Weather.svelte';
-  import { app } from '../api.svelte';
+  import { app, call } from '../api.svelte';
+  import type { PlaceUse } from '../types';
   import { exactDay, refreshPlaces } from '../weather';
   import { backgroundEvents, historyShown, setHistoryShown, type Background } from '../history';
   import Landmark from '@lucide/svelte/icons/landmark';
@@ -15,6 +16,16 @@
 
   let { data, ruler = true, weather = true, history = true }: { data: Lifeline; ruler?: boolean; weather?: boolean; history?: boolean } = $props();
   let histOn = $state(historyShown());
+  // where the person lived: local events of history are shown only there
+  let coords = $state<Map<string, [number, number]>>(new Map());
+  $effect(() => {
+    call<PlaceUse[]>('places.list')
+      .then((l) => (coords = new Map(l.filter((p) => p.lat != null && p.lng != null).map((p) => [p.name.trim().toLowerCase(), [p.lat!, p.lng!] as [number, number]]))))
+      .catch(() => {});
+  });
+  const ownKinds = new Set(['birth', 'death', 'event', 'marriage', 'marriage_end']);
+  const myPlaces = $derived([...new Set(data.events.filter((e) => ownKinds.has(e.kind) && e.place).map((e) => e.place.trim()))]);
+  const myPoints = $derived(myPlaces.map((n) => coords.get(n.toLowerCase())).filter((p): p is [number, number] => !!p));
   // coordinates may have changed on the map since the last time
   refreshPlaces();
   const viewer = $derived(!!app.info?.viewer);
@@ -86,7 +97,7 @@
     if (!to && data.living) to = new Date().toISOString().slice(0, 10);
     if (!to) to = data.events.filter((e) => own.has(e.kind)).map((e) => keyOf(e.date)).filter((k): k is string => !!k).sort().pop() || null;
     if (!to || to <= from) return [];
-    return backgroundEvents(app.settings?.history)
+    return backgroundEvents(app.settings?.history, myPoints, myPlaces, (n) => coords.get(n.trim().toLowerCase()) || null)
       .map((h) => ({ h, key: keyOf(h.date) }))
       .filter((x): x is { h: Background; key: string } => !!x.key && x.key > from && x.key <= to!)
       .sort((a, b) => a.key.localeCompare(b.key))

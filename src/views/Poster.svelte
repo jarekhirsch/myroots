@@ -8,7 +8,9 @@
   import { t } from '../lib/i18n/index.svelte';
   import { toast } from '../lib/ui.svelte';
   import { errorText } from '../lib/errors';
-  import { PAPERS, fan, sector, midArc, descendants, type FanCell } from '../lib/poster';
+  import { PAPERS, fan, sector, midArc, descendants, CARD_W, CARD_H, type FanCell } from '../lib/poster';
+  import { tone } from '../lib/text';
+  import { initials } from '../lib/format';
   import PersonPicker from '../lib/components/PersonPicker.svelte';
   import Printer from '@lucide/svelte/icons/printer';
   import Download from '@lucide/svelte/icons/download';
@@ -16,6 +18,8 @@
   import Tree from '@lucide/svelte/icons/network';
   import fontLatin from '@fontsource-variable/literata/files/literata-latin-wght-normal.woff2?url';
   import fontExt from '@fontsource-variable/literata/files/literata-latin-ext-wght-normal.woff2?url';
+  import uiLatin from '@fontsource-variable/onest/files/onest-latin-wght-normal.woff2?url';
+  import uiExt from '@fontsource-variable/onest/files/onest-latin-ext-wght-normal.woff2?url';
   import { svgToPdf } from '../lib/pdf';
   import { AUTHOR } from '../lib/credits';
   import FileDown from '@lucide/svelte/icons/file-down';
@@ -49,10 +53,34 @@
   const heading = $derived(title.trim() || (kind === 'fan' ? t('Ancestors of %s', rootName) : t('Descendants of %s', rootName)));
   const subtitle = $derived([app.info?.tree_name || app.info?.site?.title || '', String(new Date().getFullYear())].filter(Boolean).join(' · '));
   // the smallest names on the descendants poster (mm): too small to read under ~1.6 mm
-  const tooSmall = $derived(!!D && D.box[1] * 0.24 < 1.6);
+  // years are written 12.5 units high: under ~1.6 mm they cannot be read
+  const tooSmall = $derived(!!D && D.scale * 12.5 < 1.6);
 
   /* ---------- fan text ---------- */
   const SERIF = "'Literata Variable', Literata, Georgia, serif";
+  const UI = "'Onest Variable', Onest, system-ui, sans-serif";
+  // the light colours of the app (the poster is printed on white paper)
+  const C = {
+    text: '#17201b',
+    muted: '#56645b',
+    line: '#e3eae5',
+    lineStrong: '#cdd8d1',
+    heirloom: '#c49a6c',
+    p: [[], ['#dfe9e3', '#24503f'], ['#f1e4d3', '#7a5328'], ['#dde8f0', '#2e5468'], ['#f2dfe3', '#7d3d4d'], ['#e6e2f1', '#4b4170'], ['#e9ecd9', '#4f5826']] as string[][],
+  };
+  const fullName = (p: { first: string; last: string }) => [p.first, p.last].filter(Boolean).join(' ') || '?';
+  // names cut to the card, as in the tree
+  let mctx: CanvasRenderingContext2D | null = null;
+  function fit(name: string): string {
+    if (!mctx) mctx = document.createElement('canvas').getContext('2d');
+    if (!mctx) return name;
+    mctx.font = "620 14.5px 'Onest Variable', system-ui";
+    const max = CARD_W - 76;
+    if (mctx.measureText(name).width <= max) return name;
+    let n = name.length;
+    while (n > 1 && mctx.measureText(name.slice(0, n) + '…').width > max) n--;
+    return name.slice(0, n).trimEnd() + '…';
+  }
   function fill(c: FanCell, gens: number): string {
     if (!c.person) return '#f2eee6';
     const l = 58 + ((c.gen - 1) / Math.max(1, gens - 2)) * 30;
@@ -106,9 +134,12 @@
   async function standalone(): Promise<string> {
     const clone = svgEl!.cloneNode(true) as SVGSVGElement;
     clone.removeAttribute('class');
-    const [a, b] = await Promise.all([dataUrl(fontLatin), dataUrl(fontExt)]);
+    const [a, b, c, d] = await Promise.all([dataUrl(fontLatin), dataUrl(fontExt), dataUrl(uiLatin), dataUrl(uiExt)]);
     const style = document.createElementNS('http://www.w3.org/2000/svg', 'style');
-    style.textContent = `@font-face{font-family:'Literata Variable';font-weight:200 900;src:url(${a}) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}@font-face{font-family:'Literata Variable';font-weight:200 900;src:url(${b}) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}`;
+    const LATIN = 'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD';
+    const EXT = 'U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF';
+    const face = (family: string, url: string, range: string) => `@font-face{font-family:'${family}';font-weight:100 900;src:url(${url}) format('woff2');unicode-range:${range}}`;
+    style.textContent = face('Literata Variable', a, LATIN) + face('Literata Variable', b, EXT) + face('Onest Variable', c, LATIN) + face('Onest Variable', d, EXT);
     clone.insertBefore(style, clone.firstChild);
     return '<?xml version="1.0" encoding="UTF-8"?>\n' + new XMLSerializer().serializeToString(clone);
   }
@@ -248,28 +279,31 @@
         <text x={F.W - F.W * 0.02} y={F.H - F.H * 0.02} font-size={Math.max(1.6, F.H * 0.009)} text-anchor="end" fill="#a39a8f">{credit}</text>
       </svg>
     {:else if D}
-      {@const s = D.scale}
-      <svg bind:this={svgEl} class="poster-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {D.W} {D.H}" width="{D.W}mm" height="{D.H}mm" font-family={SERIF}>
-        <rect width={D.W} height={D.H} fill="#fbf8f2" />
-        <text x={D.W / 2} y={D.titleY} font-size={Math.min(D.W, D.H) * 0.042} text-anchor="middle" fill="#2a2420" font-weight="600">{heading}</text>
-        <text x={D.W / 2} y={D.titleY + Math.min(D.W, D.H) * 0.03} font-size={Math.min(D.W, D.H) * 0.016} text-anchor="middle" fill="#6b6259">{subtitle}</text>
-        {#each D.links as l, i (i)}
-          {@const my = (l.y1 + l.y2) / 2}
-          <path d="M{l.x1} {l.y1} V{my} H{l.x2} V{l.y2}" fill="none" stroke="#b9ad9c" stroke-width={Math.max(0.25, 0.6 * s)} />
-        {/each}
-        {#each D.nodes as n, i (i)}
-          {@const [bw, bh] = D.box}
-          <g transform="translate({n.x - bw / 2} {n.y})">
-            <rect width={bw} height={bh} rx={bh * 0.14} fill="#fff" stroke="#d9cfbf" stroke-width={Math.max(0.2, 0.4 * s)} />
-            <rect width={bh * 0.12} height={bh} rx={bh * 0.06} fill={n.person.gender === 'F' ? '#b7867a' : n.person.gender === 'M' ? '#6f8fa6' : '#a99f92'} />
-            <text x={bw / 2 + bh * 0.06} y={bh * 0.36} font-size={bh * 0.24} text-anchor="middle" fill="#2a2420" font-weight="600">{[n.person.first, n.person.last].filter(Boolean).join(' ')}</text>
-            <text x={bw / 2 + bh * 0.06} y={bh * 0.62} font-size={bh * 0.19} text-anchor="middle" fill="#6b6259">{n.person.years}</text>
-            {#if n.partners.length}
-              <text x={bw / 2 + bh * 0.06} y={bh * 0.86} font-size={bh * 0.16} text-anchor="middle" fill="#6b6259">∞ {n.partners[0]}{n.partners.length > 1 ? ` +${n.partners.length - 1}` : ''}</text>
-            {/if}
-          </g>
-        {/each}
-        <text x={D.W - Math.min(D.W, D.H) * 0.02} y={D.H - Math.min(D.W, D.H) * 0.02} font-size={Math.max(1.6, Math.min(D.W, D.H) * 0.009)} text-anchor="end" fill="#a39a8f">{credit}</text>
+      <svg bind:this={svgEl} class="poster-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {D.W} {D.H}" width="{D.W}mm" height="{D.H}mm" font-family={UI}>
+        <rect width={D.W} height={D.H} fill="#f6f8f6" />
+        <text x={D.W / 2} y={D.titleY} font-size={Math.min(D.W, D.H) * 0.04} text-anchor="middle" fill={C.text} font-weight="650">{heading}</text>
+        <text x={D.W / 2} y={D.titleY + Math.min(D.W, D.H) * 0.028} font-size={Math.min(D.W, D.H) * 0.015} text-anchor="middle" fill={C.muted}>{subtitle}</text>
+        <!-- the same cards and lines as the family tree in the app -->
+        <g transform="translate({D.ox} {D.oy}) scale({D.scale})">
+          {#each D.links as d, i (i)}<path {d} fill="none" stroke={C.lineStrong} stroke-width="2" stroke-linejoin="round" />{/each}
+          {#each D.couples as d, i (i)}<path {d} fill="none" stroke={C.heirloom} stroke-width="3" />{/each}
+          {#each D.units as u, i (i)}
+            {#each [u.person, u.spouse] as p, k (k)}
+              {#if p}
+                {@const tn = tone(fullName(p))}
+                <g transform="translate({u.x + k * (CARD_W + 26)} {u.y})">
+                  <rect width={CARD_W} height={CARD_H} rx="16" fill="#fff" stroke={C.line} stroke-width="1" />
+                  <rect x="10" y="10" width="44" height="44" rx="14" fill={C.p[tn][0]} />
+                  <text x="32" y="37.5" text-anchor="middle" font-size="15" font-weight="650" fill={C.p[tn][1]}>{initials(fullName(p))}</text>
+                  <text x="66" y={p.years ? 29 : 37} font-size="14.5" font-weight="620" fill={C.text}>{fit(fullName(p))}</text>
+                  {#if p.years}<text x="66" y="47" font-size="12.5" fill={C.muted}>{p.years}</text>{/if}
+                  {#if k === 1 && u.more}<text x={CARD_W - 12} y="20" font-size="11" text-anchor="end" fill={C.muted}>+{u.more}</text>{/if}
+                </g>
+              {/if}
+            {/each}
+          {/each}
+        </g>
+        <text x={D.W - Math.min(D.W, D.H) * 0.02} y={D.H - Math.min(D.W, D.H) * 0.02} font-size={Math.max(1.6, Math.min(D.W, D.H) * 0.009)} text-anchor="end" fill="#9aa59f">{credit}</text>
       </svg>
     {:else if nodes.length === 0}
       <div class="panel empty">{t('No people yet.')}</div>
@@ -341,7 +375,7 @@
     width: 100%;
     height: auto;
     max-height: 78vh;
-    background: #fbf8f2;
+    background: transparent;
     box-shadow: var(--shadow-raised, 0 10px 30px rgba(0, 0, 0, 0.15));
     border-radius: 4px;
   }

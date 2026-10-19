@@ -659,6 +659,8 @@ pub struct HistoryEvent {
     /// Qualified date (usually exact).
     pub date: String,
     pub title: String,
+    /// Shown only for people of this place (and within 50 km); empty = everyone.
+    pub place: String,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]

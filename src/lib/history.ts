@@ -3,11 +3,14 @@
 // the background of a lifeline. Built in, no network; the user can switch any
 // of them off and add their own in the settings.
 import { t } from './i18n/index.svelte';
+import { within, km } from './regions';
 
 export interface HistoryEvent {
   /** YYYY, YYYY-MM or YYYY-MM-DD */
   date: string;
   title: () => string;
+  /** Only for people who lived in this region (see regions.ts); none = all of Poland. */
+  region?: string;
 }
 
 /** An event shown in the background: built in (id = its date) or added by the user. */
@@ -16,6 +19,9 @@ export interface Background {
   date: string;
   title: string;
   own: boolean;
+  region?: string;
+  /** own event tied to a place */
+  place?: string;
 }
 
 export const POLAND: HistoryEvent[] = [
@@ -34,22 +40,22 @@ export const POLAND: HistoryEvent[] = [
   { date: '1656-04-01', title: () => t("Lwów Oath of King John Casimir") },
   { date: '1660-05-03', title: () => t("Peace of Oliva ends the war with Sweden") },
   { date: '1667-01-30', title: () => t("Truce of Andrusovo: Kyiv and the left-bank Ukraine are lost") },
-  { date: '1672-08', title: () => t("The Ottomans capture Kamieniec Podolski") },
+  { date: '1672-08', title: () => t("The Ottomans capture Kamieniec Podolski"), region: 'southeast' },
   { date: '1673-11-11', title: () => t("Victory over the Ottomans at Khotyn") },
   { date: '1674-05-21', title: () => t("John III Sobieski is elected king") },
   { date: '1683-09-12', title: () => t("Relief of Vienna by King John III Sobieski") },
   { date: '1686-05-06', title: () => t("Eternal Peace with Russia") },
   { date: '1697-06-27', title: () => t("Augustus II of Saxony is elected king") },
-  { date: '1699-01-26', title: () => t("Treaty of Karlowitz: Podolia returns to Poland") },
+  { date: '1699-01-26', title: () => t("Treaty of Karlowitz: Podolia returns to Poland"), region: 'southeast' },
   { date: '1700-02', title: () => t("The Great Northern War begins") },
   { date: '1708', title: () => t("Great plague epidemic (until 1712)") },
   { date: '1709-07-08', title: () => t("Battle of Poltava; Augustus II returns to the throne") },
   { date: '1717-02-01', title: () => t("The Silent Sejm") },
   { date: '1733', title: () => t("War of the Polish Succession") },
-  { date: '1747-08-08', title: () => t("The Załuski Library opens in Warsaw") },
+  { date: '1747-08-08', title: () => t("The Załuski Library opens in Warsaw"), region: 'warsaw' },
   { date: '1764-09-07', title: () => t("Stanisław August Poniatowski is elected king") },
   { date: '1768-02-29', title: () => t("Bar Confederation against Russian influence") },
-  { date: '1770', title: () => t("Plague in the south-east of the Commonwealth") },
+  { date: '1770', title: () => t("Plague in the south-east of the Commonwealth"), region: 'southeast' },
   { date: '1772-08-05', title: () => t("First partition of Poland") },
   { date: '1773-10-14', title: () => t("Commission of National Education: the first ministry of education") },
   { date: '1788-10-06', title: () => t("The Great (Four-Year) Sejm begins") },
@@ -60,62 +66,62 @@ export const POLAND: HistoryEvent[] = [
   { date: '1794-04-04', title: () => t("Battle of Racławice: the scythe-bearers") },
   { date: '1795-10-24', title: () => t("Third partition: Poland disappears from the map") },
   { date: '1797-07', title: () => t("Polish Legions in Italy; Dąbrowski's Mazurka is written") },
-  { date: '1806-11', title: () => t("Napoleon's army enters Poland; uprising in Greater Poland") },
+  { date: '1806-11', title: () => t("Napoleon's army enters Poland; uprising in Greater Poland"), region: 'prussian' },
   { date: '1807-07-09', title: () => t("The Duchy of Warsaw is created") },
-  { date: '1807-07-22', title: () => t("Constitution of the Duchy of Warsaw: peasants become personally free") },
-  { date: '1808-05-01', title: () => t("Napoleonic Code: civil registers of births, marriages and deaths begin") },
-  { date: '1809-04-19', title: () => t("Battle of Raszyn") },
+  { date: '1807-07-22', title: () => t("Constitution of the Duchy of Warsaw: peasants become personally free"), region: 'duchy' },
+  { date: '1808-05-01', title: () => t("Napoleonic Code: civil registers of births, marriages and deaths begin"), region: 'duchy' },
+  { date: '1809-04-19', title: () => t("Battle of Raszyn"), region: 'duchy' },
   { date: '1812-06', title: () => t("Napoleon's campaign against Russia") },
   { date: '1815-06-09', title: () => t("Congress of Vienna: the Kingdom of Poland under the tsar") },
-  { date: '1816-11-19', title: () => t("The University of Warsaw is founded") },
+  { date: '1816-11-19', title: () => t("The University of Warsaw is founded"), region: 'warsaw' },
   { date: '1830-11-29', title: () => t("The November Uprising breaks out") },
   { date: '1831-05', title: () => t("Cholera epidemic") },
   { date: '1831-09-08', title: () => t("Fall of Warsaw; the Great Emigration begins") },
   { date: '1834-06', title: () => t("Mickiewicz publishes Pan Tadeusz") },
-  { date: '1846-02', title: () => t("Kraków Uprising and the Galician peasant revolt") },
-  { date: '1847', title: () => t("Famine and typhus in Galicia") },
+  { date: '1846-02', title: () => t("Kraków Uprising and the Galician peasant revolt"), region: 'austrian' },
+  { date: '1847', title: () => t("Famine and typhus in Galicia"), region: 'austrian' },
   { date: '1848-03', title: () => t("Spring of Nations") },
-  { date: '1848-04-22', title: () => t("Serfdom is abolished in Galicia") },
+  { date: '1848-04-22', title: () => t("Serfdom is abolished in Galicia"), region: 'austrian' },
   { date: '1848-06', title: () => t("Cholera epidemic") },
   { date: '1852', title: () => t("Cholera epidemic (until 1855)") },
   { date: '1863-01-22', title: () => t("The January Uprising breaks out") },
-  { date: '1864-03-02', title: () => t("Peasants in the Kingdom of Poland become owners of their land") },
+  { date: '1864-03-02', title: () => t("Peasants in the Kingdom of Poland become owners of their land"), region: 'congress' },
   { date: '1866', title: () => t("Cholera epidemic") },
-  { date: '1867-12', title: () => t("Galicia gains autonomy within Austria-Hungary") },
-  { date: '1872', title: () => t("Kulturkampf: Germanisation in the Prussian partition") },
+  { date: '1867-12', title: () => t("Galicia gains autonomy within Austria-Hungary"), region: 'austrian' },
+  { date: '1872', title: () => t("Kulturkampf: Germanisation in the Prussian partition"), region: 'prussian' },
   { date: '1873', title: () => t("Cholera epidemic") },
-  { date: '1885-03', title: () => t("Prussian deportations of Poles without German citizenship") },
-  { date: '1886-04', title: () => t("Prussian Settlement Commission buys up Polish land") },
+  { date: '1885-03', title: () => t("Prussian deportations of Poles without German citizenship"), region: 'prussian' },
+  { date: '1886-04', title: () => t("Prussian Settlement Commission buys up Polish land"), region: 'prussian' },
   { date: '1890', title: () => t("Mass emigration 'for bread' to America") },
   { date: '1892', title: () => t("Cholera epidemic") },
-  { date: '1901-05', title: () => t("School strike in Września against teaching in German") },
+  { date: '1901-05', title: () => t("School strike in Września against teaching in German"), region: 'prussian' },
   { date: '1903-12-10', title: () => t("Maria Skłodowska-Curie receives the Nobel Prize") },
-  { date: '1905-01', title: () => t("Revolution of 1905 in the Kingdom of Poland") },
+  { date: '1905-01', title: () => t("Revolution of 1905 in the Kingdom of Poland"), region: 'congress' },
   { date: '1914-07-28', title: () => t("The First World War breaks out") },
   { date: '1914-08-06', title: () => t("Piłsudski's First Cadre Company marches out") },
-  { date: '1915-08-05', title: () => t("The Russians leave Warsaw; mass flight of refugees to the east") },
+  { date: '1915-08-05', title: () => t("The Russians leave Warsaw; mass flight of refugees to the east"), region: 'russian' },
   { date: '1916-11-05', title: () => t("Act of 5 November: the Kingdom of Poland is announced") },
   { date: '1918-10', title: () => t("The Spanish flu pandemic reaches Poland") },
-  { date: '1918-11-01', title: () => t("Battles for Lwów: the Polish–Ukrainian war") },
+  { date: '1918-11-01', title: () => t("Battles for Lwów: the Polish–Ukrainian war"), region: 'volhynia' },
   { date: '1918-11-11', title: () => t("Poland regains independence") },
   { date: '1918-11-28', title: () => t("Women gain the right to vote") },
-  { date: '1918-12-27', title: () => t("Greater Poland Uprising") },
+  { date: '1918-12-27', title: () => t("Greater Poland Uprising"), region: 'greaterpoland' },
   { date: '1919', title: () => t("Typhus epidemic in the war-torn country") },
   { date: '1919-06-28', title: () => t("Treaty of Versailles") },
-  { date: '1919-08', title: () => t("First Silesian Uprising") },
-  { date: '1920-02-10', title: () => t("Poland's wedding to the sea in Puck") },
+  { date: '1919-08', title: () => t("First Silesian Uprising"), region: 'silesia' },
+  { date: '1920-02-10', title: () => t("Poland's wedding to the sea in Puck"), region: 'pomerania' },
   { date: '1920-08-15', title: () => t("Battle of Warsaw in the Polish–Soviet War") },
   { date: '1921-03-17', title: () => t("The March Constitution") },
   { date: '1921-03-18', title: () => t("Peace of Riga ends the Polish–Soviet War") },
-  { date: '1921-05', title: () => t("Third Silesian Uprising") },
-  { date: '1922-06-20', title: () => t("Part of Upper Silesia joins Poland") },
+  { date: '1921-05', title: () => t("Third Silesian Uprising"), region: 'silesia' },
+  { date: '1922-06-20', title: () => t("Part of Upper Silesia joins Poland"), region: 'silesia' },
   { date: '1922-12-16', title: () => t("President Gabriel Narutowicz is assassinated") },
   { date: '1924-04-28', title: () => t("Grabski's reform: the złoty is introduced") },
   { date: '1926-05-12', title: () => t("The May Coup") },
   { date: '1929-10', title: () => t("The Great Depression begins") },
   { date: '1935-05-12', title: () => t("Death of Józef Piłsudski") },
-  { date: '1937', title: () => t("Building of the Central Industrial Region") },
-  { date: '1938-10-02', title: () => t("Poland takes Zaolzie from Czechoslovakia") },
+  { date: '1937', title: () => t("Building of the Central Industrial Region"), region: 'cop' },
+  { date: '1938-10-02', title: () => t("Poland takes Zaolzie from Czechoslovakia"), region: 'zaolzie' },
   { date: '1939-09-01', title: () => t("Germany invades Poland: the Second World War begins") },
   { date: '1939-09-17', title: () => t("The Soviet Union invades Poland from the east") },
   { date: '1939-09-28', title: () => t("Warsaw capitulates") },
@@ -123,18 +129,18 @@ export const POLAND: HistoryEvent[] = [
   { date: '1940-02-10', title: () => t("Mass deportations of Poles deep into the Soviet Union begin") },
   { date: '1940-04', title: () => t("The Katyn massacre") },
   { date: '1940-06-14', title: () => t("First transport of Polish prisoners to Auschwitz") },
-  { date: '1940-11-16', title: () => t("The Warsaw Ghetto is closed off") },
+  { date: '1940-11-16', title: () => t("The Warsaw Ghetto is closed off"), region: 'warsaw' },
   { date: '1941-06-22', title: () => t("Germany attacks the Soviet Union") },
   { date: '1942-02-14', title: () => t("The Home Army (Armia Krajowa) is formed") },
   { date: '1942-07-22', title: () => t("The Holocaust: deportations from the Warsaw Ghetto to Treblinka") },
-  { date: '1942-11-27', title: () => t("Expulsions from the Zamość region") },
+  { date: '1942-11-27', title: () => t("Expulsions from the Zamość region"), region: 'zamosc' },
   { date: '1943-04-19', title: () => t("Warsaw Ghetto Uprising") },
   { date: '1943-07-04', title: () => t("General Władysław Sikorski dies at Gibraltar") },
-  { date: '1943-07-11', title: () => t("Peak of the Volhynian massacre") },
+  { date: '1943-07-11', title: () => t("Peak of the Volhynian massacre"), region: 'volhynia' },
   { date: '1944-05-18', title: () => t("Battle of Monte Cassino") },
   { date: '1944-07-22', title: () => t("The PKWN Manifesto: communist rule begins") },
   { date: '1944-08-01', title: () => t("The Warsaw Uprising breaks out") },
-  { date: '1944-10-02', title: () => t("The Warsaw Uprising ends; the city's people are driven out") },
+  { date: '1944-10-02', title: () => t("The Warsaw Uprising ends; the city's people are driven out"), region: 'warsaw' },
   { date: '1945-01-27', title: () => t("Auschwitz is liberated") },
   { date: '1945-02-11', title: () => t("Yalta Conference decides on Poland's borders") },
   { date: '1945-05-08', title: () => t("End of the Second World War in Europe") },
@@ -142,14 +148,14 @@ export const POLAND: HistoryEvent[] = [
   { date: '1946-06-30', title: () => t("The '3 times yes' referendum") },
   { date: '1946-07-04', title: () => t("Kielce pogrom") },
   { date: '1947-01-19', title: () => t("Rigged elections to the Sejm") },
-  { date: '1947-04-28', title: () => t("Operation Vistula") },
+  { date: '1947-04-28', title: () => t("Operation Vistula"), region: 'sepoland' },
   { date: '1948-12-15', title: () => t("The communist Polish United Workers' Party is founded") },
   { date: '1950-10-30', title: () => t("Currency exchange: savings lose most of their value") },
   { date: '1952-07-22', title: () => t("Constitution of the Polish People's Republic") },
   { date: '1953-09-25', title: () => t("Cardinal Stefan Wyszyński is arrested") },
   { date: '1956-06-28', title: () => t("Poznań June protests") },
   { date: '1956-10', title: () => t("The Polish October: the political thaw") },
-  { date: '1963-07', title: () => t("Smallpox outbreak in Wrocław") },
+  { date: '1963-07', title: () => t("Smallpox outbreak in Wrocław"), region: 'wroclaw' },
   { date: '1966-04-14', title: () => t("Millennium of the Baptism of Poland") },
   { date: '1968-03', title: () => t("March 1968: student protests and the antisemitic campaign") },
   { date: '1970-12-14', title: () => t("December 1970: protests on the Baltic coast") },
@@ -169,7 +175,7 @@ export const POLAND: HistoryEvent[] = [
   { date: '1993-09-17', title: () => t("The last Russian troops leave Poland") },
   { date: '1995-01-01', title: () => t("Redenomination of the złoty") },
   { date: '1997-04-02', title: () => t("The present Constitution is adopted") },
-  { date: '1997-07', title: () => t("The Millennium Flood") },
+  { date: '1997-07', title: () => t("The Millennium Flood"), region: 'southwest' },
   { date: '1999-01-01', title: () => t("Administrative reform: 16 voivodeships and counties") },
   { date: '1999-03-12', title: () => t("Poland joins NATO") },
   { date: '2004-05-01', title: () => t("Poland joins the European Union") },
@@ -178,14 +184,32 @@ export const POLAND: HistoryEvent[] = [
   { date: '2010-04-10', title: () => t("The Smolensk air disaster") },
   { date: '2020-03', title: () => t("The COVID-19 pandemic") },
   { date: '2022-02-24', title: () => t("Russia invades Ukraine: millions of refugees come to Poland") },
-  { date: '2024-09-15', title: () => t("Floods in south-western Poland") },
+  { date: '2024-09-15', title: () => t("Floods in south-western Poland"), region: 'southwest' },
 ];
 
-/** Built-in events that are on, and the user's own ones, in order of date. */
-export function backgroundEvents(h: { off: string[]; own: { id: string; date: string; title: string }[] } | undefined): Background[] {
+type Own = { id: string; date: string; title: string; place?: string };
+type Pt = [number, number];
+
+/**
+ * Events for one person: national ones, regional ones where the person lived
+ * (`points`: coordinates of their places), and own events (those with a place
+ * only for people of that place or within 50 km of it).
+ */
+export function backgroundEvents(h: { off: string[]; own: Own[] } | undefined, points?: Pt[], names?: string[], at?: (place: string) => Pt | null): Background[] {
   const off = new Set(h?.off || []);
-  const out: Background[] = POLAND.filter((e) => !off.has(e.date)).map((e) => ({ id: e.date, date: e.date, title: e.title(), own: false }));
-  for (const e of h?.own || []) if (e.title && e.date) out.push({ id: e.id, date: e.date, title: e.title, own: true });
+  const pts = points || [];
+  const out: Background[] = POLAND.filter((e) => !off.has(e.date) && (!e.region || (points ? within(e.region, pts) : true))).map((e) => ({ id: e.date, date: e.date, title: e.title(), own: false, region: e.region }));
+  const lower = new Set((names || []).map((n) => n.trim().toLowerCase()));
+  for (const e of h?.own || []) {
+    if (!e.title || !e.date) continue;
+    const place = (e.place || '').trim();
+    if (place && points) {
+      const c = at?.(place);
+      const near = lower.has(place.toLowerCase()) || (!!c && pts.some((p) => km(p, c) <= 50));
+      if (!near) continue;
+    }
+    out.push({ id: e.id, date: e.date, title: e.title, own: true, place });
+  }
   return out;
 }
 
