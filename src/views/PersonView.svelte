@@ -96,6 +96,8 @@
   });
 
   const gallery = $derived((p?.gallery || []).map((g) => ({ media: g.media, caption: g.caption })));
+  // group photos of others where this person is marked
+  const tagged = $derived(P?.tagged || []);
 
   function openPhoto() {
     if (!p?.photo) return;
@@ -182,7 +184,7 @@
     <div class="ptabs no-print" role="tablist" aria-label={t('View')}>
       <button role="tab" aria-selected={tab === 'life'} onclick={() => (tab = 'life')}>{tx('profile tab', 'Life')}</button>
       <button role="tab" aria-selected={tab === 'family'} onclick={() => (tab = 'family')}>{t('Family')}</button>
-      {#if gallery.length || (p.aging?.length || 0) >= 2}<button role="tab" aria-selected={tab === 'photos'} onclick={() => (tab = 'photos')}>{t('Photos')}</button>{/if}
+      {#if gallery.length || tagged.length || (p.aging?.length || 0) >= 2}<button role="tab" aria-selected={tab === 'photos'} onclick={() => (tab = 'photos')}>{t('Photos')}</button>{/if}
       {#if P.sources.length}<button role="tab" aria-selected={tab === 'sources'} onclick={() => (tab = 'sources')}>{t('Sources')}</button>{/if}
     </div>
 
@@ -227,6 +229,20 @@
             <div class="gal">
               {#each gallery as g, i (g.media)}
                 <button class="g" onclick={() => openLightbox(gallery, i)} aria-label={g.caption || t('Enlarge')}>
+                  <Img id={g.media} alt={g.caption} />
+                  {#if g.caption}<span class="cap">{g.caption}</span>{/if}
+                </button>
+              {/each}
+            </div>
+          </section>
+        {/if}
+
+        {#if tagged.length}
+          <section class="block tab-photos">
+            <h2>{t('Also in photos')} <span class="muted small">({tagged.length})</span></h2>
+            <div class="gal">
+              {#each tagged as g, i (g.media)}
+                <button class="g" onclick={() => openLightbox(tagged, i)} aria-label={g.caption || t('Enlarge')}>
                   <Img id={g.media} alt={g.caption} />
                   {#if g.caption}<span class="cap">{g.caption}</span>{/if}
                 </button>

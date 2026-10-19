@@ -25,6 +25,7 @@ export const THIRD_PARTY: { name: string; license: string; url: string }[] = [
   { name: 'D3', license: 'ISC', url: 'https://d3js.org' },
   { name: 'Leaflet, Leaflet.markercluster', license: 'BSD-2-Clause, MIT', url: 'https://leafletjs.com' },
   { name: 'Map data © OpenStreetMap contributors', license: 'ODbL', url: 'https://www.openstreetmap.org/copyright' },
+  { name: 'Weather data by Open-Meteo.com (ERA5, Copernicus Climate Change Service)', license: 'CC BY 4.0', url: 'https://open-meteo.com/' },
   { name: 'face-api (face detection, TensorFlow.js)', license: 'MIT, Apache-2.0', url: 'https://github.com/vladmandic/face-api' },
   { name: 'DOMPurify', license: 'MPL-2.0 / Apache-2.0', url: 'https://github.com/cure53/DOMPurify' },
   { name: 'fflate', license: 'MIT', url: 'https://github.com/101arrowz/fflate' },

@@ -467,6 +467,20 @@ pub fn execute(db: &mut Database, ctx: &Ctx, a: Id, b: Id, keep: Id, sel: Select
         }
     }
 
+    // Marks on photos.
+    let tagged: Vec<Id> = db.media.values().filter(|m| m.tags.iter().any(|t| t.person == Some(remove))).map(|m| m.id).collect();
+    for mid in tagged {
+        let mut m = db.media[&mid].clone();
+        for t in m.tags.iter_mut() {
+            if t.person == Some(remove) {
+                t.person = Some(keep);
+            }
+        }
+        let mut seen = HashSet::new();
+        m.tags.retain(|t| t.person.map(|p| seen.insert(p)).unwrap_or(true));
+        db.put_media_meta(m);
+    }
+
     // Pets, sources, suggestions, settings.
     let pets: Vec<Id> = db.pets.values().filter(|p| p.owner == Some(remove)).map(|p| p.id).collect();
     for pid in pets {

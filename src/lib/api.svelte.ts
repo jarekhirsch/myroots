@@ -12,7 +12,7 @@ export const app = $state({
   busy: 0,
 });
 
-const READ = /^(app\.info|overview|settings\.get|people\.summaries|person\.(profile|edit|history)|pets\.list|pet\.get|sources\.list|source\.get|media\.(list|unused)|clans\.list|places\.(list|missing)|tree\.data|lifeline|map\.data|stats|anniversaries|events\.list|gallery|kinship|health\.(issues|completeness)|merge\.(suggestions|compare)|book\.build|suggestions\.list|suggestion\.encode|gedcom\.export|wp\.pending)$/;
+const READ = /^(app\.info|overview|settings\.get|people\.summaries|person\.(profile|edit|history)|pets\.list|pet\.get|sources\.list|source\.get|media\.(list|unused|get)|clans\.list|places\.(list|missing|weather)|tree\.data|lifeline|map\.data|stats|anniversaries|events\.list|gallery|kinship|health\.(issues|completeness)|merge\.(suggestions|compare)|book\.build|suggestions\.list|suggestion\.encode|gedcom\.export|wp\.pending)$/;
 
 export async function call<T = any>(method: string, params: unknown = {}): Promise<T> {
   try {

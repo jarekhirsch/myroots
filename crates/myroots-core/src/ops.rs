@@ -720,8 +720,21 @@ pub fn add_relative(db: &mut Database, ctx: &Ctx, of: Id, relation: NewRelation,
 
 /// Deletes a person and every reference to them.
 pub fn delete_person(db: &mut Database, id: Id) -> Result<()> {
-    if db.del_person_raw(id).is_none() {
+    let Some(gone) = db.del_person_raw(id) else {
         return Err(Error::not_found("person", id));
+    };
+    // Marks on group photos keep the name only.
+    let name = gone.full_name();
+    let tagged: Vec<Id> = db.media.values().filter(|m| m.tags.iter().any(|t| t.person == Some(id))).map(|m| m.id).collect();
+    for mid in tagged {
+        let mut m = db.media[&mid].clone();
+        for t in m.tags.iter_mut().filter(|t| t.person == Some(id)) {
+            t.person = None;
+            if t.name.is_empty() {
+                t.name = name.clone();
+            }
+        }
+        db.put_media_meta(m);
     }
     let children: Vec<Id> = db.persons.values().filter(|c| c.mother == Some(id) || c.father == Some(id)).map(|c| c.id).collect();
     for cid in children {
@@ -902,6 +915,7 @@ pub fn register_media(db: &mut Database, ctx: &Ctx, mut m: Media) -> Id {
     m.file_name = clean(&m.file_name);
     m.caption = clean(&m.caption);
     m.mime = safe_mime(&m.mime);
+    m.tags = clean_tags(&m.tags, db);
     if m.created == 0 {
         m.created = ctx.now;
     }
@@ -968,9 +982,52 @@ pub fn delete_media(db: &mut Database, id: Id) {
     db.delete_media(id);
 }
 
+/// Cleans the people marked on a photo: boxes inside the image, known people
+/// only (unknown ids keep the name), no empty marks.
+pub fn clean_tags(tags: &[PhotoTag], db: &Database) -> Vec<PhotoTag> {
+    let mut out: Vec<PhotoTag> = Vec::new();
+    for t in tags.iter().take(300) {
+        let r = t.rect;
+        if r.iter().any(|v| !v.is_finite()) {
+            continue;
+        }
+        let x = r[0].clamp(0.0, 1.0);
+        let y = r[1].clamp(0.0, 1.0);
+        let w = r[2].clamp(0.0, 1.0 - x);
+        let h = r[3].clamp(0.0, 1.0 - y);
+        if w < 0.005 || h < 0.005 {
+            continue;
+        }
+        let person = t.person.filter(|p| db.persons.contains_key(p));
+        let name: String = clean(&t.name).chars().take(200).collect();
+        if person.is_none() && name.is_empty() {
+            continue;
+        }
+        if person.is_some() && out.iter().any(|o| o.person == person) {
+            continue;
+        }
+        out.push(PhotoTag { person, name: if person.is_some() { String::new() } else { name }, rect: [x, y, w, h] });
+    }
+    out
+}
+
+/// Sets the people marked on a photo.
+pub fn set_media_tags(db: &mut Database, id: Id, tags: &[PhotoTag]) -> Result<Vec<PhotoTag>> {
+    let mut m = db.media.get(&id).cloned().ok_or_else(|| Error::not_found("media", id))?;
+    m.tags = clean_tags(tags, db);
+    let out = m.tags.clone();
+    db.put_media_meta(m);
+    Ok(out)
+}
+
 /// Ids of media not referenced anywhere.
 pub fn unused_media(db: &Database) -> Vec<Id> {
     let mut used = HashSet::new();
+    for m in db.media.values() {
+        if m.tags.iter().any(|t| t.person.is_some()) {
+            used.insert(m.id);
+        }
+    }
     for p in db.persons.values() {
         used.extend(p.photo);
         used.extend(p.gallery.iter().map(|g| g.media));
@@ -1073,13 +1130,41 @@ pub fn set_place_coords(db: &mut Database, ctx: &Ctx, name: &str, lat: Option<f6
         p.id = db.next_id();
         p.name = name;
     }
+    let (old_lat, old_lng) = (p.lat, p.lng);
     p.lat = lat.filter(|v| v.is_finite() && (-90.0..=90.0).contains(v));
     p.lng = lng.filter(|v| v.is_finite() && (-180.0..=180.0).contains(v));
+    // the weather belonged to the old position
+    if p.lat != old_lat || p.lng != old_lng {
+        p.weather.clear();
+    }
     p.origin = if p.lat.is_some() && p.lng.is_some() { origin.to_string() } else { "failed".into() };
     p.updated = ctx.now;
     let id = p.id;
     db.put_place(p);
     id
+}
+
+/// Stores the weather of one day at a place that has coordinates.
+pub fn set_place_weather(db: &mut Database, name: &str, day: &str, w: DayWeather) -> Result<()> {
+    let d = date::parse_iso_day(day).ok_or_else(|| Error::invalid("date must be YYYY-MM-DD"))?;
+    let mut p = db.place_by_name(name).cloned().ok_or_else(|| Error::not_found("place", 0))?;
+    if p.lat.is_none() || p.lng.is_none() {
+        return Err(Error::invalid("the place has no coordinates"));
+    }
+    let num = |v: Option<f32>, lo: f32, hi: f32| v.filter(|x| x.is_finite() && (lo..=hi).contains(x));
+    let w = DayWeather {
+        code: w.code.clamp(0, 99),
+        tmax: num(w.tmax, -90.0, 60.0),
+        tmin: num(w.tmin, -90.0, 60.0),
+        rain: num(w.rain, 0.0, 2000.0),
+        snow: num(w.snow, 0.0, 1000.0),
+    };
+    if p.weather.len() >= 5000 && !p.weather.contains_key(day) {
+        return Err(Error::invalid("too many days"));
+    }
+    p.weather.insert(d.format("%Y-%m-%d").to_string(), w);
+    db.put_place(p);
+    Ok(())
 }
 
 /// Renames a place everywhere it is used (people, events, unions).

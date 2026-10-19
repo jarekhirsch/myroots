@@ -35,7 +35,7 @@ fn ok<T: serde::Serialize>(v: T) -> Result<Value> {
 
 const READ_ONLY: &[&str] = &[
     "app.info", "overview", "settings.get", "people.summaries", "person.profile", "person.history", "pets.list", "pet.get",
-    "sources.list", "source.get", "media.list", "clans.list", "places.list", "tree.data", "lifeline", "map.data", "stats",
+    "sources.list", "source.get", "media.list", "media.get", "clans.list", "places.list", "tree.data", "lifeline", "map.data", "stats",
     "anniversaries", "events.list", "gallery", "kinship", "book.build", "suggestion.encode",
 ];
 
@@ -92,6 +92,7 @@ impl Engine {
                 "language": db.settings.language,
                 "suggestions": db.settings.suggestions,
                 "map_external": db.settings.map_external,
+                "weather_external": db.settings.weather_external && !viewer,
                 "empty": db.persons.is_empty(),
             })),
             "overview" => ok(query::overview(db, ctx)),
@@ -359,6 +360,16 @@ impl Engine {
                 db.put_media_meta(m);
                 ok(json!({"ok": true}))
             }
+            "media.get" => {
+                let id = id_param(&params, "id")?;
+                query::media_view(db, &pol, id).map(|v| serde_json::to_value(v).unwrap()).ok_or_else(|| Error::not_found("media", id))
+            }
+            "media.tags" => {
+                let id = id_param(&params, "id")?;
+                let tags: Vec<PhotoTag> = p(params.get("tags").unwrap_or(&json!([])))?;
+                ops::set_media_tags(db, id, &tags)?;
+                query::media_view(db, &pol, id).map(|v| serde_json::to_value(v).unwrap()).ok_or_else(|| Error::not_found("media", id))
+            }
             "media.delete" => {
                 ops::delete_media(db, id_param(&params, "id")?);
                 ok(json!({"ok": true}))
@@ -401,6 +412,17 @@ impl Engine {
                 let a: P = p(&params)?;
                 let origin = if a.origin.is_empty() { "manual".to_string() } else { a.origin };
                 ok(json!({ "id": ops::set_place_coords(db, ctx, &a.name, a.lat, a.lng, &origin) }))
+            }
+            "places.weather" => {
+                #[derive(Deserialize)]
+                struct P {
+                    name: String,
+                    date: String,
+                    weather: DayWeather,
+                }
+                let a: P = p(&params)?;
+                ops::set_place_weather(db, &a.name, &a.date, a.weather)?;
+                ok(json!({"ok": true}))
             }
             "places.rename" => {
                 let from = params.get("from").and_then(|v| v.as_str()).unwrap_or("").to_string();

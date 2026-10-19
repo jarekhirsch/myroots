@@ -42,7 +42,11 @@ export interface Source {
   photo: Id | null; scans: Id[]; persons: Id[]; created: number; updated: number;
 }
 
-export interface Media { id: Id; file_name: string; mime: string; size: number; width: number; height: number; has_thumb: boolean; caption: string; origin: string; created: number }
+export interface PhotoTag { person: Id | null; name: string; rect: [number, number, number, number] }
+export interface Media { id: Id; file_name: string; mime: string; size: number; width: number; height: number; has_thumb: boolean; caption: string; origin: string; created: number; tags?: PhotoTag[] }
+export interface TagView extends PhotoTag { label: string }
+export interface MediaView { media: Media; tags: TagView[] }
+export interface DayWeather { code: number; tmax: number | null; tmin: number | null; rain: number | null; snow: number | null }
 
 export interface Summary {
   id: Id; name: string; first_name: string; last_name: string; maiden_name: string; gender: Gender;
@@ -61,6 +65,7 @@ export interface Profile {
   children: Summary[]; siblings: Summary[]; half_siblings: Id[];
   pets: PetRef[]; sources: SourceRef[]; grandparents: Summary[]; grandchildren: Summary[];
   revisions: number; censored: boolean;
+  tagged?: { media: Id; caption: string }[];
 }
 
 export interface EditModel { person: Person; unions: UnionView[]; children: Id[]; sources: Id[] }
@@ -72,6 +77,7 @@ export interface Settings {
   tree_name: string; max_age: number;
   privacy: { enabled: boolean; level: string; sections: string[]; fields: string[] };
   map_external: boolean;
+  weather_external: boolean;
   appearance: { primary: string; accent: string; bg: string; text: string; border: string; font: string; font_size: string; radius: string; shadow: string; theme: string; map_style: string };
   custom_schema: CustomGroup[]; clans: string[]; sort_order: string; people_per_page: number;
   tree_start_mode: string; tree_start_person: Id | null; merge_dismissed: string[];
@@ -85,7 +91,7 @@ export interface AppInfo {
   version: string; viewer: boolean; data_version: number;
   sections: Record<string, boolean>; tree_name: string;
   site: Settings['site']; appearance: Settings['appearance']; language: string;
-  suggestions: Settings['suggestions']; map_external: boolean; empty: boolean;
+  suggestions: Settings['suggestions']; map_external: boolean; weather_external?: boolean; empty: boolean;
 }
 
 export interface Overview {
@@ -96,7 +102,7 @@ export interface Overview {
 export interface Anniversary { date: string; days_left: number; kind: 'birth' | 'death' | 'marriage'; years: number; living: boolean; person: Id; name: string; partner: Id | null; partner_name: string; photo: Id | null }
 export interface Revision { id: Id; person: Id; time: number; fields: string[]; data: Person; unions: Union[] }
 export interface ClanInfo { name: string; count: number; defined: boolean }
-export interface PlaceUse { name: string; count: number; lat: number | null; lng: number | null; origin: string; place_id: Id | null }
+export interface PlaceUse { name: string; count: number; lat: number | null; lng: number | null; origin: string; place_id: Id | null; weather?: Record<string, DayWeather> }
 export interface PetView { pet: Pet; owner: Summary | null; years: string; alive: boolean }
 export interface SourceView { source: Source; persons: Summary[]; citations: [Summary, string[]][] }
 export interface GalleryEntry { media: Id; caption: string; kind: string; owner_id: Id; owner_name: string; owner_type: 'person' | 'pet' | 'source'; clans: string[]; date: string }

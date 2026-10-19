@@ -48,5 +48,6 @@ późniejszej, z warunkami dodatkowymi z sekcji 7:
 
 MyRoots includes software by others under their own licences (MIT, ISC,
 BSD-2-Clause, Apache-2.0, MPL-2.0, SIL OFL 1.1; SQLite is in the public
-domain; map data © OpenStreetMap contributors, ODbL). The full list is shown
+domain; map data © OpenStreetMap contributors, ODbL; weather data by
+Open-Meteo.com, CC BY 4.0). The full list is shown
 in the app: Settings → About MyRoots.

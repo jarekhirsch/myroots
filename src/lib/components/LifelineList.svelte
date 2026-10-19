@@ -6,9 +6,37 @@
   import { openLightbox } from '../ui.svelte';
   import Html from './Html.svelte';
   import Img from './Img.svelte';
+  import Weather from './Weather.svelte';
+  import { app, call, refreshInfo } from '../api.svelte';
+  import { confirmDialog, toast } from '../ui.svelte';
+  import { errorText } from '../errors';
+  import { exactDay, inArchive, refreshPlaces, WEATHER_SOURCE } from '../weather';
+  import CloudSun from '@lucide/svelte/icons/cloud-sun';
   import type { Lifeline, LEvent } from '../types';
 
-  let { data, ruler = true }: { data: Lifeline; ruler?: boolean } = $props();
+  let { data, ruler = true, weather = true }: { data: Lifeline; ruler?: boolean; weather?: boolean } = $props();
+  // coordinates may have changed on the map since the last time
+  refreshPlaces();
+  const viewer = $derived(!!app.info?.viewer);
+  const fetchOn = $derived(!!app.info?.weather_external);
+  let shown = $state(false);
+  // events the weather could be shown for (exact day, a place, in the archive)
+  const dated = $derived(data.events.filter((e) => e.place && exactDay(e.date) && inArchive(exactDay(e.date)!)).length);
+
+  async function enableWeather() {
+    const ok = await confirmDialog(
+      t('Show the weather of those days?'),
+      t('For events with an exact date (from 1940) at a place with coordinates, the app downloads the historical weather from Open-Meteo.com. Only the coordinates of the place and the date are sent. You can turn it off in the settings.'),
+      t('Show weather'),
+    );
+    if (!ok || !app.settings) return;
+    try {
+      await call('settings.save', { settings: { ...app.settings, weather_external: true } });
+      await refreshInfo();
+    } catch (e) {
+      toast(errorText(e), 'error');
+    }
+  }
   let open = $state<Record<number, boolean>>({});
 
   function title(e: LEvent): string {
@@ -102,7 +130,10 @@
                 {title(e)}
               {/if}
             </div>
-            <div class="pl small muted">{[fmtDate(e.date), e.place].filter(Boolean).join(', ')}</div>
+            <div class="pl small muted">
+              {[fmtDate(e.date), e.place].filter(Boolean).join(', ')}
+              {#if weather && e.place && exactDay(e.date)}<Weather place={e.place} date={e.date} fetch={fetchOn && !viewer} onshown={() => (shown = true)} />{/if}
+            </div>
             {#if e.kind === 'marriage_end' && e.role}<div class="small muted">{endCauseLabel(e.role)}</div>{/if}
             {#if e.image}
               <button class="thumb" onclick={() => openLightbox([{ media: e.image!, caption: title(e) }])} aria-label={t('Enlarge')}>
@@ -121,9 +152,23 @@
       {/if}
     {/each}
   </ol>
+  {#if weather && shown}
+    <p class="wx-src small muted">{t('Historical weather:')} <a href={WEATHER_SOURCE} target="_blank" rel="noopener noreferrer">Open-Meteo.com</a> (ERA5, CC BY 4.0)</p>
+  {:else if weather && !viewer && !fetchOn && dated}
+    <button type="button" class="btn ghost sm wx-on no-print" onclick={enableWeather}><CloudSun size={15} /> {t('Show the weather of those days')}</button>
+  {/if}
 {/if}
 
 <style>
+  .wx-src {
+    margin: 14px 0 0;
+  }
+  .wx-on {
+    margin-top: 12px;
+  }
+  .pl :global(.wx) {
+    margin-inline-start: 6px;
+  }
   .ll {
     list-style: none;
     margin: 0;

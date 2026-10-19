@@ -16,6 +16,8 @@ Pierwsze samodzielne wydanie MyRoots, bez WordPressa. Ta sama aplikacja działa 
 - Edycja osoby: nowego rodzica, małżonka lub dziecko można utworzyć od razu z pola wyboru („+ Dodaj nową osobę”).
 - Mapa: lista miejsc bez współrzędnych (przycisk „Popraw”) z wyszukiwaniem pod inną nazwą albo wskazaniem miejsca kliknięciem na mapie.
 - „Cała rodzina”: kliknięta osoba podświetla wszystkich swoich przodków do kliknięcia w tło lub klawisza Esc.
+- Osoby na wspólnych zdjęciach: przycisk „Oznacz osoby” w podglądzie zdjęcia wyszukuje twarze na urządzeniu; twarz (albo zaznaczony obszar) można przypisać osobie z drzewa, nowej osobie albo tylko podpisać. Imiona są pod zdjęciem, a w profilu osoby pojawia się sekcja „Także na zdjęciach”. Na stronie rodzinnej oznaczenia respektują ustawienia prywatności.
+- Pogoda z dnia wydarzenia (opcjonalnie, z Open-Meteo.com, dane od 1940 r.): w linii życia przy wydarzeniach z dokładną datą i miejscem na mapie. Pobrana pogoda zostaje zapisana przy miejscu.
 - Okno „O aplikacji” z licencją i listą użytych bibliotek.
 
 **Poprawki**

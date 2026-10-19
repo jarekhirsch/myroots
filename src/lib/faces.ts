@@ -74,6 +74,69 @@ export async function detectEyes(src: string): Promise<Eyes | null> {
   return [a.x / c.width, a.y / c.height, b.x / c.width, b.y / c.height];
 }
 
+/**
+ * Boxes around the faces on a photo (x, y, width, height as fractions of the
+ * image, a little larger than the face), largest first. Group photos have
+ * small faces, so the photo is also searched in overlapping tiles.
+ */
+export async function detectFaces(src: string): Promise<[number, number, number, number][]> {
+  const faceapi = await api();
+  if (!faceapi) return [];
+  const img = await loadImage(src);
+  const scale = Math.min(1, 1800 / Math.max(img.naturalWidth, img.naturalHeight));
+  const W = Math.round(img.naturalWidth * scale);
+  const H = Math.round(img.naturalHeight * scale);
+  const full = document.createElement('canvas');
+  full.width = W;
+  full.height = H;
+  full.getContext('2d')!.drawImage(img, 0, 0, W, H);
+
+  type Hit = { x: number; y: number; w: number; h: number; score: number };
+  const hits: Hit[] = [];
+  const run = async (sx: number, sy: number, sw: number, sh: number, inputSize: number, threshold: number) => {
+    const c = document.createElement('canvas');
+    c.width = sw;
+    c.height = sh;
+    c.getContext('2d')!.drawImage(full, sx, sy, sw, sh, 0, 0, sw, sh);
+    const found = await faceapi.detectAllFaces(c, new faceapi.TinyFaceDetectorOptions({ inputSize, scoreThreshold: threshold }));
+    for (const d of found) hits.push({ x: sx + d.box.x, y: sy + d.box.y, w: d.box.width, h: d.box.height, score: d.score });
+  };
+  // the whole photo (large faces) …
+  await run(0, 0, W, H, 608, 0.4);
+  // … and square tiles with an overlap (small faces), at most about 12
+  let side = Math.max(416, Math.round(Math.min(W, H) * 0.6));
+  const count = (s: number) => (n: number) => (n <= s ? 1 : Math.ceil((n - s) / (s * 0.75)) + 1);
+  while (count(side)(W) * count(side)(H) > 12) side = Math.round(side * 1.15);
+  if (Math.max(W, H) > side * 1.2) {
+    const steps = (n: number) => {
+      const k = count(side)(n);
+      return k === 1 ? [0] : Array.from({ length: k }, (_, i) => Math.round((i * (n - side)) / (k - 1)));
+    };
+    const input = Math.min(608, Math.round(side / 32) * 32);
+    for (const y of steps(H)) for (const x of steps(W)) await run(x, y, Math.min(side, W - x), Math.min(side, H - y), input, 0.45);
+  }
+  // one box per face: the more certain of overlapping ones
+  const iou = (a: Hit, b: Hit) => {
+    const ix = Math.max(0, Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x));
+    const iy = Math.max(0, Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y));
+    const i = ix * iy;
+    return i / Math.min(a.w * a.h, b.w * b.h);
+  };
+  const kept: Hit[] = [];
+  for (const h of hits.sort((a, b) => b.score - a.score)) if (!kept.some((k) => iou(k, h) > 0.5)) kept.push(h);
+  return kept
+    .sort((a, b) => b.w * b.h - a.w * a.h)
+    .slice(0, 80)
+    .map((b): [number, number, number, number] => {
+      const pad = 0.18;
+      const x = Math.max(0, b.x - b.w * pad);
+      const y = Math.max(0, b.y - b.h * pad * 1.3);
+      const w = Math.min(W - x, b.w * (1 + 2 * pad));
+      const h = Math.min(H - y, b.h * (1 + 2 * pad));
+      return [x / W, y / H, w / W, h / H];
+    });
+}
+
 /** Preloads the models (e.g. when the editor opens). */
 export function warmUp() {
   api().catch(() => {});

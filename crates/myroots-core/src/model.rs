@@ -428,6 +428,19 @@ pub struct Media {
     /// Original location (e.g. the WordPress attachment URL) — informational.
     pub origin: String,
     pub created: i64,
+    /// People marked on the photo (group photos).
+    pub tags: Vec<PhotoTag>,
+}
+
+/// A person marked on a photo.
+#[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]
+#[serde(default)]
+pub struct PhotoTag {
+    /// Person in the tree; None for someone outside it (then only `name`).
+    pub person: Option<Id>,
+    pub name: String,
+    /// Box around the face: x, y, width, height as fractions of the image.
+    pub rect: [f32; 4],
 }
 
 /* ------------------------------------------------------------------ */
@@ -444,6 +457,22 @@ pub struct Place {
     /// "nominatim" | "manual" | "gedcom" | "failed"
     pub origin: String,
     pub updated: i64,
+    /// Historical weather on given days ("YYYY-MM-DD"), fetched on request.
+    pub weather: BTreeMap<String, DayWeather>,
+}
+
+/// Weather of one day at a place (daily values of a reanalysis).
+#[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]
+#[serde(default)]
+pub struct DayWeather {
+    /// WMO weather code.
+    pub code: i32,
+    /// Highest and lowest temperature (°C).
+    pub tmax: Option<f32>,
+    pub tmin: Option<f32>,
+    /// Precipitation (mm) and snowfall (cm).
+    pub rain: Option<f32>,
+    pub snow: Option<f32>,
 }
 
 /* ------------------------------------------------------------------ */
@@ -602,6 +631,8 @@ pub struct Settings {
     pub privacy: PrivacySettings,
     /// Opt-in: OpenStreetMap tiles and Nominatim geocoding.
     pub map_external: bool,
+    /// Opt-in: historical weather of events from Open-Meteo.
+    pub weather_external: bool,
     pub appearance: Appearance,
     pub custom_schema: Vec<CustomGroup>,
     /// Clans defined manually (in addition to the ones used by people).
@@ -628,6 +659,7 @@ impl Default for Settings {
             max_age: 110,
             privacy: PrivacySettings::default(),
             map_external: false,
+            weather_external: false,
             appearance: Appearance::default(),
             custom_schema: Vec::new(),
             clans: Vec::new(),

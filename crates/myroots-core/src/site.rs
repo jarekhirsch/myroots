@@ -123,19 +123,47 @@ pub fn public_db(db: &Database, ctx: &Ctx) -> Database {
         media.extend(s.photo);
         media.extend(s.scans.iter().copied());
     }
+    // People marked on photos: only the ones shown with their photos.
+    let markable: HashSet<Id> = db.persons.values().filter(|p| ids.contains(&p.id) && !hidden.contains(&p.id) && !pol.photo_hidden(p)).map(|p| p.id).collect();
+    for m in db.media.values() {
+        if m.tags.iter().any(|t| t.person.map(|p| markable.contains(&p)).unwrap_or(false)) {
+            media.insert(m.id);
+        }
+    }
     for m in media {
         if let Some(md) = db.media.get(&m) {
             let mut md = md.clone();
             md.origin.clear();
+            md.tags.retain(|t| t.person.map(|p| markable.contains(&p)).unwrap_or(true));
             out.media.insert(m, md);
         }
     }
     // Places with coordinates (unless the map is locked or disabled).
     if db.settings.map_external && !pol.blocks_section("map") {
         let used: HashSet<String> = crate::query::places(&out).into_iter().map(|p| p.name.to_lowercase()).collect();
+        // weather only for days that are shown (it would reveal hidden dates)
+        let mut days: HashSet<(String, String)> = HashSet::new();
+        let mut day = |place: &str, d: &str| {
+            if let Some(x) = crate::date::exact_day(d) {
+                days.insert((place.trim().to_lowercase(), x.format("%Y-%m-%d").to_string()));
+            }
+        };
+        for p in out.persons.values() {
+            day(&p.birth_place, &p.birth_date);
+            day(&p.death_place, &p.death_date);
+            for e in &p.events {
+                day(&e.place, &e.date);
+            }
+        }
+        for u in out.unions.values() {
+            day(&u.place, &u.date);
+        }
         for pl in db.places.values() {
             if pl.lat.is_some() && used.contains(&pl.name.trim().to_lowercase()) {
-                out.places.insert(pl.id, pl.clone());
+                let mut pl = pl.clone();
+                let key = pl.name.trim().to_lowercase();
+                pl.weather.retain(|d, _| days.contains(&(key.clone(), d.clone())));
+                out.places.insert(pl.id, pl);
             }
         }
     }
@@ -292,5 +320,68 @@ mod tests {
         assert!(p.persons[&kid].recordings.is_empty() && p.persons[&kid].aging.is_empty());
         assert!(!p.media.contains_key(&m));
         assert!(!data_js(&p, &c, "t").contains("owner@example.com"));
+    }
+
+    #[test]
+    fn photo_tags_and_weather() {
+        let c = Ctx::new(1, NaiveDate::from_ymd_opt(2026, 1, 1).unwrap());
+        let mut db = Database::new(0);
+        let gran = ops::create_person(&mut db, &c, Person { first_name: "Gran".into(), birth_date: "1920-05-04".into(), birth_place: "Gdańsk".into(), death_date: "1990".into(), ..Default::default() }, Default::default()).unwrap();
+        let kid = ops::create_person(&mut db, &c, Person { first_name: "Kid".into(), birth_date: "1990-02-03".into(), birth_place: "Gdańsk".into(), ..Default::default() }, Default::default()).unwrap();
+        let other = ops::create_person(&mut db, &c, Person { first_name: "Other".into(), birth_date: "1921".into(), death_date: "1999".into(), ..Default::default() }, Default::default()).unwrap();
+        let m = ops::register_media(&mut db, &c, Media { file_name: "g.jpg".into(), mime: "image/jpeg".into(), ..Default::default() });
+        let tags = vec![
+            PhotoTag { person: Some(gran), name: String::new(), rect: [0.1, 0.1, 0.2, 0.2] },
+            PhotoTag { person: Some(kid), name: String::new(), rect: [0.5, 0.1, 0.2, 0.2] },
+            PhotoTag { person: Some(gran), name: String::new(), rect: [0.0, 0.0, 0.1, 0.1] },
+            PhotoTag { person: None, name: "  Ciocia Ala ".into(), rect: [0.8, 0.5, 0.5, 0.9] },
+            PhotoTag { person: None, name: String::new(), rect: [0.1, 0.1, 0.2, 0.2] },
+            PhotoTag { person: Some(9999), name: "Nobody".into(), rect: [0.1, 0.1, 0.0, 0.2] },
+        ];
+        let t = ops::set_media_tags(&mut db, m, &tags).unwrap();
+        assert_eq!(t.len(), 3);
+        assert_eq!(t[2].name, "Ciocia Ala");
+        assert!((t[2].rect[2] - 0.2).abs() < 1e-6 && (t[2].rect[3] - 0.5).abs() < 1e-6);
+        // the photo shows up on the profile and counts as used
+        let pol = Policy::owner(110, c.today);
+        let prof = crate::query::profile(&db, &c, gran, &pol).unwrap();
+        assert_eq!(prof.tagged.len(), 1);
+        assert!(!ops::unused_media(&db).contains(&m));
+        // merging keeps the marks
+        let sel = crate::merge::Selection { gallery: vec![], ..Default::default() };
+        crate::merge::execute(&mut db, &c, gran, other, gran, sel).unwrap();
+        assert!(db.media[&m].tags.iter().any(|t| t.person == Some(gran)));
+
+        // weather: stored per day, cleared when the place moves
+        ops::set_place_coords(&mut db, &c, "Gdańsk", Some(54.35), Some(18.65), "manual");
+        let w = DayWeather { code: 3, tmax: Some(18.0), tmin: Some(9.5), rain: Some(1.2), snow: None };
+        ops::set_place_weather(&mut db, "gdańsk", "1920-05-04", w.clone()).unwrap();
+        ops::set_place_weather(&mut db, "Gdańsk", "1990-02-03", w.clone()).unwrap();
+        assert!(ops::set_place_weather(&mut db, "Gdańsk", "1990-02", w.clone()).is_err());
+        assert!(ops::set_place_weather(&mut db, "Nowhere", "1990-02-03", w.clone()).is_err());
+        assert_eq!(crate::query::places(&db).iter().find(|p| p.name == "Gdańsk").unwrap().weather.len(), 2);
+
+        // family website: the living child is censored, so neither the mark nor the weather of the birthday is published
+        let mut s = db.settings.clone();
+        s.map_external = true;
+        s.privacy.enabled = true;
+        s.privacy.level = "censor_living".into();
+        s.privacy.fields = vec!["dates".into(), "photos_sensitive".into()];
+        ops::save_settings(&mut db, s);
+        let p = public_db(&db, &c);
+        let pm = &p.media[&m];
+        assert!(pm.tags.iter().any(|t| t.person == Some(gran)));
+        assert!(!pm.tags.iter().any(|t| t.person == Some(kid)));
+        let pl = p.places.values().find(|x| x.name == "Gdańsk").unwrap();
+        assert!(pl.weather.contains_key("1920-05-04"));
+        assert!(!pl.weather.contains_key("1990-02-03"));
+        let pv = crate::query::media_view(&p, &Policy::public(&p.settings, c.today), m).unwrap();
+        assert_eq!(pv.tags.iter().map(|t| t.label.as_str()).collect::<Vec<_>>(), vec!["Gran", "Ciocia Ala"]);
+
+        ops::set_place_coords(&mut db, &c, "Gdańsk", Some(54.0), Some(18.65), "manual");
+        assert!(db.place_by_name("Gdańsk").unwrap().weather.is_empty());
+        // deleting a person keeps the name on the photo
+        ops::delete_person(&mut db, gran).unwrap();
+        assert!(db.media[&m].tags.iter().any(|t| t.person.is_none() && t.name == "Gran"));
     }
 }

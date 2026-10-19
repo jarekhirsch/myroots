@@ -201,6 +201,8 @@ pub struct Profile {
     pub grandchildren: Vec<Summary>,
     pub revisions: usize,
     pub censored: bool,
+    /// Photos of others where this person is marked (group photos).
+    pub tagged: Vec<GalleryItem>,
 }
 
 pub fn profile(db: &Database, ctx: &Ctx, id: Id, pol: &Policy) -> Option<Profile> {
@@ -333,11 +335,60 @@ pub fn profile(db: &Database, ctx: &Ctx, id: Id, pol: &Policy) -> Option<Profile
         grandchildren,
         revisions: db.revisions.values().filter(|r| r.person == id).count(),
         censored,
+        tagged: tagged_photos(db, pol, raw),
         person,
     })
 }
 
 /// Summary respecting the policy (anonymous placeholder when hidden).
+/// Photos (not the person's own) on which the person is marked.
+fn tagged_photos(db: &Database, pol: &Policy, p: &Person) -> Vec<GalleryItem> {
+    if pol.active && pol.photo_hidden(p) {
+        return vec![];
+    }
+    let own: std::collections::HashSet<Id> = p.photo.into_iter().chain(p.gallery.iter().map(|g| g.media)).collect();
+    let mut v: Vec<&Media> = db.media.values().filter(|m| !own.contains(&m.id) && m.tags.iter().any(|t| t.person == Some(p.id))).collect();
+    v.sort_by_key(|m| (m.created, m.id));
+    v.into_iter().map(|m| GalleryItem { media: m.id, caption: m.caption.clone() }).collect()
+}
+
+#[derive(Serialize, Debug, Clone)]
+pub struct TagView {
+    pub person: Option<Id>,
+    pub name: String,
+    pub rect: [f32; 4],
+    /// Name to show (the person's current name, or the name written on the mark).
+    pub label: String,
+}
+
+#[derive(Serialize, Debug, Clone)]
+pub struct MediaView {
+    pub media: Media,
+    pub tags: Vec<TagView>,
+}
+
+/// A photo with the people marked on it (people the reader may not see are left out).
+pub fn media_view(db: &Database, pol: &Policy, id: Id) -> Option<MediaView> {
+    let m = db.media.get(&id)?;
+    let mut tags = Vec::new();
+    for t in &m.tags {
+        let label = match t.person {
+            Some(pid) => {
+                let Some(s) = public_summary(db, pol, pid) else { continue };
+                if pol.active && db.persons.get(&pid).map(|p| pol.photo_hidden(p)).unwrap_or(true) {
+                    continue;
+                }
+                s.name
+            }
+            None => t.name.clone(),
+        };
+        tags.push(TagView { person: t.person, name: t.name.clone(), rect: t.rect, label });
+    }
+    let mut media = m.clone();
+    media.tags = tags.iter().map(|t| PhotoTag { person: t.person, name: t.name.clone(), rect: t.rect }).collect();
+    Some(MediaView { media, tags })
+}
+
 pub fn public_summary(db: &Database, pol: &Policy, id: Id) -> Option<Summary> {
     let p = db.persons.get(&id)?;
     if pol.active && p.status != Status::Published {
@@ -770,6 +821,7 @@ pub struct PlaceUse {
     pub lng: Option<f64>,
     pub origin: String,
     pub place_id: Option<Id>,
+    pub weather: BTreeMap<String, DayWeather>,
 }
 
 /// All place names used in the tree with their usage count and coordinates.
@@ -801,6 +853,7 @@ pub fn places(db: &Database) -> Vec<PlaceUse> {
                 lng: pl.and_then(|p| p.lng),
                 origin: pl.map(|p| p.origin.clone()).unwrap_or_default(),
                 place_id: pl.map(|p| p.id),
+                weather: pl.map(|p| p.weather.clone()).unwrap_or_default(),
                 name,
             }
         })

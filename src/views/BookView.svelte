@@ -233,7 +233,7 @@
                 {#if opts.bio && p.biography}<div class="bio"><Html html={p.biography} /></div>{/if}
                 {#if opts.lifeline && book.lifelines.get(id)?.events.length}
                   <h4>{t('Lifeline')}</h4>
-                  <LifelineList ruler={false} data={book.lifelines.get(id)!} />
+                  <LifelineList ruler={false} weather={false} data={book.lifelines.get(id)!} />
                 {/if}
                 {#if opts.photos && p.gallery.length}
                   <div class="gal">
