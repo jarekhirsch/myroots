@@ -19,6 +19,8 @@ import Pin from '@lucide/svelte/icons/map-pin';
 import Cog from '@lucide/svelte/icons/settings';
 import Database from '@lucide/svelte/icons/database';
 import Globe from '@lucide/svelte/icons/globe';
+import Flower from '@lucide/svelte/icons/flower-2';
+import Frame from '@lucide/svelte/icons/frame';
 
 export interface NavItem {
   path: string;
@@ -47,6 +49,7 @@ export const NAV: NavGroup[] = [
       { path: '/map', label: () => t('Map'), icon: MapIcon, section: 'map' },
       { path: '/gallery', label: () => t('Gallery'), icon: Images, section: 'gallery' },
       { path: '/events', label: () => t('Events'), icon: Calendar, section: 'list' },
+      { path: '/graves', label: () => t('Graves'), icon: Flower, section: 'list' },
       { path: '/pets', label: () => t('Pets'), icon: Paw, section: 'list' },
       { path: '/sources', label: () => t('Sources'), icon: Scroll, editorOnly: true },
     ],
@@ -57,6 +60,7 @@ export const NAV: NavGroup[] = [
       { path: '/stats', label: () => t('Statistics'), icon: Chart, section: 'stats' },
       { path: '/kinship', label: () => t('Kinship'), icon: Link, section: 'kinship' },
       { path: '/book', label: () => t('Genealogy book'), icon: Book, section: 'list' },
+      { path: '/poster', label: () => t('Poster'), icon: Frame, section: 'tree' },
     ],
   },
   {

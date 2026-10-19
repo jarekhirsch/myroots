@@ -140,6 +140,21 @@ fn clean_gallery(items: &[GalleryItem], db: &Database) -> Vec<GalleryItem> {
         .collect()
 }
 
+fn clean_grave(g: &Grave, db: &Database) -> Grave {
+    let lat = g.lat.filter(|v| v.is_finite() && (-90.0..=90.0).contains(v));
+    let lng = g.lng.filter(|v| v.is_finite() && (-180.0..=180.0).contains(v));
+    let (lat, lng) = if lat.is_some() && lng.is_some() { (lat, lng) } else { (None, None) };
+    Grave {
+        cemetery: clean(&g.cemetery),
+        location: clean(&g.location),
+        lat,
+        lng,
+        photo: g.photo.filter(|m| db.media.contains_key(m)),
+        url: safe_url(&g.url),
+        notes: clean_multiline(&g.notes),
+    }
+}
+
 fn clean_recordings(items: &[Recording], db: &Database) -> Vec<Recording> {
     let mut seen = HashSet::new();
     items
@@ -188,6 +203,7 @@ pub fn sanitize_person(p: &Person, db: &Database) -> Person {
     d.recordings = clean_recordings(&d.recordings, db);
     d.aging = clean_aging(&d.aging, db);
     d.aging_audio = d.aging_audio.filter(|a| d.recordings.iter().any(|r| r.media == *a));
+    d.grave = clean_grave(&d.grave, db);
     let mut custom = BTreeMap::new();
     let url_fields: HashSet<(String, String)> = db
         .settings
@@ -916,6 +932,7 @@ pub fn register_media(db: &mut Database, ctx: &Ctx, mut m: Media) -> Id {
     m.caption = clean(&m.caption);
     m.mime = safe_mime(&m.mime);
     m.tags = clean_tags(&m.tags, db);
+    m.date = date::sanitize(&m.date);
     if m.created == 0 {
         m.created = ctx.now;
     }
@@ -940,6 +957,7 @@ pub fn delete_media(db: &mut Database, id: Id) {
                 || p.events.iter().any(|e| e.image == Some(id))
                 || p.recordings.iter().any(|r| r.media == id)
                 || p.aging.iter().any(|f| f.media == id)
+                || p.grave.photo == Some(id)
         })
         .map(|p| p.id)
         .collect();
@@ -953,6 +971,9 @@ pub fn delete_media(db: &mut Database, id: Id) {
         p.aging.retain(|f| f.media != id);
         if p.aging_audio == Some(id) {
             p.aging_audio = None;
+        }
+        if p.grave.photo == Some(id) {
+            p.grave.photo = None;
         }
         for e in &mut p.events {
             if e.image == Some(id) {
@@ -1006,7 +1027,8 @@ pub fn clean_tags(tags: &[PhotoTag], db: &Database) -> Vec<PhotoTag> {
         if person.is_some() && out.iter().any(|o| o.person == person) {
             continue;
         }
-        out.push(PhotoTag { person, name: if person.is_some() { String::new() } else { name }, rect: [x, y, w, h] });
+        let face = if t.face.len() == 128 && t.face.iter().all(|v| v.is_finite() && v.abs() < 10.0) { t.face.clone() } else { Vec::new() };
+        out.push(PhotoTag { person, name: if person.is_some() { String::new() } else { name }, rect: [x, y, w, h], face });
     }
     out
 }
@@ -1014,7 +1036,14 @@ pub fn clean_tags(tags: &[PhotoTag], db: &Database) -> Vec<PhotoTag> {
 /// Sets the people marked on a photo.
 pub fn set_media_tags(db: &mut Database, id: Id, tags: &[PhotoTag]) -> Result<Vec<PhotoTag>> {
     let mut m = db.media.get(&id).cloned().ok_or_else(|| Error::not_found("media", id))?;
-    m.tags = clean_tags(tags, db);
+    // the client does not get the face descriptors back: keep them for unchanged boxes
+    let mut tags = tags.to_vec();
+    for t in tags.iter_mut().filter(|t| t.face.is_empty()) {
+        if let Some(old) = m.tags.iter().find(|o| o.rect.iter().zip(t.rect.iter()).all(|(a, b)| (a - b).abs() < 1e-4)) {
+            t.face = old.face.clone();
+        }
+    }
+    m.tags = clean_tags(&tags, db);
     let out = m.tags.clone();
     db.put_media_meta(m);
     Ok(out)
@@ -1034,6 +1063,7 @@ pub fn unused_media(db: &Database) -> Vec<Id> {
         used.extend(p.events.iter().filter_map(|e| e.image));
         used.extend(p.recordings.iter().map(|r| r.media));
         used.extend(p.aging.iter().map(|f| f.media));
+        used.extend(p.grave.photo);
     }
     for p in db.pets.values() {
         used.extend(p.photo);
@@ -1048,6 +1078,7 @@ pub fn unused_media(db: &Database) -> Vec<Id> {
         used.extend(r.data.gallery.iter().map(|g| g.media));
         used.extend(r.data.recordings.iter().map(|x| x.media));
         used.extend(r.data.aging.iter().map(|f| f.media));
+        used.extend(r.data.grave.photo);
     }
     db.media.keys().copied().filter(|m| !used.contains(m)).collect()
 }

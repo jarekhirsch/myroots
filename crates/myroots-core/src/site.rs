@@ -41,6 +41,7 @@ pub fn public_db(db: &Database, ctx: &Ctx) -> Database {
             r.aging.clear();
             r.recordings.clear();
             r.aging_audio = None;
+            r.grave.photo = None;
         }
         r.created = 0;
         out.persons.insert(p.id, r);
@@ -114,6 +115,7 @@ pub fn public_db(db: &Database, ctx: &Ctx) -> Database {
         media.extend(p.events.iter().filter_map(|e| e.image));
         media.extend(p.recordings.iter().map(|r| r.media));
         media.extend(p.aging.iter().map(|f| f.media));
+        media.extend(p.grave.photo);
     }
     for p in out.pets.values() {
         media.extend(p.photo);
@@ -135,6 +137,10 @@ pub fn public_db(db: &Database, ctx: &Ctx) -> Database {
             let mut md = md.clone();
             md.origin.clear();
             md.tags.retain(|t| t.person.map(|p| markable.contains(&p)).unwrap_or(true));
+            // face descriptors stay on the device
+            for t in md.tags.iter_mut() {
+                t.face.clear();
+            }
             out.media.insert(m, md);
         }
     }
@@ -331,12 +337,12 @@ mod tests {
         let other = ops::create_person(&mut db, &c, Person { first_name: "Other".into(), birth_date: "1921".into(), death_date: "1999".into(), ..Default::default() }, Default::default()).unwrap();
         let m = ops::register_media(&mut db, &c, Media { file_name: "g.jpg".into(), mime: "image/jpeg".into(), ..Default::default() });
         let tags = vec![
-            PhotoTag { person: Some(gran), name: String::new(), rect: [0.1, 0.1, 0.2, 0.2] },
-            PhotoTag { person: Some(kid), name: String::new(), rect: [0.5, 0.1, 0.2, 0.2] },
-            PhotoTag { person: Some(gran), name: String::new(), rect: [0.0, 0.0, 0.1, 0.1] },
-            PhotoTag { person: None, name: "  Ciocia Ala ".into(), rect: [0.8, 0.5, 0.5, 0.9] },
-            PhotoTag { person: None, name: String::new(), rect: [0.1, 0.1, 0.2, 0.2] },
-            PhotoTag { person: Some(9999), name: "Nobody".into(), rect: [0.1, 0.1, 0.0, 0.2] },
+            PhotoTag { person: Some(gran), name: String::new(), rect: [0.1, 0.1, 0.2, 0.2], ..Default::default() },
+            PhotoTag { person: Some(kid), name: String::new(), rect: [0.5, 0.1, 0.2, 0.2], ..Default::default() },
+            PhotoTag { person: Some(gran), name: String::new(), rect: [0.0, 0.0, 0.1, 0.1], ..Default::default() },
+            PhotoTag { person: None, name: "  Ciocia Ala ".into(), rect: [0.8, 0.5, 0.5, 0.9], ..Default::default() },
+            PhotoTag { person: None, name: String::new(), rect: [0.1, 0.1, 0.2, 0.2], ..Default::default() },
+            PhotoTag { person: Some(9999), name: "Nobody".into(), rect: [0.1, 0.1, 0.0, 0.2], ..Default::default() },
         ];
         let t = ops::set_media_tags(&mut db, m, &tags).unwrap();
         assert_eq!(t.len(), 3);
@@ -383,5 +389,50 @@ mod tests {
         // deleting a person keeps the name on the photo
         ops::delete_person(&mut db, gran).unwrap();
         assert!(db.media[&m].tags.iter().any(|t| t.person.is_none() && t.name == "Gran"));
+    }
+
+    #[test]
+    fn graves_and_faces() {
+        let c = Ctx::new(1, NaiveDate::from_ymd_opt(2026, 1, 1).unwrap());
+        let mut db = Database::new(0);
+        let photo = ops::register_media(&mut db, &c, Media { file_name: "g.jpg".into(), mime: "image/jpeg".into(), date: "~1952".into(), ..Default::default() });
+        assert_eq!(db.media[&photo].date, "~1952");
+        let grave = Grave { cemetery: " Cmentarz Rakowicki, Kraków ".into(), location: "kw. LXVII, rząd 3".into(), lat: Some(50.07), lng: Some(19.95), photo: Some(photo), url: "javascript:alert(1)".into(), notes: String::new() };
+        let gran = ops::create_person(&mut db, &c, Person { first_name: "Gran".into(), birth_date: "1900".into(), death_date: "1970".into(), grave, ..Default::default() }, Default::default()).unwrap();
+        let g = &db.persons[&gran].grave;
+        assert_eq!(g.cemetery, "Cmentarz Rakowicki, Kraków");
+        assert_eq!(g.url, "");
+        assert!(!ops::unused_media(&db).contains(&photo));
+        let list = crate::query::graves(&db, &Policy::owner(110, c.today));
+        assert_eq!(list.len(), 1);
+        // half a position is no position
+        let mut p = db.persons[&gran].clone();
+        p.grave.lng = None;
+        db.put_person(ops::sanitize_person(&p, &db));
+        assert!(db.persons[&gran].grave.lat.is_none());
+        // GEDCOM: the grave goes out as a burial and comes back
+        let mut p = db.persons[&gran].clone();
+        p.grave.lat = Some(50.07);
+        p.grave.lng = Some(19.95);
+        db.put_person(p);
+        let ged = crate::gedcom::export(&db, &c, &Default::default());
+        assert!(ged.contains("1 BURI\n2 PLAC Cmentarz Rakowicki, Kraków\n3 MAP\n4 LATI N50.070000"), "{ged}");
+        // face descriptors are kept on the device, not on the website
+        let mut face = vec![0.01f32; 128];
+        face[0] = 0.2;
+        let tags = vec![PhotoTag { person: Some(gran), name: String::new(), rect: [0.1, 0.1, 0.2, 0.2], face: face.clone() }];
+        ops::set_media_tags(&mut db, photo, &tags).unwrap();
+        // sent back without the descriptor: it stays
+        let again = vec![PhotoTag { person: Some(gran), name: String::new(), rect: [0.1, 0.1, 0.2, 0.2], face: vec![] }];
+        ops::set_media_tags(&mut db, photo, &again).unwrap();
+        assert_eq!(db.media[&photo].tags[0].face.len(), 128);
+        assert_eq!(crate::query::face_index(&db).len(), 1);
+        let mut s = db.settings.clone();
+        s.map_external = true;
+        ops::save_settings(&mut db, s);
+        let pubdb = public_db(&db, &c);
+        assert!(pubdb.media[&photo].tags.iter().all(|t| t.face.is_empty()));
+        assert!(!data_js(&pubdb, &c, "t").contains("0.2,0.01"));
+        assert_eq!(pubdb.persons[&gran].grave.photo, Some(photo));
     }
 }

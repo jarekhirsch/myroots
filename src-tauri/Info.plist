@@ -5,5 +5,7 @@
   <!-- merged by Tauri into the app's Info.plist (macOS and iOS) -->
   <key>NSMicrophoneUsageDescription</key>
   <string>MyRoots records the voices of your family members when you choose to.</string>
+  <key>NSLocationWhenInUseUsageDescription</key>
+  <string>MyRoots saves the position of a family grave when you are standing at it.</string>
 </dict>
 </plist>

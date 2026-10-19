@@ -35,6 +35,8 @@ pub struct Lifeline {
     pub gender: Gender,
     pub photo: Option<Id>,
     pub years: String,
+    /// Still alive (the lifeline runs until today).
+    pub living: bool,
     pub events: Vec<LifelineEvent>,
 }
 
@@ -201,6 +203,7 @@ pub fn build(db: &Database, pol: &Policy, id: Id) -> Option<Lifeline> {
         gender: d.gender,
         photo: if pol.photo_hidden(raw) { None } else { d.photo },
         years: life::years(&d),
+        living: life::is_alive(raw, db.settings.max_age, pol.today),
         events: ev,
     })
 }

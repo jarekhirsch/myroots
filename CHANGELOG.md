@@ -17,7 +17,14 @@ Pierwsze samodzielne wydanie MyRoots, bez WordPressa. Ta sama aplikacja działa 
 - Mapa: lista miejsc bez współrzędnych (przycisk „Popraw”) z wyszukiwaniem pod inną nazwą albo wskazaniem miejsca kliknięciem na mapie.
 - „Cała rodzina”: kliknięta osoba podświetla wszystkich swoich przodków do kliknięcia w tło lub klawisza Esc.
 - Osoby na wspólnych zdjęciach: przycisk „Oznacz osoby” w podglądzie zdjęcia wyszukuje twarze na urządzeniu; twarz (albo zaznaczony obszar) można przypisać osobie z drzewa, nowej osobie albo tylko podpisać. Imiona są pod zdjęciem, a w profilu osoby pojawia się sekcja „Także na zdjęciach”. Na stronie rodzinnej oznaczenia respektują ustawienia prywatności.
-- Pogoda z dnia wydarzenia (opcjonalnie, z Open-Meteo.com, dane od 1940 r.): w linii życia przy wydarzeniach z dokładną datą i miejscem na mapie. Pobrana pogoda zostaje zapisana przy miejscu.
+- Tło historyczne: w linii życia najważniejsze wydarzenia z historii Polski (od Konstytucji 3 maja po 2022 r.) z wiekiem osoby w tamtej chwili; można je ukryć.
+- Groby: cmentarz, miejsce (kwatera, rząd, numer), położenie (z mapy, z telefonu przy grobie albo samo ze zdjęcia nagrobka), zdjęcie i link do wyszukiwarki grobów. Strona „Groby” grupuje je według cmentarzy, pokazuje na mapie i układa trasę odwiedzin (np. na 1 listopada) w Mapach Google. Grób jest eksportowany do GEDCOM jako pochówek.
+- Zdjęcia: podpowiedzi, kto jest na zdjęciu (rozpoznawanie twarzy na urządzeniu na podstawie wcześniejszych oznaczeń; dane twarzy nie trafiają na stronę rodzinną), „Przyjmij wszystkie podpowiedzi”.
+- Zdjęcia: „Kiedy zrobiono?”: data zdjęcia, szacowana z wieku oznaczonych twarzy i dat ich urodzenia oraz śmierci.
+- Galeria: „Skan strony albumu” dzieli zeskanowaną stronę na osobne, wyprostowane zdjęcia.
+- Mapa: tryb „Migracje” z liniami między miejscami urodzenia rodziców i dzieci oraz przeprowadzkami w ciągu życia, z suwakiem lat i odtwarzaniem.
+- Plakat do druku: wachlarz przodków (do 8 pokoleń) i drzewo potomków w formatach A4–A0; druk do PDF, zapis SVG (z czcionką) i PNG.
+- Pogoda z dnia wydarzenia (z Open-Meteo.com, dane od 1940 r.; można wyłączyć w Ustawieniach): w linii życia przy wydarzeniach z dokładną datą i miejscem na mapie. Pobrana pogoda zostaje zapisana przy miejscu.
 - Okno „O aplikacji” z licencją i listą użytych bibliotek.
 
 **Poprawki**

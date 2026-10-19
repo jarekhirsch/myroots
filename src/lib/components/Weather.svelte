@@ -37,7 +37,7 @@
     if (w.tmin != null && w.tmax != null) parts.push(t('from %1$s to %2$s °C', fmtNumber(w.tmin), fmtNumber(w.tmax)));
     if (w.snow != null && w.snow >= 0.5) parts.push(t('snow %s cm', fmtNumber(w.snow)));
     else if (w.rain != null && w.rain >= 0.2) parts.push(t('precipitation %s mm', fmtNumber(w.rain)));
-    return t('Weather that day: %s', parts.join(', '));
+    return t('Weather that day: %s', parts.join(', ')) + ' (Open-Meteo.com)';
   });
 </script>
 

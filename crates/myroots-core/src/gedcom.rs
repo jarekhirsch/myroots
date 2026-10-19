@@ -448,6 +448,14 @@ fn extract(node: &Node, c: &Ctx2) -> Parsed {
             p.events.push(LifeEvent { name, date: date::from_gedcom(&ev.val("DATE")), place: place_of(ev), description: text_to_html(&desc), image: None });
         }
     }
+    // the burial place is also the grave
+    if let Some(b) = node.child("BURI") {
+        p.grave.cemetery = place_of(b);
+        if let Some((_, lat, lng)) = place_coords(b) {
+            p.grave.lat = Some(lat);
+            p.grave.lng = Some(lng);
+        }
+    }
     let sources: Vec<String> = node.all("SOUR").filter_map(source_key).collect();
     Parsed { person: p, citations: cits, sources, coords }
 }
@@ -459,7 +467,7 @@ fn merge_into(base: &mut Person, parsed: &Person) {
             if !parsed.$x.is_empty() { base.$x = parsed.$x.clone(); }
         )*};
     }
-    f!(first_name, last_name, maiden_name, birth_date, birth_place, death_date, death_place, death_cause, occupation, education, faith, height, eye_color, blood_type, biography, notes);
+    f!(first_name, last_name, maiden_name, birth_date, birth_place, death_date, death_place, death_cause, occupation, education, faith, height, eye_color, blood_type, biography, notes, grave);
     if parsed.deceased && base.death_date.is_empty() {
         base.deceased = true;
     }
@@ -1116,6 +1124,23 @@ pub fn export(db: &Database, ctx: &Ctx, o: &ExportOptions) -> String {
             out += &plac(2, &e.place);
             if !d.is_empty() {
                 out += &gnote(&d, 2, "NOTE");
+            }
+        }
+        // the grave as a burial, unless a burial event says it already
+        let g = &p.grave;
+        if (!g.cemetery.is_empty() || g.lat.is_some()) && !p.events.iter().any(|e| std_tag.get(&norm(&gv(&e.name))).copied() == Some("BURI")) {
+            out += "1 BURI\n";
+            if !g.cemetery.is_empty() {
+                out += &gline(2, "PLAC", &g.cemetery);
+            }
+            if let (Some(lat), Some(lng)) = (g.lat, g.lng) {
+                if g.cemetery.is_empty() {
+                    out += "2 PLAC\n";
+                }
+                out += &format!("3 MAP\n4 LATI {}{:.6}\n4 LONG {}{:.6}\n", if lat < 0.0 { 'S' } else { 'N' }, lat.abs(), if lng < 0.0 { 'W' } else { 'E' }, lng.abs());
+            }
+            if !g.location.is_empty() {
+                out += &gnote(&g.location, 2, "NOTE");
             }
         }
         if let Some(x) = famc.get(&p.id) {

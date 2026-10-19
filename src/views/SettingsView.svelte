@@ -140,7 +140,7 @@
     </div>
     <div class="panel">
       <h2>{t('Weather')}</h2>
-      <label class="check"><input type="checkbox" bind:checked={s.weather_external} /> {t('Show the weather on the day of events (from Open-Meteo.com)')}</label>
+      <label class="check"><input type="checkbox" checked={!s.weather_off} onchange={(e) => (s.weather_off = !e.currentTarget.checked)} /> {t('Show the weather on the day of events (from Open-Meteo.com)')}</label>
       <p class="hint">{t('For events with an exact date from 1940 on, at places with coordinates. Only the coordinates and the date are sent; the result is kept with the place.')}</p>
     </div>
   {:else if tab === 'appearance'}

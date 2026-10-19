@@ -9,14 +9,19 @@
   import Library from '@lucide/svelte/icons/images';
   import X from '@lucide/svelte/icons/x';
 
-  let { value = $bindable(null), size = 120, round = false }: { value?: number | null; size?: number; round?: boolean } = $props();
+  let {
+    value = $bindable(null),
+    size = 120,
+    round = false,
+    onfile,
+  }: { value?: number | null; size?: number; round?: boolean; onfile?: (file: File) => void } = $props();
   let lib = $state(false);
   let busy = $state(false);
 
   async function upload() {
     busy = true;
     try {
-      const ids = await pickImages(false);
+      const ids = await pickImages(false, (f) => onfile?.(f));
       if (ids.length) value = ids[0];
     } catch {
       toast(t('This file could not be read as an image.'), 'error');

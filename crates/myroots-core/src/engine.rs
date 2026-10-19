@@ -35,7 +35,7 @@ fn ok<T: serde::Serialize>(v: T) -> Result<Value> {
 
 const READ_ONLY: &[&str] = &[
     "app.info", "overview", "settings.get", "people.summaries", "person.profile", "person.history", "pets.list", "pet.get",
-    "sources.list", "source.get", "media.list", "media.get", "clans.list", "places.list", "tree.data", "lifeline", "map.data", "stats",
+    "sources.list", "source.get", "media.list", "media.get", "graves.list", "clans.list", "places.list", "tree.data", "lifeline", "map.data", "stats",
     "anniversaries", "events.list", "gallery", "kinship", "book.build", "suggestion.encode",
 ];
 
@@ -92,7 +92,7 @@ impl Engine {
                 "language": db.settings.language,
                 "suggestions": db.settings.suggestions,
                 "map_external": db.settings.map_external,
-                "weather_external": db.settings.weather_external && !viewer,
+                "weather_external": !db.settings.weather_off && !viewer,
                 "empty": db.persons.is_empty(),
             })),
             "overview" => ok(query::overview(db, ctx)),
@@ -357,6 +357,9 @@ impl Engine {
                 if let Some(c) = params.get("caption").and_then(|v| v.as_str()) {
                     m.caption = c.trim().to_string();
                 }
+                if let Some(d) = params.get("date").and_then(|v| v.as_str()) {
+                    m.date = crate::date::sanitize(d);
+                }
                 db.put_media_meta(m);
                 ok(json!({"ok": true}))
             }
@@ -375,6 +378,7 @@ impl Engine {
                 ok(json!({"ok": true}))
             }
             "media.list" => ok(db.media.values().collect::<Vec<_>>()),
+            "media.faces" => ok(query::face_index(db)),
             "media.unused" => ok(ops::unused_media(db)),
 
             /* ---------------- clans / places ---------------- */
@@ -398,6 +402,7 @@ impl Engine {
                 let a: P = p(&params)?;
                 ok(json!({ "count": ops::assign_clan(db, &a.name, &a.persons, a.add) }))
             }
+            "graves.list" => ok(query::graves(db, &pol)),
             "places.list" => ok(query::places(db)),
             "places.missing" => ok(query::missing_places(db)),
             "places.set" => {

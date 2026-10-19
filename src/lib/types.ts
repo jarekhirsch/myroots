@@ -19,7 +19,7 @@ export interface Person {
   mother: Id | null; mother_rel: ParentRel; father: Id | null; father_rel: ParentRel;
   events: LifeEvent[]; clans: string[];
   photo: Id | null; gallery: GalleryItem[];
-  recordings?: Recording[]; aging?: AgingFrame[]; aging_audio?: Id | null;
+  recordings?: Recording[]; aging?: AgingFrame[]; aging_audio?: Id | null; grave?: Grave;
   custom: Record<string, Record<string, string>>;
   citations: Record<string, Id[]>;
   created: number; updated: number;
@@ -42,9 +42,11 @@ export interface Source {
   photo: Id | null; scans: Id[]; persons: Id[]; created: number; updated: number;
 }
 
-export interface PhotoTag { person: Id | null; name: string; rect: [number, number, number, number] }
-export interface Media { id: Id; file_name: string; mime: string; size: number; width: number; height: number; has_thumb: boolean; caption: string; origin: string; created: number; tags?: PhotoTag[] }
-export interface TagView extends PhotoTag { label: string }
+export interface Grave { cemetery: string; location: string; lat: number | null; lng: number | null; photo: Id | null; url: string; notes: string }
+export interface GraveEntry { person: Summary; grave: Grave; death_date: string }
+export interface PhotoTag { person: Id | null; name: string; rect: [number, number, number, number]; face?: number[] }
+export interface Media { id: Id; file_name: string; mime: string; size: number; width: number; height: number; has_thumb: boolean; caption: string; origin: string; created: number; tags?: PhotoTag[]; date?: string }
+export interface TagView extends PhotoTag { label: string; birth_date: string; death_date: string; has_face: boolean }
 export interface MediaView { media: Media; tags: TagView[] }
 export interface DayWeather { code: number; tmax: number | null; tmin: number | null; rain: number | null; snow: number | null }
 
@@ -77,7 +79,7 @@ export interface Settings {
   tree_name: string; max_age: number;
   privacy: { enabled: boolean; level: string; sections: string[]; fields: string[] };
   map_external: boolean;
-  weather_external: boolean;
+  weather_off: boolean;
   appearance: { primary: string; accent: string; bg: string; text: string; border: string; font: string; font_size: string; radius: string; shadow: string; theme: string; map_style: string };
   custom_schema: CustomGroup[]; clans: string[]; sort_order: string; people_per_page: number;
   tree_start_mode: string; tree_start_person: Id | null; merge_dismissed: string[];
@@ -110,7 +112,7 @@ export interface FamilyEvent { kind: string; name: string; date: string; place: 
 export interface Suggestion { id: Id; person: Id | null; person_name: string; message: string; author: string; email: string; status: string; created: number; token: string }
 
 export interface LEvent { kind: string; date: string; place: string; name: string; description: string; image: Id | null; related: Id | null; related_name: string; role: string; age: number | null }
-export interface Lifeline { person: Id; name: string; gender: Gender; photo: Id | null; years: string; events: LEvent[] }
+export interface Lifeline { person: Id; name: string; gender: Gender; photo: Id | null; years: string; living?: boolean; events: LEvent[] }
 
 export interface MapEvent { person: Id; name: string; photo: Id | null; clans: string[]; kind: string; label: string; date: string }
 export interface MapPlace { place: string; lat: number | null; lng: number | null; events: MapEvent[] }

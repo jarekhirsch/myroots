@@ -5,6 +5,8 @@
   <!-- merged by Tauri into the iOS app's Info.plist -->
   <key>NSMicrophoneUsageDescription</key>
   <string>MyRoots records the voices of your family members when you choose to.</string>
+  <key>NSLocationWhenInUseUsageDescription</key>
+  <string>MyRoots saves the position of a family grave when you are standing at it.</string>
   <key>NSCameraUsageDescription</key>
   <string>MyRoots can take a photo for a family member's profile when you choose to.</string>
   <key>ITSAppUsesNonExemptEncryption</key>

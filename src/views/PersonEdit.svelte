@@ -9,6 +9,7 @@
   import DateInput from '../lib/components/DateInput.svelte';
   import RichText from '../lib/components/RichText.svelte';
   import PhotoField from '../lib/components/PhotoField.svelte';
+  import GraveEditor from '../lib/components/GraveEditor.svelte';
   import GalleryEditor from '../lib/components/GalleryEditor.svelte';
   import RecordingsEditor from '../lib/components/RecordingsEditor.svelte';
   import PlaceInput from '../lib/components/PlaceInput.svelte';
@@ -17,7 +18,7 @@
   import X from '@lucide/svelte/icons/x';
   import Up from '@lucide/svelte/icons/arrow-up';
   import Down from '@lucide/svelte/icons/arrow-down';
-  import type { Person, Union, EditModel, SourceView, Summary } from '../lib/types';
+  import type { Person, Union, EditModel, SourceView, Summary, Grave } from '../lib/types';
 
   let { id }: { id: number | null } = $props();
 
@@ -28,13 +29,17 @@
       id: 0, status: 'published', first_name: '', last_name: '', maiden_name: '', gender: '',
       birth_date: '', birth_place: '', death_date: '', death_place: '', death_cause: '', deceased: false, biography: '', notes: '',
       occupation: '', education: '', faith: '', height: '', eye_color: '', blood_type: '',
-      mother: null, mother_rel: 'bio', father: null, father_rel: 'bio', events: [], clans: [], photo: null, gallery: [], recordings: [], aging: [], aging_audio: null,
+      mother: null, mother_rel: 'bio', father: null, father_rel: 'bio', events: [], clans: [], photo: null, gallery: [], recordings: [], aging: [], aging_audio: null, grave: emptyGrave(),
       custom: {}, citations: {}, created: 0, updated: 0,
     };
   }
 
   interface URow extends Union { external: boolean }
 
+  function emptyGrave(): Grave {
+    return { cemetery: '', location: '', lat: null, lng: null, photo: null, url: '', notes: '' };
+  }
+  let graveOpen = $state(false);
   let person = $state<Person>(blank());
   let unions = $state<URow[]>([]);
   let children = $state<(number | null)[]>([]);
@@ -53,7 +58,7 @@
       allSources = await call<SourceView[]>('sources.list');
       if (cur) {
         const m = await call<EditModel>('person.edit', { id: cur });
-        person = { ...blank(), ...m.person };
+        person = { ...blank(), ...m.person, grave: { ...emptyGrave(), ...(m.person.grave || {}) } };
         unions = m.unions.map((u) => {
           const partner = u.union.a === cur ? u.union.b : u.union.a;
           return { ...u.union, a: cur, b: partner, external: !partner };
@@ -250,6 +255,14 @@
           <span class="lbl-s">{t('Profile photo')}</span>
           <PhotoField bind:value={person.photo} round size={110} />
         </div>
+        {#if person.grave && (person.death_date || person.deceased || graveOpen || person.grave.cemetery || person.grave.lat != null || person.grave.photo)}
+          <div class="panel">
+            <h2>{t('Grave')}</h2>
+            <GraveEditor bind:grave={person.grave} name={[person.first_name, person.last_name].filter(Boolean).join(' ')} />
+          </div>
+        {:else}
+          <button type="button" class="btn sm ghost" onclick={() => (graveOpen = true)}><Plus size={15} /> {t('Add the grave')}</button>
+        {/if}
       {:else if tab === 'family'}
         <div class="panel">
           <h2>{t('Parents')}</h2>

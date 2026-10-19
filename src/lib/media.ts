@@ -66,7 +66,7 @@ export async function prepareImage(blob: Blob, fileName: string, extra: Partial<
 }
 
 /** Opens a file picker for images; resolves with the new media ids. */
-export function pickImages(multiple = true): Promise<number[]> {
+export function pickImages(multiple = true, onFile?: (file: File, id: number) => void): Promise<number[]> {
   return new Promise((resolve) => {
     const input = document.createElement('input');
     input.type = 'file';
@@ -77,7 +77,9 @@ export function pickImages(multiple = true): Promise<number[]> {
       const failed: string[] = [];
       for (const f of Array.from(input.files || [])) {
         try {
-          ids.push(await backend.addMedia(await prepareImage(f, f.name)));
+          const id = await backend.addMedia(await prepareImage(f, f.name));
+          ids.push(id);
+          onFile?.(f, id);
         } catch (e) {
           console.warn('skipped', f.name, e);
           failed.push(f.name);

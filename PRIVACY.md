@@ -17,7 +17,7 @@ MyRoots nie ma kont, serwerów ani reklam i nie zbiera żadnych danych. Wszystko
 Tylko w tych sytuacjach i tylko z Twojej inicjatywy:
 
 - **Mapa** (domyślnie wyłączona): po jej włączeniu fragmenty mapy są pobierane z serwerów OpenStreetMap, a nazwy miejsc są wysyłane do wyszukiwarki Nominatim (OpenStreetMap), żeby znaleźć współrzędne. Obowiązuje polityka prywatności OpenStreetMap: https://osmfoundation.org/wiki/Privacy_Policy
-- **Pogoda** (domyślnie wyłączona): dla wydarzeń z dokładną datą aplikacja wysyła do Open-Meteo.com współrzędne miejsca i datę, żeby pobrać historyczną pogodę tego dnia. Nazwy, osoby i inne dane nie są wysyłane. Warunki: https://open-meteo.com/en/terms
+- **Pogoda** (można ją wyłączyć w Ustawieniach): dla wydarzeń z dokładną datą aplikacja wysyła do Open-Meteo.com współrzędne miejsca i datę, żeby pobrać historyczną pogodę tego dnia. Nazwy, osoby i inne dane nie są wysyłane. Warunki: https://open-meteo.com/en/terms
 - **Import z WordPressa**: aplikacja pobiera zdjęcia z Twojej witryny WordPress.
 - **Linki**: otwierają się w przeglądarce.
 
@@ -47,7 +47,7 @@ Effective 15 October 2026. Publisher: Jarek Hirsch (https://hirsch.fi).
 
 MyRoots has no accounts, servers or ads and collects no data. Everything you enter (people, photos, recordings, notes) stays on your device; the author has no access to it.
 
-The app connects to the internet only when you choose to: the **map** (off by default) loads map tiles from OpenStreetMap and sends place names to the Nominatim search service to find coordinates; the **weather** (off by default) sends the coordinates of a place and a date to Open-Meteo.com to get the historical weather of that day; the **WordPress import** downloads photos from your own WordPress site; **links** open in your browser.
+The app connects to the internet only when you choose to: the **map** (off by default) loads map tiles from OpenStreetMap and sends place names to the Nominatim search service to find coordinates; the **weather** (can be turned off in the settings) sends the coordinates of a place and a date to Open-Meteo.com to get the historical weather of that day; the **WordPress import** downloads photos from your own WordPress site; **links** open in your browser.
 
 The **microphone** is used only while you record a voice; the recording stays on your device. The **camera and photo library** are used only when you add a photo. "Through the years" finds the eyes on photos on your device; nothing is sent anywhere.
 

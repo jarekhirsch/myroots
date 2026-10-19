@@ -323,6 +323,9 @@ pub fn execute(db: &mut Database, ctx: &Ctx, a: Id, b: Id, keep: Id, sel: Select
         }
     }
     new.aging_audio = new.aging_audio.or(pa.aging_audio).or(pb.aging_audio);
+    if new.grave.is_empty() {
+        new.grave = if pk.grave.is_empty() { pr.grave.clone() } else { pk.grave.clone() };
+    }
     new.father_rel = if new.father == pa.father { pa.father_rel } else if new.father == pb.father { pb.father_rel } else { ParentRel::Bio };
     new.events = sel
         .events

@@ -137,6 +137,66 @@ export async function detectFaces(src: string): Promise<[number, number, number,
     });
 }
 
+const extra: Record<string, Promise<void> | undefined> = {};
+/** Loads an additional model once ("ageGenderNet" ~0.4 MB, "faceRecognitionNet" ~6 MB). */
+async function need(net: 'ageGenderNet' | 'faceRecognitionNet'): Promise<any> {
+  const faceapi = await api();
+  if (!faceapi) return null;
+  if (!extra[net]) {
+    extra[net] = faceapi.nets[net].loadFromUri(new URL('./models/face/', document.baseURI).href).catch((e: unknown) => {
+      extra[net] = undefined;
+      throw e;
+    });
+  }
+  await extra[net];
+  return faceapi;
+}
+
+/** A square crop around a box (fractions of the image), larger than the face, as a canvas. */
+function cropFace(img: HTMLImageElement, r: [number, number, number, number], size = 256): HTMLCanvasElement {
+  const W = img.naturalWidth;
+  const H = img.naturalHeight;
+  const cx = (r[0] + r[2] / 2) * W;
+  const cy = (r[1] + r[3] / 2) * H;
+  const side = Math.max(r[2] * W, r[3] * H) * 1.7;
+  const c = document.createElement('canvas');
+  c.width = size;
+  c.height = size;
+  const g = c.getContext('2d')!;
+  g.fillStyle = '#808080';
+  g.fillRect(0, 0, size, size);
+  g.drawImage(img, cx - side / 2, cy - side / 2, side, side, 0, 0, size, size);
+  return c;
+}
+
+/** Estimated ages of the faces in the boxes (null where no face is found). */
+export async function estimateAges(src: string, rects: [number, number, number, number][]): Promise<(number | null)[]> {
+  const faceapi = await need('ageGenderNet');
+  if (!faceapi) return rects.map(() => null);
+  const img = await loadImage(src);
+  const out: (number | null)[] = [];
+  for (const r of rects) {
+    const c = cropFace(img, r);
+    const d = await faceapi.detectSingleFace(c, new faceapi.TinyFaceDetectorOptions({ inputSize: 256, scoreThreshold: 0.2 })).withFaceLandmarks().withAgeAndGender();
+    out.push(d ? Math.max(0, d.age) : null);
+  }
+  return out;
+}
+
+/** 128-number descriptors of the faces in the boxes, to tell people apart (null where no face is found). */
+export async function describeFaces(src: string, rects: [number, number, number, number][]): Promise<(number[] | null)[]> {
+  const faceapi = await need('faceRecognitionNet');
+  if (!faceapi) return rects.map(() => null);
+  const img = await loadImage(src);
+  const out: (number[] | null)[] = [];
+  for (const r of rects) {
+    const c = cropFace(img, r);
+    const d = await faceapi.detectSingleFace(c, new faceapi.TinyFaceDetectorOptions({ inputSize: 256, scoreThreshold: 0.2 })).withFaceLandmarks().withFaceDescriptor();
+    out.push(d ? Array.from(d.descriptor as Float32Array, (v) => Math.round(v * 1e4) / 1e4) : null);
+  }
+  return out;
+}
+
 /** Preloads the models (e.g. when the editor opens). */
 export function warmUp() {
   api().catch(() => {});

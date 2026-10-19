@@ -2,7 +2,9 @@
   // Ordered list of images with captions.
   import Img from './Img.svelte';
   import MediaLibrary from './MediaLibrary.svelte';
-  import { pickImages } from '../media';
+  import { pickImages, pickFile } from '../media';
+  import AlbumSplitter from './AlbumSplitter.svelte';
+  import Scan from '@lucide/svelte/icons/scan-line';
   import { t } from '../i18n/index.svelte';
   import Upload from '@lucide/svelte/icons/upload';
   import Library from '@lucide/svelte/icons/images';
@@ -14,6 +16,7 @@
   let { items = $bindable([]), captions = true }: { items?: GalleryItem[]; captions?: boolean } = $props();
   let lib = $state(false);
   let busy = $state(false);
+  let page = $state<File | null>(null);
 
   function add(ids: number[]) {
     const have = new Set(items.map((i) => i.media));
@@ -51,11 +54,15 @@
   <div class="add">
     <button type="button" class="btn sm" onclick={upload} disabled={busy}><Upload size={15} /> {t('Upload photos')}</button>
     <button type="button" class="btn sm ghost" onclick={() => (lib = true)}><Library size={15} /> {t('From library')}</button>
+    <button type="button" class="btn sm ghost" onclick={async () => (page = await pickFile('image/*'))}><Scan size={15} /> {t('Album page scan')}</button>
   </div>
 </div>
 
 {#if lib}
   <MediaLibrary onpick={add} onclose={() => (lib = false)} />
+{/if}
+{#if page}
+  <AlbumSplitter file={page} onadd={add} onclose={() => (page = null)} />
 {/if}
 
 <style>

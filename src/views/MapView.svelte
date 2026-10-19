@@ -8,7 +8,11 @@
   import MapPinned from '@lucide/svelte/icons/map-pin-plus';
   import SearchIcon from '@lucide/svelte/icons/search';
   import X from '@lucide/svelte/icons/x';
-  import type { PlaceUse } from '../lib/types';
+  import Waypoints from '@lucide/svelte/icons/waypoints';
+  import Play from '@lucide/svelte/icons/play';
+  import Pause from '@lucide/svelte/icons/pause';
+  import { buildMigrations, arc, type Move, type Birth } from '../lib/migrations';
+  import type { PlaceUse, TreeNode } from '../lib/types';
   import { toast } from '../lib/ui.svelte';
   import NotFound from './NotFound.svelte';
   import BackButton from '../lib/components/BackButton.svelte';
@@ -85,6 +89,86 @@
     return p.events.filter((e) => kinds[e.kind] !== false && (!clan || e.clans.includes(clan)));
   }
 
+  /* ---------- migrations: moves of the family over the years ---------- */
+  let mig = $state(false);
+  let moves = $state<Move[]>([]);
+  let births = $state<Birth[]>([]);
+  let yearNow = $state(0);
+  let playing = $state(false);
+  let migLayer: any = null;
+  let migItems: { year: number; obj: any; line: boolean }[] = [];
+  const years = $derived.by(() => {
+    const all = [...moves.map((m) => m.year), ...births.map((b) => b.year)];
+    return all.length ? [Math.min(...all), Math.max(...all)] : [0, 0];
+  });
+  async function loadMig() {
+    const [tree, pl] = await Promise.all([call<{ nodes: TreeNode[] }>('tree.data'), call<PlaceUse[]>('places.list')]);
+    const r = buildMigrations(tree.nodes, pl, person);
+    moves = r.moves;
+    births = r.births;
+    const all = [...moves.map((m) => m.year), ...births.map((b) => b.year)];
+    yearNow = all.length ? Math.max(...all) : 0;
+  }
+  function drawMig() {
+    migLayer?.remove();
+    migItems = [];
+    if (!map || !L || !mig) return;
+    migLayer = L.layerGroup();
+    for (const b of births) {
+      const c = L.circleMarker(b.at, { radius: 4, className: 'mig-dot', weight: 1 }).bindTooltip(`${esc(b.name)}, ${b.year}: ${esc(b.place)}`);
+      migItems.push({ year: b.year, obj: c, line: false });
+    }
+    const bounds: [number, number][] = [];
+    for (const m of moves) {
+      const pl = L.polyline(arc(m.from, m.to), { className: `mig mig-${m.kind}`, weight: 2.5, opacity: 0.9 });
+      pl.bindTooltip(`<b>${esc(m.name)}</b>, ${m.year}<br>${esc(m.fromName)} → ${esc(m.toName)}`, { sticky: true });
+      const head = L.circleMarker(m.to, { radius: 3.5, className: `mig-head mig-${m.kind}`, weight: 0, fillOpacity: 1 });
+      migItems.push({ year: m.year, obj: pl, line: true }, { year: m.year, obj: head, line: false });
+      bounds.push(m.from, m.to);
+    }
+    for (const b of births) bounds.push(b.at);
+    migLayer.addTo(map);
+    applyYear();
+    if (bounds.length) map.fitBounds(bounds, { padding: [60, 60], maxZoom: 8 });
+  }
+  function applyYear() {
+    if (!migLayer) return;
+    for (const it of migItems) {
+      const on = it.year <= yearNow;
+      if (on && !migLayer.hasLayer(it.obj)) migLayer.addLayer(it.obj);
+      else if (!on && migLayer.hasLayer(it.obj)) migLayer.removeLayer(it.obj);
+      if (on && it.line) it.obj.getElement()?.classList.toggle('fresh', yearNow - it.year < 4);
+    }
+  }
+  $effect(() => {
+    void yearNow;
+    applyYear();
+  });
+  let timer = 0;
+  function play() {
+    if (playing) {
+      playing = false;
+      clearInterval(timer);
+      return;
+    }
+    if (yearNow >= years[1]) yearNow = years[0];
+    playing = true;
+    timer = window.setInterval(() => {
+      if (yearNow >= years[1]) {
+        playing = false;
+        clearInterval(timer);
+      } else yearNow++;
+    }, 90);
+  }
+  async function toggleMig() {
+    mig = !mig;
+    playing = false;
+    clearInterval(timer);
+    if (mig) await loadMig();
+    render();
+  }
+  const recent = $derived(moves.filter((m) => m.year <= yearNow).slice(-3).reverse());
+
   async function render() {
     if (!el || !data || !enabled) return;
     if (!L) {
@@ -103,6 +187,13 @@
       });
     }
     if (cluster) cluster.remove();
+    if (mig) {
+      drawMig();
+      setTimeout(() => map?.invalidateSize(), 50);
+      return;
+    }
+    migLayer?.remove();
+    migLayer = null;
     cluster = (L as any).markerClusterGroup({
       showCoverageOnHover: false,
       maxClusterRadius: 44,
@@ -146,6 +237,7 @@
   $effect(() => {
     return () => {
       cancelled = true;
+      clearInterval(timer);
       map?.remove();
       map = null;
     };
@@ -233,11 +325,14 @@
     <!-- floating toolbar in the style of the tree -->
     <div class="bar no-print">
       <BackButton pill />
-      <div class="kinds" role="group" aria-label={t('Show')}>
-        {#each Object.keys(KIND_LABEL) as k (k)}
-          <button aria-pressed={kinds[k]} style="--c:{KIND_COLOR[k]}" onclick={() => (kinds[k] = !kinds[k])}><i aria-hidden="true"></i>{KIND_LABEL[k]()}</button>
-        {/each}
-      </div>
+      {#if !mig}
+        <div class="kinds" role="group" aria-label={t('Show')}>
+          {#each Object.keys(KIND_LABEL) as k (k)}
+            <button aria-pressed={kinds[k]} style="--c:{KIND_COLOR[k]}" onclick={() => (kinds[k] = !kinds[k])}><i aria-hidden="true"></i>{KIND_LABEL[k]()}</button>
+          {/each}
+        </div>
+      {/if}
+      <button class="migbtn" aria-pressed={mig} onclick={toggleMig}><Waypoints size={16} /> {t('Migrations')}</button>
       {#if !viewer || app.info?.sections?.list !== false}
         <div class="pick">
           <PersonPicker value={person} placeholder={t('Places of one person…')} onchange={(v) => go(v ? `/map/${v}` : '/map')} />
@@ -266,6 +361,29 @@
       </div>
     </div>
     <div class="map" class:picking bind:this={el}></div>
+
+    {#if mig}
+      <div class="timeline no-print">
+        {#if moves.length || births.length}
+          <button class="btn icon primary" onclick={play} aria-label={playing ? t('Pause') : t('Play')}>{#if playing}<Pause size={18} />{:else}<Play size={18} />{/if}</button>
+          <div class="yr" aria-live="off">{yearNow}</div>
+          <input type="range" min={years[0]} max={years[1]} bind:value={yearNow} aria-label={t('Year')} />
+          <div class="legend small">
+            <span><i class="lg gen"></i>{t('a new generation elsewhere')}</span>
+            <span><i class="lg life"></i>{t('moved during their life')}</span>
+          </div>
+          <ul class="recent small">
+            {#each recent as m (m.person + m.kind + m.year)}
+              <li><b>{m.year}</b> <a href="#/person/{m.person}">{m.name}</a>: {m.fromName} → {m.toName}</li>
+            {:else}
+              <li class="muted">{tn('%d move in the family', '%d moves in the family', moves.length)}</li>
+            {/each}
+          </ul>
+        {:else}
+          <p class="small muted">{t('No moves to show yet: places of birth and death need coordinates.')}</p>
+        {/if}
+      </div>
+    {/if}
 
     {#if picking}
       <div class="pick-banner no-print" role="status">
@@ -422,6 +540,101 @@
     flex: 1;
     min-height: 300px;
     z-index: 0;
+  }
+  .migbtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 0;
+    border-radius: 999px;
+    padding: 8px 14px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .migbtn[aria-pressed='true'] {
+    background: var(--ink);
+    color: var(--surface);
+  }
+  .timeline {
+    position: absolute;
+    inset: auto 16px 22px 16px;
+    margin: 0 auto;
+    max-width: 760px;
+    z-index: 1000;
+    background: var(--surface);
+    box-shadow: var(--shadow-raised, var(--shadow));
+    border-radius: 18px;
+    padding: 12px 16px;
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    gap: 6px 14px;
+    align-items: center;
+  }
+  .yr {
+    font-size: 1.7rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+    min-width: 3.2ch;
+  }
+  .timeline input[type='range'] {
+    width: 100%;
+  }
+  .legend,
+  .recent {
+    grid-column: 1 / -1;
+  }
+  .legend {
+    display: flex;
+    gap: 16px;
+    color: var(--muted);
+  }
+  .lg {
+    display: inline-block;
+    width: 22px;
+    height: 0;
+    border-top: 3px solid var(--heirloom);
+    vertical-align: middle;
+    margin-inline-end: 6px;
+  }
+  .lg.life {
+    border-top: 3px dashed var(--ev-death);
+  }
+  .recent {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    color: var(--muted);
+  }
+  .recent b {
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .map :global(path.mig-gen) {
+    stroke: var(--heirloom);
+  }
+  .map :global(path.mig-life) {
+    stroke: var(--ev-death);
+    stroke-dasharray: 6 5;
+  }
+  .map :global(path.mig.fresh) {
+    stroke-width: 5;
+  }
+  .map :global(path.mig-head.mig-gen) {
+    fill: var(--heirloom);
+  }
+  .map :global(path.mig-head.mig-life) {
+    fill: var(--ev-death);
+  }
+  .map :global(path.mig-dot) {
+    fill: var(--surface);
+    stroke: var(--ink);
+    fill-opacity: 1;
   }
   .map :global(.mr-pin span) {
     display: flex;

@@ -7,36 +7,19 @@
   import Html from './Html.svelte';
   import Img from './Img.svelte';
   import Weather from './Weather.svelte';
-  import { app, call, refreshInfo } from '../api.svelte';
-  import { confirmDialog, toast } from '../ui.svelte';
-  import { errorText } from '../errors';
-  import { exactDay, inArchive, refreshPlaces, WEATHER_SOURCE } from '../weather';
-  import CloudSun from '@lucide/svelte/icons/cloud-sun';
+  import { app } from '../api.svelte';
+  import { exactDay, refreshPlaces } from '../weather';
+  import { POLAND, historyShown, setHistoryShown, type HistoryEvent } from '../history';
+  import Landmark from '@lucide/svelte/icons/landmark';
   import type { Lifeline, LEvent } from '../types';
 
-  let { data, ruler = true, weather = true }: { data: Lifeline; ruler?: boolean; weather?: boolean } = $props();
+  let { data, ruler = true, weather = true, history = true }: { data: Lifeline; ruler?: boolean; weather?: boolean; history?: boolean } = $props();
+  let histOn = $state(historyShown());
   // coordinates may have changed on the map since the last time
   refreshPlaces();
   const viewer = $derived(!!app.info?.viewer);
   const fetchOn = $derived(!!app.info?.weather_external);
-  let shown = $state(false);
-  // events the weather could be shown for (exact day, a place, in the archive)
-  const dated = $derived(data.events.filter((e) => e.place && exactDay(e.date) && inArchive(exactDay(e.date)!)).length);
 
-  async function enableWeather() {
-    const ok = await confirmDialog(
-      t('Show the weather of those days?'),
-      t('For events with an exact date (from 1940) at a place with coordinates, the app downloads the historical weather from Open-Meteo.com. Only the coordinates of the place and the date are sent. You can turn it off in the settings.'),
-      t('Show weather'),
-    );
-    if (!ok || !app.settings) return;
-    try {
-      await call('settings.save', { settings: { ...app.settings, weather_external: true } });
-      await refreshInfo();
-    } catch (e) {
-      toast(errorText(e), 'error');
-    }
-  }
   let open = $state<Record<number, boolean>>({});
 
   function title(e: LEvent): string {
@@ -78,24 +61,65 @@
 
   const own = new Set(['birth', 'death', 'presumed_death', 'event', 'marriage', 'marriage_end']);
 
-  type Row = { tick: number; gap: number } | { e: LEvent; i: number; gap: number };
+  type Row = { tick: number; gap: number } | { e: LEvent; i: number; gap: number } | { h: HistoryEvent; age: number; gap: number };
+
+  // "YYYY-MM-DD" sort key of a (qualified) date; null when it has no year
+  function keyOf(v: string): string | null {
+    const m = (v || '').match(/(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?/);
+    return m ? `${m[1]}-${m[2] || '00'}-${m[3] || '00'}` : null;
+  }
+  function yearsBetween(a: string, b: string): number {
+    const [ay, am, ad] = a.split('-').map(Number);
+    const [by, bm, bd] = b.split('-').map(Number);
+    let y = by - ay;
+    if (am && ad && bm && bd && (bm < am || (bm === am && bd < ad))) y--;
+    return y;
+  }
+  // events of the history of Poland within this life
+  const background = $derived.by(() => {
+    if (!history) return [] as { h: HistoryEvent; key: string; age: number }[];
+    const birth = data.events.find((e) => e.kind === 'birth');
+    const from = birth ? keyOf(birth.date) : null;
+    if (!from) return [];
+    const death = data.events.find((e) => e.kind === 'death' && keyOf(e.date));
+    let to = death ? keyOf(death.date) : null;
+    if (!to && data.living) to = new Date().toISOString().slice(0, 10);
+    if (!to) to = data.events.filter((e) => own.has(e.kind)).map((e) => keyOf(e.date)).filter((k): k is string => !!k).sort().pop() || null;
+    if (!to || to <= from) return [];
+    return POLAND.map((h) => ({ h, key: keyOf(h.date)! })).filter((x) => x.key > from && x.key <= to!).map((x) => ({ ...x, age: yearsBetween(from, x.key) }));
+  });
+
   const rows = $derived.by(() => {
     const out: Row[] = [];
     let last: number | null = null;
     const gap = (a: number) => (ruler && last != null ? Math.min(64, Math.max(0, (a - last) * 2.6)) : 0);
-    data.events.forEach((e, i) => {
-      const a = e.age != null && e.age >= 0 ? e.age : null;
-      if (ruler && a != null) {
-        for (let d = (last == null ? 0 : Math.floor(last / 10) * 10) + 10; d < a; d += 10) {
-          if (last != null && d > last) {
-            out.push({ tick: d, gap: gap(d) });
-            last = d;
-          }
+    const ticks = (a: number) => {
+      if (!ruler) return;
+      for (let d = (last == null ? 0 : Math.floor(last / 10) * 10) + 10; d < a; d += 10) {
+        if (last != null && d > last) {
+          out.push({ tick: d, gap: gap(d) });
+          last = d;
         }
       }
+    };
+    const hist = histOn ? [...background] : [];
+    const flush = (until: string | null) => {
+      while (hist.length && (until == null || hist[0].key < until)) {
+        const x = hist.shift()!;
+        ticks(x.age);
+        out.push({ h: x.h, age: x.age, gap: gap(x.age) });
+        last = x.age;
+      }
+    };
+    data.events.forEach((e, i) => {
+      const k = keyOf(e.date);
+      if (k) flush(k);
+      const a = e.age != null && e.age >= 0 ? e.age : null;
+      if (a != null) ticks(a);
       out.push({ e, i, gap: a != null ? gap(a) : 0 });
       if (a != null) last = a;
     });
+    flush(null);
     return out;
   });
   function left(e: LEvent): string {
@@ -113,6 +137,15 @@
         <li class="tick" style="margin-top: {r.gap}px" aria-hidden="true">
           <span class="when">{tn('%d year', '%d years', r.tick)}</span>
           <span class="mark"></span>
+        </li>
+      {:else if 'h' in r}
+        <li class="hist" style="margin-top: {r.gap}px">
+          <span class="dot" aria-hidden="true"></span>
+          <div class="when"><span class="d">{tn('%d year', '%d years', r.age)}</span></div>
+          <div class="what">
+            <div class="ttl">{r.h.title()}</div>
+            <div class="pl small muted">{fmtDate(r.h.date)}</div>
+          </div>
         </li>
       {:else}
         {@const e = r.e}
@@ -132,7 +165,7 @@
             </div>
             <div class="pl small muted">
               {[fmtDate(e.date), e.place].filter(Boolean).join(', ')}
-              {#if weather && e.place && exactDay(e.date)}<Weather place={e.place} date={e.date} fetch={fetchOn && !viewer} onshown={() => (shown = true)} />{/if}
+              {#if weather && e.place && exactDay(e.date)}<Weather place={e.place} date={e.date} fetch={fetchOn && !viewer} />{/if}
             </div>
             {#if e.kind === 'marriage_end' && e.role}<div class="small muted">{endCauseLabel(e.role)}</div>{/if}
             {#if e.image}
@@ -152,19 +185,33 @@
       {/if}
     {/each}
   </ol>
-  {#if weather && shown}
-    <p class="wx-src small muted">{t('Historical weather:')} <a href={WEATHER_SOURCE} target="_blank" rel="noopener noreferrer">Open-Meteo.com</a> (ERA5, CC BY 4.0)</p>
-  {:else if weather && !viewer && !fetchOn && dated}
-    <button type="button" class="btn ghost sm wx-on no-print" onclick={enableWeather}><CloudSun size={15} /> {t('Show the weather of those days')}</button>
+  {#if background.length}
+    <button type="button" class="btn ghost sm hist-on no-print" onclick={() => setHistoryShown((histOn = !histOn))} aria-pressed={histOn}>
+      <Landmark size={15} /> {histOn ? t('Hide the history of Poland') : t('Show the history of Poland in the background')}
+    </button>
   {/if}
 {/if}
 
 <style>
-  .wx-src {
-    margin: 14px 0 0;
+  .hist .ttl {
+    color: var(--muted);
+    font-style: italic;
   }
-  .wx-on {
+  .hist .dot {
+    width: 9px !important;
+    height: 9px !important;
+    margin-top: 7px !important;
+    border-radius: 2px;
+    transform: rotate(45deg);
+    background: var(--surface) !important;
+    box-shadow: 0 0 0 1.5px var(--muted), 0 0 0 4px var(--surface) !important;
+  }
+  .hist .when .d {
+    color: var(--faint);
+  }
+  .hist-on {
     margin-top: 12px;
+    margin-inline-end: 8px;
   }
   .pl :global(.wx) {
     margin-inline-start: 6px;

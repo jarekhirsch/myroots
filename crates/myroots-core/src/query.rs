@@ -359,6 +359,11 @@ pub struct TagView {
     pub rect: [f32; 4],
     /// Name to show (the person's current name, or the name written on the mark).
     pub label: String,
+    /// Dates of the person (to estimate when the photo was taken).
+    pub birth_date: String,
+    pub death_date: String,
+    /// The face descriptor is known.
+    pub has_face: bool,
 }
 
 #[derive(Serialize, Debug, Clone)]
@@ -372,20 +377,20 @@ pub fn media_view(db: &Database, pol: &Policy, id: Id) -> Option<MediaView> {
     let m = db.media.get(&id)?;
     let mut tags = Vec::new();
     for t in &m.tags {
-        let label = match t.person {
+        let (label, birth_date, death_date) = match t.person {
             Some(pid) => {
                 let Some(s) = public_summary(db, pol, pid) else { continue };
                 if pol.active && db.persons.get(&pid).map(|p| pol.photo_hidden(p)).unwrap_or(true) {
                     continue;
                 }
-                s.name
+                (s.name, s.birth_date, s.death_date)
             }
-            None => t.name.clone(),
+            None => (t.name.clone(), String::new(), String::new()),
         };
-        tags.push(TagView { person: t.person, name: t.name.clone(), rect: t.rect, label });
+        tags.push(TagView { person: t.person, name: t.name.clone(), rect: t.rect, label, birth_date, death_date, has_face: !t.face.is_empty() });
     }
     let mut media = m.clone();
-    media.tags = tags.iter().map(|t| PhotoTag { person: t.person, name: t.name.clone(), rect: t.rect }).collect();
+    media.tags = tags.iter().map(|t| PhotoTag { person: t.person, name: t.name.clone(), rect: t.rect, face: Vec::new() }).collect();
     Some(MediaView { media, tags })
 }
 
@@ -886,3 +891,56 @@ mod tests {
         assert_eq!(next_occurrence(NaiveDate::from_ymd_opt(1952, 2, 29).unwrap(), leap), NaiveDate::from_ymd_opt(2028, 2, 29));
     }
 }
+
+/* ------------------------------------------------------------------ */
+/*  Graves                                                              */
+/* ------------------------------------------------------------------ */
+
+#[derive(Serialize, Debug, Clone)]
+pub struct GraveEntry {
+    pub person: Summary,
+    pub grave: Grave,
+    pub death_date: String,
+}
+
+/// Everyone with a recorded grave, by cemetery and name.
+pub fn graves(db: &Database, pol: &Policy) -> Vec<GraveEntry> {
+    let mut v: Vec<GraveEntry> = db
+        .persons
+        .values()
+        .filter(|p| !p.grave.is_empty())
+        .filter_map(|p| {
+            let s = public_summary(db, pol, p.id)?;
+            let (r, _) = pol.redact(p);
+            if r.grave.is_empty() {
+                return None;
+            }
+            Some(GraveEntry { person: s, grave: r.grave, death_date: r.death_date })
+        })
+        .collect();
+    v.sort_by_key(|g| (crate::model::norm(&g.grave.cemetery), crate::model::norm(&g.person.last_name), crate::model::norm(&g.person.first_name)));
+    v
+}
+
+#[derive(Serialize, Debug, Clone)]
+pub struct KnownFace {
+    pub person: Id,
+    pub media: Id,
+    pub face: Vec<f32>,
+}
+
+/// Faces of people marked on photos (for suggestions on other photos).
+pub fn face_index(db: &Database) -> Vec<KnownFace> {
+    let mut v = Vec::new();
+    for m in db.media.values() {
+        for t in &m.tags {
+            if let (Some(p), false) = (t.person, t.face.is_empty()) {
+                if db.persons.contains_key(&p) {
+                    v.push(KnownFace { person: p, media: m.id, face: t.face.clone() });
+                }
+            }
+        }
+    }
+    v
+}
+

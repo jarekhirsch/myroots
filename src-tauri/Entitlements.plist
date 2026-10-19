@@ -5,5 +5,8 @@
   <!-- signed macOS builds (hardened runtime): voice recordings need the microphone -->
   <key>com.apple.security.device.audio-input</key>
   <true/>
+  <!-- "I am at the grave": the current position -->
+  <key>com.apple.security.personal-information.location</key>
+  <true/>
 </dict>
 </plist>

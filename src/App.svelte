@@ -24,6 +24,8 @@
   import LifelineView from './views/LifelineView.svelte';
   import TreeView from './views/TreeView.svelte';
   import MapView from './views/MapView.svelte';
+  import Graves from './views/Graves.svelte';
+  import Poster from './views/Poster.svelte';
   import Gallery from './views/Gallery.svelte';
   import Events from './views/Events.svelte';
   import Pets from './views/Pets.svelte';
@@ -230,6 +232,8 @@
         <MapView person={p[1] ? Number(p[1]) : null} />
       {:else if p[0] === 'gallery'}
         <Gallery />
+      {:else if p[0] === 'graves'}
+        <Graves />
       {:else if p[0] === 'events'}
         <Events />
       {:else if p[0] === 'pets'}
@@ -252,6 +256,8 @@
         <Stats />
       {:else if p[0] === 'kinship'}
         <Kinship />
+      {:else if p[0] === 'poster'}
+        <Poster id={p[1] ? Number(p[1]) : null} />
       {:else if p[0] === 'book'}
         <BookView />
       {:else if p[0] === 'health'}

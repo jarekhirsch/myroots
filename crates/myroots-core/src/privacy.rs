@@ -101,6 +101,7 @@ impl Policy {
         if self.censors("places") {
             d.birth_place.clear();
             d.death_place.clear();
+            d.grave = Grave::default();
             for e in &mut d.events {
                 e.place.clear();
             }
@@ -116,6 +117,7 @@ impl Policy {
             d.recordings.clear();
             d.aging_audio = None;
             d.photo = None;
+            d.grave.photo = None;
             d.height.clear();
             d.eye_color.clear();
             d.blood_type.clear();

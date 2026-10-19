@@ -142,6 +142,28 @@ pub struct AgingFrame {
     pub eyes: Option<[f32; 4]>,
 }
 
+/// A grave: cemetery, the place on it, position and a photo of the tombstone.
+#[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]
+#[serde(default)]
+pub struct Grave {
+    /// Name of the cemetery (with the town), e.g. "Cmentarz Rakowicki, Kraków".
+    pub cemetery: String,
+    /// Section, row, number …
+    pub location: String,
+    pub lat: Option<f64>,
+    pub lng: Option<f64>,
+    pub photo: Option<Id>,
+    /// Link to the grave in an online cemetery register.
+    pub url: String,
+    pub notes: String,
+}
+
+impl Grave {
+    pub fn is_empty(&self) -> bool {
+        self.cemetery.is_empty() && self.location.is_empty() && self.lat.is_none() && self.photo.is_none() && self.url.is_empty() && self.notes.is_empty()
+    }
+}
+
 #[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]
 #[serde(default)]
 pub struct Person {
@@ -189,6 +211,8 @@ pub struct Person {
     pub aging: Vec<AgingFrame>,
     /// Recording played along with the animation (one of `recordings`).
     pub aging_audio: Option<Id>,
+    /// Where the person is buried.
+    pub grave: Grave,
 
     /// Custom fields: group id → field id → value.
     pub custom: BTreeMap<String, BTreeMap<String, String>>,
@@ -430,6 +454,8 @@ pub struct Media {
     pub created: i64,
     /// People marked on the photo (group photos).
     pub tags: Vec<PhotoTag>,
+    /// When the photo was taken (qualified date, may be empty).
+    pub date: String,
 }
 
 /// A person marked on a photo.
@@ -441,6 +467,10 @@ pub struct PhotoTag {
     pub name: String,
     /// Box around the face: x, y, width, height as fractions of the image.
     pub rect: [f32; 4],
+    /// Face descriptor (128 numbers) to recognise the person on other photos.
+    /// Stays on the device: never published on the family website.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub face: Vec<f32>,
 }
 
 /* ------------------------------------------------------------------ */
@@ -631,8 +661,8 @@ pub struct Settings {
     pub privacy: PrivacySettings,
     /// Opt-in: OpenStreetMap tiles and Nominatim geocoding.
     pub map_external: bool,
-    /// Opt-in: historical weather of events from Open-Meteo.
-    pub weather_external: bool,
+    /// Historical weather of events from Open-Meteo is on unless turned off.
+    pub weather_off: bool,
     pub appearance: Appearance,
     pub custom_schema: Vec<CustomGroup>,
     /// Clans defined manually (in addition to the ones used by people).
@@ -659,7 +689,7 @@ impl Default for Settings {
             max_age: 110,
             privacy: PrivacySettings::default(),
             map_external: false,
-            weather_external: false,
+            weather_off: false,
             appearance: Appearance::default(),
             custom_schema: Vec::new(),
             clans: Vec::new(),

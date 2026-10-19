@@ -28,6 +28,7 @@
   import Flag from '@lucide/svelte/icons/message-square-warning';
   import Down from '@lucide/svelte/icons/chevron-down';
   import Printer from '@lucide/svelte/icons/printer';
+  import Frame from '@lucide/svelte/icons/frame';
   import type { Profile, Lifeline, Summary } from '../lib/types';
 
   let { id }: { id: number } = $props();
@@ -127,6 +128,12 @@
   }
 
   const sec = $derived(app.info?.sections || {});
+
+  const grave = $derived(p?.grave && (p.grave.cemetery || p.grave.lat != null || p.grave.photo || p.grave.location) ? p.grave : null);
+  const dead = $derived(!!P && !P.living);
+  const directions = (g: { lat: number | null; lng: number | null }) => `https://www.google.com/maps/dir/?api=1&destination=${g.lat},${g.lng}`;
+  const q = (s: string) => encodeURIComponent(s || '');
+  const deathYear = $derived((p?.death_date || '').match(/\d{4}/)?.[0] || '');
 </script>
 
 {#if prof.error}
@@ -171,6 +178,7 @@
             {#if sec.kinship !== false}<a class="btn ghost icon" href="#/kinship?a={id}" title={t('Kinship')} aria-label={t('Kinship')}><Link size={18} /></a>{/if}
             {#if !viewer || (p.aging?.length || 0) >= 2}<a class="btn ghost icon" href="#/person/{id}/years" title={t('Through the years')} aria-label={t('Through the years')}><Film size={18} /></a>{/if}
             {#if !viewer && P.revisions}<a class="btn ghost icon" href="#/person/{id}/history" title="{t('History')} ({P.revisions})" aria-label={t('History')}><Clock size={18} /></a>{/if}
+            {#if sec.tree !== false}<a class="btn ghost icon" href="#/poster/{id}" title={t('Poster')} aria-label={t('Poster')}><Frame size={18} /></a>{/if}
             <button class="btn ghost icon" onclick={() => print()} aria-label={t('Print / PDF')} title={t('Print / PDF')}><Printer size={18} /></button>
           </span>
           {#if viewer && app.info?.suggestions?.enabled}
@@ -296,6 +304,38 @@
           </dl>
         </section>
 
+        {#if grave}
+          <section class="block tab-life">
+            <h2>{t('Grave')}</h2>
+            <div class="panel grave">
+              {#if grave.photo}
+                <button class="gph" onclick={() => openLightbox([{ media: grave.photo!, caption: [t('Grave'), grave.cemetery].filter(Boolean).join(': ') }])} aria-label={t('Enlarge')}><Img id={grave.photo} alt="" /></button>
+              {/if}
+              <div class="gtx">
+                {#if grave.cemetery}<div class="gname">{grave.cemetery}</div>{/if}
+                {#if grave.location}<div class="small muted">{grave.location}</div>{/if}
+                {#if grave.notes}<div class="small pre">{grave.notes}</div>{/if}
+                <div class="glinks small no-print">
+                  {#if grave.lat != null && grave.lng != null}<a href={directions(grave)} target="_blank" rel="noopener noreferrer">{t('Directions')}</a>{/if}
+                  {#if safeHref(grave.url)}<a href={safeHref(grave.url)} target="_blank" rel="noopener noreferrer">{t('Grave register')}</a>{/if}
+                  {#if sec.list !== false}<a href="#/graves">{t('All graves')}</a>{/if}
+                </div>
+              </div>
+            </div>
+          </section>
+        {:else if dead && !viewer}
+          <section class="block tab-life no-print">
+            <h2>{t('Grave')}</h2>
+            <div class="panel small">
+              <a href="#/person/{id}/edit">{t('Add the grave')}</a>
+              <span class="muted"> · {t('Search:')}</span>
+              <a href="https://www.grobonet.com/" target="_blank" rel="noopener noreferrer">Grobonet</a>,
+              <a href="https://www.findagrave.com/memorial/search?firstname={q(p.first_name)}&lastname={q(p.last_name)}&deathyear={deathYear}" target="_blank" rel="noopener noreferrer">Find a Grave</a>,
+              <a href="https://billiongraves.com/search/results?given_names={q(p.first_name)}&family_names={q(p.last_name)}&death_year={deathYear}" target="_blank" rel="noopener noreferrer">BillionGraves</a>
+            </div>
+          </section>
+        {/if}
+
         {#each custom as g (g.name)}
           <section class="block tab-life">
             <h2>{g.name}</h2>
@@ -391,6 +431,36 @@
 <svelte:window onclick={(e) => { if (addMenu && !(e.target as HTMLElement).closest('.menu-wrap')) addMenu = false; }} />
 
 <style>
+  .grave {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .gph {
+    flex: none;
+    width: 76px;
+    height: 96px;
+    border: 0;
+    padding: 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: zoom-in;
+    background: var(--ink-soft);
+  }
+  .gph :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .gname {
+    font-weight: 600;
+  }
+  .glinks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    margin-top: 6px;
+  }
   .hero {
     display: flex;
     gap: 34px;
