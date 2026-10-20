@@ -1,6 +1,6 @@
 # Zmiany
 
-## 3.0.0 (2026-10-15)
+## 3.0.0 (2026-10-20)
 
 Pierwsze samodzielne wydanie MyRoots, bez WordPressa. Ta sama aplikacja działa na Macu, Windowsie i Linuksie, na telefonach (iOS, Android) i w przeglądarce, a z każdej z nich można wydać stronę rodzinną tylko do odczytu.
 

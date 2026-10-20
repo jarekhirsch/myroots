@@ -49,17 +49,17 @@ pub fn decode_file(raw: &[u8]) -> Result<String> {
     if !raw.starts_with(b"PK\x03\x04") {
         return Ok(decode(raw));
     }
-    use std::io::Read;
     let mut z = zip::ZipArchive::new(std::io::Cursor::new(raw)).map_err(|_| Error::new("gedcom_zip", "the archive cannot be read"))?;
-    let names: Vec<String> = z.file_names().map(|s| s.to_string()).collect();
+    let names: Vec<String> = z.file_names().filter_map(|s| s.ok().map(|s| s.to_string())).collect();
     let pick = names
         .iter()
         .find(|n| n.eq_ignore_ascii_case("gedcom.ged"))
         .or_else(|| names.iter().find(|n| n.to_lowercase().ends_with(".ged") && !n.starts_with("__MACOSX")))
         .ok_or_else(|| Error::new("gedcom_no_people", "the archive does not contain a GEDCOM file"))?
         .clone();
-    let mut buf = vec![];
-    z.by_name(&pick).map_err(|_| Error::new("gedcom_zip", "the archive cannot be read"))?.read_to_end(&mut buf).map_err(|_| Error::new("gedcom_zip", "the archive cannot be read"))?;
+    let mut f = z.by_name(&pick).map_err(|_| Error::new("gedcom_zip", "the archive cannot be read"))?;
+    let buf = crate::archive::read_limited(&mut f, 512 << 20).map_err(|_| Error::new("gedcom_zip", "the archive cannot be read"))?;
+    drop(f);
     Ok(decode(&buf))
 }
 

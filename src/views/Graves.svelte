@@ -108,7 +108,14 @@
     const dest = seq[seq.length - 1];
     const way = seq.slice(0, -1).map(ll).join('|');
     const url = `https://www.google.com/maps/dir/?api=1&destination=${ll(dest)}${way ? `&waypoints=${encodeURIComponent(way)}` : ''}&travelmode=driving`;
-    window.open(url, '_blank', 'noopener');
+    // a link click: the desktop app opens it in the system browser (window.open would not)
+    const a = document.createElement('a');
+    a.href = url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
   }
 
   /* ---------- map ---------- */

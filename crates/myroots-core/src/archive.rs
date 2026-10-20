@@ -77,13 +77,25 @@ pub fn write_vec(db: &Database, media: &mut dyn MediaSource, app: &str, now: i64
     Ok(write(std::io::Cursor::new(Vec::new()), db, media, app, now)?.into_inner())
 }
 
+/// Largest file read from an archive (protects against "zip bombs").
+const LIMIT: u64 = 1 << 30;
+
+/// Reads a whole entry, but not more than `limit` bytes (and does not trust the declared size).
+pub(crate) fn read_limited(f: &mut impl Read, limit: u64) -> Result<Vec<u8>> {
+    let mut b = Vec::new();
+    f.take(limit + 1).read_to_end(&mut b).map_err(|e| Error::new("archive_invalid", e.to_string()))?;
+    if b.len() as u64 > limit {
+        return Err(Error::new("archive_invalid", "a file in the archive is too large"));
+    }
+    Ok(b)
+}
+
 /// Reads an archive; media are passed to `sink(id, is_thumb, bytes)`.
 pub fn read<R: Read + Seek>(r: R, mut sink: impl FnMut(Id, bool, Vec<u8>) -> Result<()>) -> Result<Database> {
     let mut z = ZipArchive::new(r).map_err(|_| Error::new("archive_invalid", "not a MyRoots archive"))?;
     let manifest: Manifest = {
         let mut f = z.by_name("myroots.json").map_err(|_| Error::new("archive_invalid", "missing myroots.json"))?;
-        let mut s = Vec::new();
-        f.read_to_end(&mut s).map_err(zerr)?;
+        let s = read_limited(&mut f, LIMIT)?;
         serde_json::from_slice(&s).map_err(|e| Error::new("archive_invalid", e.to_string()))?
     };
     if manifest.format != FORMAT {
@@ -95,15 +107,14 @@ pub fn read<R: Read + Seek>(r: R, mut sink: impl FnMut(Id, bool, Vec<u8>) -> Res
     let db = Database::from_records(manifest.records).map_err(|e| Error::new("archive_invalid", e))?;
     for i in 0..z.len() {
         let mut f = z.by_index(i).map_err(zerr)?;
-        let name = f.name().to_string();
+        let name = f.name().map_err(zerr)?.to_string();
         let Some(rest) = name.strip_prefix("media/") else { continue };
         let (id, thumb) = match rest.strip_suffix("_t") {
             Some(x) => (x, true),
             None => (rest, false),
         };
         let Ok(id) = id.parse::<Id>() else { continue };
-        let mut b = Vec::with_capacity(f.size() as usize);
-        f.read_to_end(&mut b).map_err(zerr)?;
+        let b = read_limited(&mut f, LIMIT)?;
         sink(id, thumb, b)?;
     }
     Ok(db)
