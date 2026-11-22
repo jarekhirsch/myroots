@@ -15,6 +15,11 @@
   const people = useLoad(() => summaries());
   const byId = $derived(new Map((people.data || []).map((p) => [p.id, p])));
   let crit = $state<string | null>(null);
+  // big trees can have thousands of findings: render them in pages
+  const STEP = 200;
+  let shownErr = $state(STEP);
+  let shownWarn = $state(STEP);
+  let shownMissing = $state(STEP);
 
   const TYPE: Record<string, () => string> = {
     death_before_birth: () => t('Death before birth'),
@@ -98,10 +103,11 @@
 
 {#snippet group(list: Issue[], sev: string)}
   {#if list.length}
+    {@const limit = sev === 'error' ? shownErr : shownWarn}
     <section class="block">
       <h2>{sev === 'error' ? t('Errors') : t('Warnings')} <span class="muted small">({list.length})</span></h2>
       <div class="list">
-        {#each list as i, k (k)}
+        {#each list.slice(0, limit) as i, k (k)}
           {@const p = byId.get(i.person)}
           <div class="row issue">
             <span class="ic {sev}">{#if sev === 'error'}<Alert size={18} />{:else}<Warn size={18} />{/if}</span>
@@ -113,6 +119,9 @@
           </div>
         {/each}
       </div>
+      {#if list.length > limit}
+        <button class="btn sm more" onclick={() => (sev === 'error' ? (shownErr += STEP * 5) : (shownWarn += STEP * 5))}>{t('Show more (%d left)', list.length - limit)}</button>
+      {/if}
     </section>
   {/if}
 {/snippet}
@@ -161,8 +170,11 @@
         {#if crit}
           <h3 class="ml">{CRIT[crit]?.()}</h3>
           <div class="chips">
-            {#each missingList as p (p.id)}<a class="tag" href="#/person/{p.id}/edit">{p.name}</a>{/each}
+            {#each missingList.slice(0, shownMissing) as p (p.id)}<a class="tag" href="#/person/{p.id}/edit">{p.name}</a>{/each}
           </div>
+          {#if missingList.length > shownMissing}
+            <button class="btn sm more" onclick={() => (shownMissing += STEP * 5)}>{t('Show more (%d left)', missingList.length - shownMissing)}</button>
+          {/if}
         {/if}
       </section>
       <section class="panel">
@@ -182,6 +194,9 @@
 </div>
 
 <style>
+  .more {
+    margin-top: 10px;
+  }
   .ok {
     display: flex;
     gap: 10px;

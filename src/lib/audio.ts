@@ -4,6 +4,8 @@
 import { backend } from './backend';
 import type { Media } from './types';
 import { call } from './api.svelte';
+import { withProgress } from './ui.svelte';
+import { t } from './i18n/index.svelte';
 
 /** Larger files are refused (a long interview in MP3 is ~1 MB a minute). */
 export const MAX_AUDIO_BYTES = 80 * 1024 * 1024;
@@ -25,7 +27,7 @@ async function mimeOf(id: number): Promise<string> {
 
 /** A URL for <audio src>. */
 export async function audioUrl(id: number): Promise<string> {
-  if (backend.platform === 'viewer') return backend.mediaUrl(id, false);
+  if (backend.platform === 'viewer') return backend.mediaUrlAsync ? backend.mediaUrlAsync(id, false) : backend.mediaUrl(id, false);
   const cached = urls.get(id);
   if (cached) return cached;
   const bytes = await backend.mediaBytes(id, false);
@@ -45,7 +47,7 @@ function guessMime(f: File): string {
 export async function storeAudio(blob: Blob, fileName: string, mime?: string): Promise<number> {
   if (blob.size > MAX_AUDIO_BYTES) throw Object.assign(new Error('too large'), { code: 'audio_too_large' });
   const type = (mime || blob.type || 'audio/mpeg').split(';')[0];
-  const id = await backend.addMedia({ original: new Uint8Array(await blob.arrayBuffer()), thumb: null, fileName, mime: type, width: 0, height: 0 });
+  const id = await withProgress(t('Adding the recording…'), async () => backend.addMedia({ original: new Uint8Array(await blob.arrayBuffer()), thumb: null, fileName, mime: type, width: 0, height: 0 }));
   mimes?.set(id, type);
   return id;
 }

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { assetUrl } from '../backend/assets';
   // About MyRoots: author, licence, the components it is built with.
   import Modal from './Modal.svelte';
   import { app } from '../api.svelte';
@@ -13,10 +14,10 @@
 <Modal title={t('About MyRoots')} {onclose}>
   <div class="about">
     <div class="id">
-      <img src="./icon.svg" alt="" width="56" height="56" />
+      <img src={assetUrl('icon.svg')} alt="" width="56" height="56" />
       <div>
         <div class="nm">MyRoots <span class="v">{app.info?.version || ''}</span></div>
-        <div class="by">© {YEAR} <a href={authorUrl(medium, 'about')} target="_blank" rel="noopener">{AUTHOR}</a> · <a href={authorUrl(medium, 'about-domain')} target="_blank" rel="noopener">hirsch.fi</a></div>
+        <div class="by">© {YEAR} <a href={authorUrl(medium, 'about')} target="_blank" rel="noopener">{AUTHOR}</a> · <a href={authorUrl(medium, 'about-domain')} target="_blank" rel="noopener">hirsch.lt</a></div>
       </div>
     </div>
 
@@ -29,7 +30,7 @@
 
     <h3>{t('Additional terms (section 7)')}</h3>
     <ul class="terms">
-      <li>{t('The credit “© Jarek Hirsch” with the link to hirsch.fi must stay in this window in every copy and every modified version.')}</li>
+      <li>{t('The credit “© Jarek Hirsch” with the link to hirsch.lt must stay in this window in every copy and every modified version.')}</li>
       <li>{t('A modified version must be clearly marked as different from the original MyRoots.')}</li>
       <li>{t('The licence gives no rights to the name and logo of MyRoots: modified versions use their own.')}</li>
     </ul>

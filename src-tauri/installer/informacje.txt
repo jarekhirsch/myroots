@@ -1,0 +1,27 @@
+﻿MyRoots 3 · © 2026 Jarek Hirsch (https://hirsch.lt)
+
+PL
+
+Licencja: GNU GPL w wersji 3 lub nowszej, z dodatkowymi warunkami opisanymi w pliku NOTICE.md w kodzie źródłowym (https://myroots.cc). Program jest darmowy i dostarczany bez jakiejkolwiek gwarancji.
+
+Prywatność: MyRoots nie ma kont, serwerów ani reklam i nie zbiera żadnych danych. Drzewo, zdjęcia i nagrania zostają na tym komputerze. Program łączy się z internetem tylko wtedy, gdy:
+- włączysz mapę (domyślnie wyłączona): pobiera wtedy fragmenty mapy z OpenStreetMap i wysyła nazwy miejsc do wyszukiwarek Nominatim i Photon, żeby znaleźć współrzędne;
+- korzystasz z historycznej pogody: dla wydarzeń z dokładną datą wysyła do Open-Meteo.com tylko współrzędne miejsca i datę (bez nazwisk i innych danych). Pogodę wyłączysz w Ustawieniach;
+- sprawdza aktualizacje: raz dziennie pobiera z myroots.cc numer najnowszej wersji (bez żadnych danych drzewa); wyłączysz to w Ustawieniach;
+- importujesz zdjęcia z własnej witryny WordPress albo otwierasz linki.
+Pełna polityka prywatności: https://myroots.cc/prywatnosc/
+
+Podpis cyfrowy: darmowe podpisywanie kodu zapewnia SignPath.io, certyfikat wydaje SignPath Foundation (https://myroots.cc/podpisywanie-kodu/).
+
+EN
+
+License: GNU GPL version 3 or later, with the additional terms in NOTICE.md in the source code (https://myroots.cc). The program is free and comes without any warranty.
+
+Privacy: MyRoots has no accounts, servers or ads and collects no data. Your tree, photos and recordings stay on this computer. The program connects to the internet only when:
+- you turn on the map (off by default): map tiles are loaded from OpenStreetMap and place names are sent to the Nominatim and Photon search services to find coordinates;
+- you use the historical weather: for events with an exact date only the coordinates of the place and the date are sent to Open-Meteo.com (no names or other data). The weather can be turned off in the Settings;
+- it checks for updates: once a day it reads the number of the newest version from myroots.cc (without any data of your tree); this can be turned off in the Settings;
+- you import photos from your own WordPress site or open links.
+Full privacy policy: https://myroots.cc/prywatnosc/
+
+Code signing: free code signing provided by SignPath.io, certificate by SignPath Foundation (https://myroots.cc/podpisywanie-kodu/).

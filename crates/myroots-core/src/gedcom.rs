@@ -285,15 +285,54 @@ fn place_coords(n: &Node) -> Option<(String, f64, f64)> {
 
 struct Parsed {
     person: Person,
-    /// field → source xrefs
-    citations: Vec<(String, String)>,
+    /// field → source key (xref or "inline:<title>") with the citation details
+    citations: Vec<(String, String, CitationInfo)>,
+    /// index in `person.events` → source key with details
+    event_cites: Vec<(usize, String, CitationInfo)>,
     sources: Vec<String>,
     coords: Vec<(String, f64, f64)>,
 }
 
+/// Details of a citation (`n SOUR @S1@` with `PAGE`, `QUAY`, `DATA.TEXT`, `NOTE`).
+fn cite_info(s: &Node, c: &Ctx2) -> CitationInfo {
+    let mut notes: Vec<String> = vec![];
+    if let Some(d) = s.child("DATA") {
+        for t in d.all("TEXT") {
+            let v = t.value.trim();
+            if !v.is_empty() {
+                notes.push(v.to_string());
+            }
+        }
+    }
+    // GEDCOM 5.5.1 inline source: "n SOUR <title>" + "n+1 TEXT …"
+    for t in s.all("TEXT") {
+        let v = t.value.trim();
+        if !v.is_empty() {
+            notes.push(v.to_string());
+        }
+    }
+    for n in s.all("NOTE") {
+        let v = note_text(n, c);
+        if !v.is_empty() {
+            notes.push(v);
+        }
+    }
+    CitationInfo {
+        page: s.val("PAGE"),
+        quality: s.val("QUAY").trim().parse::<u8>().ok().filter(|q| *q <= 3),
+        note: notes.join("\n\n"),
+    }
+}
+
+/// Citations under a node: source key + details.
+fn cites_of(n: &Node, c: &Ctx2) -> Vec<(String, CitationInfo)> {
+    n.all("SOUR").filter_map(|s| source_key(s).map(|k| (k, cite_info(s, c)))).collect()
+}
+
 fn extract(node: &Node, c: &Ctx2) -> Parsed {
     let mut p = Person::default();
-    let mut cits = vec![];
+    let mut cits: Vec<(String, String, CitationInfo)> = vec![];
+    let mut ev_cits: Vec<(usize, String, CitationInfo)> = vec![];
     let mut coords = vec![];
     // Names: the primary one (first without TYPE married/aka), the married
     // surname (NAME TYPE married or _MARNM) and the birth surname.
@@ -352,15 +391,16 @@ fn extract(node: &Node, c: &Ctx2) -> Parsed {
         "F" => Gender::Female,
         _ => Gender::Unknown,
     };
-    let cite = |n: &Node, fields: &[&str], cits: &mut Vec<(String, String)>| {
-        for s in n.all("SOUR") {
-            if let Some(x) = source_key(s) {
-                for f in fields {
-                    cits.push((f.to_string(), x.clone()));
-                }
+    let cite = |n: &Node, fields: &[&str], cits: &mut Vec<(String, String, CitationInfo)>| {
+        for (k, info) in cites_of(n, c) {
+            for f in fields {
+                cits.push((f.to_string(), k.clone(), info.clone()));
             }
         }
     };
+    if let Some(name) = primary {
+        cite(name, &["name"], &mut cits);
+    }
     if let Some(b) = node.child("BIRT") {
         p.birth_date = date::from_gedcom(&b.val("DATE"));
         p.birth_place = place_of(b);
@@ -371,27 +411,40 @@ fn extract(node: &Node, c: &Ctx2) -> Parsed {
         p.death_date = date::from_gedcom(&d.val("DATE"));
         p.death_place = place_of(d);
         p.death_cause = d.val("CAUS");
-        cite(d, &["death_date", "death_place"], &mut cits);
+        let fields: &[&str] = if p.death_cause.is_empty() { &["death_date", "death_place"] } else { &["death_date", "death_place", "death_cause"] };
+        cite(d, fields, &mut cits);
         coords.extend(place_coords(d));
     }
     // "1 DEAT Y", or a burial: died, date unknown
     p.deceased = p.death_date.is_empty()
         && (node.child("DEAT").map(|d| !d.value.trim().eq_ignore_ascii_case("N")).unwrap_or(false) || node.child("BURI").is_some() || node.child("CREM").is_some());
     p.occupation = node.all("OCCU").map(|o| o.value.trim().to_string()).filter(|s| !s.is_empty()).collect::<Vec<_>>().join(", ");
-    if let Some(o) = node.child("OCCU") {
+    for o in node.all("OCCU") {
         cite(o, &["occupation"], &mut cits);
     }
     p.education = node.val("EDUC");
     p.faith = node.val("RELI");
-    // MyRoots writes the free notes as a NOTE marked "_TYPE notes"; every other NOTE is the biography
+    if let Some(e) = node.child("EDUC") {
+        cite(e, &["education"], &mut cits);
+    }
+    if let Some(r) = node.child("RELI") {
+        cite(r, &["faith"], &mut cits);
+    }
+    // MyRoots writes the free notes as a NOTE marked "_TYPE notes" and the
+    // unconfirmed information as "_TYPE research"; every other NOTE is the biography
     let is_free = |n: &&Node| n.val("_TYPE").eq_ignore_ascii_case("notes");
-    let notes: Vec<String> = node.all("NOTE").filter(|n| !is_free(n)).map(|n| note_text(n, c)).filter(|s| !s.is_empty()).collect();
+    let is_research = |n: &&Node| n.val("_TYPE").eq_ignore_ascii_case("research");
+    let notes: Vec<String> = node.all("NOTE").filter(|n| !is_free(n) && !is_research(n)).map(|n| note_text(n, c)).filter(|s| !s.is_empty()).collect();
     if !notes.is_empty() {
         p.biography = text_to_html(&notes.join("\n\n"));
     }
     let free: Vec<String> = node.all("NOTE").filter(is_free).map(|n| note_text(n, c)).filter(|s| !s.is_empty()).collect();
     if !free.is_empty() {
         p.notes = text_to_html(&free.join("\n\n"));
+    }
+    let research: Vec<String> = node.all("NOTE").filter(is_research).map(|n| note_text(n, c)).filter(|s| !s.is_empty()).collect();
+    if !research.is_empty() {
+        p.research = text_to_html(&research.join("\n\n"));
     }
     for a in node.all("_ATTR") {
         let v = a.value.trim().to_string();
@@ -422,16 +475,30 @@ fn extract(node: &Node, c: &Ctx2) -> Parsed {
             continue;
         }
         coords.extend(place_coords(ev));
+        for (k, info) in cites_of(ev, c) {
+            ev_cits.push((p.events.len(), k, info));
+        }
         p.events.push(LifeEvent {
             name,
             date: date::from_gedcom(&ev.val("DATE")),
             place: place_of(ev),
             description: text_to_html(&desc),
             image: None,
+            citations: vec![],
         });
     }
     for (tag, def) in STD_EVENTS {
         for ev in node.all(tag) {
+            // a residence without a date is the address of the person
+            if *tag == "RESI" && p.residence.is_empty() && ev.val("DATE").is_empty() {
+                let at = place_of(ev);
+                let at = if at.is_empty() { ev.value.trim().to_string() } else { at };
+                if !at.is_empty() && at != "Y" {
+                    p.residence = at;
+                    cite(ev, &["residence"], &mut cits);
+                    continue;
+                }
+            }
             let name = c.opts.event_names.get(*tag).cloned().unwrap_or_else(|| def.to_string());
             let note = ev.child("NOTE").map(|n| note_text(n, c)).unwrap_or_default();
             let value = ev.value.trim();
@@ -445,11 +512,15 @@ fn extract(node: &Node, c: &Ctx2) -> Parsed {
                 desc = if desc.is_empty() { note } else { format!("{desc}\n\n{note}") };
             }
             coords.extend(place_coords(ev));
-            p.events.push(LifeEvent { name, date: date::from_gedcom(&ev.val("DATE")), place: place_of(ev), description: text_to_html(&desc), image: None });
+            for (k, info) in cites_of(ev, c) {
+                ev_cits.push((p.events.len(), k, info));
+            }
+            p.events.push(LifeEvent { name, date: date::from_gedcom(&ev.val("DATE")), place: place_of(ev), description: text_to_html(&desc), image: None, citations: vec![] });
         }
     }
     // the burial place is also the grave
     if let Some(b) = node.child("BURI") {
+        cite(b, &["burial"], &mut cits);
         p.grave.cemetery = place_of(b);
         if let Some((_, lat, lng)) = place_coords(b) {
             p.grave.lat = Some(lat);
@@ -457,19 +528,34 @@ fn extract(node: &Node, c: &Ctx2) -> Parsed {
         }
     }
     let sources: Vec<String> = node.all("SOUR").filter_map(source_key).collect();
-    Parsed { person: p, citations: cits, sources, coords }
+    p.ext_ids = ext_ids(node);
+    Parsed { person: p, citations: cits, event_cites: ev_cits, sources, coords }
 }
 
 /// Merges parsed values into an existing person (no overwrite with empty values).
 fn merge_into(base: &mut Person, parsed: &Person) {
+    let (old_birth, old_death) = (base.birth_date.clone(), base.death_date.clone());
     macro_rules! f {
         ($($x:ident),*) => {$(
             if !parsed.$x.is_empty() { base.$x = parsed.$x.clone(); }
         )*};
     }
-    f!(first_name, last_name, maiden_name, birth_date, birth_place, death_date, death_place, death_cause, occupation, education, faith, height, eye_color, blood_type, biography, notes, grave);
+    f!(first_name, last_name, maiden_name, birth_date, birth_place, death_date, death_place, death_cause, occupation, education, faith, height, eye_color, blood_type, biography, notes, research, residence, grave);
+    // a more exact date entered in MyRoots stays ("1902-04-11" over "about 1902")
+    let exact = |d: &str| d.len() == 10 && !d.starts_with(['~', '<', '>']);
+    if exact(&old_birth) && !exact(&base.birth_date) && dates_agree(&old_birth, &base.birth_date).is_some() {
+        base.birth_date = old_birth;
+    }
+    if exact(&old_death) && !exact(&base.death_date) && dates_agree(&old_death, &base.death_date).is_some() {
+        base.death_date = old_death;
+    }
     if parsed.deceased && base.death_date.is_empty() {
         base.deceased = true;
+    }
+    for e in &parsed.ext_ids {
+        if !base.ext_ids.contains(e) {
+            base.ext_ids.push(e.clone());
+        }
     }
     if parsed.gender.is_known() || base.gender == Gender::Unset {
         base.gender = parsed.gender;
@@ -480,32 +566,137 @@ fn merge_into(base: &mut Person, parsed: &Person) {
         }
     }
     for e in &parsed.events {
-        if !base.events.iter().any(|x| x.name == e.name && x.date == e.date && x.description == e.description) {
-            base.events.push(e.clone());
+        match base.events.iter_mut().find(|x| x.name == e.name && x.date == e.date && x.description == e.description) {
+            Some(x) => {
+                for c in &e.citations {
+                    if !x.citations.iter().any(|y| y.source == c.source) {
+                        x.citations.push(c.clone());
+                    }
+                }
+            }
+            None => base.events.push(e.clone()),
         }
     }
 }
 
+/// Id of a source cited in the file: a SOUR record, or an inline source
+/// ("1 SOUR Parish register of …"), which becomes a source record.
+fn resolve_source(db: &mut Database, ctx: &Ctx, known: &mut HashMap<String, Id>, by_title: &mut HashMap<String, Id>, rep: &mut ImportReport, key: &str) -> Result<Option<Id>> {
+    if let Some(id) = known.get(key) {
+        return Ok(Some(*id));
+    }
+    let Some(title) = key.strip_prefix("inline:") else { return Ok(None) };
+    let id = match by_title.get(&norm(title)) {
+        Some(id) => *id,
+        None => {
+            rep.sources += 1;
+            let id = ops::save_source(db, ctx, Source { title: title.to_string(), ..Default::default() })?;
+            by_title.insert(norm(title), id);
+            id
+        }
+    };
+    known.insert(key.to_string(), id);
+    Ok(Some(id))
+}
+
 /// A person already in the tree before this import (`taken`: people created
 /// or matched by this import, so two records of one file never collapse).
-fn find_existing(db: &Database, by_name: &HashMap<String, Vec<Id>>, p: &Person, taken: &HashSet<Id>) -> Option<Id> {
-    let title = norm(&format!("{} {}", p.first_name, p.last_name));
-    if title.is_empty() {
+/// Existing people by name (first name + surname, also + maiden name) and
+/// by identifiers of other programs, for imports into a tree that is not empty.
+struct Matcher {
+    by_name: HashMap<String, Vec<Id>>,
+    by_ext: HashMap<String, Id>,
+}
+
+impl Matcher {
+    fn new(db: &Database) -> Matcher {
+        let mut by_name: HashMap<String, Vec<Id>> = HashMap::new();
+        let mut by_ext = HashMap::new();
+        for p in db.persons.values() {
+            for k in name_keys(p) {
+                let v = by_name.entry(k).or_default();
+                if !v.contains(&p.id) {
+                    v.push(p.id);
+                }
+            }
+            for e in &p.ext_ids {
+                by_ext.insert(e.clone(), p.id);
+            }
+        }
+        Matcher { by_name, by_ext }
+    }
+}
+
+fn name_keys(p: &Person) -> Vec<String> {
+    let f = p.first_name.trim();
+    let mut v: Vec<String> = [p.last_name.trim(), p.maiden_name.trim()].iter().map(|l| norm(&format!("{f} {l}"))).filter(|k| !k.trim().is_empty()).collect();
+    v.dedup();
+    v
+}
+
+/// Identifiers of a person in the program that wrote the file.
+fn ext_ids(node: &Node) -> Vec<String> {
+    let mut v = vec![];
+    for tag in ["_UID", "UID", "RIN", "REFN", "EXID", "AFN", "_FSFTID"] {
+        for n in node.all(tag) {
+            let x = n.value.trim();
+            if !x.is_empty() && x.len() <= 120 {
+                v.push(format!("{tag}:{x}"));
+            }
+        }
+    }
+    v
+}
+
+/// Two dates can describe the same event: one is missing, or the years
+/// differ by at most one (estimates, "about"), and full dates are equal.
+fn dates_agree(a: &str, b: &str) -> Option<u32> {
+    if a.is_empty() || b.is_empty() {
+        return Some(0);
+    }
+    if a == b {
+        return Some(3);
+    }
+    let (ya, yb) = (crate::date::year(a)?, crate::date::year(b)?);
+    if (ya - yb).abs() > 1 {
         return None;
     }
-    let cands: Vec<&Person> = by_name.get(&title).into_iter().flatten().filter(|x| !taken.contains(x)).filter_map(|x| db.persons.get(x)).collect();
-    if cands.is_empty() {
+    // two exact, different days are different people
+    let exact = |d: &str| d.len() == 10 && d.chars().all(|c| c.is_ascii_digit() || c == '-');
+    if exact(a) && exact(b) {
         return None;
     }
-    if !p.birth_date.is_empty() {
-        return cands.iter().find(|x| x.birth_date == p.birth_date).map(|x| x.id);
+    Some(if ya == yb { 2 } else { 1 })
+}
+
+fn find_existing(db: &Database, m: &Matcher, p: &Person, taken: &HashSet<Id>) -> Option<Id> {
+    for e in &p.ext_ids {
+        if let Some(id) = m.by_ext.get(e) {
+            if !taken.contains(id) && db.persons.contains_key(id) {
+                return Some(*id);
+            }
+        }
     }
-    if cands.len() == 1 {
-        return Some(cands[0].id);
+    let mut cands: Vec<Id> = name_keys(p).iter().flat_map(|k| m.by_name.get(k).into_iter().flatten().copied()).filter(|x| !taken.contains(x)).collect();
+    cands.sort_unstable();
+    cands.dedup();
+    let mut best: Option<(u32, Id)> = None;
+    for id in cands {
+        let Some(x) = db.persons.get(&id) else { continue };
+        if p.gender.is_known() && x.gender.is_known() && p.gender != x.gender {
+            continue;
+        }
+        let (Some(b), Some(d)) = (dates_agree(&p.birth_date, &x.birth_date), dates_agree(&p.death_date, &x.death_date)) else { continue };
+        let mut score = 1 + b * 3 + d * 2;
+        if !p.birth_place.is_empty() && norm(&p.birth_place) == norm(&x.birth_place) {
+            score += 2;
+        }
+        // the oldest record first among equals (re-imported files keep the order)
+        if best.map(|(s, bid)| score > s || (score == s && id < bid)).unwrap_or(true) {
+            best = Some((score, id));
+        }
     }
-    // Namesakes without a birth date: pair them in order (a re-imported file
-    // lists them in the same order), oldest record first.
-    cands.iter().filter(|x| x.birth_date.is_empty()).map(|x| x.id).min()
+    best.map(|(_, id)| id)
 }
 
 pub fn import(db: &mut Database, ctx: &Ctx, text: &str, opts: &ImportOptions) -> Result<ImportReport> {
@@ -539,6 +730,7 @@ pub fn import(db: &mut Database, ctx: &Ctx, text: &str, opts: &ImportOptions) ->
     };
 
     // Sources
+    let mut by_title: HashMap<String, Id> = db.sources.values().map(|x| (norm(&x.title), x.id)).collect();
     for s in src_nodes {
         let title = {
             let t = s.val("TITL");
@@ -556,7 +748,7 @@ pub fn import(db: &mut Database, ctx: &Ctx, text: &str, opts: &ImportOptions) ->
         if title.is_empty() {
             continue;
         }
-        let existing = db.sources.values().find(|x| norm(&x.title) == norm(&title)).map(|x| x.id);
+        let existing = by_title.get(&norm(&title)).copied();
         let id = match existing {
             Some(id) => id,
             None => {
@@ -576,17 +768,17 @@ pub fn import(db: &mut Database, ctx: &Ctx, text: &str, opts: &ImportOptions) ->
                 let url = s.all("_LINK").chain(s.all("WWW")).map(|n| n.value.trim().to_string()).find(|v| !v.is_empty()).unwrap_or_default();
                 let date = s.child("DATA").and_then(|d| d.child("EVEN")).map(|e| date::from_gedcom(&e.val("DATE"))).unwrap_or_default();
                 rep.sources += 1;
-                ops::save_source(db, ctx, Source { title, url, notes: notes.join("\n"), date, ..Default::default() })?
+                let key = norm(&title);
+                let id = ops::save_source(db, ctx, Source { title, url, notes: notes.join("\n"), date, ..Default::default() })?;
+                by_title.insert(key, id);
+                id
             }
         };
         c.sources.insert(s.xref.clone().unwrap_or_default(), id);
     }
 
     // People
-    let mut by_name: HashMap<String, Vec<Id>> = HashMap::new();
-    for p in db.persons.values() {
-        by_name.entry(norm(&p.full_name())).or_default().push(p.id);
-    }
+    let matcher = Matcher::new(db);
     let indi_by_x: HashMap<&str, &Node> = indi.iter().filter_map(|n| n.xref.as_deref().map(|x| (x, *n))).collect();
     let mut xmap: HashMap<String, Id> = HashMap::new();
     let mut taken: HashSet<Id> = HashSet::new();
@@ -599,22 +791,21 @@ pub fn import(db: &mut Database, ctx: &Ctx, text: &str, opts: &ImportOptions) ->
             rep.warnings.push(("indi_no_name".into(), format!("@{xref}@")));
             continue;
         }
-        // inline sources ("1 SOUR Parish register of …") become source records
-        for key in parsed.citations.iter().map(|(_, k)| k).chain(parsed.sources.iter()) {
-            let Some(title) = key.strip_prefix("inline:") else { continue };
-            if c.sources.contains_key(key) {
-                continue;
+        // sources of the person: SOUR records and inline sources
+        let mut resolved: HashMap<String, Id> = HashMap::new();
+        for key in parsed.citations.iter().map(|(_, k, _)| k).chain(parsed.event_cites.iter().map(|(_, k, _)| k)).chain(parsed.sources.iter()) {
+            if let Some(id) = resolve_source(db, ctx, &mut c.sources, &mut by_title, &mut rep, key)? {
+                resolved.insert(key.clone(), id);
             }
-            let id = match db.sources.values().find(|x| norm(&x.title) == norm(title)).map(|x| x.id) {
-                Some(id) => id,
-                None => {
-                    rep.sources += 1;
-                    ops::save_source(db, ctx, Source { title: title.to_string(), ..Default::default() })?
-                }
-            };
-            c.sources.insert(key.clone(), id);
         }
-        let existing = if mode == "new" { None } else { find_existing(db, &by_name, &p, &taken) };
+        for (i, key, info) in &parsed.event_cites {
+            if let (Some(sid), Some(ev)) = (resolved.get(key), p.events.get_mut(*i)) {
+                if !ev.citations.iter().any(|x| x.source == *sid) {
+                    ev.citations.push(Citation::new(*sid, info.clone()));
+                }
+            }
+        }
+        let existing = if mode == "new" { None } else { find_existing(db, &matcher, &p, &taken) };
         if let Some(id) = existing {
             taken.insert(id);
         }
@@ -644,18 +835,21 @@ pub fn import(db: &mut Database, ctx: &Ctx, text: &str, opts: &ImportOptions) ->
         // citations + general source links
         if !parsed.citations.is_empty() {
             let mut person = db.persons[&id].clone();
-            for (field, sx) in &parsed.citations {
-                if let Some(sid) = c.sources.get(sx) {
+            for (field, sx, info) in &parsed.citations {
+                if let Some(sid) = resolved.get(sx) {
                     let e = person.citations.entry(field.clone()).or_default();
                     if !e.contains(sid) {
                         e.push(*sid);
+                    }
+                    if !info.is_empty() {
+                        person.citation_info.entry(citation_key(field, *sid)).or_insert_with(|| info.clone());
                     }
                 }
             }
             db.put_person(person);
         }
         for sx in &parsed.sources {
-            if let Some(sid) = c.sources.get(sx) {
+            if let Some(sid) = resolved.get(sx) {
                 let mut s = db.sources[sid].clone();
                 if !s.persons.contains(&id) {
                     s.persons.push(id);
@@ -684,7 +878,13 @@ pub fn import(db: &mut Database, ctx: &Ctx, text: &str, opts: &ImportOptions) ->
             for ev in f.all(tag) {
                 let name = c.opts.event_names.get(*tag).cloned().unwrap_or_else(|| def.to_string());
                 let note = ev.child("NOTE").map(|n| note_text(n, &c)).unwrap_or_default();
-                fam_events.push(LifeEvent { name, date: date::from_gedcom(&ev.val("DATE")), place: place_of(ev), description: text_to_html(&note), image: None });
+                let mut cites = vec![];
+                for (k, info) in cites_of(ev, &c) {
+                    if let Some(sid) = resolve_source(db, ctx, &mut c.sources, &mut by_title, &mut rep, &k)? {
+                        cites.push(Citation::new(sid, info));
+                    }
+                }
+                fam_events.push(LifeEvent { name, date: date::from_gedcom(&ev.val("DATE")), place: place_of(ev), description: text_to_html(&note), image: None, citations: cites });
             }
         }
         for ev in f.all("EVEN").chain(f.all("FACT")) {
@@ -693,7 +893,13 @@ pub fn import(db: &mut Database, ctx: &Ctx, text: &str, opts: &ImportOptions) ->
                 continue;
             }
             let note = ev.child("NOTE").map(|n| note_text(n, &c)).unwrap_or_default();
-            fam_events.push(LifeEvent { name, date: date::from_gedcom(&ev.val("DATE")), place: place_of(ev), description: text_to_html(&note), image: None });
+            let mut cites = vec![];
+            for (k, info) in cites_of(ev, &c) {
+                if let Some(sid) = resolve_source(db, ctx, &mut c.sources, &mut by_title, &mut rep, &k)? {
+                    cites.push(Citation::new(sid, info));
+                }
+            }
+            fam_events.push(LifeEvent { name, date: date::from_gedcom(&ev.val("DATE")), place: place_of(ev), description: text_to_html(&note), image: None, citations: cites });
         }
         if !fam_events.is_empty() {
             for pid in [husb, wife].into_iter().flatten() {
@@ -707,9 +913,21 @@ pub fn import(db: &mut Database, ctx: &Ctx, text: &str, opts: &ImportOptions) ->
             }
         }
         let mut touched = false;
+        // sources of the marriage (MARR.SOUR) and of the family record (FAM.SOUR)
+        let mut union_cites: Vec<Citation> = vec![];
+        for n in marr.into_iter().chain(std::iter::once(*f)) {
+            for (k, info) in cites_of(n, &c) {
+                if let Some(sid) = resolve_source(db, ctx, &mut c.sources, &mut by_title, &mut rep, &k)? {
+                    if !union_cites.iter().any(|x| x.source == sid) {
+                        union_cites.push(Citation::new(sid, info));
+                    }
+                }
+            }
+        }
         if let (Some(h), Some(w)) = (husb, wife) {
             if h != w {
                 let u = Union {
+                    citations: union_cites.clone(),
                     date: marr.map(|m| date::from_gedcom(&m.val("DATE"))).unwrap_or_default(),
                     place: marr.map(place_of).unwrap_or_default(),
                     end_date: div.map(|d| date::from_gedcom(&d.val("DATE"))).unwrap_or_default(),
@@ -1004,16 +1222,33 @@ pub fn export(db: &Database, ctx: &Ctx, o: &ExportOptions) -> String {
     }
     const ATTRS: [&str; 4] = ["TITL", "NATI", "DSCR", "PROP"];
 
+    let by_name = db.places_by_name();
     let plac = |level: usize, name: &str| -> String {
         if name.is_empty() {
             return String::new();
         }
         let mut s = format!("{level} PLAC {}\n", gv(name));
         if o.places {
-            if let Some(p) = db.place_by_name(name) {
+            if let Some(p) = by_name.get(&name.trim().to_lowercase()) {
                 if let (Some(lat), Some(lng)) = (p.lat, p.lng) {
                     s += &format!("{} MAP\n{} LATI {}{:.6}\n{} LONG {}{:.6}\n", level + 1, level + 2, if lat < 0.0 { 'S' } else { 'N' }, lat.abs(), level + 2, if lng < 0.0 { 'W' } else { 'E' }, lng.abs());
                 }
+            }
+        }
+        s
+    };
+    // "n SOUR @S1@" with PAGE, QUAY and a NOTE of the citation
+    let cite_block = |level: usize, sid: Id, info: Option<&CitationInfo>| -> String {
+        let mut s = format!("{level} SOUR @S{sid}@\n");
+        if let Some(i) = info {
+            if !i.page.trim().is_empty() {
+                s += &gline(level + 1, "PAGE", &i.page);
+            }
+            if let Some(q) = i.quality {
+                s += &format!("{} QUAY {}\n", level + 1, q.min(3));
+            }
+            if !i.note.trim().is_empty() {
+                s += &gnote(&i.note, level + 1, "NOTE");
             }
         }
         s
@@ -1022,18 +1257,34 @@ pub fn export(db: &Database, ctx: &Ctx, o: &ExportOptions) -> String {
         if !o.sources {
             return String::new();
         }
-        let mut ids: Vec<Id> = vec![];
+        let mut ids: Vec<(Id, Option<&CitationInfo>)> = vec![];
         for f in fields {
             if let Some(v) = p.citations.get(*f) {
                 for i in v {
-                    if !ids.contains(i) && db.sources.contains_key(i) {
-                        ids.push(*i);
+                    if !db.sources.contains_key(i) {
+                        continue;
+                    }
+                    let info = p.citation_info.get(&citation_key(f, *i));
+                    match ids.iter_mut().find(|(x, _)| x == i) {
+                        Some(e) => {
+                            if e.1.is_none() {
+                                e.1 = info;
+                            }
+                        }
+                        None => ids.push((*i, info)),
                     }
                 }
             }
         }
-        ids.iter().map(|i| format!("{level} SOUR @S{i}@\n")).collect()
+        ids.iter().map(|(i, info)| cite_block(level, *i, *info)).collect()
     };
+    let cites_list = |list: &[Citation], level: usize| -> String {
+        if !o.sources {
+            return String::new();
+        }
+        list.iter().filter(|c| db.sources.contains_key(&c.source)).map(|c| cite_block(level, c.source, Some(&c.info()))).collect()
+    };
+    let ix = db.index();
 
     for p in persons.values() {
         out += &format!("0 @I{}@ INDI\n", p.id);
@@ -1055,9 +1306,11 @@ pub fn export(db: &Database, ctx: &Ctx, o: &ExportOptions) -> String {
         };
         if !m.is_empty() && norm(&m) != norm(&l) {
             out += &name(&m, "birth");
+            out += &cites(p, &["name"], 2);
             out += &name(&l, "married");
         } else {
             out += &name(&l, "");
+            out += &cites(p, &["name"], 2);
         }
         out += &format!("1 SEX {}\n", match p.gender { Gender::Male => "M", Gender::Female => "F", _ => "U" });
         if !p.birth_date.is_empty() || !p.birth_place.is_empty() {
@@ -1077,7 +1330,7 @@ pub fn export(db: &Database, ctx: &Ctx, o: &ExportOptions) -> String {
             if !p.death_cause.is_empty() {
                 out += &format!("2 CAUS {}\n", gv(&p.death_cause));
             }
-            out += &cites(p, &["death_date", "death_place"], 2);
+            out += &cites(p, &["death_date", "death_place", "death_cause"], 2);
         } else if p.deceased {
             out += "1 DEAT Y\n";
         }
@@ -1092,6 +1345,11 @@ pub fn export(db: &Database, ctx: &Ctx, o: &ExportOptions) -> String {
         if !p.faith.is_empty() {
             out += &gline(1, "RELI", &p.faith);
             out += &cites(p, &["faith"], 2);
+        }
+        if !p.residence.is_empty() {
+            out += "1 RESI\n";
+            out += &gline(2, "ADDR", &p.residence);
+            out += &cites(p, &["residence"], 2);
         }
         if o.attrs {
             for (v, t) in [(&p.height, "HEIGHT"), (&p.eye_color, "EYE_COLOR"), (&p.blood_type, "BLOOD")] {
@@ -1125,10 +1383,15 @@ pub fn export(db: &Database, ctx: &Ctx, o: &ExportOptions) -> String {
             if !d.is_empty() {
                 out += &gnote(&d, 2, "NOTE");
             }
+            out += &cites_list(&e.citations, 2);
+            // sources of the grave go with a burial event
+            if std_tag.get(&norm(&name)).copied() == Some("BURI") {
+                out += &cites(p, &["burial"], 2);
+            }
         }
         // the grave as a burial, unless a burial event says it already
         let g = &p.grave;
-        if (!g.cemetery.is_empty() || g.lat.is_some()) && !p.events.iter().any(|e| std_tag.get(&norm(&gv(&e.name))).copied() == Some("BURI")) {
+        if (!g.cemetery.is_empty() || g.lat.is_some() || p.citations.contains_key("burial")) && !p.events.iter().any(|e| std_tag.get(&norm(&gv(&e.name))).copied() == Some("BURI")) {
             out += "1 BURI\n";
             if !g.cemetery.is_empty() {
                 out += &gline(2, "PLAC", &g.cemetery);
@@ -1142,6 +1405,7 @@ pub fn export(db: &Database, ctx: &Ctx, o: &ExportOptions) -> String {
             if !g.location.is_empty() {
                 out += &gnote(&g.location, 2, "NOTE");
             }
+            out += &cites(p, &["burial"], 2);
         }
         if let Some(x) = famc.get(&p.id) {
             out += &format!("1 FAMC @{x}@\n");
@@ -1174,10 +1438,15 @@ pub fn export(db: &Database, ctx: &Ctx, o: &ExportOptions) -> String {
                 out += &gnote(&n, 1, "NOTE");
                 out += "2 _TYPE notes\n";
             }
+            let r = strip_tags(&p.research);
+            if !r.trim().is_empty() {
+                out += &gnote(&r, 1, "NOTE");
+                out += "2 _TYPE research\n";
+            }
         }
         if o.sources {
-            for s in db.sources.values().filter(|s| s.persons.contains(&p.id)) {
-                out += &format!("1 SOUR @S{}@\n", s.id);
+            for sid in ix.sources_of(p.id) {
+                out += &format!("1 SOUR @S{sid}@\n");
             }
         }
         if o.media {
@@ -1215,6 +1484,10 @@ pub fn export(db: &Database, ctx: &Ctx, o: &ExportOptions) -> String {
                     out += &format!("2 DATE {}\n", date::to_gedcom(&u.date));
                 }
                 out += &plac(2, &u.place);
+                out += &cites_list(&u.citations, 2);
+            } else {
+                // an informal relationship: the sources of the family record
+                out += &cites_list(&u.citations, 1);
             }
             if u.informal {
                 out += "1 _UST PARTNERS\n";
@@ -1313,6 +1586,74 @@ mod tests {
 
     const SAMPLE: &str = "0 HEAD\n1 CHAR UTF-8\n0 @N1@ NOTE Shared note\n1 CONT second line\n0 @S1@ SOUR\n1 TITL Parish book\n0 @I1@ INDI\n1 NAME Jan /Kowalski/\n1 SEX M\n1 BIRT\n2 DATE ABT 1900\n2 PLAC Kraków\n3 MAP\n4 LATI N50.06\n4 LONG E19.94\n2 SOUR @S1@\n1 NOTE @N1@\n1 BURI\n2 DATE 1970\n1 FAMS @F1@\n0 @I2@ INDI\n1 NAME Anna /Nowak/\n1 SEX F\n1 FAMS @F1@\n0 @I3@ INDI\n1 NAME Ewa /Kowalska/\n1 SEX F\n1 FAMC @F1@\n2 PEDI adopted\n0 @F1@ FAM\n1 HUSB @I1@\n1 WIFE @I2@\n1 MARR\n2 DATE 12 JUN 1925\n1 CHIL @I3@\n0 @PET1@ _PET\n1 NAME Burek\n1 _SPECIES dog\n1 _OWNER @I1@\n0 TRLR\n";
 
+    const CITED: &str = "0 HEAD\n1 CHAR UTF-8\n0 @S1@ SOUR\n1 TITL Księga urodzeń\n0 @S2@ SOUR\n1 TITL Księga ślubów\n0 @I1@ INDI\n1 NAME Jan /Kowalski/\n2 SOUR @S1@\n1 SEX M\n1 BIRT\n2 DATE 3 MAR 1900\n2 PLAC Kraków\n2 SOUR @S1@\n3 PAGE akt 112\n3 QUAY 3\n3 DATA\n4 TEXT Jan, syn Józefa\n1 OCCU kowal\n2 SOUR Spis ludności 1921\n3 PAGE s. 4\n1 RESI\n2 DATE 1930\n2 PLAC Tarnów\n2 SOUR @S1@\n3 PAGE k. 7\n1 BURI\n2 PLAC Cmentarz Rakowicki\n2 SOUR @S1@\n1 FAMS @F1@\n0 @I2@ INDI\n1 NAME Anna /Nowak/\n1 SEX F\n1 FAMS @F1@\n0 @F1@ FAM\n1 HUSB @I1@\n1 WIFE @I2@\n1 MARR\n2 DATE 1925\n2 SOUR @S2@\n3 PAGE akt 5\n3 QUAY 2\n0 TRLR\n";
+
+    #[test]
+    fn reimport_with_new_people_does_not_duplicate() {
+        let c = Ctx::new(0, NaiveDate::from_ymd_opt(2026, 10, 14).unwrap());
+        let mut db = Database::new(0);
+        let v1 = "0 HEAD\n0 @I1@ INDI\n1 NAME Jan /Kowalski/\n1 SEX M\n1 _UID AAA1\n1 FAMS @F1@\n0 @I2@ INDI\n1 NAME Anna /Nowak/\n1 SEX F\n1 BIRT\n2 DATE ABT 1902\n1 FAMS @F1@\n0 @F1@ FAM\n1 HUSB @I1@\n1 WIFE @I2@\n0 TRLR\n";
+        import(&mut db, &c, v1, &ImportOptions::default()).unwrap();
+        // the user corrects data in MyRoots
+        let anna = db.persons.values().find(|p| p.first_name == "Anna").unwrap().id;
+        let mut a = db.persons[&anna].clone();
+        a.birth_date = "1902-04-11".into();
+        db.put_person(a);
+        // a newer file from the other program: Jan renamed there, a birth date
+        // where there was none, Anna with "about", and a new child
+        let v2 = "0 HEAD\n0 @I1@ INDI\n1 NAME Janek /Kowalski/\n1 SEX M\n1 _UID AAA1\n1 BIRT\n2 DATE 1899\n1 FAMS @F1@\n0 @I2@ INDI\n1 NAME Anna /Nowak/\n1 SEX F\n1 BIRT\n2 DATE ABT 1902\n1 FAMS @F1@\n0 @I3@ INDI\n1 NAME Piotr /Kowalski/\n1 BIRT\n2 DATE 1925\n1 FAMC @F1@\n0 @F1@ FAM\n1 HUSB @I1@\n1 WIFE @I2@\n1 CHIL @I3@\n0 TRLR\n";
+        let r = import(&mut db, &c, v2, &ImportOptions::default()).unwrap();
+        assert_eq!((r.created, r.updated), (1, 2), "{r:?}");
+        assert_eq!(db.persons.len(), 3);
+        assert_eq!(db.unions.len(), 1);
+        assert_eq!(db.persons[&anna].birth_date, "1902-04-11");
+        let piotr = db.persons.values().find(|p| p.first_name == "Piotr").unwrap();
+        assert_eq!(piotr.mother, Some(anna));
+    }
+
+    #[test]
+    fn citations_of_facts_events_and_marriages() {
+        let c = Ctx::new(0, NaiveDate::from_ymd_opt(2026, 10, 14).unwrap());
+        let check = |db: &Database| {
+            let jan = db.persons.values().find(|p| p.first_name == "Jan").unwrap();
+            let s1 = db.sources.values().find(|s| s.title == "Księga urodzeń").unwrap().id;
+            let s2 = db.sources.values().find(|s| s.title == "Księga ślubów").unwrap().id;
+            let census = db.sources.values().find(|s| s.title == "Spis ludności 1921").unwrap().id;
+            assert_eq!(jan.citations["name"], vec![s1]);
+            assert_eq!(jan.citations["birth_date"], vec![s1]);
+            assert_eq!(jan.citations["birth_place"], vec![s1]);
+            assert_eq!(jan.citations["burial"], vec![s1]);
+            let b = &jan.citation_info[&citation_key("birth_date", s1)];
+            assert_eq!((b.page.as_str(), b.quality), ("akt 112", Some(3)));
+            assert!(b.note.contains("Jan, syn Józefa"));
+            assert_eq!(jan.citations["occupation"], vec![census]);
+            assert_eq!(jan.citation_info[&citation_key("occupation", census)].page, "s. 4");
+            let resi = jan.events.iter().find(|e| e.place == "Tarnów").unwrap();
+            assert_eq!(resi.citations.len(), 1);
+            assert_eq!((resi.citations[0].source, resi.citations[0].page.as_str()), (s1, "k. 7"));
+            let u = db.unions.values().next().unwrap();
+            assert_eq!(u.citations.len(), 1);
+            assert_eq!((u.citations[0].source, u.citations[0].page.as_str(), u.citations[0].quality), (s2, "akt 5", Some(2)));
+        };
+        let mut db = Database::new(0);
+        import(&mut db, &c, CITED, &ImportOptions::default()).unwrap();
+        check(&db);
+        // the same after an export and an import into an empty tree
+        let text = export(&db, &c, &ExportOptions { sources: true, notes: true, places: true, attrs: true, ..Default::default() });
+        assert!(text.contains("3 PAGE akt 112\n3 QUAY 3\n"), "{text}");
+        assert!(text.contains("1 MARR\n2 DATE 1925\n2 SOUR @S"), "{text}");
+        let mut db2 = Database::new(0);
+        import(&mut db2, &c, &text, &ImportOptions::default()).unwrap();
+        check(&db2);
+        // deleting a source removes its citations everywhere
+        let s1 = db.sources.values().find(|s| s.title == "Księga urodzeń").unwrap().id;
+        crate::ops::delete_source(&mut db, s1).unwrap();
+        let jan = db.persons.values().find(|p| p.first_name == "Jan").unwrap();
+        assert!(!jan.citations.contains_key("birth_date"));
+        assert!(jan.citation_info.keys().all(|k| !k.ends_with(&format!("#{s1}"))));
+        assert!(jan.events.iter().all(|e| e.citations.iter().all(|x| x.source != s1)));
+    }
+
     #[test]
     fn roundtrip() {
         let c = Ctx::new(0, NaiveDate::from_ymd_opt(2026, 10, 14).unwrap());
@@ -1408,6 +1749,8 @@ mod tests {
         let mut a = db.persons[&id].clone();
         a.maiden_name = "Kowalska".into();
         a.notes = "<p>Wolne notatki</p>".into();
+        a.research = "<p>Podobno z Wilna</p>".into();
+        a.residence = "ul. Długa 5, Gdańsk".into();
         a.biography = format!("<p>{}</p>", "słowo ".repeat(80));
         a.occupation = "ab@cd".into();
         db.put_person(a);
@@ -1432,6 +1775,9 @@ mod tests {
         import(&mut db2, &c, &out, &ImportOptions::default()).unwrap();
         let b = who(&db2, "Anna");
         assert_eq!((b.last_name.as_str(), b.maiden_name.as_str()), ("Nowak", "Kowalska"));
+        assert_eq!(b.residence, "ul. Długa 5, Gdańsk");
+        assert!(b.research.contains("Podobno z Wilna") && !b.biography.contains("Wilna"));
+        assert!(!b.events.iter().any(|e| e.name == "Residence"));
         assert!(b.deceased);
         assert!(b.notes.contains("Wolne notatki") && !b.biography.contains("Wolne"));
         assert_eq!(strip_tags(&b.biography).trim(), "słowo ".repeat(80).trim());

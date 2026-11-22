@@ -2,6 +2,7 @@
   import { app, call, refreshInfo } from '../lib/api.svelte';
   import { route } from '../lib/router.svelte';
   import { t, tx, LANGUAGES, setLanguage, detectLanguage } from '../lib/i18n/index.svelte';
+  import { canUpdate, checkUpdates, upd } from '../lib/updates.svelte';
   import { toast } from '../lib/ui.svelte';
   import { errorText } from '../lib/errors';
   import { applyAppearance, FONT_KEYS } from '../lib/theme';
@@ -82,6 +83,23 @@
     ['text', () => t('Text'), '#17201b'],
     ['border', () => t('Borders'), '#e3eae5'],
   ];
+  const TREE_COLORS: [keyof Settings['appearance'], () => string, string][] = [
+    ['tree_bg', () => t('Tree background'), '#f6f8f6'],
+    ['tree_line', () => t('Lines between people'), '#b9c6bd'],
+    ['tree_line_main', () => t('Line to the chosen person'), '#c49a6c'],
+  ];
+  const BRANCHES: [() => string, string][] = [
+    [() => t('Father’s father'), '#3f7cc4'],
+    [() => t('Father’s mother'), '#2f9a6b'],
+    [() => t('Mother’s father'), '#c9693c'],
+    [() => t('Mother’s mother'), '#9b59b6'],
+  ];
+  function setBranch(i: number, v: string) {
+    const b = [...(s.appearance.tree_branches || [])];
+    while (b.length < 4) b.push('');
+    b[i] = v.trim();
+    s.appearance.tree_branches = b;
+  }
   const FONTS: Record<string, () => string> = {
     system: () => t('System'),
     serif: () => t('Serif (book)'),
@@ -155,6 +173,25 @@
       </div>
     </div>
     <div class="panel">
+      <h2>{t('Sources')}</h2>
+      <div class="radios">
+        <label class="check"><input type="radio" name="srcmode" value="facts" checked={(s.sources_mode || 'facts') !== 'general'} onchange={() => (s.sources_mode = 'facts')} /> {t('Next to every piece of information')}</label>
+        <p class="hint">{t('In the edit form each fact (birth, death, occupation, events, marriages) has its own Source button with the page or record number, reliability and the text of the record, as in MyHeritage or Gramps.')}</p>
+        <label class="check"><input type="radio" name="srcmode" value="general" checked={s.sources_mode === 'general'} onchange={() => (s.sources_mode = 'general')} /> {t('In one list per person')}</label>
+        <p class="hint">{t('Sources are linked on the Sources tab of the form, with ticks of the facts each source confirms. Quicker for a few sources per person.')}</p>
+      </div>
+      <p class="hint">{t('Both ways keep the same data: you can switch at any time.')}</p>
+    </div>
+    {#if canUpdate()}
+      <div class="panel">
+        <h2>{t('Updates')}</h2>
+        <label class="check"><input type="checkbox" checked={!s.updates_off} onchange={(e) => (s.updates_off = !e.currentTarget.checked)} /> {t('Check for a new version once a day (myroots.cc)')}</label>
+        <p class="hint">{t('Only the version number is read from myroots.cc; nothing about your tree is sent. Updates are signed by the author and installed after you agree.')}</p>
+        <p class="small muted">{t('Installed version: %s', app.info?.version || '')}</p>
+        <button type="button" class="btn sm" onclick={() => checkUpdates(true)} disabled={upd.checking}>{upd.checking ? t('Checking…') : t('Check now')}</button>
+      </div>
+    {/if}
+    <div class="panel">
       <h2>{t('Weather')}</h2>
       <label class="check"><input type="checkbox" checked={!s.weather_off} onchange={(e) => (s.weather_off = !e.currentTarget.checked)} /> {t('Show the weather on the day of events (from Open-Meteo.com)')}</label>
       <p class="hint">{t('For events with an exact date from 1940 on, at places with coordinates. Only the coordinates and the date are sent; the result is kept with the place.')}</p>
@@ -190,6 +227,34 @@
         {/each}
       </div>
       <p class="hint">{t('In the dark theme only the accent color is used, so text stays readable.')}</p>
+    </div>
+    <div class="panel">
+      <h2>{t('Family tree colors')}</h2>
+      <div class="colors">
+        {#each TREE_COLORS as [k, label, def] (k)}
+          <label class="field">
+            <span class="lbl">{label()}</span>
+            <span class="cin">
+              <input type="color" value={(s.appearance[k] as string) || def} oninput={(e) => ((s.appearance as any)[k] = e.currentTarget.value)} />
+              <input type="text" bind:value={s.appearance[k]} placeholder={t('From the theme')} />
+            </span>
+          </label>
+        {/each}
+      </div>
+      <h3 class="sub">{t('Colors of the lines of the grandparents')}</h3>
+      <div class="colors">
+        {#each BRANCHES as [label, def], i (i)}
+          <label class="field">
+            <span class="lbl">{label()}</span>
+            <span class="cin">
+              <input type="color" value={s.appearance.tree_branches?.[i] || def} oninput={(e) => setBranch(i, e.currentTarget.value)} />
+              <input type="text" value={s.appearance.tree_branches?.[i] || ''} placeholder={def} onchange={(e) => setBranch(i, e.currentTarget.value)} />
+            </span>
+          </label>
+        {/each}
+      </div>
+      <p class="hint">{t('The lines of the grandparents are colored in the tree when you choose “Color the lines of the grandparents” above the tree.')}</p>
+      <button class="btn sm ghost" onclick={() => (s.appearance = { ...s.appearance, tree_bg: '', tree_line: '', tree_line_main: '', tree_branches: [] })}>{t('Restore the default tree colors')}</button>
     </div>
     <div class="panel">
       <div class="form-grid">
@@ -449,5 +514,9 @@
     .savebar {
       bottom: calc(var(--tabbar) + env(safe-area-inset-bottom));
     }
+  }
+  h3.sub {
+    font-size: 1rem;
+    margin: 18px 0 8px;
   }
 </style>

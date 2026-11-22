@@ -64,7 +64,7 @@ pub fn nodes(db: &Database, pol: &Policy) -> Vec<Node> {
             continue;
         }
         let anon = pol.should_hide(raw);
-        let (d, _) = pol.redact(raw);
+        let d = pol.view(raw);
         let photo_off = anon || pol.photo_hidden(raw);
         let mut marriages = BTreeMap::new();
         let mut spouses = vec![];

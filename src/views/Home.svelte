@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { assetUrl } from '../lib/backend/assets';
+  import { backend } from '../lib/backend';
   import { app, call, refreshInfo } from '../lib/api.svelte';
   import { useLoad } from '../lib/load.svelte';
   import { t, tn, tx, locale } from '../lib/i18n/index.svelte';
@@ -12,13 +14,18 @@
   import Press from '@lucide/svelte/icons/newspaper';
   import Globe from '@lucide/svelte/icons/globe';
   import Shield from '@lucide/svelte/icons/shield-check';
+  import MapIcon from '@lucide/svelte/icons/map';
   import type { Overview, Anniversary } from '../lib/types';
 
   const viewer = $derived(!!app.info?.viewer);
+  // inside WordPress the tree lives on the site, and the website is published there
+  const wp = !!(window as any).MYROOTS_WP;
+  const server = (window as any).MYROOTS_WP?.host === 'server';
   const sec = $derived(app.info?.sections || {});
   const ov = useLoad(() => call<Overview>('overview'));
   const ann = useLoad(() => call<Anniversary[]>('anniversaries', { days: 45, limit: 3 }));
-  const issues = useLoad(() => (app.info?.viewer ? Promise.resolve([]) : call<any[]>('health.issues')));
+  // only the number is shown here (the list is in Data health)
+  const issues = useLoad(() => (app.info?.viewer ? Promise.resolve({ count: 0 }) : call<{ count: number }>('health.count')));
   let treeName = $state('');
   async function saveName() {
     if (!app.settings) return;
@@ -58,9 +65,9 @@
 <div class="page home">
   {#if ov.data?.empty && !viewer}
     <section class="welcome">
-      <img src="./icon.svg" alt="" width="68" height="68" />
+      <img src={assetUrl('icon.svg')} alt="" width="68" height="68" />
       <h1>{t('Welcome to MyRoots')}</h1>
-      <p class="lead">{t('Your family history, on your own device. Start with one person, or bring in a tree you already have.')}</p>
+      <p class="lead">{server ? t('Your family history on your own server. Start with one person, or bring in a tree you already have.') : wp ? t('Your family history on your WordPress site. Start with one person, or bring in a tree you already have.') : t('Your family history, on your own device. Start with one person, or bring in a tree you already have.')}</p>
       <form class="name-form" onsubmit={(e) => { e.preventDefault(); saveName(); }}>
         <input type="text" bind:value={treeName} placeholder={t('Name of the family tree, e.g. The Nowak family')} aria-label={t('Name of the family tree')} />
         <button class="btn" type="submit" disabled={!treeName.trim()}>{t('Save')}</button>
@@ -101,6 +108,13 @@
       </div>
     </header>
 
+    {#if viewer && (backend as any).lock && !(backend as any).unlocked}
+      <section class="panel locked-note">
+        <span>{tn('%d person on this website is protected with a password.', '%d people on this website are protected with a password.', (backend as any).lock.people)}</span>
+        <button class="btn sm" onclick={() => window.dispatchEvent(new Event('myroots-unlock'))}>{t('Show protected people')}</button>
+      </section>
+    {/if}
+
     {#if viewer && app.info?.site?.intro}
       <section class="intro"><Html html={app.info.site.intro} /></section>
     {/if}
@@ -132,17 +146,22 @@
         {/if}
       </section>
       {#if !viewer}
-        {#if issues.data?.length}
+        {#if issues.data?.count}
           <a class="tint sky" href="#/health">
             <span class="ic"><Shield size={20} /></span>
-            <strong>{tn('%d thing to check', '%d things to check', issues.data.length)}</strong>
+            <strong>{tn('%d thing to check', '%d things to check', issues.data.count)}</strong>
             <span>{t('Dates or relations that look wrong. Open the data check.')}</span>
           </a>
         {/if}
+        <a class="tint sand" href={app.info?.map_external ? '#/map?mig=1' : '#/map'}>
+          <span class="ic"><MapIcon size={20} /></span>
+          <strong>{t('Where the family lived')}</strong>
+          <span>{t('Places of births, marriages and graves on a map, and the moves of the family over the years.')}</span>
+        </a>
         <a class="tint sage" href="#/website">
           <span class="ic"><Globe size={20} /></span>
           <strong>{t('Share the tree with your family')}</strong>
-          <span>{t('Export a read-only family website and put it on any hosting. Living people stay protected.')}</span>
+          <span>{server ? t('Publish a read-only family website on this server. Living people stay protected.') : wp ? t('Publish a read-only family website on this WordPress site. Living people stay protected.') : t('Export a read-only family website and put it on any hosting. Living people stay protected.')}</span>
         </a>
         <a class="tint lilac" href="#/data">
           <span class="ic"><Archive size={20} /></span>
@@ -386,5 +405,12 @@
       padding: 14px 12px;
       border-radius: 22px;
     }
+  }
+  .locked-note {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
   }
 </style>

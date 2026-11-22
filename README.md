@@ -26,7 +26,7 @@ scripts                budowanie WASM, tłumaczeń i podglądu strony rodzinnej
 
 - Node.js 20+ i npm
 - Rust (stable, `rustup`), plus cel WASM: `rustup target add wasm32-unknown-unknown`
-- `wasm-bindgen-cli` w wersji zgodnej z crate'em: `cargo install wasm-bindgen-cli --version 0.2.129`
+- `wasm-bindgen-cli` w wersji zgodnej z crate'em: `cargo install wasm-bindgen-cli --version 0.2.130`
 - Do aplikacji natywnej: wymagania systemowe Tauri 2, opisane na https://v2.tauri.app/start/prerequisites/
   (macOS: Xcode Command Line Tools; Windows: WebView2 + MSVC; Linux: webkit2gtk 4.1)
 
@@ -104,6 +104,6 @@ Instrukcja wydania (instalatory, wersja w przeglądarce, App Store, Google Play)
 
 ## Autor i licencja
 
-© 2026 Jarek Hirsch, [hirsch.fi](https://hirsch.fi/?utm_source=myroots&utm_medium=readme&utm_campaign=myroots&utm_content=credits)
+© 2026 Jarek Hirsch, [hirsch.lt](https://hirsch.lt/?utm_source=myroots&utm_medium=readme&utm_campaign=myroots&utm_content=credits)
 
 MyRoots jest wolnym oprogramowaniem na licencji GNU GPL w wersji 3 lub dowolnej późniejszej (GPL-3.0-or-later) z warunkami dodatkowymi z sekcji 7: zachowanie oznaczenia autora w oknie „O aplikacji”, oznaczanie zmienionych wersji i brak praw do nazwy oraz logo MyRoots. Szczegóły: `NOTICE.md`, pełny tekst licencji: `LICENSE`. Licencje użytych bibliotek są wymienione w aplikacji: Ustawienia → O aplikacji MyRoots.

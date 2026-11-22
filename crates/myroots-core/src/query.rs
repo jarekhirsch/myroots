@@ -32,6 +32,10 @@ pub struct Summary {
     pub living: bool,
     pub status: Status,
     pub occupation: String,
+    #[serde(skip_serializing_if = "String::is_empty")]
+    pub death_cause: String,
+    #[serde(skip_serializing_if = "String::is_empty")]
+    pub residence: String,
     pub updated: i64,
     /// Anonymous placeholder (privacy) — no data, no profile.
     #[serde(skip_serializing_if = "std::ops::Not::not")]
@@ -59,6 +63,8 @@ pub fn summary(p: &Person, max_age: u32, today: NaiveDate) -> Summary {
         living: life::is_alive(p, max_age, today),
         status: p.status,
         occupation: p.occupation.clone(),
+        death_cause: p.death_cause.clone(),
+        residence: p.residence.clone(),
         updated: p.updated,
         anon: false,
         censored: false,
@@ -66,9 +72,9 @@ pub fn summary(p: &Person, max_age: u32, today: NaiveDate) -> Summary {
 }
 
 pub fn summaries(db: &Database, ctx: &Ctx) -> Vec<Summary> {
-    let mut v: Vec<Summary> = db.persons.values().map(|p| summary(p, db.settings.max_age, ctx.today)).collect();
-    v.sort_by(|a, b| crate::model::norm(&a.name).cmp(&crate::model::norm(&b.name)).then(a.id.cmp(&b.id)));
-    v
+    let mut v: Vec<(String, Summary)> = db.persons.values().map(|p| summary(p, db.settings.max_age, ctx.today)).map(|s| (crate::model::norm(&s.name), s)).collect();
+    v.sort_unstable_by(|a, b| a.0.cmp(&b.0).then(a.1.id.cmp(&b.1.id)));
+    v.into_iter().map(|(_, s)| s).collect()
 }
 
 /* ------------------------------------------------------------------ */
@@ -95,6 +101,11 @@ pub struct Overview {
 pub fn overview(db: &Database, ctx: &Ctx) -> Overview {
     let max = db.settings.max_age;
     let mut recent: Vec<&Person> = db.persons.values().collect();
+    let k = recent.len().min(8);
+    if k > 0 && k < recent.len() {
+        recent.select_nth_unstable_by(k - 1, |a, b| b.updated.cmp(&a.updated).then(b.id.cmp(&a.id)));
+        recent.truncate(k);
+    }
     recent.sort_by(|a, b| b.updated.cmp(&a.updated).then(b.id.cmp(&a.id)));
     Overview {
         tree_name: db.settings.tree_name.clone(),
@@ -170,6 +181,23 @@ pub struct SourceRef {
     /// Fields this source is cited for (empty for a general link).
     pub fields: Vec<String>,
     pub linked: bool,
+    /// Every citation of this source in the profile, with its details.
+    pub cites: Vec<CiteRef>,
+}
+
+/// One citation shown in a profile: what it confirms and where in the source.
+#[derive(Serialize, Debug, Clone)]
+pub struct CiteRef {
+    /// A field of `CITABLE_FIELDS`, "event" or "marriage".
+    pub fact: String,
+    /// Name of the event or the partner (events and marriages).
+    pub label: String,
+    /// Index of the event in `person.events` / id of the union.
+    pub index: Option<usize>,
+    pub union: Option<Id>,
+    pub page: String,
+    pub quality: Option<u8>,
+    pub note: String,
 }
 
 #[derive(Serialize, Debug, Clone)]
@@ -298,6 +326,7 @@ pub fn profile(db: &Database, ctx: &Ctx, id: Id, pol: &Policy) -> Option<Profile
         scans: s.scans.clone(),
         fields: vec![],
         linked: false,
+        cites: vec![],
     };
     for sid in ix.sources_of(id) {
         if let Some(s) = db.sources.get(sid) {
@@ -307,7 +336,28 @@ pub fn profile(db: &Database, ctx: &Ctx, id: Id, pol: &Policy) -> Option<Profile
     for (field, ids) in &person.citations {
         for sid in ids {
             if let Some(s) = db.sources.get(sid) {
-                src.entry(*sid).or_insert_with(|| mk(s)).fields.push(field.clone());
+                let e = src.entry(*sid).or_insert_with(|| mk(s));
+                e.fields.push(field.clone());
+                let info = person.citation_info.get(&citation_key(field, *sid)).cloned().unwrap_or_default();
+                e.cites.push(CiteRef { fact: field.clone(), label: String::new(), index: None, union: None, page: info.page, quality: info.quality, note: info.note });
+            }
+        }
+    }
+    for (i, ev) in person.events.iter().enumerate() {
+        for c in &ev.citations {
+            if let Some(s) = db.sources.get(&c.source) {
+                let e = src.entry(c.source).or_insert_with(|| mk(s));
+                e.cites.push(CiteRef { fact: "event".into(), label: ev.name.clone(), index: Some(i), union: None, page: c.page.clone(), quality: c.quality, note: c.note.clone() });
+            }
+        }
+    }
+
+    for uv in &unions {
+        let u: &UnionView = uv;
+        for c in &u.union.citations {
+            if let Some(s) = db.sources.get(&c.source) {
+                let e = src.entry(c.source).or_insert_with(|| mk(s));
+                e.cites.push(CiteRef { fact: "marriage".into(), label: u.partner_name.clone(), index: None, union: Some(u.union.id), page: c.page.clone(), quality: c.quality, note: c.note.clone() });
             }
         }
     }
@@ -430,6 +480,8 @@ pub fn anon_summary(p: &Person) -> Summary {
         living: true,
         status: Status::Published,
         occupation: String::new(),
+        death_cause: String::new(),
+        residence: String::new(),
         updated: 0,
         anon: true,
         censored: false,
@@ -492,15 +544,47 @@ pub struct SourceView {
     pub citations: Vec<(Summary, Vec<String>)>,
 }
 
-pub fn source_view(db: &Database, ctx: &Ctx, s: &Source) -> SourceView {
-    let max = db.settings.max_age;
-    let mut citations = Vec::new();
+/// Facts of every person citing each source: source → person → facts
+/// (`CITABLE_FIELDS` keys, "event:<name>", "marriage:<partner>").
+fn citing(db: &Database) -> HashMap<Id, BTreeMap<Id, Vec<String>>> {
+    let mut m: HashMap<Id, BTreeMap<Id, Vec<String>>> = HashMap::new();
+    let mut add = |sid: Id, pid: Id, fact: String| {
+        let v = m.entry(sid).or_default().entry(pid).or_default();
+        if !v.contains(&fact) {
+            v.push(fact);
+        }
+    };
     for p in db.persons.values() {
-        let fields: Vec<String> = p.citations.iter().filter(|(_, v)| v.contains(&s.id)).map(|(k, _)| k.clone()).collect();
-        if !fields.is_empty() {
-            citations.push((summary(p, max, ctx.today), fields));
+        for (field, ids) in &p.citations {
+            for sid in ids {
+                add(*sid, p.id, field.clone());
+            }
+        }
+        for e in &p.events {
+            for c in &e.citations {
+                add(c.source, p.id, format!("event:{}", e.name));
+            }
         }
     }
+    for u in db.unions.values() {
+        for c in &u.citations {
+            for (pid, other) in [(Some(u.a), u.b), (u.b, Some(u.a))] {
+                let Some(pid) = pid else { continue };
+                let partner = other.and_then(|o| db.persons.get(&o)).map(|o| o.full_name()).unwrap_or_else(|| format!("{} {}", u.partner_first_name, u.partner_last_name).trim().to_string());
+                add(c.source, pid, format!("marriage:{partner}"));
+            }
+        }
+    }
+    m
+}
+
+fn source_view_with(db: &Database, ctx: &Ctx, s: &Source, cited: Option<&BTreeMap<Id, Vec<String>>>) -> SourceView {
+    let max = db.settings.max_age;
+    let citations = cited
+        .into_iter()
+        .flatten()
+        .filter_map(|(pid, facts)| db.persons.get(pid).map(|p| (summary(p, max, ctx.today), facts.clone())))
+        .collect();
     SourceView {
         source: s.clone(),
         persons: s.persons.iter().filter_map(|p| db.persons.get(p)).map(|p| summary(p, max, ctx.today)).collect(),
@@ -508,9 +592,15 @@ pub fn source_view(db: &Database, ctx: &Ctx, s: &Source) -> SourceView {
     }
 }
 
+pub fn source_view(db: &Database, ctx: &Ctx, s: &Source) -> SourceView {
+    let all = citing(db);
+    source_view_with(db, ctx, s, all.get(&s.id))
+}
+
 pub fn sources(db: &Database, ctx: &Ctx) -> Vec<SourceView> {
-    let mut v: Vec<SourceView> = db.sources.values().map(|s| source_view(db, ctx, s)).collect();
-    v.sort_by_key(|s| crate::model::norm(&s.source.title));
+    let all = citing(db);
+    let mut v: Vec<SourceView> = db.sources.values().map(|s| source_view_with(db, ctx, s, all.get(&s.id))).collect();
+    v.sort_by_cached_key(|s| crate::model::norm(&s.source.title));
     v
 }
 
@@ -560,7 +650,7 @@ pub fn gallery(db: &Database, pol: &Policy) -> Vec<GalleryEntry> {
         for g in &p.gallery {
             push(g.media, &g.caption, "gallery", "");
         }
-        let (r, _) = pol.redact(p);
+        let r = pol.view(p);
         for e in &r.events {
             if let Some(m) = e.image {
                 push(m, &e.name, "event", &e.date);
@@ -620,7 +710,7 @@ pub fn family_events(db: &Database, pol: &Policy) -> Vec<FamilyEvent> {
         if !visible(raw) {
             continue;
         }
-        let (p, _) = pol.redact(raw);
+        let p = pol.view(raw);
         let photo = if pol.photo_hidden(raw) { None } else { p.photo };
         let base = |kind: &str, date: &str, place: &str| FamilyEvent {
             kind: kind.into(),
@@ -848,10 +938,11 @@ pub fn places(db: &Database) -> Vec<PlaceUse> {
     for u in db.unions.values() {
         add(&u.place);
     }
+    let by_name = db.places_by_name();
     let mut out: Vec<PlaceUse> = counts
         .into_values()
         .map(|(name, count)| {
-            let pl = db.place_by_name(&name);
+            let pl = by_name.get(&name.trim().to_lowercase()).copied();
             PlaceUse {
                 count,
                 lat: pl.and_then(|p| p.lat),
@@ -873,7 +964,7 @@ pub fn missing_places(db: &Database) -> Vec<String> {
 }
 
 /// Unused helper to keep Index in the public API docs.
-pub fn index(db: &Database) -> Index {
+pub fn index(db: &Database) -> std::sync::Arc<Index> {
     db.index()
 }
 
@@ -911,15 +1002,36 @@ pub fn graves(db: &Database, pol: &Policy) -> Vec<GraveEntry> {
         .filter(|p| !p.grave.is_empty())
         .filter_map(|p| {
             let s = public_summary(db, pol, p.id)?;
-            let (r, _) = pol.redact(p);
+            let r = pol.view(p);
             if r.grave.is_empty() {
                 return None;
             }
-            Some(GraveEntry { person: s, grave: r.grave, death_date: r.death_date })
+            Some(GraveEntry { person: s, grave: r.grave.clone(), death_date: r.death_date.clone() })
         })
         .collect();
-    v.sort_by_key(|g| (crate::model::norm(&g.grave.cemetery), crate::model::norm(&g.person.last_name), crate::model::norm(&g.person.first_name)));
+    v.sort_by_cached_key(|g| (crate::model::norm(&g.grave.cemetery), crate::model::norm(&g.person.last_name), crate::model::norm(&g.person.first_name)));
     v
+}
+
+/// A cemetery used in the tree (suggestions in the grave form).
+#[derive(Serialize, Debug, Clone)]
+pub struct CemeteryUse {
+    pub name: String,
+    pub count: usize,
+}
+
+/// Cemeteries of the family with the number of graves (owner view).
+pub fn cemeteries(db: &Database) -> Vec<CemeteryUse> {
+    let mut m: HashMap<String, CemeteryUse> = HashMap::new();
+    for p in db.persons.values() {
+        let c = p.grave.cemetery.trim();
+        if !c.is_empty() {
+            m.entry(crate::model::norm(c)).or_insert_with(|| CemeteryUse { name: c.to_string(), count: 0 }).count += 1;
+        }
+    }
+    let mut v: Vec<(String, CemeteryUse)> = m.into_iter().collect();
+    v.sort_by(|a, b| a.0.cmp(&b.0));
+    v.into_iter().map(|(_, c)| c).collect()
 }
 
 #[derive(Serialize, Debug, Clone)]

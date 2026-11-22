@@ -44,6 +44,8 @@ pub fn public_db(db: &Database, ctx: &Ctx) -> Database {
             r.grave.photo = None;
         }
         r.created = 0;
+        // working notes (unconfirmed information) never leave the app
+        r.research.clear();
         out.persons.insert(p.id, r);
     }
     // Drop parent links to people that are not exported.
@@ -91,6 +93,12 @@ pub fn public_db(db: &Database, ctx: &Ctx) -> Database {
         for v in p.citations.values() {
             used_sources.extend(v.iter().copied());
         }
+        for e in &p.events {
+            used_sources.extend(e.citations.iter().map(|c| c.source));
+        }
+    }
+    for u in out.unions.values() {
+        used_sources.extend(u.citations.iter().map(|c| c.source));
     }
     for s in db.sources.values() {
         let visible_links: Vec<Id> = s.persons.iter().copied().filter(|p| ids.contains(p) && !hidden.contains(p)).collect();
@@ -102,10 +110,20 @@ pub fn public_db(db: &Database, ctx: &Ctx) -> Database {
         s.created = 0;
         out.sources.insert(s.id, s);
     }
+    let exported: HashSet<Id> = out.sources.keys().copied().collect();
     for p in out.persons.values_mut() {
         for v in p.citations.values_mut() {
-            v.retain(|s| db.sources.contains_key(s));
+            v.retain(|s| exported.contains(s));
         }
+        p.citations.retain(|_, v| !v.is_empty());
+        let cit = p.citations.clone();
+        p.citation_info.retain(|k, _| k.rsplit_once('#').and_then(|(f, s)| Some(cit.get(f)?.contains(&s.parse().ok()?))).unwrap_or(false));
+        for e in &mut p.events {
+            e.citations.retain(|c| exported.contains(&c.source));
+        }
+    }
+    for u in out.unions.values_mut() {
+        u.citations.retain(|c| exported.contains(&c.source));
     }
     // Media referenced by exported data.
     let mut media: BTreeSet<Id> = BTreeSet::new();
@@ -176,6 +194,8 @@ pub fn public_db(db: &Database, ctx: &Ctx) -> Database {
     let mut s = db.settings.clone();
     s.merge_dismissed.clear();
     s.notifications = NotificationSettings::default();
+    // the key of the password protection never goes to the website
+    s.site.lock = SiteLock::default();
     if !s.map_external || pol.blocks_section("map") {
         s.map_external = false;
     }
@@ -290,7 +310,7 @@ mod tests {
     fn privacy_applied() {
         let c = Ctx::new(1, NaiveDate::from_ymd_opt(2026, 1, 1).unwrap());
         let mut db = Database::new(0);
-        let old = ops::create_person(&mut db, &c, Person { first_name: "Old".into(), birth_date: "1900".into(), death_date: "1980".into(), ..Default::default() }, Default::default()).unwrap();
+        let old = ops::create_person(&mut db, &c, Person { first_name: "Old".into(), birth_date: "1900".into(), death_date: "1980".into(), research: "<p>Może z Wilna?</p>".into(), ..Default::default() }, Default::default()).unwrap();
         let kid = ops::create_person(&mut db, &c, Person { first_name: "Kid".into(), birth_date: "1990-02-03".into(), birth_place: "X".into(), father: Some(old), ..Default::default() }, Default::default()).unwrap();
         let draft = ops::create_person(&mut db, &c, Person { first_name: "Draft".into(), status: Status::Draft, ..Default::default() }, Default::default()).unwrap();
         let mut s = db.settings.clone();
@@ -298,6 +318,8 @@ mod tests {
         s.privacy.level = "hide_living".into();
         ops::save_settings(&mut db, s);
         let p = public_db(&db, &c);
+        assert_eq!(db.persons[&old].research, "<p>Może z Wilna?</p>");
+        assert_eq!(p.persons[&old].research, "");
         assert_eq!(p.persons[&kid].first_name, "");
         assert_eq!(p.persons[&kid].father, Some(old));
         assert!(!p.persons.contains_key(&draft));
@@ -326,6 +348,18 @@ mod tests {
         assert!(p.persons[&kid].recordings.is_empty() && p.persons[&kid].aging.is_empty());
         assert!(!p.media.contains_key(&m));
         assert!(!data_js(&p, &c, "t").contains("owner@example.com"));
+    }
+
+    #[test]
+    fn lock_key_stays_private() {
+        let c = Ctx::new(1, NaiveDate::from_ymd_opt(2026, 1, 1).unwrap());
+        let mut db = Database::new(0);
+        let mut s = db.settings.clone();
+        s.site.lock = SiteLock { mode: "all".into(), salt: "c2FsdA==".into(), key: "SECRETKEYSECRETKEY".into(), iterations: 1, people: vec![], hint: String::new() };
+        ops::save_settings(&mut db, s);
+        assert_eq!(db.settings.site.lock.mode, "all");
+        let p = public_db(&db, &c);
+        assert!(!data_js(&p, &c, "t").contains("SECRETKEY"));
     }
 
     #[test]

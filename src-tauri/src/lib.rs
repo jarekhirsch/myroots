@@ -1,4 +1,4 @@
-// MyRoots © 2026 Jarek Hirsch, https://hirsch.fi
+// MyRoots © 2026 Jarek Hirsch, https://hirsch.lt
 // SPDX-License-Identifier: GPL-3.0-or-later (with additional terms, see NOTICE.md)
 
 //! MyRoots desktop / mobile shell.
@@ -9,8 +9,10 @@
 
 use myroots_core::{archive, site, Ctx, Engine};
 use myroots_store::{Store, StoreMedia};
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::fs;
+use std::path::{Path, PathBuf};
 use std::io::Cursor;
 use std::sync::Mutex;
 use tauri::http::{header, Response as HttpResponse, StatusCode};
@@ -36,8 +38,80 @@ fn err(e: impl std::fmt::Display) -> String {
     e.to_string()
 }
 
+/* ------------------------------------------------------------------ */
+/*  Several family trees                                               */
+/* ------------------------------------------------------------------ */
+
+// Each tree is a store of its own (SQLite + media folder). The first tree
+// ("default") lives straight in the app data folder, where 3.0 kept its only
+// tree, so existing data opens unchanged; others live in trees/<id>/.
+// trees.json lists them and remembers the one that is open.
+
+const DEFAULT_TREE: &str = "default";
+const REGISTRY: &str = "trees.json";
+
+#[derive(Serialize, Deserialize, Clone)]
+struct TreeEntry {
+    id: String,
+    name: String,
+    #[serde(default)]
+    created: i64,
+}
+
+#[derive(Serialize, Deserialize, Default)]
+struct Registry {
+    #[serde(default)]
+    current: String,
+    #[serde(default)]
+    trees: Vec<TreeEntry>,
+}
+
+fn data_root(app: &AppHandle) -> Result<PathBuf, String> {
+    app.path().app_data_dir().map_err(err)
+}
+
+fn tree_dir(root: &Path, id: &str) -> PathBuf {
+    if id == DEFAULT_TREE {
+        root.to_path_buf()
+    } else {
+        root.join("trees").join(id)
+    }
+}
+
+fn load_registry(root: &Path) -> Registry {
+    let mut r: Registry = fs::read(root.join(REGISTRY)).ok().and_then(|b| serde_json::from_slice(&b).ok()).unwrap_or_default();
+    if r.trees.is_empty() {
+        r.trees.push(TreeEntry { id: DEFAULT_TREE.into(), name: String::new(), created: 0 });
+    }
+    if r.current.is_empty() || !r.trees.iter().any(|t| t.id == r.current) {
+        r.current = r.trees[0].id.clone();
+    }
+    r
+}
+
+fn save_registry(root: &Path, r: &Registry) -> Result<(), String> {
+    fs::create_dir_all(root).map_err(err)?;
+    let tmp = root.join("trees.json.tmp");
+    fs::write(&tmp, serde_json::to_vec_pretty(r).map_err(err)?).map_err(err)?;
+    fs::rename(&tmp, root.join(REGISTRY)).map_err(err)
+}
+
+/// A safe folder name for a new tree.
+fn new_tree_id(r: &Registry) -> String {
+    let base = format!("t{}", chrono::Local::now().timestamp_millis());
+    let mut id = base.clone();
+    let mut n = 1;
+    while r.trees.iter().any(|t| t.id == id) {
+        n += 1;
+        id = format!("{base}-{n}");
+    }
+    id
+}
+
 fn open_inner(app: &AppHandle) -> Result<Inner, String> {
-    let dir = app.path().app_data_dir().map_err(err)?;
+    let root = data_root(app)?;
+    let reg = load_registry(&root);
+    let dir = tree_dir(&root, &reg.current);
     let mut store = Store::open(&dir).map_err(err)?;
     let mut engine = Engine::new(store.database(ctx().now).map_err(err)?, VERSION);
     // a brand-new tree: persist the initial meta / settings records
@@ -51,6 +125,77 @@ fn with<T>(app: &AppHandle, state: &State<AppState>, f: impl FnOnce(&mut Inner) 
         *g = Some(open_inner(app)?);
     }
     f(g.as_mut().unwrap())
+}
+
+/// The trees and the open one: `{ current, trees: [{ id, name, created }] }`.
+#[tauri::command]
+fn trees_list(app: AppHandle) -> Result<Value, String> {
+    let root = data_root(&app)?;
+    serde_json::to_value(load_registry(&root)).map_err(err)
+}
+
+/// A new, empty tree (not opened). Returns its id.
+#[tauri::command]
+fn tree_create(app: AppHandle, name: String) -> Result<String, String> {
+    let root = data_root(&app)?;
+    let mut reg = load_registry(&root);
+    let id = new_tree_id(&reg);
+    fs::create_dir_all(tree_dir(&root, &id)).map_err(err)?;
+    reg.trees.push(TreeEntry { id: id.clone(), name: name.trim().to_string(), created: chrono::Local::now().timestamp_millis() });
+    save_registry(&root, &reg)?;
+    Ok(id)
+}
+
+#[tauri::command]
+fn tree_rename(app: AppHandle, id: String, name: String) -> Result<(), String> {
+    let root = data_root(&app)?;
+    let mut reg = load_registry(&root);
+    let t = reg.trees.iter_mut().find(|t| t.id == id).ok_or("no such tree")?;
+    t.name = name.trim().to_string();
+    save_registry(&root, &reg)
+}
+
+/// Deletes a tree with its photos. The open tree cannot be deleted.
+#[tauri::command]
+fn tree_delete(app: AppHandle, id: String) -> Result<(), String> {
+    let root = data_root(&app)?;
+    let mut reg = load_registry(&root);
+    if reg.current == id {
+        return Err("open another tree first".into());
+    }
+    if !reg.trees.iter().any(|t| t.id == id) || reg.trees.len() < 2 {
+        return Err("no such tree".into());
+    }
+    if id == DEFAULT_TREE {
+        // the first tree shares the data folder with the list of trees: remove only its files
+        for f in [myroots_store::DB_FILE.to_string(), format!("{}-wal", myroots_store::DB_FILE), format!("{}-shm", myroots_store::DB_FILE)] {
+            let _ = fs::remove_file(root.join(f));
+        }
+        let _ = fs::remove_dir_all(root.join(myroots_store::MEDIA_DIR));
+    } else {
+        let dir = tree_dir(&root, &id);
+        if dir.starts_with(root.join("trees")) {
+            let _ = fs::remove_dir_all(&dir);
+        }
+    }
+    reg.trees.retain(|t| t.id != id);
+    save_registry(&root, &reg)
+}
+
+/// Opens another tree (the UI reloads afterwards).
+#[tauri::command]
+fn tree_open(app: AppHandle, state: State<AppState>, id: String) -> Result<(), String> {
+    let root = data_root(&app)?;
+    let mut reg = load_registry(&root);
+    if !reg.trees.iter().any(|t| t.id == id) {
+        return Err("no such tree".into());
+    }
+    reg.current = id;
+    save_registry(&root, &reg)?;
+    let mut g = state.0.lock().map_err(|_| "state poisoned".to_string())?;
+    *g = None; // closes the old database before the new one opens
+    *g = Some(open_inner(&app)?);
+    Ok(())
 }
 
 #[tauri::command]
@@ -200,7 +345,12 @@ fn media_protocol(app: &AppHandle, path: &str) -> HttpResponse<Vec<u8>> {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
+    let builder = tauri::Builder::default();
+    // updates are checked by the UI (Settings → Updates); the plugin verifies
+    // the signature of every update with the public key in tauri.conf.json
+    #[cfg(desktop)]
+    let builder = builder.plugin(tauri_plugin_updater::Builder::new().build()).plugin(tauri_plugin_process::init());
+    builder
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_http::init())
@@ -215,7 +365,7 @@ pub fn run() {
             *state.0.lock().unwrap() = Some(inner);
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![engine_open, engine_call, media_put, media_get, archive_bytes, archive_import, site_bytes, print_page])
+        .invoke_handler(tauri::generate_handler![trees_list, tree_create, tree_rename, tree_delete, tree_open, engine_open, engine_call, media_put, media_get, archive_bytes, archive_import, site_bytes, print_page])
         .run(tauri::generate_context!())
         .expect("error while running MyRoots");
 }

@@ -21,6 +21,7 @@ import Database from '@lucide/svelte/icons/database';
 import Globe from '@lucide/svelte/icons/globe';
 import Flower from '@lucide/svelte/icons/flower-2';
 import Frame from '@lucide/svelte/icons/frame';
+import FolderTree from '@lucide/svelte/icons/folder-tree';
 
 export interface NavItem {
   path: string;
@@ -77,6 +78,7 @@ export const NAV: NavGroup[] = [
     label: () => t('Settings'),
     items: [
       { path: '/website', label: () => t('Family website'), icon: Globe, editorOnly: true },
+      { path: '/trees', label: () => t('Family trees'), icon: FolderTree, editorOnly: true },
       { path: '/data', label: () => t('Import and backup'), icon: Database, editorOnly: true },
       { path: '/settings', label: () => t('Settings'), icon: Cog, editorOnly: true },
     ],

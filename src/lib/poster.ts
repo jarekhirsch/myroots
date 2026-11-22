@@ -9,6 +9,8 @@ export const PAPERS: Record<string, [number, number]> = {
   A2: [420, 594],
   A1: [594, 841],
   A0: [841, 1189],
+  '2A0': [1189, 1682],
+  '4A0': [1682, 2378],
 };
 
 export interface Who {

@@ -86,6 +86,16 @@ impl Policy {
 
     /// Copy of the person with censored fields (when `censor_living` applies).
     /// Returns `(person, censored)`.
+    /// The person as this policy shows it, without a copy when nothing is
+    /// censored (lists of a whole big tree call this for every person).
+    pub fn view<'a>(&self, p: &'a Person) -> std::borrow::Cow<'a, Person> {
+        if !self.should_censor() || !self.is_living(p) {
+            std::borrow::Cow::Borrowed(p)
+        } else {
+            std::borrow::Cow::Owned(self.redact(p).0)
+        }
+    }
+
     pub fn redact(&self, p: &Person) -> (Person, bool) {
         if !self.should_censor() || !self.is_living(p) {
             return (p.clone(), false);
@@ -101,6 +111,7 @@ impl Policy {
         if self.censors("places") {
             d.birth_place.clear();
             d.death_place.clear();
+            d.residence.clear();
             d.grave = Grave::default();
             for e in &mut d.events {
                 e.place.clear();
@@ -109,6 +120,7 @@ impl Policy {
         if self.censors("bio_events") {
             d.biography.clear();
             d.notes.clear();
+            d.research.clear();
             d.events.clear();
         }
         if self.censors("photos_sensitive") {

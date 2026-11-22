@@ -6,11 +6,11 @@
   import Avatar from './Avatar.svelte';
   import Search from '@lucide/svelte/icons/search';
   import ArrowRight from '@lucide/svelte/icons/arrow-right';
-  import { norm } from '../text';
+  import { search, words } from '../text';
   import type { Summary } from '../types';
 
   let { compact = false, big = false, placeholder = '' }: { compact?: boolean; big?: boolean; placeholder?: string } = $props();
-  let all: Summary[] = $state([]);
+  let all: Summary[] = $state.raw([]);
   let q = $state('');
   let open = $state(false);
   let active = $state(0);
@@ -21,15 +21,9 @@
   }
 
   const results = $derived.by(() => {
-    const words = norm(q).split(' ').filter(Boolean);
-    if (!words.length) return [];
-    return all
-      .filter((p) => !p.anon)
-      .filter((p) => {
-        const hay = norm(`${p.name} ${p.maiden_name} ${p.years}`);
-        return words.every((w) => hay.includes(w));
-      })
-      .slice(0, 12);
+    const w = words(q);
+    if (!w.length) return [];
+    return search(all, 'quick', (p) => `${p.name} ${p.maiden_name} ${p.years}`, w, 12, (p) => !p.anon);
   });
 
   function pick(p: Summary) {

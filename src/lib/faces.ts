@@ -2,6 +2,8 @@
 // detector and a 68-point landmark model (~550 KB, loaded on first use).
 // Only the editor uses it; the family website just plays the stored positions.
 
+import { assetUrl, isViewerMode } from './backend/assets';
+
 declare const __VIEWER__: boolean;
 
 export type Eyes = [number, number, number, number];
@@ -9,11 +11,11 @@ export type Eyes = [number, number, number, number];
 let ready: Promise<any> | null = null;
 
 async function api(): Promise<any> {
-  if (__VIEWER__) return null;
+  if (isViewerMode()) return null;
   if (!ready) {
     ready = (async () => {
       const faceapi: any = await import('@vladmandic/face-api');
-      const base = new URL('./models/face/', document.baseURI).href;
+      const base = new URL(assetUrl('models/face/'), document.baseURI).href;
       // the graphics card when possible, otherwise the processor (no extra downloads)
       if (!(await faceapi.tf.setBackend('webgl').catch(() => false))) await faceapi.tf.setBackend('cpu');
       await faceapi.tf.ready();
@@ -143,7 +145,7 @@ async function need(net: 'ageGenderNet' | 'faceRecognitionNet'): Promise<any> {
   const faceapi = await api();
   if (!faceapi) return null;
   if (!extra[net]) {
-    extra[net] = faceapi.nets[net].loadFromUri(new URL('./models/face/', document.baseURI).href).catch((e: unknown) => {
+    extra[net] = faceapi.nets[net].loadFromUri(new URL(assetUrl('models/face/'), document.baseURI).href).catch((e: unknown) => {
       extra[net] = undefined;
       throw e;
     });

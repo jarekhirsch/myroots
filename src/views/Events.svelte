@@ -4,7 +4,7 @@
   import { route } from '../lib/router.svelte';
   import { t, tn } from '../lib/i18n/index.svelte';
   import { fmtDate, year } from '../lib/format';
-  import { norm } from '../lib/text';
+  import { words as toWords, haystack } from '../lib/text';
   import { openLightbox } from '../lib/ui.svelte';
   import Avatar from '../lib/components/Avatar.svelte';
   import Html from '../lib/components/Html.svelte';
@@ -33,14 +33,18 @@
   };
 
   const shown = $derived.by(() => {
-    const words = norm(q).split(' ').filter(Boolean);
+    const words = toWords(q);
     const f = Number(from) || -Infinity;
     const tt = Number(to) || Infinity;
-    return (evs.data || []).filter((e) => {
+    const list = evs.data || [];
+    const hay = words.length ? haystack(list, 'events', (e) => `${e.person_name} ${e.with_name} ${e.name} ${e.place} ${e.description}`) : [];
+    return list.filter((e, i) => {
       if (kind && e.kind !== kind) return false;
-      const y = year(e.date);
-      if ((from || to) && (y == null || y < f || y > tt)) return false;
-      if (words.length && !words.every((w) => norm(`${e.person_name} ${e.with_name} ${e.name} ${e.place} ${e.description}`).includes(w))) return false;
+      if (from || to) {
+        const y = year(e.date);
+        if (y == null || y < f || y > tt) return false;
+      }
+      if (words.length && !words.every((w) => hay[i].includes(w))) return false;
       return true;
     });
   });

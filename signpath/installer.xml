@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SignPath artifact configuration "installer": the Windows installer
+     (MyRoots_<version>_x64-setup.exe, NSIS) made from the already signed
+     myroots.exe, uploaded by GitHub Actions as a ZIP. Slug in SignPath: installer -->
+<artifact-configuration xmlns="http://signpath.io/artifact-configuration/v1">
+  <parameters>
+    <parameter name="version" required="true" />
+  </parameters>
+  <zip-file>
+    <pe-file path="MyRoots_*_x64-setup.exe" product-name="MyRoots" product-version="${version}">
+      <authenticode-sign />
+    </pe-file>
+  </zip-file>
+</artifact-configuration>

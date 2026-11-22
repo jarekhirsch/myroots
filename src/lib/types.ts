@@ -4,7 +4,10 @@ export type Gender = 'M' | 'F' | 'U' | '';
 export type ParentRel = 'bio' | 'adopted' | 'foster' | 'step';
 export type Status = 'published' | 'draft' | 'private';
 
-export interface LifeEvent { name: string; date: string; place: string; description: string; image: Id | null }
+/** A source cited for a fact, with the details of the citation (all optional). */
+export interface Citation { source: Id; page: string; quality: number | null; note: string }
+export type CitationInfo = Omit<Citation, 'source'>;
+export interface LifeEvent { name: string; date: string; place: string; description: string; image: Id | null; citations?: Citation[] }
 export interface GalleryItem { media: Id; caption: string }
 export interface Recording { media: Id; title: string; date: string }
 /** eyes: left x, left y, right x, right y as fractions of the image (as seen on the photo). */
@@ -14,14 +17,16 @@ export interface Person {
   id: Id; status: Status;
   first_name: string; last_name: string; maiden_name: string; gender: Gender;
   birth_date: string; birth_place: string; death_date: string; death_place: string; death_cause: string; deceased?: boolean;
-  biography: string; notes: string;
-  occupation: string; education: string; faith: string; height: string; eye_color: string; blood_type: string;
+  biography: string; notes: string; research?: string;
+  occupation: string; education: string; faith: string; residence?: string; height: string; eye_color: string; blood_type: string;
   mother: Id | null; mother_rel: ParentRel; father: Id | null; father_rel: ParentRel;
   events: LifeEvent[]; clans: string[];
   photo: Id | null; gallery: GalleryItem[];
   recordings?: Recording[]; aging?: AgingFrame[]; aging_audio?: Id | null; grave?: Grave;
   custom: Record<string, Record<string, string>>;
   citations: Record<string, Id[]>;
+  /** Details of the citations above, by `${field}#${sourceId}`. */
+  citation_info?: Record<string, CitationInfo>;
   created: number; updated: number;
 }
 
@@ -29,6 +34,7 @@ export interface Union {
   id: Id; a: Id; b: Id | null;
   partner_first_name: string; partner_last_name: string;
   date: string; place: string; end_cause: string; end_date: string; informal: boolean;
+  citations?: Citation[];
 }
 
 export interface Pet {
@@ -53,12 +59,15 @@ export interface DayWeather { code: number; tmax: number | null; tmin: number | 
 export interface Summary {
   id: Id; name: string; first_name: string; last_name: string; maiden_name: string; gender: Gender;
   birth_date: string; birth_place: string; death_date: string; death_place: string; years: string;
-  clans: string[]; photo: Id | null; living: boolean; status: Status; occupation: string; updated: number;
+  clans: string[]; photo: Id | null; living: boolean; status: Status; occupation: string; death_cause?: string; residence?: string; updated: number;
   anon?: boolean; censored?: boolean;
 }
 
 export interface UnionView { union: Union; partner: Summary | null; partner_name: string; children: Id[] }
-export interface SourceRef { id: Id; title: string; date: string; url: string; notes: string; media_url: string; photo: Id | null; scans: Id[]; fields: string[]; linked: boolean }
+export interface CiteRef { fact: string; label: string; index: number | null; union: Id | null; page: string; quality: number | null; note: string }
+export interface SourceRef { id: Id; title: string; date: string; url: string; notes: string; media_url: string; photo: Id | null; scans: Id[]; fields: string[]; linked: boolean; cites?: CiteRef[] }
+/** Id and title of a source (pickers). */
+export interface SourceBrief { id: Id; title: string; date: string }
 export interface PetRef { id: Id; name: string; species: string; breed: string; photo: Id | null; years: string }
 
 export interface Profile {
@@ -80,14 +89,18 @@ export interface Settings {
   privacy: { enabled: boolean; level: string; sections: string[]; fields: string[] };
   map_external: boolean;
   weather_off: boolean;
-  appearance: { primary: string; accent: string; bg: string; text: string; border: string; font: string; font_size: string; radius: string; shadow: string; theme: string; map_style: string };
+  /** Desktop app: no daily check of myroots.cc for a new version. */
+  updates_off?: boolean;
+  appearance: { primary: string; accent: string; bg: string; text: string; border: string; font: string; font_size: string; radius: string; shadow: string; theme: string; map_style: string; tree_bg?: string; tree_line?: string; tree_line_main?: string; tree_branches?: string[] };
   custom_schema: CustomGroup[]; clans: string[]; sort_order: string; people_per_page: number;
   tree_start_mode: string; tree_start_person: Id | null; merge_dismissed: string[];
   notifications: { enabled: boolean; days_before: number };
   suggestions: { enabled: boolean; email: string; endpoint: string };
-  site: { title: string; subtitle: string; intro: string; language: string; full_photos: boolean };
+  site: { title: string; subtitle: string; intro: string; language: string; full_photos: boolean; lock?: SiteLock };
   history?: { off: string[]; own: { id: string; date: string; title: string; place?: string }[] };
   language: string;
+  /** "facts" (or ""): sources next to every fact in the edit form; "general": one list per person with ticks. */
+  sources_mode?: string;
 }
 
 export interface AppInfo {
@@ -117,7 +130,8 @@ export interface Lifeline { person: Id; name: string; gender: Gender; photo: Id 
 
 export interface MapEvent { person: Id; name: string; photo: Id | null; clans: string[]; kind: string; label: string; date: string }
 export interface MapPlace { place: string; lat: number | null; lng: number | null; events: MapEvent[] }
-export interface MapData { geocoded: MapPlace[]; uncached: MapPlace[] }
+export interface MapCemetery { name: string; lat: number | null; lng: number | null; persons: Id[]; located: number }
+export interface MapData { geocoded: MapPlace[]; uncached: MapPlace[]; cemeteries?: MapCemetery[] }
 
 export interface NamedAge { id: Id; name: string; age: number }
 export interface Stats {
@@ -160,3 +174,13 @@ export interface TreeNode {
 export interface GedcomReport { dry_run: boolean; created: number; updated: number; skipped: number; families: number; pets_created: number; pets_skipped: number; sources: number; places: number; warnings: [string, string][] }
 export interface WpReport { persons: number; unions: number; pets: number; sources: number; media_pending: number; site: string; plugin: string; warnings: [string, string][] }
 export interface WpPending { site: string; items: { wp_id: number; refs: any[] }[] }
+
+/** Password protection of the family website (see lib/sitelock.ts). */
+export interface SiteLock {
+  mode: '' | 'all' | 'people';
+  salt: string;
+  key: string;
+  iterations: number;
+  people: { person: number; scope: 'person' | 'descendants' | 'ancestors' }[];
+  hint: string;
+}

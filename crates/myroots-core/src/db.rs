@@ -8,6 +8,7 @@ use crate::model::*;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::collections::{BTreeMap, HashMap};
+use std::sync::{Arc, Mutex};
 
 #[derive(Serialize, Deserialize, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Debug, Hash)]
 #[serde(rename_all = "lowercase")]
@@ -96,6 +97,26 @@ pub struct Meta {
     pub extra: BTreeMap<String, Value>,
 }
 
+/// The derived index of relations, built once and reused until the data changes.
+/// Large trees (tens of thousands of people) would otherwise rebuild it on
+/// every call, which made opening a profile take tens of milliseconds.
+#[derive(Default)]
+struct IndexCache(Mutex<Option<(IndexKey, Arc<Index>)>>);
+
+type IndexKey = (u64, usize, usize, usize, usize);
+
+impl Clone for IndexCache {
+    fn clone(&self) -> Self {
+        IndexCache::default()
+    }
+}
+
+impl std::fmt::Debug for IndexCache {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("IndexCache")
+    }
+}
+
 #[derive(Default, Debug, Clone)]
 pub struct Database {
     pub persons: BTreeMap<Id, Person>,
@@ -109,6 +130,9 @@ pub struct Database {
     pub settings: Settings,
     pub meta: Meta,
     changes: ChangeSet,
+    /// Bumped by every change (invalidates the cached index).
+    generation: u64,
+    ix: IndexCache,
 }
 
 macro_rules! store_fns {
@@ -214,7 +238,14 @@ impl Database {
         out
     }
 
+    /// Tells the database that records were changed directly (not through
+    /// the `put_*` / `del_*` functions), so derived data must be rebuilt.
+    pub fn touch(&mut self) {
+        self.generation = self.generation.wrapping_add(1);
+    }
+
     fn track(&mut self, kind: Kind, id: Id, data: Option<Value>) {
+        self.generation = self.generation.wrapping_add(1);
         self.changes.map.insert((kind, id), data);
         if kind != Kind::Meta {
             self.meta.version += 1;
@@ -291,13 +322,30 @@ impl Database {
         self.persons.get(&id).map(|p| p.full_name()).unwrap_or_else(|| format!("#{id}"))
     }
 
+    /// Places by lowercase name (for many lookups in a row; `place_by_name`
+    /// scans all places every time).
+    pub fn places_by_name(&self) -> HashMap<String, &Place> {
+        self.places.values().map(|p| (p.name.trim().to_lowercase(), p)).collect()
+    }
+
     pub fn place_by_name(&self, name: &str) -> Option<&Place> {
         let key = name.trim().to_lowercase();
         self.places.values().find(|p| p.name.trim().to_lowercase() == key)
     }
 
-    pub fn index(&self) -> Index {
-        Index::build(self)
+    /// Relations derived from the data (children, unions, pets, sources per
+    /// person). Cached until the next change.
+    pub fn index(&self) -> Arc<Index> {
+        let key: IndexKey = (self.generation, self.persons.len(), self.unions.len(), self.pets.len(), self.sources.len());
+        let mut g = self.ix.0.lock().unwrap_or_else(|e| e.into_inner());
+        if let Some((k, ix)) = g.as_ref() {
+            if *k == key {
+                return ix.clone();
+            }
+        }
+        let ix = Arc::new(Index::build(self));
+        *g = Some((key, ix.clone()));
+        ix
     }
 }
 
@@ -326,14 +374,12 @@ impl Index {
         }
         // Children sorted by birth date, then id.
         for list in ix.children.values_mut() {
-            list.sort_by(|a, b| {
-                let da = crate::date::sort_key(&db.persons[a].birth_date);
-                let dbb = crate::date::sort_key(&db.persons[b].birth_date);
-                da.cmp(&dbb).then(a.cmp(b))
-            });
+            if list.len() > 1 {
+                list.sort_by_cached_key(|a| (crate::date::sort_key(&db.persons[a].birth_date), *a));
+            }
         }
         let mut unions: Vec<&Union> = db.unions.values().collect();
-        unions.sort_by(|a, b| crate::date::sort_key(&a.date).cmp(&crate::date::sort_key(&b.date)).then(a.id.cmp(&b.id)));
+        unions.sort_by_cached_key(|u| (crate::date::sort_key(&u.date), u.id));
         for u in unions {
             ix.unions_of.entry(u.a).or_default().push(u.id);
             if let Some(b) = u.b {
@@ -387,7 +433,7 @@ impl Index {
                 }
             }
         }
-        out.sort_by(|a, b| crate::date::sort_key(&db.persons[a].birth_date).cmp(&crate::date::sort_key(&db.persons[b].birth_date)));
+        out.sort_by_cached_key(|a| crate::date::sort_key(&db.persons[a].birth_date));
         out
     }
 

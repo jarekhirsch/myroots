@@ -15,7 +15,7 @@ export class WasmEngine {
     /**
      * GEDCOM bytes (any encoding) → UTF-8 text.
      */
-    static decode_gedcom(bytes: Uint8Array): string;
+    static decode_gedcom(bytes: Uint8Array | number[]): string;
     /**
      * Builds a `.myroots` archive. `media(id, thumb)` must return the bytes synchronously.
      */
@@ -29,7 +29,7 @@ export class WasmEngine {
      * Replaces the database with the archive content. Media are passed to
      * `sink(id, thumb, bytes)`. Returns the new records as JSON (to persist).
      */
-    import_archive(bytes: Uint8Array, sink: Function): string;
+    import_archive(bytes: Uint8Array | number[], sink: Function): string;
     /**
      * `records_json`: JSON array of stored records ("" or "[]" = new, empty tree).
      */
@@ -52,17 +52,22 @@ export interface InitOutput {
     readonly wasmengine_all_records: (a: number, b: number) => void;
     readonly wasmengine_call: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number) => void;
     readonly wasmengine_decode_gedcom: (a: number, b: number, c: number) => void;
-    readonly wasmengine_export_archive: (a: number, b: number, c: number, d: number) => void;
-    readonly wasmengine_export_site: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number) => void;
-    readonly wasmengine_import_archive: (a: number, b: number, c: number, d: number, e: number) => void;
+    readonly wasmengine_export_archive: (a: number, b: number, c: any, d: number) => void;
+    readonly wasmengine_export_site: (a: number, b: number, c: number, d: number, e: number, f: number, g: any, h: number, i: number, j: number) => void;
+    readonly wasmengine_import_archive: (a: number, b: number, c: number, d: number, e: any) => void;
     readonly wasmengine_new: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => void;
     readonly wasmengine_site_media: (a: number, b: number, c: number, d: number, e: number) => void;
     readonly wasmengine_take_changes: (a: number, b: number) => void;
     readonly __wbindgen_export: (a: number, b: number) => number;
     readonly __wbindgen_export2: (a: number, b: number, c: number, d: number) => number;
-    readonly __wbindgen_export3: (a: number) => void;
+    readonly __wbindgen_export3: (a: number, b: number, c: number) => void;
+    readonly __wbindgen_export4: (a: number) => void;
+    readonly __wbindgen_export5: () => number;
+    readonly __wbindgen_externrefs: WebAssembly.Table;
     readonly __wbindgen_add_to_stack_pointer: (a: number) => number;
-    readonly __wbindgen_export4: (a: number, b: number, c: number) => void;
+    readonly __wbindgen_export6: (a: number) => void;
+    readonly __wbindgen_export7: (a: number, b: number) => void;
+    readonly __wbindgen_start: () => void;
 }
 
 export type SyncInitInput = BufferSource | WebAssembly.Module;

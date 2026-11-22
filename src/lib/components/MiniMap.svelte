@@ -27,9 +27,9 @@
   function esc(s: string) {
     return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
   }
-  const COLOR: Record<string, string> = { birth: 'var(--ev-birth)', marriage: 'var(--ev-marriage)', death: 'var(--ev-death)', event: 'var(--ev-event)' };
+  const COLOR: Record<string, string> = { birth: 'var(--ev-birth)', marriage: 'var(--ev-marriage)', death: 'var(--ev-death)', event: 'var(--ev-event)', burial: 'var(--ev-burial)' };
   function label(k: string, l: string) {
-    return k === 'birth' ? t('Birth') : k === 'death' ? t('Death') : k === 'marriage' ? t('Marriage to %s', l || '?') : l || t('Event');
+    return k === 'birth' ? t('Birth') : k === 'death' ? t('Death') : k === 'marriage' ? t('Marriage to %s', l || '?') : k === 'burial' ? [t('Grave'), l].filter(Boolean).join(': ') : l || t('Event');
   }
 
   $effect(() => {

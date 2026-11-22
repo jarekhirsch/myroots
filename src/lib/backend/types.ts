@@ -1,7 +1,7 @@
 // Platform abstraction: the same UI runs on Tauri (desktop / mobile),
 // in the browser (WASM + IndexedDB) and as the read-only family website.
 
-export type Platform = 'tauri' | 'web' | 'viewer';
+export type Platform = 'tauri' | 'web' | 'viewer' | 'wp';
 
 export interface MediaInput {
   /** Original file (already downscaled when very large). */
@@ -21,6 +21,30 @@ export interface SiteExportResult {
   location: string;
 }
 
+/** One family tree in the list of trees (each has its own people and photos). */
+export interface TreeInfo {
+  id: string;
+  name: string;
+  created?: number;
+}
+
+export interface TreeList {
+  current: string;
+  trees: TreeInfo[];
+}
+
+/** Several separate family trees on one device / site. */
+export interface TreesApi {
+  list(): Promise<TreeList>;
+  /** A new empty tree (not opened). Returns its id. */
+  create(name: string): Promise<string>;
+  rename(id: string, name: string): Promise<void>;
+  /** Deletes a tree with its photos (not the open one). */
+  remove(id: string): Promise<void>;
+  /** Switches to another tree. The page reloads afterwards. */
+  open(id: string): Promise<void>;
+}
+
 export interface Backend {
   platform: Platform;
   /** Read-only family website. */
@@ -33,12 +57,14 @@ export interface Backend {
   mediaUrl(id: number, thumb?: boolean): string;
   /** Resolves when the URL from mediaUrl() is ready (browser: blob URLs). */
   ensureMedia?(ids: number[]): Promise<void>;
+  /** URL for <img src> that may need work first (encrypted photos of the family website). */
+  mediaUrlAsync?(id: number, thumb?: boolean): Promise<string>;
   /** Raw bytes of a media item. */
   mediaBytes(id: number, thumb?: boolean): Promise<Uint8Array | null>;
   /** Full backup (.myroots archive). Returns a save location / name. */
   exportArchive(): Promise<string | null>;
-  /** Restore from a .myroots archive (replaces everything). */
-  importArchive(bytes: Uint8Array): Promise<void>;
+  /** Restore from a .myroots archive (replaces everything); `onProgress(done, total)` for the progress bar. */
+  importArchive(bytes: Uint8Array, onProgress?: (done: number, total: number) => void): Promise<void>;
   /** Family website (ZIP). */
   exportSite(): Promise<string | null>;
   /** Saves a text / binary file chosen by the user. */
@@ -49,6 +75,8 @@ export interface Backend {
   fetchBytes(url: string, headers?: Record<string, string>): Promise<{ status: number; bytes: Uint8Array; type: string }>;
   /** System notification (anniversaries). */
   notify?(title: string, body: string): Promise<void>;
+  /** Several family trees (absent in the read-only website). */
+  trees?: TreesApi;
   /** Persist pending writes (browser). */
   flush?(): Promise<void>;
 }

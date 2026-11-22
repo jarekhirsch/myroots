@@ -1,5 +1,41 @@
 # Zmiany
 
+## 3.1.0 (2026-11-22)
+
+Duże drzewa działają płynnie, źródła można przypisać do każdej informacji, a MyRoots jest dostępny na Linuksie.
+
+**Nowe**
+- Źródła przy każdej informacji, tak jak w MyHeritage: przycisk „Źródło” przy imieniu, urodzeniu, śmierci, zawodzie, wykształceniu, wyznaniu, biografii, grobie, każdym wydarzeniu i każdym małżeństwie. Przy źródle można wpisać stronę lub numer aktu, wiarygodność (od dowodu bezpośredniego do niewiarygodnego) i treść zapisu, a nowe źródło utworzyć bez wychodzenia z formularza.
+- Ustawienia, karta „Źródła”: wybór między źródłami przy każdej informacji a jedną listą źródeł dla osoby z zaznaczaniem potwierdzanych informacji. Oba sposoby zapisują te same dane.
+- Profil osoby: przy każdym źródle widać, co potwierdza, z numerem strony, wiarygodnością i treścią zapisu; numery źródeł także przy imieniu, grobie i małżeństwach.
+- GEDCOM: import i eksport cytowań przy faktach, zdarzeniach i małżeństwach razem z PAGE, QUAY i notatką (DATA/TEXT, NOTE), także źródeł imienia, wykształcenia, wyznania i pochówku.
+- Mapa: warstwa „Groby” i filtr cmentarzy. Wybrany cmentarz pokazuje groby pochowanych tam osób, a z pozostałymi warstwami także to, skąd pochodzili.
+- Linux: paczki .deb (Ubuntu, Debian, Mint), .rpm (Fedora, openSUSE) i AppImage.
+- Drzewo: wyróżnienie linii głównej (przodkowie i potomkowie wybranej osoby zostają duzi, linie boczne są mniejsze i bledsze) oraz kolory czterech linii dziadków, jak w MyHeritage. Oba włącza lista „Linie” nad drzewem.
+- Drzewo: kliknięcie rodu na karcie osoby wyróżnia w drzewie tylko osoby z tego rodu i pokazuje ich listę. Z listy rodów można też otworzyć ród w drzewie i na mapie.
+- Ustawienia, Wygląd: kolor tła drzewa, linii między osobami, linii do wybranej osoby i czterech linii dziadków.
+- Osoba: pole „Adres” (miejsce zamieszkania), także w GEDCOM (RESI z ADDR), oraz „Niepotwierdzone informacje”: rodzinne opowieści i tropy do sprawdzenia, widoczne tylko dla Ciebie, nigdy na stronie rodzinnej.
+- Lista osób pokazuje przyczynę śmierci i adres, a wyszukiwarka je przeszukuje.
+- Mapa, migracje: „Kto z tego miejsca poszedł dalej”, czyli osoby urodzone w jednym miejscu (domu, wsi) i dokąd rozeszli się ich potomkowie. Kafelek „Gdzie mieszkała rodzina” na stronie startowej i przycisk „Migracje” na liście miejsc.
+- Pasek postępu przy dodawaniu zdjęć i nagrań, wycinaniu zdjęć z albumu, imporcie GEDCOM i przywracaniu kopii.
+- Aktualizacje: aplikacja na Maca, Windowsa i Linuksa (AppImage) raz dziennie sprawdza, czy jest nowa wersja, i proponuje jej instalację. Można to wyłączyć w Ustawieniach.
+
+**Szybkość dużych drzew (kilkanaście tysięcy osób i więcej)**
+- „Możliwe duplikaty” liczą się w ułamku sekundy zamiast kilkudziesięciu sekund.
+- Profil, edycja osoby, linia życia i pokrewieństwo otwierają się od razu: powiązania rodzinne są liczone raz, a nie przy każdym kliknięciu.
+- Listy osób, wyszukiwarki i pola wyboru osoby nie zwalniają przy wpisywaniu.
+- „Cała rodzina” rysuje tylko to, co widać na ekranie; z daleka karty są uproszczone.
+- Drzewo „Wokół osoby” w dużych drzewach zaczyna od 6 pokoleń przodków i 3 pokoleń potomków (można zmienić).
+- Groby, spójność danych i brakujące dane pokazują się w porcjach, a strona główna nie liczy już całej listy problemów tylko po to, żeby pokazać ich liczbę.
+
+**Poprawki**
+- Ponowny import GEDCOM z nowymi osobami nie dubluje już osób, które są w drzewie: rozpoznaje je po identyfikatorach z pliku (_UID, RIN, REFN i in.) albo po imieniu, nazwisku i datach.
+- Menu „Więcej” pokazuje tylko to, czego nie ma na pasku, bez powtórzeń.
+- Linki do repozytorium wskazują na github.com/jarekhirsch/myroots.
+
+**Biblioteki**
+- Vite 8, Svelte 5.59, Tauri 2.12, TypeScript 6, rusqlite 0.43, wasm-bindgen 0.2.130 i pozostałe zależności w najnowszych wersjach; audyt bez znanych podatności.
+
 ## 3.0.0 (2026-10-20)
 
 Pierwsze samodzielne wydanie MyRoots, bez WordPressa. Ta sama aplikacja działa na Macu, Windowsie i Linuksie, na telefonach (iOS, Android) i w przeglądarce, a z każdej z nich można wydać stronę rodzinną tylko do odczytu.

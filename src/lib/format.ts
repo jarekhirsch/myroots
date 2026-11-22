@@ -114,8 +114,10 @@ export const FIELD_LABELS: Record<string, () => string> = {
   height: () => t('Height'),
   eye_color: () => t('Eye color'),
   blood_type: () => t('Blood type'),
+  residence: () => t('Address'),
   biography: () => t('Biography'),
   notes: () => t('Notes'),
+  research: () => t('Unconfirmed information'),
   mother: () => t('Mother'),
   father: () => t('Father'),
   mother_rel: () => t('Mother'),
@@ -127,10 +129,15 @@ export const FIELD_LABELS: Record<string, () => string> = {
   gallery: () => t('Gallery'),
   custom: () => t('Custom fields'),
   citations: () => t('Source citations'),
+  name: () => t('Name'),
+  burial: () => t('Grave'),
   status: () => t('Status'),
 };
 
 export function fieldLabel(k: string): string {
+  // facts of events and marriages cited by a source: "event:<name>", "marriage:<partner>"
+  if (k.startsWith('event:')) return k.slice(6) || t('Event');
+  if (k.startsWith('marriage:')) return t('Marriage to %s', k.slice(9) || '?');
   return FIELD_LABELS[k]?.() ?? k;
 }
 

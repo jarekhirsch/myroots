@@ -184,7 +184,7 @@ pub fn completeness(db: &Database, today: chrono::NaiveDate) -> Completeness {
     let (mut filled, mut total) = (0usize, 0usize);
     for p in db.persons.values() {
         let deceased = !life::is_alive(p, db.settings.max_age, today);
-        let has_source = !ix.sources_of(p.id).is_empty() || !p.citations.is_empty();
+        let has_source = !ix.sources_of(p.id).is_empty() || !p.citations.is_empty() || p.events.iter().any(|e| !e.citations.is_empty());
         let checks: [(&str, bool, bool); 9] = [
             ("birth_date", true, !p.birth_date.is_empty()),
             ("birth_place", true, !p.birth_place.is_empty()),

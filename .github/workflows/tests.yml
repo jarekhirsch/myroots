@@ -20,6 +20,8 @@ jobs:
         run: cargo test -p myroots-core -p myroots-store
       - name: Translations
         run: node scripts/build-app-strings.mjs
+      - name: Developer docs in step with the code
+        run: npm run docs:check
       - name: Type check
         run: npm run check
       - name: Build (browser app and family website template)

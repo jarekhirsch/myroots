@@ -4,9 +4,11 @@
   // Interactive family tree (family-chart + d3). Click a card to center it,
   // click the centered card again to open the profile.
   import { app, call, refreshInfo } from '../lib/api.svelte';
-  import { go } from '../lib/router.svelte';
+  import { go, route } from '../lib/router.svelte';
   import { backend } from '../lib/backend';
-  import { t, tx } from '../lib/i18n/index.svelte';
+  import { t, tx, tn } from '../lib/i18n/index.svelte';
+  import Avatar from '../lib/components/Avatar.svelte';
+  import X from '@lucide/svelte/icons/x';
   import { toast } from '../lib/ui.svelte';
   import { initials } from '../lib/format';
   import { tone } from '../lib/text';
@@ -32,7 +34,8 @@
   let cont: HTMLDivElement | undefined = $state();
   let wrap: HTMLDivElement | undefined = $state();
   let chart: any = null;
-  let nodes = $state<TreeNode[]>([]);
+  // plain data (no deep proxy): big trees have tens of thousands of nodes
+  let nodes = $state.raw<TreeNode[]>([]);
   let main = $state<number | null>(null);
   let pick = $state<number | null>(null);
   let error = $state<unknown>(null);
@@ -40,11 +43,29 @@
   let orient = $state<'vertical' | 'horizontal'>(stored('myroots-tree-orient', 'vertical') as any);
   let anc = $state(Number(stored('myroots-tree-anc', '0')) || 0);
   let prog = $state(Number(stored('myroots-tree-prog', '0')) || 0);
+  // never chosen by the user: big trees start with a few generations
+  // (all descendants of an old ancestor can be thousands of cards)
+  const depthChosen = stored('myroots-tree-anc', '') !== '' || stored('myroots-tree-prog', '') !== '';
+  const BIG_TREE = 1500;
   // "person": the tree around one person; "all": the whole family on one board
   let mode = $state<'person' | 'all'>(stored('myroots-tree-mode', 'person') === 'all' ? 'all' : 'person');
   // the whole family reads best with generations as columns (like a poster)
   let gorient = $state<'vertical' | 'horizontal'>(stored('myroots-graph-orient', 'horizontal') === 'vertical' ? 'vertical' : 'horizontal');
   let graph: FamilyGraph | undefined = $state();
+  // "direct": the direct line of the person stays big, side lines get smaller;
+  // "colors": the four lines of the grandparents in their own colors (both: "both")
+  type Hl = '' | 'direct' | 'colors' | 'both';
+  let hl = $state<Hl>((['', 'direct', 'colors', 'both'].includes(stored('myroots-tree-hl', '')) ? stored('myroots-tree-hl', '') : '') as Hl);
+  // a clicked clan tag: only the people of this clan are lit and listed
+  let clanSel = $state<string | null>(route.query.clan || null);
+  const clanPeople = $derived(
+    clanSel
+      ? nodes
+          .filter((n) => !n.data.anon && n.data.clans?.includes(clanSel!))
+          .map((n) => ({ id: Number(n.id), name: `${n.data['first name'] || ''} ${n.data['last name'] || ''}`.trim() || '—', years: n.data.years, avatar: n.data.avatar, gender: n.data.gender }))
+          .sort((a, b) => a.name.localeCompare(b.name))
+      : [],
+  );
   let selected = $state<string | null>(null);
   let panelOpen = $state(true);
 
@@ -64,7 +85,7 @@
     setMode('person').then(() => setMain(pid));
   }
   async function saveSvg() {
-    const svgText = graph?.exportSvg();
+    const svgText = await graph?.exportSvg();
     if (!svgText) return;
     const name = (app.info?.tree_name || 'MyRoots').replace(/[\\/:*?"<>|]+/g, ' ').trim() || 'MyRoots';
     const saved = await backend.saveFile(`${name}.svg`, svgText, 'image/svg+xml');
@@ -100,10 +121,120 @@
     const n2 = tone(name);
     const av = src ? `<img src="${esc(src)}" alt="" loading="lazy">` : `<span style="background:var(--p${n2});color:var(--p${n2}t)">${esc(initials(name))}</span>`;
     const maiden = n.maiden_name ? `<div class="mr-mn">${esc(t('née %s', n.maiden_name))}</div>` : '';
-    const clans = (n.clans || []).slice(0, 1).map((c: string) => `<span class="mr-clan">${esc(c)}</span>`).join('');
-    const pets = (n.pets || []).length ? `<span class="mr-pet" title="${esc(n.pets.map((p: any) => p.name).join(', '))}">🐾</span>` : '';
-    return `<div class="mr-card"><div class="mr-av">${av}</div><div class="mr-txt"><div class="mr-nm">${esc(name)}</div>${maiden}<div class="mr-yr">${esc(n.years || '')}</div><div class="mr-tags">${clans}${pets}</div></div></div>`;
+    const clans = (n.clans || []).slice(0, 1).map((c: string) => `<span class="mr-clan" data-clan="${esc(c)}" role="button" title="${esc(t('Show only the clan %s', c))}">${esc(c)}</span>`).join('');
+    // pets: small photos hanging from the card; a click opens the pet
+    const list = (n.pets || []) as { id: number; name: string; photo: number | null }[];
+    const pets = list.length
+      ? `<div class="mr-pets">${list
+          .slice(0, 3)
+          .map((p) => {
+            const ps = p.photo ? backend.mediaUrl(p.photo, true) : '';
+            return `<span class="mr-petav" data-pet="${p.id}" title="${esc(p.name)}" role="link">${ps ? `<img src="${esc(ps)}" alt="">` : `<span>${esc(initials(p.name))}</span>`}</span>`;
+          })
+          .join('')}${list.length > 3 ? `<span class="mr-petav more" data-pet="${list[3].id}" title="${esc(list.slice(3).map((p) => p.name).join(', '))}">+${list.length - 3}</span>` : ''}</div>`
+      : '';
+    return `<div class="mr-card"><div class="mr-av">${av}</div><div class="mr-txt"><div class="mr-nm">${esc(name)}</div>${maiden}<div class="mr-yr">${esc(n.years || '')}</div><div class="mr-tags">${clans}</div></div>${pets}</div>`;
   }
+
+  /** Direct line of `mid` (ancestors, descendants, partners of the person)
+   *  and the line (0–3: the four grandparents) of every ancestor. */
+  const nodeById = $derived(new Map(nodes.map((n) => [n.id, n])));
+  function lines(mid: string) {
+    const byId = nodeById;
+    const direct = new Set<string>([mid]);
+    const branch = new Map<string, number[]>();
+    const me = byId.get(mid);
+    if (!me) return { direct, branch };
+    for (const s of me.rels.spouses || []) direct.add(s);
+    const sorted = (ids: string[]) => [...ids].sort((a, b) => (byId.get(a)?.data.gender === 'F' ? 1 : 0) - (byId.get(b)?.data.gender === 'F' ? 1 : 0));
+    const mark = (id: string, b: number) => {
+      const q = [id];
+      while (q.length) {
+        const x = q.pop()!;
+        const l = branch.get(x) || [];
+        if (l.includes(b)) continue;
+        branch.set(x, [...l, b]);
+        direct.add(x);
+        q.push(...(byId.get(x)?.rels.parents || []));
+      }
+    };
+    sorted(me.rels.parents || []).slice(0, 2).forEach((pid, pi) => {
+      direct.add(pid);
+      const gps = sorted(byId.get(pid)?.rels.parents || []).slice(0, 2);
+      if (!gps.length) branch.set(pid, [pi * 2, pi * 2 + 1]);
+      gps.forEach((g, gi) => mark(g, pi * 2 + gi));
+      if (gps.length) branch.set(pid, gps.map((_, gi) => pi * 2 + gi));
+    });
+    const q = [...(me.rels.children || [])];
+    while (q.length) {
+      const x = q.pop()!;
+      if (direct.has(x)) continue;
+      direct.add(x);
+      q.push(...(byId.get(x)?.rels.children || []));
+    }
+    return { direct, branch };
+  }
+  let deco: ReturnType<typeof lines> | null = null;
+  const dId = (d: any): string => String(d?.data?.id ?? '');
+  function decoCard(el: Element, d: any) {
+    const card = el.querySelector('.card');
+    if (!card) return;
+    const id = dId(d);
+    const side = !!deco && (hl === 'direct' || hl === 'both') && !deco.direct.has(id);
+    const br = deco && (hl === 'colors' || hl === 'both') ? deco.branch.get(id) : undefined;
+    card.classList.toggle('mr-side', side);
+    card.classList.toggle('mr-br', !!br);
+    if (br) {
+      (card as HTMLElement).style.setProperty('--b1', `var(--br${br[0] + 1})`);
+      (card as HTMLElement).style.setProperty('--b2', `var(--br${(br[1] ?? br[0]) + 1})`);
+    }
+    const inClan = !clanSel || !!d?.data?.data?.clans?.includes(clanSel);
+    card.classList.toggle('mr-dim', !inClan);
+    card.classList.toggle('mr-lit', !!clanSel && inClan);
+  }
+  function decoLink(el: Element, l: any) {
+    const ends = (x: any) => (Array.isArray(x) ? x : [x]).filter(Boolean).map(dId);
+    const from = ends(l.source);
+    const to = ends(l.target);
+    let direct = false;
+    let color: number | null = null;
+    if (deco) {
+      direct = to.every((x) => deco!.direct.has(x)) && from.some((x) => deco!.direct.has(x));
+      if (l.is_ancestry && !l.spouse) {
+        const bs = new Set(to.flatMap((x) => deco!.branch.get(x) || []));
+        if (bs.size === 1) color = [...bs][0];
+      }
+    }
+    const on = hl === 'direct' || hl === 'both';
+    el.classList.toggle('mr-ldirect', on && direct);
+    el.classList.toggle('mr-lside', on && !direct);
+    const c = hl === 'colors' || hl === 'both' ? color : null;
+    el.classList.toggle('mr-lbr', c != null);
+    if (c != null) (el as HTMLElement).style.setProperty('--lb', `var(--br${c + 1})`);
+    if (clanSel) {
+      const all = [...from, ...to].map((x) => nodeById.get(x));
+      el.classList.toggle('mr-dim', !all.some((n) => n?.data.clans?.includes(clanSel!)));
+    } else el.classList.remove('mr-dim');
+  }
+  function decorate() {
+    if (!cont || mode !== 'person') return;
+    deco = hl && main ? lines(String(main)) : null;
+    cont.querySelectorAll('div.card_cont').forEach((el) => decoCard(el, (el as any).__data__));
+    cont.querySelectorAll('path.link').forEach((el) => decoLink(el, (el as any).__data__));
+  }
+  function setHl(v: Hl) {
+    hl = v;
+    store('myroots-tree-hl', v);
+    decorate();
+  }
+  function update(props: Record<string, unknown>) {
+    chart?.updateTree(props);
+    decorate();
+  }
+  $effect(() => {
+    void clanSel;
+    decorate();
+  });
 
   async function build() {
     if (!cont || mode !== 'person') return;
@@ -120,14 +251,28 @@
       .setCardHtml()
       .setCardDim({ w: 216, h: 84 })
       .setCardInnerHtmlCreator(cardHtml)
+      .setOnCardUpdate(function (this: Element, d: any) {
+        decoCard(this, d);
+      })
       .setOnCardClick((e: MouseEvent, d: any) => {
+        const clanEl = (e.target as HTMLElement | null)?.closest?.('[data-clan]');
+        if (clanEl) {
+          const c = clanEl.getAttribute('data-clan');
+          clanSel = clanSel === c ? null : c;
+          return;
+        }
+        const petEl = (e.target as HTMLElement | null)?.closest?.('[data-pet]');
+        if (petEl) {
+          go(`/pet/${petEl.getAttribute('data-pet')}`);
+          return;
+        }
         if (d.data.data.anon) return;
         const pid = Number(d.data.id);
         if (pid === main) go(`/person/${pid}`);
         else setMain(pid);
       });
     if (main) chart.updateMainId(String(main));
-    chart.updateTree({ initial: true });
+    update({ initial: true });
   }
 
   function setMain(pid: number) {
@@ -140,7 +285,7 @@
     }
     if (chart) {
       chart.updateMainId(String(pid));
-      chart.updateTree({ tree_position: 'main_to_middle' });
+      update({ tree_position: 'main_to_middle' });
     }
     history.replaceState(null, '', `#/tree/${pid}`);
   }
@@ -153,8 +298,14 @@
         const r = await call<{ nodes: TreeNode[]; start: number | null }>('tree.data');
         empty = !r.nodes.length;
         if (empty) return;
-        await backend.ensureMedia?.(r.nodes.map((n) => n.data.avatar).filter((x): x is number => !!x));
+        await backend.ensureMedia?.(
+          r.nodes.flatMap((n) => [n.data.avatar, ...(n.data.pets || []).map((p) => p.photo)]).filter((x): x is number => !!x),
+        );
         nodes = r.nodes;
+        if (!depthChosen && r.nodes.length > BIG_TREE) {
+          if (!anc) anc = 6;
+          if (!prog) prog = 3;
+        }
         const ids = new Set(r.nodes.filter((n) => !n.data.anon).map((n) => Number(n.id)));
         main = want && ids.has(want) ? want : main && ids.has(main) ? main : r.start ?? Number(r.nodes[0].id);
         pick = main;
@@ -186,7 +337,7 @@
   $effect(() => {
     const shown = !!(panelId && panelOpen);
     if (lastPanel !== null && lastPanel !== shown && mode === 'person' && chart) {
-      tick().then(() => chart?.updateTree({ tree_position: 'main_to_middle' }));
+      tick().then(() => chart && update({ tree_position: 'main_to_middle' }));
     }
     lastPanel = shown;
   });
@@ -197,7 +348,7 @@
   }
   function fit() {
     if (mode === 'all') graph?.fit();
-    else chart?.updateTree({ tree_position: 'fit' });
+    else if (chart) update({ tree_position: 'fit' });
   }
   function full() {
     if (document.fullscreenElement) document.exitFullscreen();
@@ -246,6 +397,15 @@
               {#each [1, 2, 3, 4, 5, 6] as n}<option value={n}>{n}</option>{/each}
             </select>
           </label>
+          <label class="small muted dep">
+            {t('Lines')}
+            <select value={hl} onchange={(e) => setHl(e.currentTarget.value as Hl)}>
+              <option value="">{t('Normal')}</option>
+              <option value="direct">{t('Highlight the direct line')}</option>
+              <option value="colors">{t('Color the lines of the grandparents')}</option>
+              <option value="both">{t('Both')}</option>
+            </select>
+          </label>
         {:else}
           <button class="btn icon ghost" onclick={() => graph?.zoomBy(1 / 1.4)} title={t('Zoom out')} aria-label={t('Zoom out')}><ZoomOut size={18} /></button>
           <button class="btn icon ghost" onclick={() => graph?.zoomBy(1.4)} title={t('Zoom in')} aria-label={t('Zoom in')}><ZoomIn size={18} /></button>
@@ -271,7 +431,25 @@
       {:else}
         <div class="chart graph">{#if nodes.length}<FamilyGraph bind:this={graph} {nodes} orient={gorient} bind:selected />{/if}</div>
       {/if}
-      {#if panelId && panelOpen}
+      {#if clanSel && mode === 'person'}
+        <div class="side no-print">
+          <div class="panel clanp">
+            <div class="ch">
+              <div>
+                <span class="tag heirloom">{clanSel}</span>
+                <span class="small muted">{tn('%d person', '%d people', clanPeople.length)}</span>
+              </div>
+              <button class="btn ghost icon sm" onclick={() => (clanSel = null)} aria-label={t('Close')}><X size={16} /></button>
+            </div>
+            <p class="small faint">{t('People of this clan are highlighted in the tree. Click a person to center the tree on them.')}</p>
+            <ul>
+              {#each clanPeople as c (c.id)}
+                <li><button class="row" class:on={c.id === main} onclick={() => setMain(c.id)}><Avatar photo={c.avatar} name={c.name} gender={c.gender as any} size={34} /><span class="grow"><span class="nm">{c.name}</span><span class="small muted">{c.years}</span></span></button></li>
+              {/each}
+            </ul>
+          </div>
+        </div>
+      {:else if panelId && panelOpen}
         <div class="side no-print">
           <TreeDetails
             id={panelId}
@@ -292,7 +470,11 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
-    background: radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--ink) 14%, transparent) 1px, transparent 0) 0 0 / 22px 22px, var(--paper);
+    background: radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--ink) 14%, transparent) 1px, transparent 0) 0 0 / 22px 22px, var(--tree-bg, var(--paper));
+    --br1: var(--tree-br1, #3f7cc4);
+    --br2: var(--tree-br2, #2f9a6b);
+    --br3: var(--tree-br3, #c9693c);
+    --br4: var(--tree-br4, #9b59b6);
   }
   .bar {
     display: flex;
@@ -385,7 +567,7 @@
     --female-color: var(--female);
     --male-color: var(--male);
     --genderless-color: var(--faint);
-    --background-color: var(--paper);
+    --background-color: var(--tree-bg, var(--paper));
     --text-color: var(--text);
     font-family: var(--font-ui);
     color: var(--text);
@@ -398,11 +580,11 @@
     pointer-events: none;
   }
   .chart :global(.link) {
-    stroke: var(--line-strong) !important;
+    stroke: var(--tree-line, var(--line-strong)) !important;
     stroke-width: 2px;
   }
   .chart :global(.link.f3-path-to-main) {
-    stroke: var(--heirloom) !important;
+    stroke: var(--tree-line-main, var(--heirloom)) !important;
   }
   /* the board can be dragged: a hand everywhere except on the people */
   .chart.f3 {
@@ -524,12 +706,157 @@
     text-overflow: ellipsis;
     max-width: 110px;
   }
-  .chart :global(.mr-pet) {
-    font-size: 0.75rem;
+  .chart :global(.mr-card) {
+    position: relative;
+  }
+  .chart :global(.mr-pets) {
+    position: absolute;
+    inset-inline-end: 8px;
+    bottom: -13px;
+    display: flex;
+    gap: 3px;
+  }
+  .chart :global(.mr-petav) {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--surface);
+    background: var(--heirloom-soft);
+    box-shadow: var(--shadow-raised);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.62rem;
+    font-weight: 650;
+    color: var(--heirloom);
+    cursor: pointer;
+    transition: transform 0.12s;
+  }
+  .chart :global(.mr-petav:hover) {
+    transform: scale(1.25);
+  }
+  .chart :global(.mr-petav img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
   .chart :global(.anon .mr-nm) {
     color: var(--faint);
     font-family: var(--font-ui);
+  }
+  /* direct line: side lines smaller and paler, the line itself stronger */
+  .chart :global(.card.mr-side .mr-card) {
+    transform: scale(0.8);
+    transition: transform 0.2s;
+  }
+  .chart :global(.card.mr-side .mr-card > *) {
+    opacity: 0.6;
+  }
+  .chart :global(.card.mr-side:hover .mr-card > *) {
+    opacity: 1;
+  }
+  .chart :global(.link.mr-ldirect) {
+    stroke: var(--tree-line-main, var(--ink)) !important;
+    stroke-width: 3.5px;
+  }
+  .chart :global(.link.mr-lside) {
+    stroke-width: 1.2px;
+    opacity: 0.55 !important;
+  }
+  .chart :global(.link.mr-lbr) {
+    stroke: var(--lb) !important;
+  }
+  /* the lines of the four grandparents */
+  .chart :global(.card.mr-br .mr-card) {
+    padding-inline-start: 16px;
+  }
+  .chart :global(.card.mr-br .mr-card::before) {
+    content: '';
+    position: absolute;
+    inset-block: 10px;
+    inset-inline-start: 5px;
+    width: 5px;
+    border-radius: 3px;
+    background: linear-gradient(var(--b1) 50%, var(--b2) 50%);
+  }
+  /* a clicked clan */
+  /* the card stays opaque (lines behind it stay hidden), only its content fades */
+  .chart :global(.card.mr-dim .mr-card) {
+    filter: grayscale(1);
+    box-shadow: none;
+  }
+  .chart :global(.card.mr-dim .mr-card > *),
+  .chart :global(.card.mr-dim .mr-card::before),
+  .chart :global(.card.mr-dim .mr-card::after) {
+    opacity: 0.3;
+  }
+  .chart :global(.link.mr-dim) {
+    opacity: 0.2 !important;
+  }
+  .chart :global(.card.mr-lit .mr-card) {
+    box-shadow: 0 0 0 3px var(--heirloom), var(--shadow-raised);
+  }
+  .chart :global(.mr-clan[data-clan]) {
+    cursor: pointer;
+  }
+  .chart :global(.mr-clan[data-clan]:hover) {
+    background: var(--heirloom);
+    color: var(--surface);
+  }
+  .clanp {
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  .clanp .ch {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .clanp .ch > div {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .clanp p {
+    margin: 0;
+  }
+  .clanp ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+  }
+  .clanp .row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: inherit;
+    text-align: start;
+    padding: 6px;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+  .clanp .row:hover,
+  .clanp .row.on {
+    background: var(--surface-2);
+  }
+  .clanp .grow {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .clanp .nm {
+    font-weight: 600;
   }
   .help.beside {
     inset-inline-end: 400px;

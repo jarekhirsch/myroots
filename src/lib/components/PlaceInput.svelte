@@ -22,7 +22,7 @@
   import { app } from '../api.svelte';
   let { value = $bindable(''), id = undefined }: { value?: string; id?: string } = $props();
   const listId = 'places-' + Math.random().toString(36).slice(2);
-  let names = $state<string[]>([]);
+  let names = $state.raw<string[]>([]);
   let loaded = false;
   function load() {
     if (loaded) return;

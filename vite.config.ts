@@ -58,7 +58,7 @@ export default defineConfig(({ mode }) => {
     base: './',
     define: {
       __VIEWER__: JSON.stringify(viewer),
-      __APP_VERSION__: JSON.stringify(process.env.npm_package_version || '3.0.0'),
+      __APP_VERSION__: JSON.stringify(process.env.npm_package_version || '3.1.0'),
     },
     server: { port: 1420, strictPort: true, watch: { ignored: ['**/src-tauri/**', '**/target/**'] } },
     build: viewer
@@ -68,7 +68,7 @@ export default defineConfig(({ mode }) => {
           assetsInlineLimit: 100_000_000,
           cssCodeSplit: false,
           modulePreload: false,
-          rollupOptions: {
+          rolldownOptions: {
             input: 'viewer.html',
             output: { format: 'iife', inlineDynamicImports: true, entryFileNames: 'assets/viewer.js', assetFileNames: 'assets/viewer[extname]' },
           },

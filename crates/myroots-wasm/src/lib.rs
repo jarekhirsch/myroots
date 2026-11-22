@@ -1,4 +1,4 @@
-// MyRoots © 2026 Jarek Hirsch, https://hirsch.fi
+// MyRoots © 2026 Jarek Hirsch, https://hirsch.lt
 // SPDX-License-Identifier: GPL-3.0-or-later (with additional terms, see NOTICE.md)
 
 //! WebAssembly bindings: the browser app (PWA) and the exported family website

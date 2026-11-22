@@ -2,7 +2,6 @@ node_modules/
 target/
 dist/
 dist-viewer/
-src-tauri/gen/android/
 src-tauri/gen/apple/
 .DS_Store
 wydanie/
@@ -10,3 +9,11 @@ wydanie/
 *.keystore
 *.jks
 .env
+
+# signing secrets
+src-tauri/gen/android/keystore.properties
+*.key
+*.key.pub
+_klucze/
+
+__pycache__/

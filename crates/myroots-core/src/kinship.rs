@@ -67,7 +67,7 @@ fn ancestors(db: &Database, id: Id) -> HashMap<Id, (u32, Id)> {
 
 fn node(db: &Database, pol: &Policy, id: Id, edge: &str) -> PathNode {
     let p = &db.persons[&id];
-    let (r, _) = pol.redact(p);
+    let r = pol.view(p);
     PathNode {
         id,
         name: p.full_name(),

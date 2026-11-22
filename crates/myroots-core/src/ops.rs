@@ -109,6 +109,20 @@ fn dedup_strings(v: &[String]) -> Vec<String> {
     v.iter().map(|s| clean(s)).filter(|s| !s.is_empty() && seen.insert(s.to_lowercase())).collect()
 }
 
+/// Details of a citation, trimmed (reliability 0–3).
+pub fn clean_citation_info(i: &CitationInfo) -> CitationInfo {
+    CitationInfo { page: clean(&i.page).chars().take(500).collect(), quality: i.quality.map(|q| q.min(3)), note: clean_multiline(&i.note).chars().take(20_000).collect() }
+}
+
+/// Citations of an event or a union: existing sources only, each source once.
+pub fn clean_citations(list: &[Citation], db: &Database) -> Vec<Citation> {
+    let mut seen = HashSet::new();
+    list.iter()
+        .filter(|c| db.sources.contains_key(&c.source) && seen.insert(c.source))
+        .map(|c| Citation::new(c.source, clean_citation_info(&c.info())))
+        .collect()
+}
+
 fn clean_events(events: &[LifeEvent], db: &Database) -> Vec<LifeEvent> {
     let mut seen = HashSet::new();
     let mut out = Vec::new();
@@ -119,6 +133,7 @@ fn clean_events(events: &[LifeEvent], db: &Database) -> Vec<LifeEvent> {
             place: clean(&e.place),
             description: clean_html(&e.description),
             image: e.image.filter(|m| db.media.contains_key(m)),
+            citations: clean_citations(&e.citations, db),
         };
         if ev.name.is_empty() && ev.date.is_empty() && ev.description.is_empty() && ev.image.is_none() {
             continue;
@@ -186,6 +201,7 @@ pub fn sanitize_person(p: &Person, db: &Database) -> Person {
     d.first_name = clean(&d.first_name);
     d.last_name = clean(&d.last_name);
     d.maiden_name = clean(&d.maiden_name);
+    d.ext_ids = d.ext_ids.iter().map(|x| clean(x)).filter(|x| !x.is_empty()).take(20).collect();
     d.birth_date = date::sanitize(&d.birth_date);
     d.death_date = date::sanitize(&d.death_date);
     d.birth_place = clean(&d.birth_place);
@@ -193,6 +209,8 @@ pub fn sanitize_person(p: &Person, db: &Database) -> Person {
     d.death_cause = clean(&d.death_cause);
     d.biography = clean_html(&d.biography);
     d.notes = clean_html(&d.notes);
+    d.research = clean_html(&d.research);
+    d.residence = clean(&d.residence);
     for f in [&mut d.occupation, &mut d.education, &mut d.faith, &mut d.height, &mut d.eye_color, &mut d.blood_type] {
         *f = clean(f);
     }
@@ -245,7 +263,21 @@ pub fn sanitize_person(p: &Person, db: &Database) -> Person {
             cit.insert(fk, v);
         }
     }
+    // details only for citations that exist, empty details dropped
+    let mut info = BTreeMap::new();
+    for (k, v) in &d.citation_info {
+        let Some((f, sid)) = k.rsplit_once('#') else { continue };
+        let (f, Ok(sid)) = (key(f), sid.trim().parse::<Id>()) else { continue };
+        if !cit.get(&f).map(|ids| ids.contains(&sid)).unwrap_or(false) {
+            continue;
+        }
+        let v = clean_citation_info(v);
+        if !v.is_empty() {
+            info.insert(citation_key(&f, sid), v);
+        }
+    }
     d.citations = cit;
+    d.citation_info = info;
     d
 }
 
@@ -607,6 +639,7 @@ pub fn sanitize_union(u: &Union) -> Union {
 
 pub fn save_union(db: &mut Database, u: Union) -> Result<Id> {
     let mut u = sanitize_union(&u);
+    u.citations = clean_citations(&u.citations, db);
     if !db.persons.contains_key(&u.a) {
         return Err(Error::not_found("person", u.a));
     }
@@ -883,14 +916,30 @@ pub fn delete_source(db: &mut Database, id: Id) -> Result<()> {
     if db.del_source(id).is_none() {
         return Err(Error::not_found("source", id));
     }
-    let affected: Vec<Id> = db.persons.values().filter(|p| p.citations.values().any(|v| v.contains(&id))).map(|p| p.id).collect();
+    let affected: Vec<Id> = db
+        .persons
+        .values()
+        .filter(|p| p.citations.values().any(|v| v.contains(&id)) || p.events.iter().any(|e| e.citations.iter().any(|c| c.source == id)))
+        .map(|p| p.id)
+        .collect();
+    let suffix = format!("#{id}");
     for pid in affected {
         let mut p = db.persons[&pid].clone();
         for v in p.citations.values_mut() {
             v.retain(|x| *x != id);
         }
         p.citations.retain(|_, v| !v.is_empty());
+        p.citation_info.retain(|k, _| !k.ends_with(&suffix));
+        for e in &mut p.events {
+            e.citations.retain(|c| c.source != id);
+        }
         db.put_person(p);
+    }
+    let unions: Vec<Id> = db.unions.values().filter(|u| u.citations.iter().any(|c| c.source == id)).map(|u| u.id).collect();
+    for uid in unions {
+        let mut u = db.unions[&uid].clone();
+        u.citations.retain(|c| c.source != id);
+        db.put_union(u);
     }
     Ok(())
 }

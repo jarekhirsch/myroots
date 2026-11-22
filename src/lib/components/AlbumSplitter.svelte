@@ -4,7 +4,7 @@
   import { findPhotos, corners, cutOut, type Box } from '../albumsplit';
   import { prepareImage } from '../media';
   import { backend } from '../backend';
-  import { toast } from '../ui.svelte';
+  import { toast, withProgress } from '../ui.svelte';
   import { errorText } from '../errors';
   import { t, tn } from '../i18n/index.svelte';
 
@@ -76,11 +76,16 @@
     const base = file.name.replace(/\.[^.]+$/, '') || 'album';
     try {
       let n = 0;
-      for (const b of boxes.filter((x) => x.on)) {
-        n++;
-        const blob = await cutOut(img, b);
-        ids.push(await backend.addMedia(await prepareImage(blob, `${base}-${n}.jpg`)));
-      }
+      const on = boxes.filter((x) => x.on);
+      const im = img;
+      await withProgress(t('Adding photos…'), async (report) => {
+        for (const b of on) {
+          report(n, on.length);
+          n++;
+          const blob = await cutOut(im, b);
+          ids.push(await backend.addMedia(await prepareImage(blob, `${base}-${n}.jpg`)));
+        }
+      });
       onadd(ids);
       toast(tn('Added %d photo.', 'Added %d photos.', ids.length));
       onclose();

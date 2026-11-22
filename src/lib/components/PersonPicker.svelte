@@ -5,6 +5,7 @@
   import { t } from '../i18n/index.svelte';
   import Avatar from './Avatar.svelte';
   import X from '@lucide/svelte/icons/x';
+  import { search } from '../text';
   import type { Summary } from '../types';
 
   let {
@@ -29,7 +30,7 @@
   } = $props();
 
   const listId = 'pp-' + Math.random().toString(36).slice(2);
-  let all: Summary[] = $state([]);
+  let all: Summary[] = $state.raw([]);
   let q = $state('');
   let open = $state(false);
   let active = $state(0);
@@ -41,25 +42,14 @@
 
   const selected = $derived(all.find((p) => p.id === value) || null);
 
-  function norm(s: string) {
-    return s
-      .toLowerCase()
-      .normalize('NFKD')
-      .replace(/[̀-ͯ]/g, '')
-      .replace(/ł/g, 'l');
-  }
-
+  const text = (p: Summary) => `${p.name} ${p.maiden_name} ${p.years} ${p.birth_place}`;
   const results = $derived.by(() => {
-    const words = norm(q).split(/\s+/).filter(Boolean);
-    let list = all.filter((p) => !exclude.includes(p.id));
-    if (words.length) {
-      list = list.filter((p) => {
-        const hay = norm(`${p.name} ${p.maiden_name} ${p.years} ${p.birth_place}`);
-        return words.every((w) => hay.includes(w));
-      });
-    }
-    if (gender) list = [...list.filter((p) => p.gender === gender), ...list.filter((p) => p.gender !== gender)];
-    return list.slice(0, 40);
+    const ex = new Set(exclude);
+    const keep = (p: Summary) => !ex.has(p.id);
+    if (!gender) return search(all, 'picker', text, q, 40, keep);
+    // people of the wanted gender first
+    const first = search(all, 'picker', text, q, 40, (p) => keep(p) && p.gender === gender);
+    return first.length >= 40 ? first : [...first, ...search(all, 'picker', text, q, 40 - first.length, (p) => keep(p) && p.gender !== gender)];
   });
 
   function pick(p: Summary | null) {

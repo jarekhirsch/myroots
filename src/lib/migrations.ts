@@ -29,7 +29,26 @@ const name = (n: TreeNode) => [n.data['first name'], n.data['last name']].filter
 /** ~2 km: closer places count as the same place */
 const far = (a: LatLng, b: LatLng) => Math.hypot(a[0] - b[0], (a[1] - b[1]) * Math.cos((a[0] * Math.PI) / 180)) > 0.02;
 
-export function buildMigrations(nodes: TreeNode[], places: PlaceUse[], only: number | null): { moves: Move[]; births: Birth[] } {
+/** Place names of births in the tree that have coordinates, the most frequent first. */
+export function homePlaces(nodes: TreeNode[], places: PlaceUse[]): { name: string; count: number }[] {
+  const ok = new Set(places.filter((p) => p.lat != null && p.lng != null).map((p) => p.name.trim().toLowerCase()));
+  const n = new Map<string, { name: string; count: number }>();
+  for (const x of nodes) {
+    const k = (x.data.birth_place || '').trim().toLowerCase();
+    if (!k || !ok.has(k)) continue;
+    const e = n.get(k) || { name: x.data.birth_place.trim(), count: 0 };
+    e.count++;
+    n.set(k, e);
+  }
+  return [...n.values()].filter((e) => e.count > 0).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+}
+
+/**
+ * Moves of the family. `only`: the ancestors of one person. `home`: the
+ * people born at one place (a house, a village) and all their descendants:
+ * who from this place went further, and where.
+ */
+export function buildMigrations(nodes: TreeNode[], places: PlaceUse[], only: number | null, home = ''): { moves: Move[]; births: Birth[] } {
   const at = new Map<string, LatLng>();
   for (const p of places) if (p.lat != null && p.lng != null) at.set(p.name.trim().toLowerCase(), [p.lat, p.lng]);
   const byId = new Map(nodes.map((n) => [n.id, n]));
@@ -43,6 +62,19 @@ export function buildMigrations(nodes: TreeNode[], places: PlaceUse[], only: num
         if (!keep.has(p)) {
           keep.add(p);
           q.push(p);
+        }
+      }
+    }
+  }
+  if (home && only == null) {
+    const h = home.trim().toLowerCase();
+    keep = new Set(nodes.filter((n) => (n.data.birth_place || '').trim().toLowerCase() === h).map((n) => n.id));
+    const q = [...keep];
+    while (q.length) {
+      for (const c of byId.get(q.pop()!)?.rels.children || []) {
+        if (!keep.has(c)) {
+          keep.add(c);
+          q.push(c);
         }
       }
     }

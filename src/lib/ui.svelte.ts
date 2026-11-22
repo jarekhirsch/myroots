@@ -32,3 +32,28 @@ export function promptDialog(title: string, label = '', value = '', ok = ''): Pr
 export function openLightbox(items: { media: number; caption: string }[], index = 0) {
   ui.lightbox = { items, index };
 }
+
+// Progress of long file work (adding photos, restoring a backup, importing
+// GEDCOM, sending files to WordPress / MyRoots Server). Shown as a bar at the
+// top of the window by ProgressBar.svelte. total = 0: unknown length.
+export const progress = $state({ active: 0, label: '', done: 0, total: 0 });
+
+/** Runs `fn` with the progress bar; `report(done, total)` moves it. */
+export async function withProgress<T>(label: string, fn: (report: (done: number, total: number) => void) => Promise<T>): Promise<T> {
+  progress.active++;
+  progress.label = label;
+  progress.done = 0;
+  progress.total = 0;
+  try {
+    return await fn((done, total) => {
+      progress.done = done;
+      progress.total = total;
+    });
+  } finally {
+    progress.active = Math.max(0, progress.active - 1);
+    if (!progress.active) {
+      progress.label = '';
+      progress.done = progress.total = 0;
+    }
+  }
+}

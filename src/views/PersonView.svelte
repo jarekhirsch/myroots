@@ -30,7 +30,8 @@
   import Down from '@lucide/svelte/icons/chevron-down';
   import Printer from '@lucide/svelte/icons/printer';
   import Frame from '@lucide/svelte/icons/frame';
-  import type { Profile, Lifeline, Summary } from '../lib/types';
+  import type { Profile, Lifeline, Summary, Union, CiteRef } from '../lib/types';
+  import { qualityLabel } from '../lib/citations';
 
   let { id }: { id: number } = $props();
   const viewer = $derived(!!app.info?.viewer);
@@ -52,6 +53,25 @@
   function cites(field: string): number[] {
     return (p?.citations?.[field] || []).map((s) => srcNo.get(s)).filter((n): n is number => !!n);
   }
+  function unionCites(u: Union): number[] {
+    return (u.citations || []).map((c) => srcNo.get(c.source)).filter((n): n is number => !!n);
+  }
+  // Citations of one source, one row per fact (birth date + place = "Birth").
+  const GROUP: Record<string, string> = { birth_date: 'birth', birth_place: 'birth', death_date: 'death', death_place: 'death', death_cause: 'death' };
+  function citeRows(list: CiteRef[]) {
+    const rows: { what: string; page: string; quality: number | null; note: string }[] = [];
+    const seen = new Set<string>();
+    for (const c of list) {
+      const g = GROUP[c.fact] || c.fact;
+      const what =
+        g === 'birth' ? t('Birth') : g === 'death' ? t('Death') : g === 'event' ? c.label || t('Event') : g === 'marriage' ? t('Marriage to %s', c.label || '?') : g === 'burial' ? t('Grave') : g === 'name' ? t('Name') : fieldLabel(g);
+      const k = `${what}|${c.page}|${c.note}`;
+      if (seen.has(k)) continue;
+      seen.add(k);
+      rows.push({ what, page: c.page, quality: c.quality, note: c.note });
+    }
+    return rows;
+  }
 
   const facts = $derived.by(() => {
     if (!P || !p) return [] as { key: string; label: string; value: string }[];
@@ -70,6 +90,7 @@
     add('occupation', t('Occupation'), p.occupation);
     add('education', t('Education'), p.education);
     add('faith', t('Religion'), p.faith);
+    add('residence', t('Address'), p.residence);
     add('height', t('Height'), p.height);
     add('eye_color', t('Eye color'), p.eye_color);
     add('blood_type', t('Blood type'), p.blood_type);
@@ -147,7 +168,7 @@
       </button>
       <div class="id">
         <div class="ident">
-        <h1 class="name">{P.summary.name}</h1>
+        <h1 class="name">{P.summary.name}{#each cites('name') as n}<sup class="cite"><a href="#src-{n}">{n}</a></sup>{/each}</h1>
         {#if p.maiden_name}<div class="maiden">{t('née %s', p.maiden_name)}</div>{/if}
         <div class="meta">
           {#if P.summary.years}<bdi class="yrs">{P.summary.years}</bdi>{/if}
@@ -267,6 +288,13 @@
           </section>
         {/if}
 
+        {#if p.research && !viewer}
+          <section class="block tab-life">
+            <h2>{t('Unconfirmed information')}</h2>
+            <div class="panel research"><p class="small faint">{t('Only you see this: it is not on the family website.')}</p><Html html={p.research} /></div>
+          </section>
+        {/if}
+
         {#if P.sources.length}
           <section class="block tab-sources">
             <h2>{t('Sources and documents')}</h2>
@@ -278,8 +306,18 @@
                   <span class="grow">
                     {#if viewer}<span class="title">{s.title}</span>{:else}<a class="title" href="#/source/{s.id}">{s.title}</a>{/if}
                     <span class="sub">
-                      {[fmtDate(s.date), s.fields.map((f) => fieldLabel(f)).join(', ')].filter(Boolean).join(' · ')}
+                      {[fmtDate(s.date), s.cites?.length ? '' : s.fields.map((f) => fieldLabel(f)).join(', ')].filter(Boolean).join(' · ')}
                     </span>
+                    {#if s.cites?.length}
+                      <ul class="cl">
+                        {#each citeRows(s.cites) as c, k (k)}
+                          <li>
+                            <span class="cf">{c.what}</span>{#if c.page}: {c.page}{/if}{#if c.quality != null}<span class="q"> · {qualityLabel(c.quality)}</span>{/if}
+                            {#if c.note}<div class="cn">{c.note}</div>{/if}
+                          </li>
+                        {/each}
+                      </ul>
+                    {/if}
                     {#if safeHref(s.url)}<a class="small" href={safeHref(s.url)} target="_blank" rel="noopener noreferrer">{s.url}</a>{/if}
                   </span>
                   {#if s.scans.length}
@@ -307,7 +345,7 @@
 
         {#if grave}
           <section class="block tab-life">
-            <h2>{t('Grave')}</h2>
+            <h2>{t('Grave')}{#each cites('burial') as n}<sup class="cite"><a href="#src-{n}">{n}</a></sup>{/each}</h2>
             <div class="panel grave">
               {#if grave.photo}
                 <button class="gph" onclick={() => openLightbox([{ media: grave.photo!, caption: [t('Grave'), grave.cemetery].filter(Boolean).join(': ') }])} aria-label={t('Enlarge')}><Img id={grave.photo} alt="" /></button>
@@ -369,7 +407,7 @@
               {#each P.unions as u (u.union.id)}
                 <div class="union">
                   {#if u.partner}<PersonLink p={u.partner} />{:else}<span class="ext name">{u.partner_name || t('Unknown')}</span>{/if}
-                  {#if relLine(u)}<div class="small muted ul">{relLine(u)}</div>{/if}
+                  {#if relLine(u)}<div class="small muted ul">{relLine(u)}{#each unionCites(u.union) as n}<sup class="cite"><a href="#src-{n}">{n}</a></sup>{/each}</div>{:else if unionCites(u.union).length}<div class="small muted ul">{t('Marriage')}{#each unionCites(u.union) as n}<sup class="cite"><a href="#src-{n}">{n}</a></sup>{/each}</div>{/if}
                 </div>
               {/each}
             {/if}
@@ -592,6 +630,26 @@
     font-size: 0.7rem;
     margin-inline-start: 2px;
   }
+  .cl {
+    list-style: none;
+    margin: 4px 0 0;
+    padding: 0;
+    font-size: 0.86rem;
+  }
+  .cl li + li {
+    margin-top: 2px;
+  }
+  .cl .cf {
+    font-weight: 500;
+  }
+  .cl .q {
+    color: var(--muted);
+  }
+  .cn {
+    color: var(--muted);
+    white-space: pre-line;
+    font-style: italic;
+  }
   .cite a {
     text-decoration: none;
     color: var(--heirloom-text);
@@ -783,5 +841,9 @@
   .years .small {
     display: inline-block;
     margin-top: 8px;
+  }
+  .panel.research {
+    background: color-mix(in srgb, var(--heirloom-soft) 55%, var(--surface));
+    border: 1px dashed color-mix(in srgb, var(--heirloom) 45%, transparent);
   }
 </style>

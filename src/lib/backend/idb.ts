@@ -1,8 +1,30 @@
 // Minimal promise wrapper around IndexedDB.
-const DB_NAME = 'myroots';
 const VERSION = 1;
+let DB_NAME = 'myroots';
 
 let dbp: Promise<IDBDatabase> | null = null;
+
+/** The first tree keeps the original database name, the others get their own. */
+export function dbNameFor(tree: string): string {
+  return tree === 'default' ? 'myroots' : `myroots-${tree}`;
+}
+
+export function useTree(tree: string) {
+  const name = dbNameFor(tree);
+  if (name === DB_NAME) return;
+  if (dbp) dbp.then((db) => db.close()).catch(() => {});
+  dbp = null;
+  DB_NAME = name;
+}
+
+export function deleteDb(tree: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.deleteDatabase(dbNameFor(tree));
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+    req.onblocked = () => resolve();
+  });
+}
 
 export function openDb(): Promise<IDBDatabase> {
   if (dbp) return dbp;

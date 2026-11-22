@@ -60,7 +60,7 @@ pub fn build(db: &Database, pol: &Policy, id: Id) -> Option<Lifeline> {
     if pol.active && (raw.status != Status::Published || pol.should_hide(raw)) {
         return None;
     }
-    let (d, _) = pol.redact(raw);
+    let d = pol.view(raw);
     let ix = db.index();
     let birth = date::to_naive(&d.birth_date);
     let age_at = |ds: &str| -> Option<i32> {

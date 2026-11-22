@@ -63,6 +63,8 @@
             <td><a href="#/people?clan={encodeURIComponent(c.name)}" class="name">{c.name}</a>{#if !c.defined} <button class="tag" onclick={() => define(c)} title={t('Add to the list of defined clans')}>+</button>{/if}</td>
             <td>{c.count}</td>
             <td class="act">
+              <a class="btn sm ghost" href="#/map?clan={encodeURIComponent(c.name)}">{t('On the map')}</a>
+              <a class="btn sm ghost" href="#/tree?clan={encodeURIComponent(c.name)}">{t('In the tree')}</a>
               <button class="btn sm ghost" onclick={() => rename(c)}>{t('Rename')}</button>
               <button class="btn sm ghost danger" onclick={() => remove(c)}>{t('Remove')}</button>
             </td>

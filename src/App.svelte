@@ -1,5 +1,10 @@
 <script lang="ts">
+  import { assetUrl, wpBack } from './lib/backend/assets';
+  import WpIcon from '@lucide/svelte/icons/square-arrow-out-up-left';
   import { app, call, refreshInfo } from './lib/api.svelte';
+  import UpdateBanner from './lib/components/UpdateBanner.svelte';
+  import ProgressBar from './lib/components/ProgressBar.svelte';
+  import { checkUpdates } from './lib/updates.svelte';
   import { route, go, back, canGoBack } from './lib/router.svelte';
   import { ui, toast } from './lib/ui.svelte';
   import { t, lang } from './lib/i18n/index.svelte';
@@ -44,13 +49,20 @@
   import Places from './views/Places.svelte';
   import SettingsView from './views/SettingsView.svelte';
   import DataView from './views/DataView.svelte';
+  import TreesView from './views/TreesView.svelte';
+  import { trees, syncTreeName, hasTrees } from './lib/trees.svelte';
+  import FolderTree from '@lucide/svelte/icons/folder-tree';
+  import LockIcon from '@lucide/svelte/icons/lock-keyhole';
+  import LogOut from '@lucide/svelte/icons/log-out';
+  import { isServerHost, wpConfig } from './lib/backend/assets';
+  import Unlock from './lib/components/Unlock.svelte';
   import Website from './views/Website.svelte';
   import NotFound from './views/NotFound.svelte';
 
   const viewer = $derived(!!app.info?.viewer);
   const sections = $derived(app.info?.sections);
   // A new, empty tree shows only what helps to start.
-  const START_ONLY = ['/', '/data', '/settings'];
+  const START_ONLY = ['/', '/data', '/settings', '/trees'];
   const groups = $derived(
     NAV.map((g) => ({ ...g, items: g.items.filter((i) => visible(i, viewer, sections) && (viewer || !app.info?.empty || START_ONLY.includes(i.path))) })).filter((g) => g.items.length),
   );
@@ -81,7 +93,44 @@
     return () => window.removeEventListener('keydown', k);
   });
 
+  // Desktop app: a new version from myroots.cc (at most once a day, can be turned off)
+  let updChecked = false;
+  $effect(() => {
+    if (viewer || updChecked || !app.settings) return;
+    updChecked = true;
+    setTimeout(() => checkUpdates().catch(() => {}), 8000);
+  });
+
+  // Several trees: keep the name in the list of trees and in the settings in step.
+  let treesSynced = false;
+  $effect(() => {
+    if (viewer || treesSynced || !app.info || !app.settings || !hasTrees()) return;
+    treesSynced = true;
+    syncTreeName().catch(() => {});
+  });
+
+  // Family website with protected people: the way to type the password.
+  const siteLock = $derived(viewer ? ((backend as any).lock && !(backend as any).unlocked ? (backend as any).lock : null) : null);
+  let unlockOpen = $state(false);
+  $effect(() => {
+    const open = () => (unlockOpen = true);
+    window.addEventListener('myroots-unlock', open);
+    return () => window.removeEventListener('myroots-unlock', open);
+  });
+
   let about = $state(false);
+  // Inside WordPress: the way back to the site and the save state of the editor.
+  const wpLink = wpBack();
+  const serverHost = isServerHost();
+  const wpCfg = wpConfig();
+  let wpSave = $state({ saving: false, error: '' });
+  $effect(() => {
+    const b = backend as any;
+    if (b.platform !== 'wp' || !b.listeners) return;
+    const l = (s: { saving: boolean; error: string }) => (wpSave = s);
+    b.listeners.add(l);
+    return () => b.listeners.delete(l);
+  });
   // The tree and the map have their own toolbars (with their own Back button).
   const fullScreen = $derived(route.parts[0] === 'tree' || route.parts[0] === 'map');
   const withBack = $derived((void route.path, void route.query, !fullScreen && canGoBack()));
@@ -120,7 +169,7 @@
   });
 
   const p = $derived(route.parts);
-  const editorOnly = $derived(['sources', 'source', 'health', 'duplicates', 'suggestions', 'clans', 'places', 'settings', 'data', 'website'].includes(p[0] || ''));
+  const editorOnly = $derived(['sources', 'source', 'health', 'duplicates', 'suggestions', 'clans', 'places', 'settings', 'data', 'website', 'trees'].includes(p[0] || ''));
 
   let promptValue = $state('');
   $effect(() => {
@@ -149,7 +198,7 @@
 {#key lang()}
   <div class="shell" class:viewer>
     <nav class="dock no-print" aria-label={t('Menu')}>
-      <a href="#/" class="dock-logo" aria-label={title}><img src="./icon.svg" alt="" width="40" height="40" /></a>
+      <a href="#/" class="dock-logo" aria-label={title}><img src={assetUrl('icon.svg')} alt="" width="40" height="40" /></a>
       {#each dock as item (item!.path)}
         {@const Icon = item!.icon}
         <a href="#{item!.path}" class="dk" class:on={isActive(item!.path, route.path)} aria-current={isActive(item!.path, route.path) ? 'page' : undefined}>
@@ -165,7 +214,7 @@
     <aside class="rail no-print" class:open={ui.menuOpen} aria-label={t('Menu')}>
       <div class="brand">
         <a href="#/" class="logo" aria-label="MyRoots">
-          <img src="./icon.svg" alt="" width="36" height="36" />
+          <img src={assetUrl('icon.svg')} alt="" width="36" height="36" />
           <span class="nm">
             <span class="name">{title}</span>
             {#if viewer && app.info?.site?.subtitle}<span class="sub">{app.info.site.subtitle}</span>{:else if !viewer && title !== 'MyRoots'}<span class="sub">MyRoots</span>{/if}
@@ -173,16 +222,20 @@
         </a>
         <button class="btn ghost icon close-menu" onclick={() => (ui.menuOpen = false)} aria-label={t('Close')}><X size={18} /></button>
       </div>
+      {#if !viewer && trees.list.length > 1}
+        <a href="#/trees" class="tree-switch" onclick={() => (ui.menuOpen = false)}><FolderTree size={15} strokeWidth={1.8} /><span>{t('Switch tree (%d)', trees.list.length)}</span></a>
+      {/if}
       {#if !app.info?.empty && (!viewer || sections?.list !== false)}
         <div class="qs"><QuickSearch /></div>
       {/if}
       <nav>
+        <!-- "More": only what is not already in the dock (computer) or in the tab bar (phone) -->
         {#each groups as g (g.label())}
-          <div class="grp">
+          <div class="grp" class:alldock={g.items.every((i) => DOCK.includes(i.path))} class:alltab={g.items.every((i) => TABBAR.includes(i.path))}>
             <div class="glabel">{g.label()}</div>
             {#each g.items as item (item.path)}
               {@const Icon = item.icon}
-              <a href="#{item.path}" class="item" class:on={isActive(item.path, route.path)} aria-current={isActive(item.path, route.path) ? 'page' : undefined}>
+              <a href="#{item.path}" class="item" class:indock={DOCK.includes(item.path)} class:intab={TABBAR.includes(item.path)} class:on={isActive(item.path, route.path)} aria-current={isActive(item.path, route.path) ? 'page' : undefined}>
                 <Icon size={18} strokeWidth={1.8} />
                 <span>{item.label()}</span>
                 {#if item.badge === 'suggestions' && newSuggestions}<span class="badge">{newSuggestions}</span>{/if}
@@ -191,6 +244,18 @@
           </div>
         {/each}
       </nav>
+      {#if siteLock}
+        <div class="unlock-link">
+          <button type="button" class="item" onclick={() => ((unlockOpen = true), (ui.menuOpen = false))}><LockIcon size={18} strokeWidth={1.8} /><span>{t('Show protected people')}</span></button>
+        </div>
+      {/if}
+      {#if wpLink}
+        <div class="wp-back">
+          <a href={wpLink.url} class="item"><WpIcon size={18} strokeWidth={1.8} /><span>{viewer ? wpLink.label || t('Back to the website') : serverHost ? wpLink.label : t('Back to WordPress')}</span></a>
+          {#if serverHost && wpCfg?.logout}<a href={wpCfg.logout} class="item"><LogOut size={18} strokeWidth={1.8} /><span>{t('Log out')}</span></a>{/if}
+          {#if !viewer}<p class="wp-state small" class:err={!!wpSave.error} role="status">{wpSave.error ? t('Not saved yet, retrying…') : wpSave.saving ? t('Saving…') : serverHost ? t('Saved on the server') : t('Saved in WordPress')}</p>{/if}
+        </div>
+      {/if}
       <div class="foot small faint">
         <button type="button" class="about-link" onclick={() => ((about = true), (ui.menuOpen = false))}>
           {#if viewer}{t('Made with MyRoots')}{:else}MyRoots {app.info?.version}{/if}
@@ -274,6 +339,8 @@
         <SettingsView />
       {:else if p[0] === 'data'}
         <DataView />
+      {:else if p[0] === 'trees'}
+        <TreesView />
       {:else if p[0] === 'website'}
         <Website />
       {:else}
@@ -297,6 +364,7 @@
     </nav>
   </div>
 
+  {#if !viewer}<UpdateBanner /><ProgressBar />{/if}
   <div class="toasts" aria-live="polite">
     {#each ui.toasts as tt (tt.id)}
       <div class="toast {tt.kind}">{tt.text}</div>
@@ -332,6 +400,7 @@
     <Lightbox />
   {/if}
 {#if about}<AboutDialog onclose={() => (about = false)} />{/if}
+{#if unlockOpen && siteLock}<Modal title={t('Protected people')} onclose={() => (unlockOpen = false)}><Unlock header={siteLock} /></Modal>{/if}
 {/key}
 
 <style>
@@ -476,6 +545,18 @@
   .close-menu {
     display: none;
   }
+  .tree-switch {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: -6px 16px 8px 20px;
+    font-size: 0.84rem;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .tree-switch:hover {
+    color: var(--ink);
+  }
   .qs {
     padding: 2px 16px 6px;
   }
@@ -533,6 +614,31 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
+  }
+  .unlock-link {
+    padding: 8px 10px 4px;
+    border-top: 1px solid var(--line);
+  }
+  .unlock-link .item {
+    width: 100%;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 0.93rem;
+    cursor: pointer;
+    color: var(--ink);
+  }
+  .wp-back {
+    padding: 0 10px 4px;
+    border-top: 1px solid var(--line);
+    padding-top: 8px;
+  }
+  .wp-state {
+    margin: 2px 12px 0;
+    color: var(--faint);
+  }
+  .wp-state.err {
+    color: var(--danger, #b3261e);
   }
   .about-link {
     border: 0;
@@ -620,7 +726,18 @@
     color: #fff;
   }
 
+  /* computer: the dock already has these */
+  @media (min-width: 901px) {
+    .rail .item.indock,
+    .rail .grp.alldock {
+      display: none;
+    }
+  }
   @media (max-width: 900px) {
+    .rail .item.intab,
+    .rail .grp.alltab {
+      display: none;
+    }
     .dock {
       display: none;
     }

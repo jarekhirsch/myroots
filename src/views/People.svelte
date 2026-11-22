@@ -4,7 +4,7 @@
   import { route } from '../lib/router.svelte';
   import { t, tx, tn, locale } from '../lib/i18n/index.svelte';
   import { year, fmtDateShort } from '../lib/format';
-  import { norm, collator } from '../lib/text';
+  import { collator, search } from '../lib/text';
   import Avatar from '../lib/components/Avatar.svelte';
   import UserPlus from '@lucide/svelte/icons/user-plus';
   import FamilyTimeline from '../lib/components/FamilyTimeline.svelte';
@@ -42,10 +42,8 @@
   }
 
   const filtered = $derived.by(() => {
-    const words = norm(q).split(' ').filter(Boolean);
     const coll = collator(locale());
-    let list = (people.data || []).filter((p) => !p.anon);
-    if (words.length) list = list.filter((p) => words.every((w) => norm(`${p.name} ${p.maiden_name} ${p.birth_place} ${p.death_place} ${p.occupation} ${p.years}`).includes(w)));
+    let list = search(people.data || [], 'people', (p) => `${p.name} ${p.maiden_name} ${p.birth_place} ${p.death_place} ${p.occupation} ${p.years} ${p.death_cause || ''} ${p.residence || ''}`, q, Infinity, (p) => !p.anon);
     if (clan) list = list.filter((p) => (clan === '-' ? !p.clans.length : p.clans.includes(clan)));
     if (gender) list = list.filter((p) => (gender === 'U' ? p.gender !== 'M' && p.gender !== 'F' : p.gender === gender));
     if (life) list = list.filter((p) => (life === 'living' ? p.living : !p.living));
@@ -163,6 +161,11 @@
               {#if p.maiden_name}<span class="muted maiden">({t('née %s', p.maiden_name)})</span>{/if}
             </span>
             <span class="sub"><bdi>{dates(p)}</bdi>{#if p.birth_place}<span class="faint"> · {p.birth_place}</span>{/if}</span>
+            {#if p.death_cause || p.residence}
+              <span class="sub faint">
+                {#if p.death_cause}<span title={t('Cause of death')}>† {p.death_cause}</span>{/if}{#if p.death_cause && p.residence}<span> · </span>{/if}{#if p.residence}<span title={t('Address')}>{p.residence}</span>{/if}
+              </span>
+            {/if}
           </span>
           <span class="tags">
             {#each p.clans.slice(0, 2) as c}<span class="tag heirloom">{c}</span>{/each}

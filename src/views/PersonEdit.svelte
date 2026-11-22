@@ -14,23 +14,26 @@
   import RecordingsEditor from '../lib/components/RecordingsEditor.svelte';
   import PlaceInput from '../lib/components/PlaceInput.svelte';
   import ClanInput from '../lib/components/ClanInput.svelte';
+  import CitationButton from '../lib/components/CitationButton.svelte';
+  import { FACTS, perFact, personCites, withPersonCites } from '../lib/citations';
   import Plus from '@lucide/svelte/icons/plus';
   import X from '@lucide/svelte/icons/x';
   import Up from '@lucide/svelte/icons/arrow-up';
   import Down from '@lucide/svelte/icons/arrow-down';
-  import type { Person, Union, EditModel, SourceView, Summary, Grave } from '../lib/types';
+  import type { Person, Union, EditModel, SourceBrief, Grave, Citation } from '../lib/types';
 
   let { id }: { id: number | null } = $props();
 
-  const CITABLE = ['birth_date', 'birth_place', 'death_date', 'death_place', 'occupation', 'faith', 'education', 'biography'];
+  // person fields that take sources (model::CITABLE_FIELDS)
+  const CITABLE = ['name', 'birth_date', 'birth_place', 'death_date', 'death_place', 'death_cause', 'burial', 'occupation', 'faith', 'education', 'residence', 'biography'];
 
   function blank(): Person {
     return {
       id: 0, status: 'published', first_name: '', last_name: '', maiden_name: '', gender: '',
-      birth_date: '', birth_place: '', death_date: '', death_place: '', death_cause: '', deceased: false, biography: '', notes: '',
+      birth_date: '', birth_place: '', death_date: '', death_place: '', death_cause: '', deceased: false, biography: '', notes: '', research: '', residence: '',
       occupation: '', education: '', faith: '', height: '', eye_color: '', blood_type: '',
       mother: null, mother_rel: 'bio', father: null, father_rel: 'bio', events: [], clans: [], photo: null, gallery: [], recordings: [], aging: [], aging_audio: null, grave: emptyGrave(),
-      custom: {}, citations: {}, created: 0, updated: 0,
+      custom: {}, citations: {}, citation_info: {}, created: 0, updated: 0,
     };
   }
 
@@ -44,7 +47,7 @@
   let unions = $state<URow[]>([]);
   let children = $state<(number | null)[]>([]);
   let sources = $state<number[]>([]);
-  let allSources = $state<SourceView[]>([]);
+  let allSources = $state.raw<SourceBrief[]>([]);
   let loaded = $state(false);
   let tab = $state('basic');
   let busy = $state(false);
@@ -55,7 +58,7 @@
     const cur = id;
     loaded = false;
     (async () => {
-      allSources = await call<SourceView[]>('sources.list');
+      allSources = await call<SourceBrief[]>('sources.brief');
       if (cur) {
         const m = await call<EditModel>('person.edit', { id: cur });
         person = { ...blank(), ...m.person, grave: { ...emptyGrave(), ...(m.person.grave || {}) } };
@@ -85,6 +88,16 @@
   });
 
   const self = $derived(id ? [id] : []);
+  // sources next to every fact (default) or one list with ticks (Settings)
+  const pf = $derived(perFact(app.settings));
+  function factCites(fact: string): Citation[] {
+    return personCites(person, FACTS[fact]);
+  }
+  function setFact(fact: string, list: Citation[]) {
+    const r = withPersonCites(person, FACTS[fact], list);
+    person.citations = r.citations;
+    person.citation_info = r.citation_info;
+  }
   const schema = $derived(app.settings?.custom_schema || []);
 
   function addUnion() {
@@ -128,6 +141,9 @@
       if (!c[k].length) delete c[k];
     }
     person.citations = c;
+    const info = { ...(person.citation_info || {}) };
+    for (const k of Object.keys(info)) if (k.endsWith(`#${src}`)) delete info[k];
+    person.citation_info = info;
   }
   let addSrc = $state<number | ''>('');
   $effect(() => {
@@ -159,7 +175,13 @@
       } else {
         pid = (await call<{ id: number }>('person.create', { person, relations })).id;
       }
-      await call('person.set_sources', { id: pid, sources: [...new Set([...sources, ...Object.values(person.citations || {}).flat()])] });
+      // every cited source is also linked to the person (the list on the source page)
+      const cited = [
+        ...Object.values(person.citations || {}).flat(),
+        ...person.events.flatMap((e) => (e.citations || []).map((c) => c.source)),
+        ...unions.flatMap((x) => (x.citations || []).map((c) => c.source)),
+      ];
+      await call('person.set_sources', { id: pid, sources: [...new Set([...sources, ...cited])] });
       dirty = false;
       toast(t('Saved.'));
       go(`/person/${pid}`, !id);
@@ -194,8 +216,11 @@
     ['more', t('More')],
   ]);
 
-  const srcTitle = (sid: number) => allSources.find((s) => s.source.id === sid)?.source.title || `#${sid}`;
+  const srcTitle = (sid: number) => allSources.find((s) => s.id === sid)?.title || `#${sid}`;
   const fieldNames: Record<string, () => string> = {
+    name: () => t('Name'),
+    death_cause: () => t('Cause of death'),
+    burial: () => t('Grave'),
     birth_date: () => t('Date of birth'),
     birth_place: () => t('Place of birth'),
     death_date: () => t('Date of death'),
@@ -203,6 +228,7 @@
     occupation: () => t('Occupation'),
     faith: () => t('Religion'),
     education: () => t('Education'),
+    residence: () => t('Address'),
     biography: () => t('Biography'),
   };
 </script>
@@ -223,7 +249,10 @@
       {#if tab === 'basic'}
         <div class="panel">
           <div class="form-grid">
-            <label class="field"><span class="lbl">{t('First name')}</span><input type="text" bind:value={person.first_name} autocomplete="off" /></label>
+            <div class="fwrap">
+              <label class="field"><span class="lbl">{t('First name')}</span><input type="text" bind:value={person.first_name} autocomplete="off" /></label>
+              {#if pf}<span class="fcite"><CitationButton fact={t('Name')} value={factCites('name')} bind:sources={allSources} onchange={(v) => setFact('name', v)} /></span>{/if}
+            </div>
             <label class="field"><span class="lbl">{t('Surname')}</span><input type="text" bind:value={person.last_name} autocomplete="off" /></label>
             <label class="field"><span class="lbl">{t('Maiden name')}</span><input type="text" bind:value={person.maiden_name} autocomplete="off" /></label>
             <label class="field">
@@ -235,16 +264,32 @@
                 <option value="U">{tx('gender', 'Unknown')}</option>
               </select>
             </label>
-            <label class="field"><span class="lbl">{t('Date of birth')}</span><DateInput bind:value={person.birth_date} /></label>
+            <div class="fwrap">
+              <label class="field"><span class="lbl">{t('Date of birth')}</span><DateInput bind:value={person.birth_date} /></label>
+              {#if pf}<span class="fcite"><CitationButton fact={t('Birth')} value={factCites('birth')} bind:sources={allSources} onchange={(v) => setFact('birth', v)} /></span>{/if}
+            </div>
             <label class="field"><span class="lbl">{t('Place of birth')}</span><PlaceInput bind:value={person.birth_place} /></label>
-            <label class="field"><span class="lbl">{t('Date of death')}</span><DateInput bind:value={person.death_date} /></label>
+            <div class="fwrap">
+              <label class="field"><span class="lbl">{t('Date of death')}</span><DateInput bind:value={person.death_date} /></label>
+              {#if pf}<span class="fcite"><CitationButton fact={t('Death')} value={factCites('death')} bind:sources={allSources} onchange={(v) => setFact('death', v)} /></span>{/if}
+            </div>
             <label class="field"><span class="lbl">{t('Place of death')}</span><PlaceInput bind:value={person.death_place} /></label>
             <label class="field full"><span class="lbl">{t('Cause of death')}</span><input type="text" bind:value={person.death_cause} /></label>
             {#if !person.death_date}
               <label class="check full"><input type="checkbox" bind:checked={person.deceased} /> {t('Deceased, the date of death is unknown')}</label>
             {/if}
-            <label class="field"><span class="lbl">{t('Occupation')}</span><input type="text" bind:value={person.occupation} /></label>
-            <label class="field"><span class="lbl">{t('Education')}</span><input type="text" bind:value={person.education} /></label>
+            <div class="fwrap">
+              <label class="field"><span class="lbl">{t('Occupation')}</span><input type="text" bind:value={person.occupation} /></label>
+              {#if pf}<span class="fcite"><CitationButton fact={t('Occupation')} value={factCites('occupation')} bind:sources={allSources} onchange={(v) => setFact('occupation', v)} /></span>{/if}
+            </div>
+            <div class="fwrap">
+              <label class="field"><span class="lbl">{t('Education')}</span><input type="text" bind:value={person.education} /></label>
+              {#if pf}<span class="fcite"><CitationButton fact={t('Education')} value={factCites('education')} bind:sources={allSources} onchange={(v) => setFact('education', v)} /></span>{/if}
+            </div>
+            <div class="fwrap full">
+              <label class="field"><span class="lbl">{t('Address')}</span><input type="text" bind:value={person.residence} placeholder={t('Street, town, country')} autocomplete="off" /></label>
+              {#if pf}<span class="fcite"><CitationButton fact={t('Address')} value={factCites('residence')} bind:sources={allSources} onchange={(v) => setFact('residence', v)} /></span>{/if}
+            </div>
             <div class="field full">
               <span class="lbl">{t('Clans')}</span>
               <ClanInput bind:value={person.clans} />
@@ -257,7 +302,7 @@
         </div>
         {#if person.grave && (person.death_date || person.deceased || graveOpen || person.grave.cemetery || person.grave.lat != null || person.grave.photo)}
           <div class="panel">
-            <h2>{t('Grave')}</h2>
+            <h2 class="hcite">{t('Grave')}{#if pf}<CitationButton fact={t('Grave')} value={factCites('burial')} bind:sources={allSources} onchange={(v) => setFact('burial', v)} />{/if}</h2>
             <GraveEditor bind:grave={person.grave} name={[person.first_name, person.last_name].filter(Boolean).join(' ')} />
           </div>
         {:else}
@@ -305,6 +350,7 @@
                   {/if}
                   <label class="check small"><input type="checkbox" bind:checked={u.external} /> {t('Not in the tree (name only)')}</label>
                 </div>
+                {#if pf}<CitationButton fact={u.informal ? t('Relationship') : t('Marriage')} value={u.citations || []} bind:sources={allSources} onchange={(v) => (u.citations = v)} />{/if}
                 <button type="button" class="btn ghost icon" onclick={() => (unions = unions.filter((_, k) => k !== i))} aria-label={t('Remove')}><X size={16} /></button>
               </div>
               <div class="form-grid">
@@ -343,7 +389,7 @@
         </div>
       {:else if tab === 'life'}
         <div class="panel">
-          <span class="lbl-s">{t('Biography')}</span>
+          <span class="lbl-s hcite">{t('Biography')}{#if pf}<CitationButton fact={t('Biography')} value={factCites('biography')} bind:sources={allSources} onchange={(v) => setFact('biography', v)} />{/if}</span>
           <RichText bind:value={person.biography} label={t('Biography')} minHeight={200} />
         </div>
         <div class="panel">
@@ -359,6 +405,7 @@
                 <div class="field full"><span class="lbl">{t('Image')}</span><PhotoField bind:value={ev.image} size={80} /></div>
               </div>
               <div class="ectl">
+                {#if pf}<span class="ecite"><CitationButton fact={ev.name || t('Event')} value={ev.citations || []} bind:sources={allSources} onchange={(v) => (ev.citations = v)} /></span>{/if}
                 <button type="button" class="btn ghost icon sm" onclick={() => moveEvent(i, -1)} disabled={i === 0} aria-label={t('Move up')}><Up size={15} /></button>
                 <button type="button" class="btn ghost icon sm" onclick={() => moveEvent(i, 1)} disabled={i === person.events.length - 1} aria-label={t('Move down')}><Down size={15} /></button>
                 <button type="button" class="btn ghost sm danger" onclick={() => (person.events = person.events.filter((_, k) => k !== i))}>{t('Remove event')}</button>
@@ -370,6 +417,11 @@
         <div class="panel">
           <span class="lbl-s">{t('Notes')}</span>
           <RichText bind:value={person.notes} label={t('Notes')} />
+        </div>
+        <div class="panel research">
+          <span class="lbl-s">{t('Unconfirmed information')}</span>
+          <p class="hint">{t('Family stories, guesses and clues to check. Only you see them: they are not on the family website or in the shared viewer.')}</p>
+          <RichText bind:value={person.research} label={t('Unconfirmed information')} />
         </div>
       {:else if tab === 'photos'}
         <div class="panel">
@@ -388,25 +440,31 @@
       {:else if tab === 'sources'}
         <div class="panel">
           <h2>{t('Sources and documents')}</h2>
-          <p class="hint">{t('Link sources to this person and tick the facts each source confirms.')}</p>
+          {#if pf}
+            <p class="hint">{t('Sources of single facts are added with the Source button next to each of them (birth, death, events, marriages). Here you link sources about the person as a whole.')}</p>
+          {:else}
+            <p class="hint">{t('Link sources to this person and tick the facts each source confirms.')}</p>
+          {/if}
           {#each sources as sid (sid)}
             <div class="src">
               <div class="urow">
                 <strong class="grow">{srcTitle(sid)}</strong>
                 <button type="button" class="btn ghost icon" onclick={() => removeSource(sid)} aria-label={t('Remove')}><X size={16} /></button>
               </div>
-              <div class="cites">
-                {#each CITABLE as f}
-                  <label class="check small"><input type="checkbox" checked={cited(sid, f)} onchange={() => toggleCite(sid, f)} /> {fieldNames[f]()}</label>
-                {/each}
-              </div>
+              {#if !pf}
+                <div class="cites">
+                  {#each CITABLE as f}
+                    <label class="check small"><input type="checkbox" checked={cited(sid, f)} onchange={() => toggleCite(sid, f)} /> {fieldNames[f]()}</label>
+                  {/each}
+                </div>
+              {/if}
             </div>
           {/each}
           <div class="urow addsrc">
             <select bind:value={addSrc} aria-label={t('Add source')}>
               <option value="">{t('Add source')}</option>
-              {#each allSources.filter((s) => !sources.includes(s.source.id)) as s (s.source.id)}
-                <option value={s.source.id}>{s.source.title}</option>
+              {#each allSources.filter((s) => !sources.includes(s.id)) as s (s.id)}
+                <option value={s.id}>{s.title}</option>
               {/each}
             </select>
             <a class="btn sm ghost" href="#/source/new">{t('New source')}</a>
@@ -415,7 +473,10 @@
       {:else if tab === 'more'}
         <div class="panel">
           <div class="form-grid">
-            <label class="field"><span class="lbl">{t('Religion')}</span><input type="text" bind:value={person.faith} /></label>
+            <div class="fwrap">
+              <label class="field"><span class="lbl">{t('Religion')}</span><input type="text" bind:value={person.faith} /></label>
+              {#if pf}<span class="fcite"><CitationButton fact={t('Religion')} value={factCites('faith')} bind:sources={allSources} onchange={(v) => setFact('faith', v)} /></span>{/if}
+            </div>
             <label class="field"><span class="lbl">{t('Height')}</span><input type="text" bind:value={person.height} /></label>
             <label class="field"><span class="lbl">{t('Eye color')}</span><input type="text" bind:value={person.eye_color} /></label>
             <label class="field"><span class="lbl">{t('Blood type')}</span><input type="text" bind:value={person.blood_type} /></label>
@@ -524,6 +585,26 @@
     margin-top: 10px;
     justify-content: flex-end;
   }
+  /* a field with its Source button on the label line */
+  .fwrap {
+    position: relative;
+    display: grid;
+    min-width: 0;
+  }
+  .fcite {
+    position: absolute;
+    top: -2px;
+    inset-inline-end: 0;
+  }
+  .hcite {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .ecite {
+    margin-inline-end: auto;
+  }
   .cites {
     display: flex;
     flex-wrap: wrap;
@@ -547,5 +628,8 @@
     .savebar {
       bottom: calc(var(--tabbar) + env(safe-area-inset-bottom));
     }
+  }
+  .panel.research {
+    background: color-mix(in srgb, var(--heirloom-soft) 55%, var(--surface));
   }
 </style>

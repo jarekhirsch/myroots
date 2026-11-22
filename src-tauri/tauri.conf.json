@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "MyRoots",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "identifier": "pl.myroots.app",
   "build": {
     "beforeDevCommand": "npm run dev",
@@ -45,7 +45,8 @@
     "copyright": "© 2026 Jarek Hirsch",
     "publisher": "Jarek Hirsch",
     "license": "GPL-3.0-or-later",
-    "homepage": "https://myroots.pl",
+    "licenseFile": "installer/informacje.txt",
+    "homepage": "https://myroots.cc",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -69,11 +70,40 @@
       "entitlements": "Entitlements.plist",
       "hardenedRuntime": true
     },
+    "linux": {
+      "deb": {
+        "section": "misc",
+        "depends": [
+          "gstreamer1.0-plugins-base",
+          "gstreamer1.0-plugins-good"
+        ]
+      },
+      "rpm": {
+        "depends": [
+          "gstreamer1-plugins-base",
+          "gstreamer1-plugins-good"
+        ]
+      },
+      "appimage": {
+        "bundleMediaFramework": true
+      }
+    },
     "iOS": {
       "minimumSystemVersion": "15.0"
     },
     "android": {
       "minSdkVersion": 26
+    }
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDg5QTAyNjExQjU4QUIxM0YKUldRL3NZcTFFU2FnaVVvQy9NYWRDM25DSkEwUy91cGRqaElRdEtwQ1FsSUpFM1BIMFIzaHk2ejIK",
+      "endpoints": [
+        "https://myroots.cc/updates/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
+      }
     }
   }
 }

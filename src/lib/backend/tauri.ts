@@ -1,6 +1,6 @@
 // Desktop / mobile backend: Tauri commands backed by the native Rust engine + SQLite.
 import { invoke, convertFileSrc } from '@tauri-apps/api/core';
-import type { Backend, MediaInput } from './types';
+import type { Backend, MediaInput, TreesApi } from './types';
 import { slug, stamp } from './util';
 
 function bytes(r: ArrayBuffer | number[] | Uint8Array | null): Uint8Array {
@@ -30,10 +30,24 @@ function externalLinks() {
 export class TauriBackend implements Backend {
   platform = 'tauri' as const;
   readonly = false;
+  /** Open tree; part of media URLs because the media protocol caches forever. */
+  private tree = 'default';
+  trees: TreesApi = {
+    list: () => invoke('trees_list'),
+    create: (name) => invoke('tree_create', { name }),
+    rename: (id, name) => invoke('tree_rename', { id, name }),
+    remove: (id) => invoke('tree_delete', { id }),
+    open: (id) => invoke('tree_open', { id }),
+  };
 
   static async create(): Promise<TauriBackend> {
     const b = new TauriBackend();
     await invoke('engine_open');
+    try {
+      b.tree = (await b.trees.list()).current;
+    } catch {
+      /* older core: a single tree */
+    }
     externalLinks();
     return b;
   }
@@ -54,7 +68,8 @@ export class TauriBackend implements Backend {
 
   mediaUrl(id: number, thumb = true): string {
     if (!id) return '';
-    return convertFileSrc(thumb ? `${id}_t` : `${id}`, 'media');
+    const u = convertFileSrc(thumb ? `${id}_t` : `${id}`, 'media');
+    return this.tree === 'default' ? u : `${u}?t=${encodeURIComponent(this.tree)}`;
   }
 
   async mediaBytes(id: number, thumb = false): Promise<Uint8Array | null> {
@@ -83,7 +98,10 @@ export class TauriBackend implements Backend {
 
   async exportSite(): Promise<string | null> {
     const info = await this.call<any>('app.info');
-    return this.saveAs(`${slug(info.site?.title || info.tree_name || 'family')}-website.zip`, 'zip', 'ZIP', async () => bytes(await invoke<ArrayBuffer>('site_bytes')));
+    return this.saveAs(`${slug(info.site?.title || info.tree_name || 'family')}-website.zip`, 'zip', 'ZIP', async () => {
+      const { lockZip } = await import('../sitelock');
+      return lockZip(bytes(await invoke<ArrayBuffer>('site_bytes')), await this.call('settings.get'));
+    });
   }
 
   async saveFile(name: string, data: Uint8Array | string, _mime: string): Promise<string | null> {
@@ -102,7 +120,7 @@ export class TauriBackend implements Backend {
   async fetchBytes(url: string, headers?: Record<string, string>) {
     const { fetch } = await import('@tauri-apps/plugin-http');
     // map services (OpenStreetMap Nominatim) refuse requests without an identification
-    const r = await fetch(url, { headers: { 'User-Agent': 'MyRoots/3 (family tree app; https://hirsch.fi)', ...headers } });
+    const r = await fetch(url, { headers: { 'User-Agent': 'MyRoots/3 (family tree app; https://hirsch.lt)', ...headers } });
     return { status: r.status, bytes: new Uint8Array(await r.arrayBuffer()), type: r.headers.get('content-type') || '' };
   }
 

@@ -1,6 +1,6 @@
 # MyRoots: copyright notice and additional terms
 
-Copyright © 2026 Jarek Hirsch, https://hirsch.fi
+Copyright © 2026 Jarek Hirsch, https://hirsch.lt
 
 MyRoots is free software: you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
@@ -15,7 +15,7 @@ for more details.
 ## Additional terms (section 7 of the GNU GPL version 3)
 
 1. **Attribution (7b).** The author attribution "© Jarek Hirsch" together with
-   the link to https://hirsch.fi must be preserved in the source files that
+   the link to https://hirsch.lt must be preserved in the source files that
    carry it and in the "About MyRoots" window (the Appropriate Legal Notices)
    of every copy and every modified version of the program, including the
    family websites it generates.
@@ -37,7 +37,7 @@ MyRoots jest wolnym oprogramowaniem na licencji GNU GPL w wersji 3 lub
 późniejszej, z warunkami dodatkowymi z sekcji 7:
 
 1. W każdej kopii i każdej zmienionej wersji należy zachować oznaczenie
-   „© Jarek Hirsch” z linkiem do https://hirsch.fi w oknie „O aplikacji”
+   „© Jarek Hirsch” z linkiem do https://hirsch.lt w oknie „O aplikacji”
    (oraz w plikach źródłowych, które je zawierają).
 2. Zmieniona wersja musi być wyraźnie oznaczona jako inna niż oryginalny
    MyRoots i nie może sugerować, że pochodzi od autora.

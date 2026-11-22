@@ -189,7 +189,16 @@
               {#if g.from}<span>{t('born %s', g.from === g.to ? `\u2068${g.from}\u2069` : `\u2068${g.from}–${g.to}\u2069`)}</span>{/if}
               <span>{tn('%d person', '%d people', g.bars.length)}</span>
             </button>
-            <div class="lanes {g.mode}" style="height: {g.lanes * (H + G) - G}px">
+            <!-- one listener per generation instead of four per person (thousands of bars in big trees) -->
+            <div
+              class="lanes {g.mode}"
+              style="height: {g.lanes * (H + G) - G}px"
+              role="presentation"
+              onpointerover={(e) => (hover = (e.target as HTMLElement).closest?.('[data-id]')?.getAttribute('data-id') ?? null)}
+              onpointerleave={() => (hover = null)}
+              onfocusin={(e) => (hover = (e.target as HTMLElement).closest?.('[data-id]')?.getAttribute('data-id') ?? null)}
+              onfocusout={() => (hover = null)}
+            >
               {#each g.bars as b (b.id)}
                 {@const n = tone(b.name || '?')}
                 <a
@@ -198,15 +207,12 @@
                   class:living={b.open === 'living'}
                   class:unknown={b.open === 'unknown'}
                   class:approx={b.approxStart}
-                  class:dim={lit && !lit.has(b.id)}
-                  class:me={hover === b.id}
+                  data-id={b.id}
+                  class:dim={g.mode !== 'mini' && lit && !lit.has(b.id)}
+                  class:me={g.mode !== 'mini' && hover === b.id}
                   style="left: {x(b.start)}px; top: {b.lane * (H + G)}px; width: {g.mode === 'mini' ? 12 : Math.max(8, (b.end - b.start) * ppy)}px; --bg: var(--p{n}); --fg: var(--p{n}t)"
                   title={g.mode === 'full' ? undefined : `${b.name} ${b.years}`}
                   aria-label={g.mode === 'full' ? undefined : `${b.name} ${b.years}`}
-                  onpointerenter={() => (hover = b.id)}
-                  onpointerleave={() => (hover = null)}
-                  onfocus={() => (hover = b.id)}
-                  onblur={() => (hover = null)}
                 >
                   {#if g.mode === 'full'}
                     {#each b.marriages as m (m.partner + m.year)}

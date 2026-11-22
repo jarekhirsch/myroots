@@ -3,7 +3,7 @@
   import { backend } from '../lib/backend';
   import { route, go } from '../lib/router.svelte';
   import { t, tn } from '../lib/i18n/index.svelte';
-  import { toast, confirmDialog, promptDialog } from '../lib/ui.svelte';
+  import { toast, confirmDialog, promptDialog, withProgress } from '../lib/ui.svelte';
   import { errorText } from '../lib/errors';
   import { pickFile } from '../lib/media';
   import { slug, stamp } from '../lib/backend/util';
@@ -37,7 +37,7 @@
     if (!app.info?.empty && !(await confirmDialog(t('Restore a backup?'), t('Everything currently in the app will be replaced by the content of the backup.'), t('Restore'), true))) return;
     busy = true;
     try {
-      await backend.importArchive(new Uint8Array(await f.arrayBuffer()));
+      await withProgress(t('Restoring the backup…'), async (report) => backend.importArchive(new Uint8Array(await f.arrayBuffer()), report));
       await refreshInfo();
       bump();
       toast(t('Backup restored.'));
@@ -77,14 +77,16 @@
     const f = await pickFile('.ged,.gedcom,.gdz,.zip,text/plain,application/zip');
     if (!f) return;
     gedFile = f;
-    gedB64 = b64(new Uint8Array(await f.arrayBuffer()));
+    gedB64 = await withProgress(t('Reading the file…'), async () => b64(new Uint8Array(await f.arrayBuffer())));
     result = null;
     await runGed(true);
   }
   async function runGed(dry: boolean) {
     busy = true;
     try {
-      const r = await call<GedcomReport>('gedcom.import', { base64: gedB64, options: { mode: gedMode, dry_run: dry, event_names: EVENT_NAMES() } });
+      const r = await withProgress(dry ? t('Checking the file…') : t('Importing…'), () =>
+        call<GedcomReport>('gedcom.import', { base64: gedB64, options: { mode: gedMode, dry_run: dry, event_names: EVENT_NAMES() } }),
+      );
       if (dry) preview = r;
       else {
         result = r;
@@ -129,6 +131,29 @@
     if (tab === 'wp') call<WpPending>('wp.pending').then((p) => (pending = p));
   });
 
+  // Inside WordPress: the 2.x plugin data of this very site, without a file.
+  const wpb = backend.platform === 'wp' ? (backend as any) : null;
+  const legacy = wpb ? Number(wpb.cfg?.legacy || 0) : 0;
+  async function importHere() {
+    if (!app.info?.empty && !(await confirmDialog(t('Import into a tree that is not empty?'), t('The people from the backup will be added next to the existing ones. You can merge duplicates later.'), t('Import')))) return;
+    busy = true;
+    try {
+      const json = await wpb.legacyExport();
+      wpReport = await call<WpReport>('wp.import', { json });
+      // the tree gets the name of the site (not its address)
+      const st = await call<any>('settings.get');
+      if (wpb.cfg.site_name && (!st.tree_name || st.tree_name === new URL(wpb.cfg.home).host)) await call('settings.save', { settings: { ...st, tree_name: wpb.cfg.site_name } });
+      pending = await call<WpPending>('wp.pending');
+      await refreshInfo();
+    } catch (e) {
+      toast(errorText(e), 'error');
+      busy = false;
+      return;
+    }
+    busy = false;
+    if (pending?.items.length) await fetchMedia(wpb.cfg.home);
+  }
+
   async function importWp() {
     const f = await pickFile('.json,application/json');
     if (!f) return;
@@ -144,8 +169,8 @@
       busy = false;
     }
   }
-  async function fetchMedia() {
-    let site = pending?.site || '';
+  async function fetchMedia(here = '') {
+    let site = here || pending?.site || '';
     if (!site) {
       site = ((await promptDialog(t('Address of the WordPress site'), '', 'https://')) || '').trim();
       if (!/^https?:\/\/./.test(site)) return;
@@ -191,7 +216,7 @@
   <div class="page-head">
     <div>
       <h1>{t('Import and backup')}</h1>
-      <p class="lead">{t('Your data lives only on this device. Make a backup regularly and keep it somewhere safe.')}</p>
+      <p class="lead">{wpb && (window as any).MYROOTS_WP?.host === 'server' ? t('Your data is stored in the database on this server. Make a backup regularly and keep it somewhere safe.') : wpb ? t('Your data is stored in the database of this WordPress site. Make a backup regularly and keep it somewhere safe.') : t('Your data lives only on this device. Make a backup regularly and keep it somewhere safe.')}</p>
     </div>
   </div>
   <div class="tabs" role="tablist">
@@ -268,7 +293,15 @@
       </section>
     </div>
   {:else if tab === 'wp'}
-    <section class="panel">
+    {#if legacy}
+      <section class="panel here">
+        <h2>{t('MyRoots 2.x data on this site')}</h2>
+        <p>{tn('This WordPress site has %d person from the previous version of the plugin.', 'This WordPress site has %d people from the previous version of the plugin.', legacy, legacy)}</p>
+        <p class="hint">{t('They are copied into the new version together with relations, pets, sources, photos and scans. The old data stays untouched.')}</p>
+        <button class="btn primary" onclick={importHere} disabled={busy}><FileUp size={16} /> {t('Import from this site')}</button>
+      </section>
+    {/if}
+    <section class="panel" class:mt={!!legacy}>
       <h2>{t('Move from the MyRoots WordPress plugin')}</h2>
       <ol class="steps">
         <li>{t('In WordPress open MyRoots → Backup and click “Download backup (JSON)”.')}</li>
@@ -295,7 +328,7 @@
           <button class="btn sm" onclick={() => (stop = true)}>{t('Stop')}</button>
         {:else}
           <div class="actions">
-            {#if pending?.items.length}<button class="btn primary" onclick={fetchMedia}>{t('Download photos')}</button>{/if}
+            {#if pending?.items.length}<button class="btn primary" onclick={() => fetchMedia(wpb ? wpb.cfg.home : '')}>{t('Download photos')}</button>{/if}
             {#if pending?.items.length}<button class="btn ghost" onclick={() => call('wp.clear').then(() => (pending = { site: '', items: [] }))}>{t('Skip the photos')}</button>{/if}
           </div>
         {/if}

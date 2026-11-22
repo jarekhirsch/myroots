@@ -331,6 +331,12 @@ impl Engine {
                 ok(json!({"ok": true}))
             }
             "sources.list" => ok(query::sources(db, ctx)),
+            // id and title of every source (pickers; sources.list is heavy in big trees)
+            "sources.brief" => {
+                let mut v: Vec<(String, Value)> = db.sources.values().map(|s| (crate::model::norm(&s.title), json!({ "id": s.id, "title": s.title, "date": s.date }))).collect();
+                v.sort_by(|a, b| a.0.cmp(&b.0));
+                ok(v.into_iter().map(|x| x.1).collect::<Vec<_>>())
+            }
             "source.get" => {
                 let id = id_param(&params, "id")?;
                 let s = db.sources.get(&id).cloned().ok_or_else(|| Error::not_found("source", id))?;
@@ -403,6 +409,7 @@ impl Engine {
                 ok(json!({ "count": ops::assign_clan(db, &a.name, &a.persons, a.add) }))
             }
             "graves.list" => ok(query::graves(db, &pol)),
+            "graves.cemeteries" => ok(query::cemeteries(db)),
             "places.list" => ok(query::places(db)),
             "places.missing" => ok(query::missing_places(db)),
             "places.set" => {
@@ -465,6 +472,7 @@ impl Engine {
                 kinship::compute(db, &pol, a, b).map(|v| serde_json::to_value(v).unwrap()).ok_or_else(|| Error::not_found("person", a))
             }
             "health.issues" => ok(health::analyze(db)),
+            "health.count" => ok(json!({ "count": health::analyze(db).len() })),
             "health.completeness" => ok(health::completeness(db, ctx.today)),
             "merge.suggestions" => ok(merge::suggestions(db, 30)),
             "merge.dismiss" => {

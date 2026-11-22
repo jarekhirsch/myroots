@@ -172,6 +172,7 @@ pub fn import(db: &mut Database, ctx: &Ctx, json: &str) -> Result<WpReport> {
                 place: String::new(),
                 description: s(ev, "event_description"),
                 image: None,
+                citations: vec![],
             });
             add_media(n(ev, "event_image"), MediaRef::PersonEvent { id, index: i });
         }
@@ -272,6 +273,7 @@ pub fn import(db: &mut Database, ctx: &Ctx, json: &str) -> Result<WpReport> {
                 db.persons.insert(id, tmp);
                 let cyc = ops::creates_cycle(db, id, par);
                 db.persons.insert(id, p.clone());
+                db.touch();
                 if cyc {
                     let mut fixed = db.persons[&id].clone();
                     fixed.set_parent(role, None, ParentRel::Bio);
@@ -298,6 +300,7 @@ pub fn import(db: &mut Database, ctx: &Ctx, json: &str) -> Result<WpReport> {
                 end_cause: end_cause::normalize(&s(sp, "marriage_end_cause")),
                 end_date: date::sanitize(&s(sp, "marriage_end")),
                 informal: matches!(sp.get("informal"), Some(Value::Number(n)) if n.as_u64() == Some(1)) || matches!(sp.get("informal"), Some(Value::Bool(true))) || s(sp, "informal") == "1",
+                citations: vec![],
             };
             match partner {
                 Some(b) => {

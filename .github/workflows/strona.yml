@@ -1,0 +1,120 @@
+# The site myroots.cc: built from strona/ and the changelogs, put on the
+# server over FTP.
+#
+# - A change of CHANGELOG.md, CHANGELOG.en.md or strona/ on main: the site is
+#   rebuilt (the "What's new" page included) and uploaded.
+# - "Publish release" on GitHub: in addition the installers go to
+#   myroots.cc/downloads/ (under names that stay the same in every version)
+#   and the update files to myroots.cc/updates/ (latest.json + signed
+#   packages), so the desktop apps update themselves.
+#
+# Settings → Secrets and variables → Actions:
+#   secrets  FTP_SERVER, FTP_USERNAME, FTP_PASSWORD
+#   variable FTP_DIR (folder of the site on the server, e.g. public_html/; default ./)
+#   variable FTP_PROTOCOL (ftps, ftp or ftps-legacy; default ftps)
+# Without the secrets the built site is only kept as an artifact of the run.
+name: Site
+
+on:
+  push:
+    branches: [main]
+    paths: ['CHANGELOG.md', 'CHANGELOG.en.md', 'strona/**', 'scripts/updater-json.mjs', '.github/workflows/strona.yml']
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: site
+  cancel-in-progress: false
+
+jobs:
+  site:
+    runs-on: ubuntu-24.04
+    env:
+      DEPLOY: ${{ secrets.FTP_SERVER != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Version
+        id: ver
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then v="${{ github.event.release.tag_name }}"; else v="$(node -p "require('./package.json').version")"; fi
+          echo "version=${v#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Build the site
+        env:
+          MYROOTS_SITE_OUT: ${{ github.workspace }}/site
+          MYROOTS_VERSION: ${{ steps.ver.outputs.version }}
+        run: python3 strona/zrodla/build.py
+
+      - name: Installers and update files of the release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          V: ${{ steps.ver.outputs.version }}
+        run: |
+          mkdir -p assets release/downloads release/updates
+          gh release download "${{ github.event.release.tag_name }}" -D assets
+          ls -la assets
+          cp_if() { f=$(ls assets/$1 2>/dev/null | head -1); if [ -n "$f" ]; then cp "$f" "release/downloads/$2"; echo "$2 <- $f"; fi; }
+          cp_if "*_universal.dmg" MyRoots-mac.dmg
+          cp_if "*_x64-setup.exe" MyRoots-windows-setup.exe
+          cp_if "*_amd64.AppImage" MyRoots-linux.AppImage
+          cp_if "*_amd64.deb" MyRoots-linux.deb
+          cp_if "*.x86_64.rpm" MyRoots-linux.rpm
+          cp_if "*_aarch64.AppImage" MyRoots-linux-arm64.AppImage
+          cp_if "*_arm64.deb" MyRoots-linux-arm64.deb
+          cp_if "*.aarch64.rpm" MyRoots-linux-arm64.rpm
+          cp_if "myroots-web-*.zip" myroots-web.zip
+          cp_if "myroots.zip" myroots.zip
+          cp_if "myroots-server.zip" myroots-server.zip
+          cp_if "*.apk" MyRoots-android.apk
+          node scripts/updater-json.mjs "$V" assets release/updates || echo "No signed update files (secret TAURI_SIGNING_PRIVATE_KEY not set): no automatic update."
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: myroots.cc
+          path: |
+            site
+            release
+          include-hidden-files: true
+
+      # installers and update files of the published release
+      - name: Upload the release
+        if: env.DEPLOY == 'true' && github.event_name == 'release'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
+          local-dir: release/
+          server-dir: ${{ vars.FTP_DIR || './' }}
+          state-name: .ftp-deploy-release.json
+
+      # the pages; downloads/ and updates/ on the server are left alone here
+      - name: Upload the site
+        if: env.DEPLOY == 'true'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
+          local-dir: site/
+          server-dir: ${{ vars.FTP_DIR || './' }}
+          state-name: .ftp-deploy-site.json
+          exclude: |
+            **/.git*
+            **/.git*/**
+            downloads/**
+            updates/**

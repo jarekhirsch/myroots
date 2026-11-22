@@ -9,7 +9,7 @@
   import Crosshair from '@lucide/svelte/icons/locate-fixed';
   import MapPin from '@lucide/svelte/icons/map-pin';
   import X from '@lucide/svelte/icons/x';
-  import type { Grave, GraveEntry } from '../types';
+  import type { Grave } from '../types';
 
   let { grave = $bindable(), name = '' }: { grave: Grave; name?: string } = $props();
   let picking = $state(false);
@@ -18,8 +18,8 @@
   const listId = 'cem-' + Math.random().toString(36).slice(2);
 
   $effect(() => {
-    call<GraveEntry[]>('graves.list')
-      .then((l) => (cemeteries = [...new Set(l.map((g) => g.grave.cemetery).filter(Boolean))]))
+    call<{ name: string; count: number }[]>('graves.cemeteries')
+      .then((l) => (cemeteries = l.map((c) => c.name)))
       .catch(() => {});
   });
 

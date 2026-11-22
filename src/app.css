@@ -50,7 +50,7 @@
 }
 
 /* MyRoots — "family album": faces first, quiet chrome.
-   Brand colours of myroots.pl: forest green, sage, sand. One typeface (Onest).
+   Brand colours of myroots.cc: forest green, sage, sand. One typeface (Onest).
    Fills instead of borders; radius hierarchy 20 / 16 / 12 / pill. */
 
 :root {
@@ -82,6 +82,7 @@
   --ev-marriage: #1d5a44;
   --ev-end: #c48b8b;
   --ev-event: #5f9c8a;
+  --ev-burial: #7d7890;
   /* portrait pastels for people without a photo */
   --p1: #dfe9e3;
   --p1t: #24503f;

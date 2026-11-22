@@ -1,4 +1,4 @@
-// MyRoots © 2026 Jarek Hirsch, https://hirsch.fi
+// MyRoots © 2026 Jarek Hirsch, https://hirsch.lt
 // SPDX-License-Identifier: GPL-3.0-or-later (with additional terms, see NOTICE.md)
 // Author, licence and the components MyRoots is built with (shown in "About").
 export const AUTHOR = 'Jarek Hirsch';
@@ -8,12 +8,12 @@ export const LICENSE_NAME = 'GNU GPL 3.0 or later';
 export const LICENSE_URL = 'https://www.gnu.org/licenses/gpl-3.0.html';
 export const SOURCE_NOTE = 'GPL-3.0-or-later';
 /** Where the source code is published (section 6 of the GPL). */
-export const SOURCE_URL = 'https://github.com/jarekhirsz/myroots';
+export const SOURCE_URL = 'https://github.com/jarekhirsch/myroots';
 
 /** The author's website, tagged so visits from the app and the family websites can be told apart. */
 export function authorUrl(medium: 'app' | 'family-website', content = 'credits'): string {
   const q = new URLSearchParams({ utm_source: 'myroots', utm_medium: medium, utm_campaign: 'myroots', utm_content: content });
-  return `https://hirsch.fi/?${q}`;
+  return `https://hirsch.lt/?${q}`;
 }
 
 export const THIRD_PARTY: { name: string; license: string; url: string }[] = [

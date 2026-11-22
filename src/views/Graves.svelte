@@ -13,6 +13,8 @@
   import Printer from '@lucide/svelte/icons/printer';
   import Flower from '@lucide/svelte/icons/flower-2';
   import 'leaflet/dist/leaflet.css';
+  import 'leaflet.markercluster/dist/MarkerCluster.css';
+  import { haystack, norm, words } from '../lib/text';
   import type { GraveEntry } from '../lib/types';
 
   const list = useLoad(() => call<GraveEntry[]>('graves.list'));
@@ -43,8 +45,25 @@
     }
   }
 
-  const norm = (s: string) => s.toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '');
-  const shown = $derived((list.data || []).filter((g) => !q.trim() || norm(`${g.person.name} ${g.grave.cemetery} ${g.grave.location}`).includes(norm(q.trim()))));
+  const shown = $derived.by(() => {
+    const all = list.data || [];
+    const w = words(q);
+    if (!w.length) return all;
+    const hay = haystack(all, 'graves', (g) => `${g.person.name} ${g.grave.cemetery} ${g.grave.location}`);
+    return all.filter((_, i) => w.every((x) => hay[i].includes(x)));
+  });
+  // Large families: cemeteries start folded (thousands of rows at once were slow).
+  const BIG = 300;
+  const big = $derived(shown.length > BIG && !q.trim());
+  let unfolded = $state<Set<string>>(new Set());
+  let allOpen = $state(false);
+  function fold(name: string) {
+    const s = new Set(unfolded);
+    if (s.has(name)) s.delete(name);
+    else s.add(name);
+    unfolded = s;
+  }
+  const isOpen = (name: string) => !big || allOpen || unfolded.has(name);
 
   type Group = { name: string; items: GraveEntry[]; lat: number | null; lng: number | null };
   const groups = $derived.by(() => {
@@ -132,6 +151,8 @@
     let cancelled = false;
     (async () => {
       Lf = (await import('leaflet')).default;
+      (window as any).L = Lf;
+      await import('leaflet.markercluster');
       if (cancelled || !el) return;
       map = Lf.map(el, { zoomControl: true, scrollWheelZoom: false });
       const style = TILES[app.settings?.appearance?.map_style || 'osm'] || TILES.osm;
@@ -148,7 +169,8 @@
   function draw() {
     if (!map || !Lf) return;
     layer?.remove();
-    layer = Lf.layerGroup().addTo(map);
+    // many graves: group nearby pins (the same plugin as the main map)
+    layer = (located.length > 300 && (Lf as any).markerClusterGroup ? (Lf as any).markerClusterGroup({ showCoverageOnHover: false, maxClusterRadius: 40 }) : Lf.layerGroup()).addTo(map);
     const bounds: [number, number][] = [];
     for (const g of located) {
       const icon = Lf.divIcon({ className: 'mr-pin', html: `<span style="--c:${skip.has(g.person.id) ? 'var(--faint)' : 'var(--ev-death)'}"></span>`, iconSize: [20, 20], iconAnchor: [10, 10] });
@@ -182,6 +204,7 @@
     </div>
     <div class="acts no-print">
       <input type="search" placeholder={t('Search…')} bind:value={q} aria-label={t('Search')} />
+      {#if big}<button class="btn" onclick={() => (allOpen = !allOpen)}>{allOpen ? t('Fold all') : t('Unfold all')}</button>{/if}
       <button class="btn" onclick={printPage}><Printer size={16} /> {t('Print the list')}</button>
       <button class="btn primary" onclick={route} disabled={!stops.length || planning}><Route size={16} /> {t('Route of the visit')}</button>
     </div>
@@ -201,10 +224,15 @@
     {#each groups as g (g.name)}
       <section class="cem">
         <h2>
-          {g.name || t('Cemetery not given')}
+          {#if big}
+            <button class="fold" aria-expanded={isOpen(g.name)} onclick={() => fold(g.name)}>{g.name || t('Cemetery not given')}</button>
+          {:else}
+            {g.name || t('Cemetery not given')}
+          {/if}
           <span class="muted small">({g.items.length})</span>
           {#if g.lat != null}<a class="small no-print" href="https://www.google.com/maps/dir/?api=1&destination={g.lat},{g.lng}" target="_blank" rel="noopener noreferrer">{t('Directions')}</a>{/if}
         </h2>
+        {#if isOpen(g.name)}
         <ul class="panel rows">
           {#each g.items as e (e.person.id)}
             <li class:off={skip.has(e.person.id)}>
@@ -221,6 +249,7 @@
             </li>
           {/each}
         </ul>
+        {/if}
       </section>
     {/each}
   {/if}
@@ -229,6 +258,22 @@
 <style>
   .sub {
     margin: 4px 0 0;
+  }
+  .fold {
+    all: unset;
+    cursor: pointer;
+    font: inherit;
+  }
+  .fold::before {
+    content: '▸ ';
+    color: var(--muted);
+  }
+  .fold[aria-expanded='true']::before {
+    content: '▾ ';
+  }
+  .fold:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
   }
   .acts {
     display: flex;

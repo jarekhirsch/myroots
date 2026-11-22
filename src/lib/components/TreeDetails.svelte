@@ -5,7 +5,7 @@
   import { app, call } from '../api.svelte';
   import { useLoad } from '../load.svelte';
   import { t, tx, tn } from '../i18n/index.svelte';
-  import { fmtDate, genderLabel, relTag } from '../format';
+  import { fmtDate, genderLabel, relTag, speciesLabel } from '../format';
   import { stripHtml } from '../text';
   import { openLightbox } from '../ui.svelte';
   import Avatar from './Avatar.svelte';
@@ -148,6 +148,21 @@
             </div>
           {/if}
         </section>
+
+        {#if P.pets.length}
+          <section>
+            <h3>{t('Pets')}</h3>
+            {#each P.pets as pet (pet.id)}
+              <a class="rel" href="#/pet/{pet.id}">
+                <Avatar photo={pet.photo} name={pet.name} size={34} />
+                <span class="rt">
+                  <span class="rn">{pet.name}</span>
+                  <span class="small muted">{[speciesLabel(pet.species), pet.breed, pet.years].filter(Boolean).join(' · ')}</span>
+                </span>
+              </a>
+            {/each}
+          </section>
+        {/if}
 
         {#if bioText}
           <section>

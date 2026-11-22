@@ -10,7 +10,7 @@ use std::collections::{BTreeMap, HashMap, HashSet};
 
 pub const SCALAR_FIELDS: &[&str] = &[
     "first_name", "last_name", "maiden_name", "gender", "birth_date", "birth_place", "death_date", "death_place",
-    "death_cause", "occupation", "education", "faith", "height", "eye_color", "blood_type", "biography", "notes",
+    "death_cause", "occupation", "education", "faith", "height", "eye_color", "blood_type", "biography", "notes", "residence", "research",
 ];
 
 #[derive(Serialize, Debug, Clone)]
@@ -39,23 +39,37 @@ fn levenshtein(a: &str, b: &str) -> usize {
     prev[b.len()]
 }
 
+/// What duplicate detection needs from a person, normalized once.
+struct Key {
+    gender: Gender,
+    first: String,
+    year: Option<i32>,
+    place: String,
+}
+
+impl Key {
+    fn of(p: &Person) -> Key {
+        Key { gender: p.gender, first: norm(&p.first_name), year: crate::date::year(&p.birth_date), place: norm(&p.birth_place) }
+    }
+}
+
 /// Score of a pair; None = certainly not a duplicate. Threshold: 45.
-fn pair_score(a: &Person, b: &Person) -> Option<u32> {
+fn pair_score(a: &Key, b: &Key) -> Option<u32> {
     if a.gender.is_known() && b.gender.is_known() && a.gender != b.gender {
         return None;
     }
     let mut score = 0;
-    let (fa, fb) = (norm(&a.first_name), norm(&b.first_name));
+    let (fa, fb) = (&a.first, &b.first);
     if !fa.is_empty() && fa == fb {
         score += 50;
-    } else if !fa.is_empty() && !fb.is_empty() && levenshtein(&fa, &fb) <= 2 {
+    } else if !fa.is_empty() && !fb.is_empty() && fa.chars().count().abs_diff(fb.chars().count()) <= 2 && levenshtein(fa, fb) <= 2 {
         score += 35;
     } else if fa.is_empty() || fb.is_empty() {
         score += 15;
     } else {
         return None;
     }
-    match (crate::date::year(&a.birth_date), crate::date::year(&b.birth_date)) {
+    match (a.year, b.year) {
         (Some(x), Some(y)) => {
             let d = (x - y).abs();
             if d == 0 {
@@ -69,8 +83,7 @@ fn pair_score(a: &Person, b: &Person) -> Option<u32> {
         (Some(_), None) | (None, Some(_)) => score += 10,
         _ => score += 5,
     }
-    let pa = norm(&a.birth_place);
-    if !pa.is_empty() && pa == norm(&b.birth_place) {
+    if !a.place.is_empty() && a.place == b.place {
         score += 10;
     }
     if score >= 45 {
@@ -80,38 +93,79 @@ fn pair_score(a: &Person, b: &Person) -> Option<u32> {
     }
 }
 
+/// Largest group of people compared with each other (a group of n people
+/// means n²/2 comparisons).
+const MAX_GROUP: usize = 400;
+
 pub fn suggestions(db: &Database, limit: usize) -> Vec<Suggestion> {
-    let mut buckets: HashMap<String, Vec<Id>> = HashMap::new();
+    // Candidates share a surname (or maiden name) and the first letter of the
+    // first name. People without a first name are compared with everybody of
+    // the same surname. This keeps big trees (tens of thousands of people with
+    // common surnames) fast without missing likely duplicates.
+    let keys: HashMap<Id, Key> = db.persons.values().map(|p| (p.id, Key::of(p))).collect();
+    let mut by_surname: HashMap<String, Vec<Id>> = HashMap::new();
     for p in db.persons.values() {
-        let mut keys: Vec<String> = [norm(&p.last_name), norm(&p.maiden_name)].into_iter().filter(|k| !k.is_empty()).collect();
-        keys.dedup();
-        for k in keys {
-            buckets.entry(k).or_default().push(p.id);
+        let mut names: Vec<String> = [norm(&p.last_name), norm(&p.maiden_name)].into_iter().filter(|k| !k.is_empty()).collect();
+        names.dedup();
+        for k in names {
+            by_surname.entry(k).or_default().push(p.id);
         }
     }
-    let dismissed: HashSet<&str> = db.settings.merge_dismissed.iter().map(|s| s.as_str()).collect();
+    let dismissed: HashSet<(Id, Id)> = db
+        .settings
+        .merge_dismissed
+        .iter()
+        .filter_map(|s| {
+            let (a, b) = s.split_once(':')?;
+            Some((a.trim().parse().ok()?, b.trim().parse().ok()?))
+        })
+        .collect();
+    let couples: HashSet<(Id, Id)> = db.unions.values().filter_map(|u| u.b.map(|b| (u.a.min(b), u.a.max(b)))).collect();
     let mut pairs: BTreeMap<(Id, Id), u32> = BTreeMap::new();
-    for ids in buckets.values() {
-        let n = ids.len();
-        if !(2..=300).contains(&n) {
+    let check = |x: Id, y: Id, pairs: &mut BTreeMap<(Id, Id), u32>| {
+        if x == y {
+            return;
+        }
+        let (a, b) = (x.min(y), x.max(y));
+        if pairs.contains_key(&(a, b)) || dismissed.contains(&(a, b)) || couples.contains(&(a, b)) {
+            return;
+        }
+        // Parent/child are not duplicates.
+        let (pa, pb) = (&db.persons[&a], &db.persons[&b]);
+        if pa.parents().any(|x| x == b) || pb.parents().any(|x| x == a) {
+            return;
+        }
+        if let Some(s) = pair_score(&keys[&a], &keys[&b]) {
+            pairs.insert((a, b), s);
+        }
+    };
+    for ids in by_surname.values() {
+        if ids.len() < 2 {
             continue;
         }
-        for i in 0..n {
-            for j in i + 1..n {
-                let (a, b) = (ids[i].min(ids[j]), ids[i].max(ids[j]));
-                if pairs.contains_key(&(a, b)) || dismissed.contains(format!("{a}:{b}").as_str()) {
-                    continue;
+        let mut groups: HashMap<char, Vec<Id>> = HashMap::new();
+        let mut unnamed: Vec<Id> = vec![];
+        for id in ids {
+            match keys[id].first.chars().next() {
+                Some(c) => groups.entry(c).or_default().push(*id),
+                None => unnamed.push(*id),
+            }
+        }
+        for g in groups.values() {
+            let n = g.len();
+            if !(2..=MAX_GROUP).contains(&n) {
+                continue;
+            }
+            for i in 0..n {
+                for j in i + 1..n {
+                    check(g[i], g[j], &mut pairs);
                 }
-                // Parent/child or partners are not duplicates.
-                let (pa, pb) = (&db.persons[&a], &db.persons[&b]);
-                if pa.parents().any(|x| x == b) || pb.parents().any(|x| x == a) {
-                    continue;
-                }
-                if db.unions.values().any(|u| u.involves(a) && u.involves(b)) {
-                    continue;
-                }
-                if let Some(s) = pair_score(pa, pb) {
-                    pairs.insert((a, b), s);
+            }
+        }
+        if !unnamed.is_empty() && unnamed.len() <= 50 && ids.len() <= MAX_GROUP * 4 {
+            for u in &unnamed {
+                for o in ids {
+                    check(*u, *o, &mut pairs);
                 }
             }
         }
@@ -356,13 +410,21 @@ pub fn execute(db: &mut Database, ctx: &Ctx, a: Id, b: Id, keep: Id, sel: Select
             }
         }
     }
-    // citations: union
+    // citations: union (details of the kept person win)
     for (k, ids) in pa.citations.iter().chain(pb.citations.iter()) {
         let e = new.citations.entry(k.clone()).or_default();
         for i in ids {
             if !e.contains(i) {
                 e.push(*i);
             }
+        }
+    }
+    for (k, v) in pk.citation_info.iter().chain(pr.citation_info.iter()) {
+        new.citation_info.entry(k.clone()).or_insert_with(|| v.clone());
+    }
+    for e in pa.ext_ids.iter().chain(pb.ext_ids.iter()) {
+        if !new.ext_ids.contains(e) {
+            new.ext_ids.push(e.clone());
         }
     }
     new.photo = match sel.avatar.as_str() {

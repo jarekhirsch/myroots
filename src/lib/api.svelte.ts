@@ -7,12 +7,13 @@ export const app = $state({
   version: 0,
   info: null as AppInfo | null,
   settings: null as Settings | null,
-  summaries: [] as Summary[],
-  summariesVersion: -1,
   busy: 0,
 });
 
-const READ = /^(app\.info|overview|settings\.get|people\.summaries|person\.(profile|edit|history)|pets\.list|pet\.get|sources\.list|source\.get|media\.(list|unused|get|faces)|graves\.list|clans\.list|places\.(list|missing|weather)|tree\.data|lifeline|map\.data|stats|anniversaries|events\.list|gallery|kinship|health\.(issues|completeness)|merge\.(suggestions|compare)|book\.build|suggestions\.list|suggestion\.encode|gedcom\.export|wp\.pending)$/;
+// Methods that only read: every other call bumps app.version (views reload).
+// A new read-only engine method must be added here, or opening a view that
+// uses it would reload all views in a loop.
+const READ = /^(app\.info|overview|settings\.get|people\.summaries|person\.(profile|edit|history)|pets\.list|pet\.get|sources\.(list|brief)|source\.get|media\.(list|unused|get|faces)|graves\.(list|cemeteries)|clans\.list|places\.(list|missing|weather)|tree\.data|lifeline|map\.data|stats|anniversaries|events\.list|gallery|kinship|health\.(issues|completeness|count)|merge\.(suggestions|compare)|book\.build|suggestions\.list|suggestion\.encode|gedcom\.export|wp\.pending)$/;
 
 export async function call<T = any>(method: string, params: unknown = {}): Promise<T> {
   try {
@@ -33,13 +34,35 @@ export async function refreshInfo() {
   app.settings = await call<Settings>('settings.get');
 }
 
-/** Summaries of all people (cached per data version). */
+// Summaries of all people, cached per data version. Kept outside the reactive
+// state on purpose: a deep proxy around tens of thousands of records made
+// lists and searches slow in big trees.
+let cached: { version: number; list: Summary[] } | null = null;
+let pending: { version: number; promise: Promise<Summary[]> } | null = null;
+
+/** Summaries of all people (cached per data version; parallel callers share one request). */
 export async function summaries(): Promise<Summary[]> {
-  if (app.summariesVersion !== app.version) {
-    app.summaries = await call<Summary[]>('people.summaries');
-    app.summariesVersion = app.version;
-  }
-  return app.summaries;
+  const v = app.version;
+  if (cached && cached.version === v) return cached.list;
+  if (pending && pending.version === v) return pending.promise;
+  const promise = call<Summary[]>('people.summaries').then(
+    (list) => {
+      if (app.version === v) cached = { version: v, list };
+      if (pending?.promise === promise) pending = null;
+      return list;
+    },
+    (e) => {
+      if (pending?.promise === promise) pending = null;
+      throw e;
+    },
+  );
+  pending = { version: v, promise };
+  return promise;
+}
+
+/** Summaries already loaded for the current data version (no request). */
+export function cachedSummaries(): Summary[] | null {
+  return cached && cached.version === app.version ? cached.list : null;
 }
 
 export function bump() {

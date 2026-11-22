@@ -84,7 +84,7 @@ pub fn compute(db: &Database, pol: &Policy, clan: &str) -> Stats {
     let mut birth_year: HashMap<Id, i32> = HashMap::new();
 
     for raw in &persons {
-        let (d, _) = pol.redact(raw);
+        let d = pol.view(raw);
         match d.gender {
             Gender::Male => s.males += 1,
             Gender::Female => s.females += 1,
@@ -166,7 +166,7 @@ pub fn compute(db: &Database, pol: &Policy, clan: &str) -> Stats {
                 continue;
             }
             let p = &db.persons[&pid];
-            let (r, _) = pol.redact(p);
+            let r = pol.view(p);
             if let Some(bd) = date::to_naive(&r.birth_date) {
                 let a = date::years_between(bd, md);
                 match p.gender {

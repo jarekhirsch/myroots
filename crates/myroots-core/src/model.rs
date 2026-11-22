@@ -101,6 +101,50 @@ impl Status {
 /*  Person                                                              */
 /* ------------------------------------------------------------------ */
 
+/// Details of a citation: where in the source the fact is and how reliable it
+/// is. Every part is optional (GEDCOM: `PAGE`, `QUAY`, `DATA.TEXT` / `NOTE`).
+#[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]
+#[serde(default)]
+pub struct CitationInfo {
+    /// Page, record number, entry … ("akt 112, s. 34").
+    pub page: String,
+    /// Reliability as in GEDCOM `QUAY`: 0 unreliable, 1 questionable,
+    /// 2 secondary evidence, 3 direct (primary) evidence. None = not given.
+    pub quality: Option<u8>,
+    /// Text of the record or a note about it (plain text).
+    pub note: String,
+}
+
+impl CitationInfo {
+    pub fn is_empty(&self) -> bool {
+        self.page.trim().is_empty() && self.quality.is_none() && self.note.trim().is_empty()
+    }
+}
+
+/// A source cited for an event or a union, with the details of the citation.
+#[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]
+#[serde(default)]
+pub struct Citation {
+    pub source: Id,
+    pub page: String,
+    pub quality: Option<u8>,
+    pub note: String,
+}
+
+impl Citation {
+    pub fn info(&self) -> CitationInfo {
+        CitationInfo { page: self.page.clone(), quality: self.quality, note: self.note.clone() }
+    }
+    pub fn new(source: Id, info: CitationInfo) -> Citation {
+        Citation { source, page: info.page, quality: info.quality, note: info.note }
+    }
+}
+
+/// Key of `Person::citation_info`: the cited field and the source.
+pub fn citation_key(field: &str, source: Id) -> String {
+    format!("{field}#{source}")
+}
+
 #[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]
 #[serde(default)]
 pub struct LifeEvent {
@@ -111,6 +155,9 @@ pub struct LifeEvent {
     /// Rich text (sanitized HTML subset).
     pub description: String,
     pub image: Option<Id>,
+    /// Sources of this event.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub citations: Vec<Citation>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]
@@ -187,10 +234,15 @@ pub struct Person {
     pub biography: String,
     /// Free content (the body of the WordPress post), rich text.
     pub notes: String,
+    /// Working notes: unconfirmed information, family stories and clues to
+    /// check (rich text). Never shown on the family website or to visitors.
+    pub research: String,
 
     pub occupation: String,
     pub education: String,
     pub faith: String,
+    /// Address or place of residence (the last known one).
+    pub residence: String,
     pub height: String,
     pub eye_color: String,
     pub blood_type: String,
@@ -216,8 +268,17 @@ pub struct Person {
 
     /// Custom fields: group id → field id → value.
     pub custom: BTreeMap<String, BTreeMap<String, String>>,
-    /// Source citations pinned to facts: field key → source ids.
+    /// Source citations pinned to facts: field key (`CITABLE_FIELDS`) → source ids.
     pub citations: BTreeMap<String, Vec<Id>>,
+    /// Optional details of those citations (page, reliability, note), by
+    /// `citation_key(field, source)`. A citation without details has no entry.
+    #[serde(skip_serializing_if = "BTreeMap::is_empty")]
+    pub citation_info: BTreeMap<String, CitationInfo>,
+    /// Identifiers of this person in other programs ("_UID:5F1E…",
+    /// "RIN:MH:I1"), read from GEDCOM. A later import of a file from the
+    /// same program finds the person by them instead of adding a copy.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub ext_ids: Vec<String>,
 
     /// Unix time in milliseconds.
     pub created: i64,
@@ -335,6 +396,9 @@ pub struct Union {
     pub end_date: String,
     /// Informal relationship (not a marriage).
     pub informal: bool,
+    /// Sources of the marriage / relationship.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub citations: Vec<Citation>,
 }
 
 impl Union {
@@ -382,6 +446,11 @@ impl Union {
             self.end_cause = other.end_cause.clone();
         }
         self.informal = self.informal && other.informal;
+        for c in &other.citations {
+            if !self.citations.iter().any(|x| x.source == c.source) {
+                self.citations.push(c.clone());
+            }
+        }
     }
 }
 
@@ -587,6 +656,14 @@ pub struct Appearance {
     pub theme: String,
     /// Map tiles style: "osm" | "light" | "dark" | "topo"
     pub map_style: String,
+    /// Family tree: background, lines between people and the line to the
+    /// chosen person (hex colors, "" = from the theme).
+    pub tree_bg: String,
+    pub tree_line: String,
+    pub tree_line_main: String,
+    /// Colors of the four lines of the grandparents (father's father,
+    /// father's mother, mother's father, mother's mother); "" = default.
+    pub tree_branches: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]
@@ -643,12 +720,39 @@ pub struct SiteSettings {
     pub language: String,
     /// Include the original-size photos (otherwise only reduced copies).
     pub full_photos: bool,
+    /// Password for the whole website or for chosen people and branches.
+    pub lock: SiteLock,
 }
 
 impl Default for SiteSettings {
     fn default() -> Self {
-        SiteSettings { title: String::new(), subtitle: String::new(), intro: String::new(), language: String::new(), full_photos: true }
+        SiteSettings { title: String::new(), subtitle: String::new(), intro: String::new(), language: String::new(), full_photos: true, lock: SiteLock::default() }
     }
+}
+
+/// Password protection of the family website. The protected part is encrypted
+/// (AES-GCM) when the website is published; the password itself is never
+/// stored, only the key derived from it (PBKDF2), which never leaves the editor.
+#[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]
+#[serde(default)]
+pub struct SiteLock {
+    /// "" (off) | "all" (the whole website) | "people" (chosen people and branches)
+    pub mode: String,
+    /// PBKDF2-SHA256 salt and the derived 256-bit key (base64).
+    pub salt: String,
+    pub key: String,
+    pub iterations: u32,
+    pub people: Vec<LockedBranch>,
+    /// Shown on the password screen (e.g. "Grandma's maiden name").
+    pub hint: String,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]
+#[serde(default)]
+pub struct LockedBranch {
+    pub person: Id,
+    /// "person" | "descendants" (with partners) | "ancestors"
+    pub scope: String,
 }
 
 /// An event of history added by the user (shown in the background of lifelines).
@@ -683,6 +787,8 @@ pub struct Settings {
     pub map_external: bool,
     /// Historical weather of events from Open-Meteo is on unless turned off.
     pub weather_off: bool,
+    /// The desktop app checks myroots.cc for a new version once a day unless turned off.
+    pub updates_off: bool,
     pub appearance: Appearance,
     pub custom_schema: Vec<CustomGroup>,
     /// Clans defined manually (in addition to the ones used by people).
@@ -702,6 +808,10 @@ pub struct Settings {
     pub history: HistorySettings,
     /// UI language ("" = system).
     pub language: String,
+    /// How sources are attached in the edit form: "facts" (next to every
+    /// fact, the default; "" means the same) or "general" (one list per
+    /// person with ticks of the facts each source confirms).
+    pub sources_mode: String,
 }
 
 impl Default for Settings {
@@ -712,6 +822,7 @@ impl Default for Settings {
             privacy: PrivacySettings::default(),
             map_external: false,
             weather_off: false,
+            updates_off: false,
             appearance: Appearance::default(),
             custom_schema: Vec::new(),
             clans: Vec::new(),
@@ -725,6 +836,7 @@ impl Default for Settings {
             site: SiteSettings::default(),
             history: HistorySettings::default(),
             language: String::new(),
+            sources_mode: String::new(),
         }
     }
 }
@@ -733,15 +845,20 @@ impl Default for Settings {
 /*  Helpers                                                             */
 /* ------------------------------------------------------------------ */
 
-/// Fields that can be pinned to sources (citations).
+/// Fields of a person that can be pinned to sources (citations). Events and
+/// unions keep their own `citations`.
 pub const CITABLE_FIELDS: &[&str] = &[
+    "name",
     "birth_date",
     "birth_place",
     "death_date",
     "death_place",
+    "death_cause",
+    "burial",
     "occupation",
     "faith",
     "education",
+    "residence",
     "biography",
 ];
 

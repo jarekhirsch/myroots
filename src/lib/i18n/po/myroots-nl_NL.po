@@ -4381,8 +4381,8 @@ msgstr "Contact met de auteur"
 
 #. Plugin URI of the plugin
 #: my-roots.php
-msgid "https://myroots.pl/"
-msgstr "https://myroots.pl/"
+msgid "https://myroots.cc/"
+msgstr "https://myroots.cc/"
 
 #. Description of the plugin
 #: my-roots.php
@@ -4396,8 +4396,8 @@ msgstr "Jarek Hirsch"
 
 #. Author URI of the plugin
 #: my-roots.php
-msgid "https://hirsch.fi/"
-msgstr "https://hirsch.fi/"
+msgid "https://hirsch.lt/"
+msgstr "https://hirsch.lt/"
 
 #. translators: 1: sibling term (e.g. brother), 2: ancestor term in the genitive case (e.g. grandfather or grandmother).
 #: includes/class-kinship.php:379

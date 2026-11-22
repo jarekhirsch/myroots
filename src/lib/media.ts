@@ -1,6 +1,6 @@
 // Image processing before storing: downscale very large photos and make a thumbnail.
 import { backend } from './backend';
-import { toast } from './ui.svelte';
+import { toast, withProgress } from './ui.svelte';
 import { t } from './i18n/index.svelte';
 import type { MediaInput } from './backend/types';
 
@@ -75,16 +75,21 @@ export function pickImages(multiple = true, onFile?: (file: File, id: number) =>
     input.onchange = async () => {
       const ids: number[] = [];
       const failed: string[] = [];
-      for (const f of Array.from(input.files || [])) {
-        try {
-          const id = await backend.addMedia(await prepareImage(f, f.name));
-          ids.push(id);
-          onFile?.(f, id);
-        } catch (e) {
-          console.warn('skipped', f.name, e);
-          failed.push(f.name);
+      const files = Array.from(input.files || []);
+      await withProgress(t('Adding photos…'), async (report) => {
+        for (const [i, f] of files.entries()) {
+          report(i, files.length);
+          try {
+            const id = await backend.addMedia(await prepareImage(f, f.name));
+            ids.push(id);
+            onFile?.(f, id);
+          } catch (e) {
+            console.warn('skipped', f.name, e);
+            failed.push(f.name);
+          }
         }
-      }
+        report(files.length, files.length);
+      });
       if (failed.length) {
         // HEIC (iPhone) is not shown by every browser
         const heic = failed.some((n) => /\.(heic|heif)$/i.test(n));
@@ -119,5 +124,6 @@ export async function mediaSrc(id: number | null | undefined, thumb = true): Pro
     }
     return (backend as any).originalUrl(id);
   }
+  if (backend.mediaUrlAsync) return backend.mediaUrlAsync(id, thumb);
   return backend.mediaUrl(id, thumb);
 }

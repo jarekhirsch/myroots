@@ -27,7 +27,7 @@
 
   let { id = null }: { id?: number | null } = $props();
 
-  let nodes = $state<TreeNode[]>([]);
+  let nodes = $state.raw<TreeNode[]>([]);
   let start = $state<number | null>(null);
   let kind = $state<'fan' | 'desc'>('fan');
   let gensFan = $state(6);
@@ -54,7 +54,36 @@
   const subtitle = $derived([app.info?.tree_name || app.info?.site?.title || '', String(new Date().getFullYear())].filter(Boolean).join(' · '));
   // the smallest names on the descendants poster (mm): too small to read under ~1.6 mm
   // years are written 12.5 units high: under ~1.6 mm they cannot be read
-  const tooSmall = $derived(!!D && D.scale * 12.5 < 1.6);
+  // (a fan of 12 generations has 4 094 places; more would be unprintable)
+  // on the fan: the smallest name of a person (mm); under ~1.4 mm it cannot be read
+  const fanSmall = $derived.by(() => {
+    if (!F) return false;
+    let min = Infinity;
+    for (const c of F.cells) {
+      const L = c.person ? cellText(c, F.cx, F.cy) : null;
+      if (L && L.fs < min) min = L.fs;
+    }
+    return min < 1.4;
+  });
+  const tooSmall = $derived((!!D && D.scale * 12.5 < 1.6) || fanSmall);
+
+  /* ---------- how many generations the tree has around the person ---------- */
+  const GENS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16];
+  function depth(dir: 'parents' | 'children'): number {
+    const byId = new Map(nodes.map((n) => [n.id, n]));
+    let level = root != null ? [String(root)] : [];
+    const seen = new Set(level);
+    let d = 0;
+    while (level.length && d < 40) {
+      d++;
+      const next: string[] = [];
+      for (const id of level) for (const x of byId.get(id)?.rels[dir] || []) if (!seen.has(x)) (seen.add(x), next.push(x));
+      level = next;
+    }
+    return d;
+  }
+  const ancGens = $derived(nodes.length ? depth('parents') : 0);
+  const descGens = $derived(nodes.length ? depth('children') : 0);
 
   /* ---------- fan text ---------- */
   const SERIF = "'Literata Variable', Literata, Georgia, serif";
@@ -212,10 +241,11 @@
     <label class="field sm">
       <span class="lbl">{t('Generations')}</span>
       {#if kind === 'fan'}
-        <select bind:value={gensFan}>{#each [3, 4, 5, 6, 7, 8] as g (g)}<option value={g}>{g}</option>{/each}</select>
+        <select bind:value={gensFan}>{#each GENS.filter((g) => g >= 3 && g <= 12) as g (g)}<option value={g}>{g}{g === ancGens ? ' ✓' : ''}</option>{/each}</select>
       {:else}
-        <select bind:value={gensDesc}>{#each [2, 3, 4, 5, 6] as g (g)}<option value={g}>{g}</option>{/each}</select>
+        <select bind:value={gensDesc}>{#each GENS as g (g)}<option value={g}>{g}{g === descGens ? ' ✓' : ''}</option>{/each}</select>
       {/if}
+      <span class="hint small">{t('In the tree: %d', kind === 'fan' ? ancGens : descGens)}</span>
     </label>
     <label class="field sm">
       <span class="lbl">{t('Paper')}</span>

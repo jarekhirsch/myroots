@@ -1,8 +1,9 @@
 // Browser backend: the Rust engine compiled to WebAssembly + IndexedDB storage.
 import init, { WasmEngine } from '../wasm/myroots_wasm.js';
 import wasmUrl from '../wasm/myroots_wasm_bg.wasm?url';
-import type { Backend, MediaInput } from './types';
+import type { Backend, MediaInput, TreeList, TreesApi } from './types';
 import * as idb from './idb';
+import { assetUrl } from './assets';
 import { downloadBlob, stamp, slug, todayLocal } from './util';
 
 declare const __APP_VERSION__: string;
@@ -17,15 +18,74 @@ export function decodeGedcom(bytes: Uint8Array): string {
   return WasmEngine.decode_gedcom(bytes);
 }
 
+// The list of trees in this browser (the trees themselves are IndexedDB databases).
+const REG_KEY = 'myroots.trees';
+
+function readRegistry(): TreeList {
+  let r: TreeList | null = null;
+  try {
+    r = JSON.parse(localStorage.getItem(REG_KEY) || 'null');
+  } catch {
+    r = null;
+  }
+  if (!r || !Array.isArray(r.trees)) r = { current: 'default', trees: [] };
+  if (!r.trees.length) r.trees.push({ id: 'default', name: '', created: 0 });
+  if (!r.trees.some((t) => t.id === r!.current)) r.current = r.trees[0].id;
+  return r;
+}
+
+function writeRegistry(r: TreeList) {
+  try {
+    localStorage.setItem(REG_KEY, JSON.stringify(r));
+  } catch {
+    /* private mode: the list lives only until the tab closes */
+  }
+}
+
+const webTrees: TreesApi = {
+  async list() {
+    return readRegistry();
+  },
+  async create(name) {
+    const r = readRegistry();
+    let id = `t${Date.now()}`;
+    while (r.trees.some((t) => t.id === id)) id += 'x';
+    r.trees.push({ id, name: name.trim(), created: Date.now() });
+    writeRegistry(r);
+    return id;
+  },
+  async rename(id, name) {
+    const r = readRegistry();
+    const t = r.trees.find((t) => t.id === id);
+    if (t) t.name = name.trim();
+    writeRegistry(r);
+  },
+  async remove(id) {
+    const r = readRegistry();
+    if (r.current === id) throw new Error('open another tree first');
+    await idb.deleteDb(id);
+    r.trees = r.trees.filter((t) => t.id !== id);
+    writeRegistry(r);
+  },
+  async open(id) {
+    const r = readRegistry();
+    if (!r.trees.some((t) => t.id === id)) throw new Error('no such tree');
+    r.current = id;
+    writeRegistry(r);
+  },
+};
+
 export class WasmBackend implements Backend {
   platform = 'web' as const;
   readonly = false;
+  trees = webTrees;
   private engine!: WasmEngine;
   private queue: Promise<void> = Promise.resolve();
   private urls = new Map<string, string>();
 
   static async create(): Promise<WasmBackend> {
     await initWasm();
+    idb.useTree(readRegistry().current);
     const b = new WasmBackend();
     const records = await idb.getAll('records');
     b.engine = new WasmEngine(JSON.stringify(records), __APP_VERSION__, false, Date.now());
@@ -124,7 +184,7 @@ export class WasmBackend implements Backend {
     return name;
   }
 
-  async importArchive(bytes: Uint8Array): Promise<void> {
+  async importArchive(bytes: Uint8Array, onProgress?: (done: number, total: number) => void): Promise<void> {
     await this.flush();
     const media: [string, any][] = [];
     const recordsJson = this.engine.import_archive(bytes, (id: number, thumb: boolean, b: Uint8Array) => {
@@ -136,7 +196,11 @@ export class WasmBackend implements Backend {
     await idb.clear('blobs');
     const recs = JSON.parse(recordsJson) as { kind: string; id: number }[];
     await idb.write('records', recs.map((r) => [`${r.kind}:${r.id}`, r]));
-    for (let i = 0; i < media.length; i += 50) await idb.write('blobs', media.slice(i, i + 50));
+    for (let i = 0; i < media.length; i += 50) {
+      onProgress?.(i, media.length);
+      await idb.write('blobs', media.slice(i, i + 50));
+    }
+    onProgress?.(media.length, media.length);
   }
 
   async exportSite(): Promise<string | null> {
@@ -146,7 +210,8 @@ export class WasmBackend implements Backend {
     for (const f of list) files.push(new Uint8Array((await fetch(`./viewer/${f}`).then((r) => r.arrayBuffer())) as ArrayBuffer));
     const ids = Array.from(this.engine.site_media(Date.now(), todayLocal()));
     const blobs = await this.loadAllBlobs(ids);
-    const zip = this.engine.export_site(list, files, (id: number, thumb: boolean) => blobs.get(thumb ? `${id}_t` : `${id}`), Date.now(), todayLocal());
+    const { lockZip } = await import('../sitelock');
+    const zip = await lockZip(this.engine.export_site(list, files, (id: number, thumb: boolean) => blobs.get(thumb ? `${id}_t` : `${id}`), Date.now(), todayLocal()), await this.call('settings.get'));
     const info = await this.call<any>('app.info');
     const name = `${slug(info.site?.title || info.tree_name || 'family')}-website.zip`;
     downloadBlob(name, zip, 'application/zip');
@@ -166,6 +231,6 @@ export class WasmBackend implements Backend {
   async notify(title: string, body: string) {
     if (!('Notification' in window)) return;
     if (Notification.permission === 'default') await Notification.requestPermission();
-    if (Notification.permission === 'granted') new Notification(title, { body, icon: './icon.svg' });
+    if (Notification.permission === 'granted') new Notification(title, { body, icon: assetUrl('icon.svg') });
   }
 }

@@ -15,6 +15,8 @@ export interface GNode {
   /** top-left corner */
   x: number;
   y: number;
+  /** pets of the person (small photos on the card) */
+  pets: { id: number; name: string; photo: number | null }[];
 }
 export interface GEdge {
   d: string;
@@ -167,7 +169,7 @@ export function layoutFamily(all: TreeNode[], orient: 'vertical' | 'horizontal',
     const v = rowPos.get(gen.get(id) ?? 0)!;
     const [x, y] = xy(u, v);
     const name = n.data.anon ? privateLabel : [n.data['first name'], n.data['last name']].filter(Boolean).join(' ').trim() || '—';
-    out.push({ id, name, years: n.data.years || '', gender: n.data.gender, photo: n.data.avatar, anon: !!n.data.anon, gen: gen.get(id) ?? 0, x, y });
+    out.push({ id, name, years: n.data.years || '', gender: n.data.gender, photo: n.data.avatar, anon: !!n.data.anon, gen: gen.get(id) ?? 0, x, y, pets: n.data.anon ? [] : (n.data.pets || []).map((p) => ({ id: p.id, name: p.name, photo: p.photo })) });
   }
   const at = new Map(out.map((g) => [g.id, g]));
   const U = (id: string) => pos.get(id)! - minAlong; // centre along

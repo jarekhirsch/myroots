@@ -1,0 +1,60 @@
+# myroots.cc (Apache / LiteSpeed)
+Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+
+AddDefaultCharset utf-8
+AddType image/webp .webp
+AddType font/woff2 .woff2
+AddType image/svg+xml .svg
+AddType application/vnd.android.package-archive .apk
+AddType application/x-apple-diskimage .dmg
+AddType application/vnd.microsoft.portable-executable .exe
+AddType application/vnd.debian.binary-package .deb
+AddType application/x-rpm .rpm
+AddType application/vnd.appimage .AppImage
+AddType application/vnd.openxmlformats-officedocument.spreadsheetml.sheet .xlsx
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+# HTTPS and no www
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} ^www\. [NC]
+RewriteCond %{HTTP_HOST} ^(?:www\.)?(.+)$ [NC]
+RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+# the old "na zlecenie" page
+RewriteRule ^drzewo-genealogiczne-na-zlecenie/?$ / [L,R=301]
+# downloads have stable names since 3.1; old links with a version number still work
+RewriteRule ^downloads/MyRoots_[0-9.]+_(aarch64|x64|universal)\.dmg$ /downloads/MyRoots-mac.dmg [L,R=302]
+RewriteRule ^downloads/MyRoots_[0-9.]+_x64-setup\.exe$ /downloads/MyRoots-windows-setup.exe [L,R=302]
+RewriteRule ^downloads/MyRoots_[0-9.]+_android\.apk$ /downloads/MyRoots-android.apk [L,R=302]
+RewriteRule ^downloads/MyRoots_[0-9.]+_amd64\.AppImage$ /downloads/MyRoots-linux.AppImage [L,R=302]
+RewriteRule ^downloads/MyRoots_[0-9.]+_amd64\.deb$ /downloads/MyRoots-linux.deb [L,R=302]
+</IfModule>
+
+<IfModule mod_headers.c>
+Header always set X-Content-Type-Options "nosniff"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+Header always set X-Frame-Options "SAMEORIGIN"
+<FilesMatch "\.(apk|dmg|exe|zip|myroots|AppImage|deb|rpm)$">
+Header set Content-Disposition "attachment"
+</FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/xml application/javascript application/json image/svg+xml
+</IfModule>
+
+<IfModule mod_expires.c>
+ExpiresActive On
+ExpiresDefault "access plus 1 hour"
+ExpiresByType text/html "access plus 0 seconds"
+ExpiresByType text/css "access plus 1 week"
+ExpiresByType image/webp "access plus 1 month"
+ExpiresByType image/svg+xml "access plus 1 month"
+ExpiresByType font/woff2 "access plus 1 year"
+# installers and update files keep their names between versions: no long cache
+<FilesMatch "\.(apk|dmg|exe|AppImage|deb|rpm|json|sig|gz|zip)$">
+ExpiresDefault "access plus 0 seconds"
+</FilesMatch>
+</IfModule>

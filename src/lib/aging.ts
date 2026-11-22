@@ -30,7 +30,7 @@ export function loadPhoto(id: number): Promise<HTMLImageElement> {
   if (!p) {
     p = (async () => {
       let src = '';
-      if (backend.platform === 'viewer') src = backend.mediaUrl(id, false);
+      if (backend.platform === 'viewer') src = backend.mediaUrlAsync ? await backend.mediaUrlAsync(id, false) : backend.mediaUrl(id, false);
       else {
         const bytes = (await backend.mediaBytes(id, false)) || (await backend.mediaBytes(id, true));
         if (!bytes) throw new Error('missing photo');

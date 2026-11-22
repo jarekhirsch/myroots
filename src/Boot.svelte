@@ -1,10 +1,11 @@
 <script lang="ts">
+  import { assetUrl } from './lib/backend/assets';
   import { t } from './lib/i18n/index.svelte';
   let { error = '' }: { error?: string } = $props();
 </script>
 
 <div class="boot">
-  <img src="./icon.svg" alt="" width="56" height="56" />
+  <img src={assetUrl('icon.svg')} alt="" width="56" height="56" />
   {#if error}
     <h1>{t('MyRoots could not start')}</h1>
     <p class="muted">{error}</p>

@@ -21,7 +21,7 @@ const SHADOWS: Record<string, string> = {
   strong: '0 2px 4px rgba(20, 35, 50, 0.1), 0 6px 22px rgba(20, 35, 50, 0.12)',
 };
 
-const VARS = ['--ink', '--ink-2', '--ink-soft', '--heirloom', '--heirloom-soft', '--paper', '--text', '--line', '--font-ui', '--fs', '--radius', '--radius-sm', '--shadow'];
+const VARS = ['--ink', '--ink-2', '--ink-soft', '--heirloom', '--heirloom-soft', '--paper', '--text', '--line', '--font-ui', '--fs', '--radius', '--radius-sm', '--shadow', '--tree-bg', '--tree-line', '--tree-line-main', '--tree-br1', '--tree-br2', '--tree-br3', '--tree-br4'];
 
 function hex(v: string): string | null {
   return /^#[0-9a-f]{6}$/i.test((v || '').trim()) ? v.trim() : null;
@@ -63,6 +63,17 @@ export function applyAppearance(ap: Partial<Ap> | null | undefined) {
     if (text) root.style.setProperty('--text', text);
     if (border) root.style.setProperty('--line', border);
   }
+  // the tree colors are an explicit choice: they apply in both themes
+  const tb = hex(ap.tree_bg || '');
+  const tl = hex(ap.tree_line || '');
+  const tm = hex(ap.tree_line_main || '');
+  if (tb) root.style.setProperty('--tree-bg', tb);
+  if (tl) root.style.setProperty('--tree-line', tl);
+  if (tm) root.style.setProperty('--tree-line-main', tm);
+  (ap.tree_branches || []).slice(0, 4).forEach((c, i) => {
+    const h = hex(c || '');
+    if (h) root.style.setProperty(`--tree-br${i + 1}`, h);
+  });
   if (ap.font && FONTS[ap.font]) root.style.setProperty('--font-ui', FONTS[ap.font]);
   if (ap.font_size && SIZES[ap.font_size]) root.style.setProperty('--fs', SIZES[ap.font_size]);
   if (ap.radius && RADII[ap.radius]) {

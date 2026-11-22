@@ -1,7 +1,14 @@
-# Builds the installers when a version tag is pushed (git tag v3.0.0 && git push --tags)
+# Builds the installers when a version tag is pushed (git tag v3.1.0 && git push --tags)
 # and puts them on a draft GitHub release, together with the browser version.
+# Publishing the draft ("Publish release") starts strona.yml, which puts the
+# installers, the update files and the "What's new" page on myroots.cc.
+# Automatic updates: with the secret TAURI_SIGNING_PRIVATE_KEY (the file
+# _klucze/myroots-updater.key) every desktop package gets a signature (.sig).
 # Signing is optional: add the secrets below in the repository settings
 # (Settings -> Secrets and variables -> Actions) when you have the certificates.
+# Windows is signed for free by SignPath Foundation (open source): see the
+# "windows" job and signpath/README.md. Without SIGNPATH_API_TOKEN the Windows
+# installer is built unsigned, as before.
 name: Release
 
 on:
@@ -11,6 +18,7 @@ on:
 
 permissions:
   contents: write
+  actions: read
 
 jobs:
   desktop:
@@ -20,9 +28,10 @@ jobs:
         include:
           - platform: macos-latest
             args: --target universal-apple-darwin
-          - platform: windows-latest
-            args: ''
           - platform: ubuntu-22.04
+            args: ''
+          # Linux on ARM (Raspberry Pi 4/5, ARM laptops)
+          - platform: ubuntu-22.04-arm
             args: ''
     runs-on: ${{ matrix.platform }}
     steps:
@@ -35,7 +44,7 @@ jobs:
         with:
           targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
       - name: Linux libraries
-        if: matrix.platform == 'ubuntu-22.04'
+        if: startsWith(matrix.platform, 'ubuntu')
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
@@ -65,13 +74,120 @@ jobs:
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           tagName: ${{ github.ref_name }}
           releaseName: 'MyRoots ${{ github.ref_name }}'
           releaseBody: 'See CHANGELOG.md. Installers for macOS, Windows and Linux, and the browser version (myroots-web.zip).'
           releaseDraft: true
           prerelease: false
-          args: ${{ matrix.args }}
+          args: ${{ matrix.args }}${{ secrets.TAURI_SIGNING_PRIVATE_KEY != '' && ' --config src-tauri/tauri.updater.conf.json' || '' }}
+
+  # Windows: the app is built first, its .exe is signed through SignPath, then
+  # the installer is made from the signed .exe and signed too. SignPath checks
+  # that both files come from this repository and this workflow; every signing
+  # request waits for a manual approval in SignPath (the maintainer clicks
+  # "Approve", usually within minutes of the e-mail).
+  windows:
+    needs: desktop
+    runs-on: windows-latest
+    env:
+      SIGN: ${{ secrets.SIGNPATH_API_TOKEN != '' }}
+      UPDATER: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+      - run: npm ci
+      - name: Version
+        id: ver
+        shell: bash
+        run: echo "version=$(node -p "require('./src-tauri/tauri.conf.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Build the app (no installer yet)
+        run: npx tauri build --no-bundle
+
+      - name: Upload the app for signing
+        if: env.SIGN == 'true'
+        id: up-app
+        uses: actions/upload-artifact@v4
+        with:
+          name: myroots-exe-unsigned
+          path: target/release/myroots.exe
+      - name: Sign the app (SignPath)
+        if: env.SIGN == 'true'
+        uses: signpath/github-action-submit-signing-request@v3
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG || 'myroots' }}
+          signing-policy-slug: ${{ vars.SIGNPATH_POLICY_SLUG || 'release-signing' }}
+          artifact-configuration-slug: app
+          github-artifact-id: ${{ steps.up-app.outputs.artifact-id }}
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 3600
+          output-artifact-directory: signed-app
+          parameters: |
+            version: "${{ steps.ver.outputs.version }}"
+      - name: Put the signed app in place
+        if: env.SIGN == 'true'
+        shell: bash
+        run: cp signed-app/myroots.exe target/release/myroots.exe
+
+      - name: Make the installer
+        run: npx tauri bundle --bundles nsis
+      - name: Upload the installer for signing
+        if: env.SIGN == 'true'
+        id: up-setup
+        uses: actions/upload-artifact@v4
+        with:
+          name: myroots-setup-unsigned
+          path: target/release/bundle/nsis/*-setup.exe
+      - name: Sign the installer (SignPath)
+        if: env.SIGN == 'true'
+        uses: signpath/github-action-submit-signing-request@v3
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG || 'myroots' }}
+          signing-policy-slug: ${{ vars.SIGNPATH_POLICY_SLUG || 'release-signing' }}
+          artifact-configuration-slug: installer
+          github-artifact-id: ${{ steps.up-setup.outputs.artifact-id }}
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 3600
+          output-artifact-directory: signed-setup
+          parameters: |
+            version: "${{ steps.ver.outputs.version }}"
+      - name: Put the signed installer in place
+        if: env.SIGN == 'true'
+        shell: bash
+        run: cp signed-setup/*-setup.exe target/release/bundle/nsis/
+
+      # the update signature is made from the final (signed) installer
+      - name: Update signature
+        if: env.UPDATER == 'true'
+        shell: bash
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: |
+          for f in target/release/bundle/nsis/*-setup.exe; do npx tauri signer sign "$f"; done
+          ls target/release/bundle/nsis/
+
+      - name: Keep the installer with the run
+        uses: actions/upload-artifact@v4
+        with:
+          name: myroots-windows
+          path: target/release/bundle/nsis/*-setup.exe*
+      - name: Attach to the draft release
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ github.ref_name }}" target/release/bundle/nsis/*-setup.exe* --clobber
 
   web:
     needs: desktop

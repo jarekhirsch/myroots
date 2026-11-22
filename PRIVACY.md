@@ -1,6 +1,6 @@
 # MyRoots: polityka prywatności
 
-Obowiązuje od 20 października 2026 r. Wydawca aplikacji: Jarek Hirsch (https://hirsch.fi).
+Obowiązuje od 20 października 2026 r. Wydawca aplikacji: Jarek Hirsch (https://hirsch.lt).
 
 ## Krótko
 
@@ -18,6 +18,7 @@ Tylko w tych sytuacjach i tylko z Twojej inicjatywy:
 
 - **Mapa** (domyślnie wyłączona): po jej włączeniu fragmenty mapy są pobierane z serwerów OpenStreetMap, a nazwy miejsc są wysyłane do wyszukiwarki Nominatim (OpenStreetMap), a gdy ta nic nie znajdzie, do wyszukiwarki Photon (komoot), żeby znaleźć współrzędne. Obowiązuje polityka prywatności OpenStreetMap: https://osmfoundation.org/wiki/Privacy_Policy
 - **Pogoda** (można ją wyłączyć w Ustawieniach): dla wydarzeń z dokładną datą aplikacja wysyła do Open-Meteo.com współrzędne miejsca i datę, żeby pobrać historyczną pogodę tego dnia. Nazwy, osoby i inne dane nie są wysyłane. Warunki: https://open-meteo.com/en/terms
+- **Aktualizacje** (tylko program na komputer; można je wyłączyć w Ustawieniach): raz dziennie program pobiera z myroots.cc plik z numerem najnowszej wersji, a po Twojej zgodzie samą aktualizację. Nic z Twojego drzewa nie jest wysyłane; serwer widzi tylko zwykłe zapytanie o plik.
 - **Import z WordPressa**: aplikacja pobiera zdjęcia z Twojej witryny WordPress.
 - **Linki i trasa odwiedzin grobów**: otwierają się w przeglądarce (trasa w Mapach Google zawiera tylko położenie wybranych cmentarzy).
 
@@ -42,20 +43,20 @@ MyRoots nie jest przeznaczony dla dzieci i nie zbiera danych od nikogo.
 
 ## Kontakt
 
-Pytania o prywatność: https://hirsch.fi
+Pytania o prywatność: https://hirsch.lt
 
 ---
 
 # MyRoots: privacy policy
 
-Effective 20 October 2026. Publisher: Jarek Hirsch (https://hirsch.fi).
+Effective 20 October 2026. Publisher: Jarek Hirsch (https://hirsch.lt).
 
 MyRoots has no accounts, servers or ads and collects no data. Everything you enter (people, photos, recordings, notes) stays on your device; the author has no access to it.
 
-The app connects to the internet only when you choose to: the **map** (off by default) loads map tiles from OpenStreetMap and sends place names to the Nominatim search service (and, when it finds nothing, to Photon by komoot) to find coordinates; the **weather** (can be turned off in the settings) sends the coordinates of a place and a date to Open-Meteo.com to get the historical weather of that day; the **WordPress import** downloads photos from your own WordPress site; **links** and the route of a visit to the graves open in your browser (the Google Maps route contains only the positions of the chosen cemeteries).
+The app connects to the internet only when you choose to: the **map** (off by default) loads map tiles from OpenStreetMap and sends place names to the Nominatim search service (and, when it finds nothing, to Photon by komoot) to find coordinates; the **weather** (can be turned off in the settings) sends the coordinates of a place and a date to Open-Meteo.com to get the historical weather of that day; **updates** (desktop app only, can be turned off in the settings) read the number of the newest version from myroots.cc once a day and, after you agree, download the update, without sending anything about your tree; the **WordPress import** downloads photos from your own WordPress site; **links** and the route of a visit to the graves open in your browser (the Google Maps route contains only the positions of the chosen cemeteries).
 
 The **microphone** is used only while you record a voice; the recording stays on your device. The **camera and photo library** are used only when you add a photo. "Through the years" finds the eyes on photos on your device; nothing is sent anywhere. Marking people on photos, suggestions of who is on a photo and the estimate of when it was taken run only on your device; for a marked face a numeric description is saved with your tree and backups (to recognise the person on other photos) and is never put on the family website or sent anywhere. The device's **location** is read only when you tap "I am at the grave" or "Route of the visit", and is not sent anywhere.
 
 The **family website** is created and published by you; you choose how the data of living people is hidden, and hidden photo data (such as GPS location) and face descriptions are removed on export.
 
-MyRoots is not directed at children and collects no data from anyone. Contact: https://hirsch.fi
+MyRoots is not directed at children and collects no data from anyone. Contact: https://hirsch.lt

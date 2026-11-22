@@ -121,6 +121,7 @@
             <td>{p.count}</td>
             <td class="small">{#if p.lat != null}{p.lat.toFixed(4)}, {p.lng?.toFixed(4)}{:else}<span class="faint">—</span>{/if} <span class="faint">{originLabel(p.origin)}</span></td>
             <td class="act">
+              {#if p.lat != null && ext}<a class="btn sm ghost" href="#/map?from={encodeURIComponent(p.name)}" title={t('Who from this place went further')}>{t('Migrations')}</a>{/if}
               <button class="btn sm ghost" onclick={() => open(p)}>{t('Coordinates')}</button>
               <button class="btn sm ghost" onclick={() => rename(p)}>{t('Rename')}</button>
             </td>

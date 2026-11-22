@@ -11,13 +11,13 @@
   import Waypoints from '@lucide/svelte/icons/waypoints';
   import Play from '@lucide/svelte/icons/play';
   import Pause from '@lucide/svelte/icons/pause';
-  import { buildMigrations, arc, type Move, type Birth } from '../lib/migrations';
+  import { buildMigrations, homePlaces, arc, type Move, type Birth } from '../lib/migrations';
   import type { PlaceUse, TreeNode } from '../lib/types';
   import { toast } from '../lib/ui.svelte';
   import NotFound from './NotFound.svelte';
   import BackButton from '../lib/components/BackButton.svelte';
   import PersonPicker from '../lib/components/PersonPicker.svelte';
-  import { go } from '../lib/router.svelte';
+  import { go, route } from '../lib/router.svelte';
   import 'leaflet/dist/leaflet.css';
   import 'leaflet.markercluster/dist/MarkerCluster.css';
   import type { MapData, MapPlace, ClanInfo, Summary } from '../lib/types';
@@ -31,10 +31,12 @@
   let map: any = null;
   let L: any = null;
   let cluster: any = null;
-  let data = $state<MapData | null>(null);
+  let data = $state.raw<MapData | null>(null);
   let error = $state<unknown>(null);
-  let kinds = $state<Record<string, boolean>>({ birth: true, marriage: true, death: true, event: true });
-  let clan = $state('');
+  let kinds = $state<Record<string, boolean>>({ birth: true, marriage: true, death: true, event: true, burial: true });
+  let clan = $state(route.query.clan || '');
+  // people buried at one cemetery: their graves and (with the other kinds) where they came from
+  let cemetery = $state('');
   let clans = $state<ClanInfo[]>([]);
   let geo = $state<GeoProgress | null>(null);
   let cancelled = false;
@@ -45,11 +47,17 @@
     marriage: () => t('Marriages'),
     death: () => t('Deaths'),
     event: () => t('Events'),
+    burial: () => t('Graves'),
   };
-  const KIND_COLOR: Record<string, string> = { birth: 'var(--ev-birth)', marriage: 'var(--ev-marriage)', death: 'var(--ev-death)', event: 'var(--ev-event)' };
+  const KIND_COLOR: Record<string, string> = { birth: 'var(--ev-birth)', marriage: 'var(--ev-marriage)', death: 'var(--ev-death)', event: 'var(--ev-event)', burial: 'var(--ev-burial)' };
+  const cems = $derived(data?.cemeteries || []);
+  const cem = $derived(cemetery ? cems.find((c) => c.name === cemetery) || null : null);
+  const buried = $derived(cem ? new Set(cem.persons) : null);
 
   async function load() {
     try {
+      migSrc = null;
+      if (mig) await loadMig();
       data = await call<MapData>('map.data', person ? { person } : {});
       if (!viewer) clans = await call<ClanInfo[]>('clans.list');
       if (person) personName = (await call<Summary[]>('people.summaries')).find((p) => p.id === person)?.name || '';
@@ -68,7 +76,8 @@
   }
 
   function evText(e: MapPlace['events'][number]): string {
-    const what = e.kind === 'birth' ? t('Birth') : e.kind === 'death' ? t('Death') : e.kind === 'marriage' ? t('Marriage to %s', e.label || '?') : e.label || t('Event');
+    const what =
+      e.kind === 'birth' ? t('Birth') : e.kind === 'death' ? t('Death') : e.kind === 'marriage' ? t('Marriage to %s', e.label || '?') : e.kind === 'burial' ? [t('Grave'), e.label].filter(Boolean).join(': ') : e.label || t('Event');
     return `${what}${e.date ? ' · ' + fmtDate(e.date) : ''}`;
   }
 
@@ -86,11 +95,20 @@
   }
 
   function filtered(p: MapPlace) {
-    return p.events.filter((e) => kinds[e.kind] !== false && (!clan || e.clans.includes(clan)));
+    return p.events.filter((e) => kinds[e.kind] !== false && (!clan || e.clans.includes(clan)) && (!buried || buried.has(e.person)));
+  }
+  function pickCemetery(name: string) {
+    cemetery = name;
+    // choosing a cemetery shows its graves even when graves were hidden
+    if (name) kinds.burial = true;
   }
 
   /* ---------- migrations: moves of the family over the years ---------- */
-  let mig = $state(false);
+  let mig = $state(route.query.mig === '1' || !!route.query.from);
+  // migrations from one place (a family house, a village): its people and their descendants
+  let home = $state(route.query.from || '');
+  let homes = $state.raw<{ name: string; count: number }[]>([]);
+  let migSrc: { nodes: TreeNode[]; pl: PlaceUse[] } | null = null;
   let moves = $state<Move[]>([]);
   let births = $state<Birth[]>([]);
   let yearNow = $state(0);
@@ -102,8 +120,12 @@
     return all.length ? [Math.min(...all), Math.max(...all)] : [0, 0];
   });
   async function loadMig() {
-    const [tree, pl] = await Promise.all([call<{ nodes: TreeNode[] }>('tree.data'), call<PlaceUse[]>('places.list')]);
-    const r = buildMigrations(tree.nodes, pl, person);
+    if (!migSrc) {
+      const [tree, pl] = await Promise.all([call<{ nodes: TreeNode[] }>('tree.data'), call<PlaceUse[]>('places.list')]);
+      migSrc = { nodes: tree.nodes, pl };
+      homes = homePlaces(tree.nodes, pl);
+    }
+    const r = buildMigrations(migSrc.nodes, migSrc.pl, person, home);
     moves = r.moves;
     births = r.births;
     const all = [...moves.map((m) => m.year), ...births.map((b) => b.year)];
@@ -165,6 +187,13 @@
     playing = false;
     clearInterval(timer);
     if (mig) await loadMig();
+    render();
+  }
+  async function setHome(v: string) {
+    home = v;
+    playing = false;
+    clearInterval(timer);
+    await loadMig();
     render();
   }
   const recent = $derived(moves.filter((m) => m.year <= yearNow).slice(-3).reverse());
@@ -229,7 +258,8 @@
   $effect(() => {
     void data;
     void clan;
-    void kinds.birth, kinds.death, kinds.marriage, kinds.event;
+    void buried;
+    void kinds.birth, kinds.death, kinds.marriage, kinds.event, kinds.burial;
     void enabled;
     render();
   });
@@ -342,6 +372,14 @@
         </div>
       {/if}
       <button class="migbtn" aria-pressed={mig} onclick={toggleMig}><Waypoints size={16} /> {t('Migrations')}</button>
+      {#if mig && !person && homes.length}
+        <select value={home} onchange={(e) => setHome(e.currentTarget.value)} aria-label={t('From one place')}>
+          <option value="">{t('The whole family')}</option>
+          <optgroup label={t('Who from this place went further')}>
+            {#each homes as h (h.name)}<option value={h.name}>{h.name} ({h.count})</option>{/each}
+          </optgroup>
+        </select>
+      {/if}
       {#if !viewer || app.info?.sections?.list !== false}
         <div class="pick">
           <PersonPicker value={person} placeholder={t('Places of one person…')} onchange={(v) => go(v ? `/map/${v}` : '/map')} />
@@ -351,6 +389,12 @@
         <select bind:value={clan} aria-label={t('Clan')}>
           <option value="">{t('All clans')}</option>
           {#each clans as c (c.name)}<option value={c.name}>{c.name}</option>{/each}
+        </select>
+      {/if}
+      {#if cems.length && !person && !mig}
+        <select value={cemetery} onchange={(e) => pickCemetery(e.currentTarget.value)} aria-label={t('Cemetery')}>
+          <option value="">{t('All cemeteries')}</option>
+          {#each cems as c (c.name)}<option value={c.name}>{c.name || t('Cemetery not given')} ({c.persons.length})</option>{/each}
         </select>
       {/if}
       <div class="tools">
@@ -367,6 +411,7 @@
           </div>
         {/if}
         {#if data}<span class="count">{tn('%d place', '%d places', shownCount)}</span>{/if}
+        {#if cem && !cem.located}<span class="count">{t('The graves at this cemetery have no position yet: set it in the grave form of a person.')}</span>{/if}
       </div>
     </div>
     <div class="map" class:picking bind:this={el}></div>
