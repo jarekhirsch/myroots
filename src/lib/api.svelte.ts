@@ -15,9 +15,19 @@ export const app = $state({
 // uses it would reload all views in a loop.
 const READ = /^(app\.info|overview|settings\.get|people\.summaries|person\.(profile|edit|history)|pets\.list|pet\.get|sources\.(list|brief)|source\.get|media\.(list|unused|get|faces)|graves\.(list|cemeteries)|clans\.list|places\.(list|missing|weather)|tree\.data|lifeline|map\.data|stats|anniversaries|events\.list|gallery|kinship|health\.(issues|completeness|count)|merge\.(suggestions|compare)|book\.build|suggestions\.list|suggestion\.encode|gedcom\.export|wp\.pending)$/;
 
+// Diagnostics: localStorage.setItem('myroots-debug', '1') logs how long every engine call takes.
+let debugCalls = false;
+try {
+  debugCalls = localStorage.getItem('myroots-debug') === '1';
+} catch {
+  /* storage unavailable */
+}
+
 export async function call<T = any>(method: string, params: unknown = {}): Promise<T> {
   try {
+    const t0 = debugCalls ? performance.now() : 0;
     const r = await backend.call<T>(method, params);
+    if (debugCalls) console.log(`[myroots] ${method} ${Math.round(performance.now() - t0)} ms`);
     const isRead = READ.test(method) && !(method === 'gedcom.import' && (params as any)?.options?.dry_run);
     if (!isRead && !(method === 'gedcom.import' && (params as any)?.options?.dry_run)) {
       app.version++;

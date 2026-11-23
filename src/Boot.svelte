@@ -1,14 +1,23 @@
 <script lang="ts">
   import { assetUrl } from './lib/backend/assets';
   import { t } from './lib/i18n/index.svelte';
-  let { error = '' }: { error?: string } = $props();
+  let { error = '', code = '' }: { error?: string; code?: string } = $props();
+  // a plain explanation first; the technical text below helps when reporting the problem
+  const hint = $derived(
+    /^wp_http_5\d\d$/.test(code)
+      ? t('The server could not send your data. Try again in a moment; if it keeps happening, the hosting may need more PHP memory (memory_limit).')
+      : /fetch|network|load failed/i.test(error)
+        ? t('No connection. Check the internet and try again.')
+        : '',
+  );
 </script>
 
 <div class="boot">
   <img src={assetUrl('icon.svg')} alt="" width="56" height="56" />
   {#if error}
     <h1>{t('MyRoots could not start')}</h1>
-    <p class="muted">{error}</p>
+    {#if hint}<p>{hint}</p>{/if}
+    <p class="muted small">{error}</p>
     <button class="btn" onclick={() => location.reload()}>{t('Try again')}</button>
   {:else}
     <div class="spin" aria-label={t('Loading…')}></div>

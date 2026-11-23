@@ -77,7 +77,7 @@ async function start() {
       return;
     }
     console.error(e);
-    mount(Boot, { target, props: { error: String((e as any)?.message || e) } });
+    mount(Boot, { target, props: { error: String((e as any)?.message || e), code: String((e as any)?.code || '') } });
   }
 }
 

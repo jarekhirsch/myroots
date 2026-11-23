@@ -10,6 +10,7 @@
   import { buildTimeline, packGeneration, type Bar, type Generation } from '../generations';
   import { tone } from '../text';
   import Avatar from './Avatar.svelte';
+  import MiniDots from './MiniDots.svelte';
   import Plus from '@lucide/svelte/icons/zoom-in';
   import Minus from '@lucide/svelte/icons/zoom-out';
   import Fit from '@lucide/svelte/icons/move-horizontal';
@@ -22,7 +23,7 @@
   let width = $state(0);
   let scroller: HTMLDivElement | undefined = $state();
   // shared with the other timeline (start page, people list): it never changes the nodes
-  const data = useLoad(() => callShared<{ nodes: TreeNode[] }>('tree.data'));
+  const data = useLoad(() => callShared<{ nodes: TreeNode[] }>('tree.data', { lite: true }));
   const full = $derived(data.data ? buildTimeline(data.data.nodes) : null);
   // Filters of the people list keep the generations, but show only matching people.
   const tl = $derived.by(() => {
@@ -200,6 +201,9 @@
               onfocusin={(e) => (hover = (e.target as HTMLElement).closest?.('[data-id]')?.getAttribute('data-id') ?? null)}
               onfocusout={() => (hover = null)}
             >
+              {#if g.mode === 'mini' && g.bars.length > 150}
+                <MiniDots bars={g.bars} {x} lanes={g.lanes} width={track} onhover={(id) => (hover = id)} />
+              {:else}
               {#each g.bars as b (b.id)}
                 {@const n = tone(b.name || '?')}
                 <a
@@ -232,6 +236,7 @@
                   {/if}
                 </a>
               {/each}
+              {/if}
             </div>
           </section>
         {/each}

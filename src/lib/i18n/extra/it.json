@@ -1162,5 +1162,6 @@
  "What I expected:": "Che cosa mi aspettavo:",
  "Last errors:": "Ultimi errori:",
  "Screen": "Schermo",
- "People in the tree": "Persone nell’albero"
+ "People in the tree": "Persone nell’albero",
+ "The server could not send your data. Try again in a moment; if it keeps happening, the hosting may need more PHP memory (memory_limit).": "Il server non è riuscito a inviare i tuoi dati. Riprova tra poco; se continua, l’hosting potrebbe aver bisogno di più memoria PHP (memory_limit)."
 }

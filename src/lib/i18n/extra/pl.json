@@ -1196,5 +1196,6 @@
  "What I expected:": "Czego się spodziewałem:",
  "Last errors:": "Ostatnie błędy:",
  "Screen": "Ekran",
- "People in the tree": "Osób w drzewie"
+ "People in the tree": "Osób w drzewie",
+ "The server could not send your data. Try again in a moment; if it keeps happening, the hosting may need more PHP memory (memory_limit).": "Serwer nie mógł wysłać Twoich danych. Spróbuj ponownie za chwilę, a jeśli to się powtarza, hosting może potrzebować więcej pamięci dla PHP (memory_limit)."
 }

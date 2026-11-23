@@ -471,7 +471,16 @@ impl Engine {
             }
 
             /* ---------------- views ---------------- */
-            "tree.data" => ok(json!({ "nodes": tree::nodes(db, &pol), "start": tree::start_person(db).filter(|s| !pol.should_hide(&db.persons[s])) })),
+            "tree.data" => {
+                let nodes = tree::nodes(db, &pol);
+                let start = tree::start_person(db).filter(|s| !pol.should_hide(&db.persons[s]));
+                // lite: only what the family timeline draws
+                if params.get("lite").and_then(|v| v.as_bool()).unwrap_or(false) {
+                    ok(json!({ "nodes": tree::lite(&nodes), "start": start }))
+                } else {
+                    ok(json!({ "nodes": nodes, "start": start }))
+                }
+            }
             "lifeline" => {
                 let id = id_param(&params, "id")?;
                 lifeline::build(db, &pol, id).map(|v| serde_json::to_value(v).unwrap()).ok_or_else(|| Error::not_found("person", id))

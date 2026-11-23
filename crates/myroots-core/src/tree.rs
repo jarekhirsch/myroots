@@ -54,6 +54,54 @@ pub struct Node {
     pub rels: Rels,
 }
 
+/// The fields of a node the family timeline needs (start page, people list):
+/// about half the size of the full node, which matters for big trees on phones.
+#[derive(Serialize, Debug)]
+pub struct LiteData<'a> {
+    pub gender: &'a str,
+    #[serde(rename = "first name")]
+    pub first_name: &'a str,
+    #[serde(rename = "last name")]
+    pub last_name: &'a str,
+    pub birthday: &'a str,
+    pub death_date: &'a str,
+    pub years: &'a str,
+    pub avatar: Option<Id>,
+    pub living: bool,
+    pub anon: bool,
+    #[serde(skip_serializing_if = "BTreeMap::is_empty")]
+    pub marriages: &'a BTreeMap<String, String>,
+}
+
+#[derive(Serialize, Debug)]
+pub struct LiteNode<'a> {
+    pub id: &'a str,
+    pub data: LiteData<'a>,
+    pub rels: &'a Rels,
+}
+
+pub fn lite(nodes: &[Node]) -> Vec<LiteNode<'_>> {
+    nodes
+        .iter()
+        .map(|n| LiteNode {
+            id: &n.id,
+            data: LiteData {
+                gender: &n.data.gender,
+                first_name: &n.data.first_name,
+                last_name: &n.data.last_name,
+                birthday: &n.data.birthday,
+                death_date: &n.data.death_date,
+                years: &n.data.years,
+                avatar: n.data.avatar,
+                living: n.data.living,
+                anon: n.data.anon,
+                marriages: &n.data.marriages,
+            },
+            rels: &n.rels,
+        })
+        .collect()
+}
+
 pub fn nodes(db: &Database, pol: &Policy) -> Vec<Node> {
     let ix = db.index();
     let include = |p: &Person| !pol.active || p.status == Status::Published;

@@ -1162,5 +1162,6 @@
  "What I expected:": "למה ציפיתי:",
  "Last errors:": "שגיאות אחרונות:",
  "Screen": "מסך",
- "People in the tree": "אנשים בעץ"
+ "People in the tree": "אנשים בעץ",
+ "The server could not send your data. Try again in a moment; if it keeps happening, the hosting may need more PHP memory (memory_limit).": "השרת לא הצליח לשלוח את הנתונים. נסו שוב בעוד רגע; אם זה נמשך, ייתכן שהאחסון צריך יותר זיכרון PHP ‏(memory_limit)."
 }

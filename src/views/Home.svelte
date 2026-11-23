@@ -60,6 +60,22 @@
     return parts.join(', ');
   });
   const title = $derived(viewer ? app.info?.site?.title || app.info?.tree_name || t('Family tree') : ov.data?.tree_name || t('Your family'));
+
+  let showTimeline = $state(false);
+  /** Calls `fn` once the element is on screen and the browser has drawn the page. */
+  function whenSeen(el: HTMLElement, fn: () => void) {
+    let done = false;
+    const go = () => {
+      if (done) return;
+      done = true;
+      io.disconnect();
+      // let the first paint happen before the heavy work starts
+      requestAnimationFrame(() => setTimeout(fn, 30));
+    };
+    const io = new IntersectionObserver((e) => e.some((x) => x.isIntersecting) && go(), { rootMargin: '200px' });
+    io.observe(el);
+    return { destroy: () => io.disconnect() };
+  }
 </script>
 
 <div class="page home">
@@ -120,8 +136,9 @@
     {/if}
 
     {#if !viewer || sec.list !== false || sec.tree !== false}
-      <section class="panel timeline" aria-label={tx('timeline', 'Family on a timeline')}>
-        <FamilyTimeline />
+      <!-- the timeline needs the whole tree: drawn after the rest of the page, when it comes into view -->
+      <section class="panel timeline" aria-label={tx('timeline', 'Family on a timeline')} use:whenSeen={() => (showTimeline = true)}>
+        {#if showTimeline}<FamilyTimeline />{:else}<div class="tl-wait" aria-hidden="true"></div>{/if}
       </section>
     {/if}
 
@@ -412,5 +429,8 @@
     justify-content: space-between;
     gap: 12px;
     flex-wrap: wrap;
+  }
+  .tl-wait {
+    min-height: 220px;
   }
 </style>

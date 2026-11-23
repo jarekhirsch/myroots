@@ -27,6 +27,14 @@
     });
   });
   const missing = $derived((places.data || []).filter((p) => p.lat == null).length);
+  // thousands of rows with buttons were slow on phones: shown in pages, the search covers all
+  const PAGE = 200;
+  let limit = $state(PAGE);
+  $effect(() => {
+    void q;
+    void only;
+    limit = PAGE;
+  });
 
   function open(p: PlaceUse) {
     edit = p;
@@ -115,7 +123,7 @@
     <table class="data panel tbl">
       <thead><tr><th>{t('Place')}</th><th>{t('Uses')}</th><th>{t('Coordinates')}</th><th></th></tr></thead>
       <tbody>
-        {#each shown as p (p.name)}
+        {#each shown.slice(0, limit) as p (p.name)}
           <tr>
             <td>{p.name}</td>
             <td>{p.count}</td>
@@ -129,6 +137,9 @@
         {/each}
       </tbody>
     </table>
+    {#if shown.length > limit}
+      <button class="btn sm more" onclick={() => (limit += PAGE * 5)}>{t('Show more (%d left)', shown.length - limit)}</button>
+    {/if}
   {/if}
 </div>
 
@@ -166,5 +177,9 @@
   .act {
     text-align: end;
     white-space: nowrap;
+  }
+  .more {
+    display: block;
+    margin: 12px auto 0;
   }
 </style>

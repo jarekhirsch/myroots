@@ -1162,5 +1162,6 @@
  "What I expected:": "Mitä odotin:",
  "Last errors:": "Viimeisimmät virheet:",
  "Screen": "Näyttö",
- "People in the tree": "Henkilöitä sukupuussa"
+ "People in the tree": "Henkilöitä sukupuussa",
+ "The server could not send your data. Try again in a moment; if it keeps happening, the hosting may need more PHP memory (memory_limit).": "Palvelin ei voinut lähettää tietojasi. Yritä hetken päästä uudelleen; jos ongelma jatkuu, palvelu voi tarvita enemmän PHP-muistia (memory_limit)."
 }
