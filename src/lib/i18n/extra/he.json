@@ -1141,5 +1141,8 @@
  "call number %s": "מספר מיון %s",
  "Find the address on the map": "חיפוש הכתובת במפה",
  "You can also click the place on the map or drag the marker.": "אפשר גם ללחוץ על המקום במפה או לגרור את הסימון.",
- "Not found on the map. Click the place or drag the marker.": "לא נמצא במפה. לחצו על המקום או גררו את הסימון."
+ "Not found on the map. Click the place or drag the marker.": "לא נמצא במפה. לחצו על המקום או גררו את הסימון.",
+ "Standard": "רגילה",
+ "Pale": "בהירה",
+ "Night": "כהה"
 }

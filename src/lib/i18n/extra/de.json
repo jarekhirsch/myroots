@@ -1141,5 +1141,8 @@
  "call number %s": "Signatur %s",
  "Find the address on the map": "Adresse auf der Karte finden",
  "You can also click the place on the map or drag the marker.": "Sie können auch auf die Stelle in der Karte klicken oder die Markierung ziehen.",
- "Not found on the map. Click the place or drag the marker.": "Auf der Karte nicht gefunden. Klicken Sie auf die Stelle oder ziehen Sie die Markierung."
+ "Not found on the map. Click the place or drag the marker.": "Auf der Karte nicht gefunden. Klicken Sie auf die Stelle oder ziehen Sie die Markierung.",
+ "Standard": "Standard",
+ "Pale": "Hell",
+ "Night": "Dunkel"
 }

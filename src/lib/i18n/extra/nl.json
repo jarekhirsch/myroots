@@ -1141,5 +1141,8 @@
  "call number %s": "inv.nr. %s",
  "Find the address on the map": "Adres op de kaart zoeken",
  "You can also click the place on the map or drag the marker.": "Je kunt ook op de plek klikken of de markering verslepen.",
- "Not found on the map. Click the place or drag the marker.": "Niet gevonden op de kaart. Klik op de plek of versleep de markering."
+ "Not found on the map. Click the place or drag the marker.": "Niet gevonden op de kaart. Klik op de plek of versleep de markering.",
+ "Standard": "Standaard",
+ "Pale": "Licht",
+ "Night": "Donker"
 }

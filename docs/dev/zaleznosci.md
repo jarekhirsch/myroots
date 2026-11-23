@@ -11,6 +11,7 @@ Zasada: najnowsze stabilne wersje. Sprawdzenie: `npm outdated`, `npm audit`, `ca
 | `@tauri-apps/*` (api, cli, plugin-dialog, fs, http, notification, opener, updater, process) | Aplikacja natywna. Wersje pluginów JS i Rust muszą się zgadzać w wersji minor (`Cargo.lock` i `package-lock.json`). |
 | `family-chart` (z `d3`) | Drzewo „Wokół osoby”. `d3` zostaje, bo family-chart go wymaga; własny kod używa `d3-selection`, `d3-zoom`, `d3-transition`, `d3-hierarchy`. |
 | `leaflet`, `leaflet.markercluster` | Mapy (główna, groby, mini mapa). Leaflet 2 jest jeszcze w becie, zostajemy przy 1.9. |
+| `maplibre-gl`, `@maplibre/maplibre-gl-leaflet` | Wektorowy podkład map z OpenFreeMap rysowany wewnątrz Leafleta (`src/lib/basemap.ts`, `src/lib/maplibre.ts`). Ładowany dopiero przy otwarciu mapy. MapLibre 5 ma krytyczną lukę XSS (do 6.4.0), więc wersja 6. |
 | `@vladmandic/face-api` | Twarze na zdjęciach (na urządzeniu), modele w `public/models/face/`. |
 | `dompurify` | Czyszczenie HTML w podglądzie. |
 | `fflate` | ZIP w przeglądarce (strona rodzinna, kopie). |
@@ -47,6 +48,8 @@ Zasada: najnowsze stabilne wersje. Sprawdzenie: `npm outdated`, `npm audit`, `ca
 | `fflate` | ^0.8.3 | aplikacja |
 | `leaflet` | ^1.9.4 | aplikacja |
 | `leaflet.markercluster` | ^1.5.3 | aplikacja |
+| `maplibre-gl` | ^6.19.0 | aplikacja |
+| `@maplibre/maplibre-gl-leaflet` | ^0.1.4 | aplikacja |
 | `@sveltejs/vite-plugin-svelte` | ^7.3.1 | budowanie |
 | `@tauri-apps/cli` | ^2.12.6 | budowanie |
 | `@tsconfig/svelte` | ^5.0.9 | budowanie |

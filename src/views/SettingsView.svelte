@@ -7,7 +7,7 @@
   import { errorText } from '../lib/errors';
   import { applyAppearance, FONT_KEYS } from '../lib/theme';
   import { slug } from '../lib/backend/util';
-  import { TILES } from '../lib/geocode';
+  import { MAP_STYLES } from '../lib/basemap';
   import PersonPicker from '../lib/components/PersonPicker.svelte';
   import DateInput from '../lib/components/DateInput.svelte';
   import { POLAND } from '../lib/history';
@@ -297,7 +297,7 @@
         <label class="field">
           <span class="lbl">{t('Map style')}</span>
           <select bind:value={s.appearance.map_style}>
-            {#each Object.keys(TILES) as k}<option value={k}>{({ osm: 'OpenStreetMap', light: t('Light'), dark: t('Dark'), topo: t('Terrain') } as Record<string, string>)[k]}</option>{/each}
+            {#each MAP_STYLES as k}<option value={k}>{({ osm: t('Standard'), light: t('Pale'), dark: t('Night'), topo: t('Terrain') } as Record<string, string>)[k]}</option>{/each}
           </select>
         </label>
       </div>

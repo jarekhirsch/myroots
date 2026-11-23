@@ -1,10 +1,11 @@
 <script lang="ts">
+  import { addBaseMap } from '../lib/basemap';
   // Map of family places (births, marriages, deaths, events). OpenStreetMap is opt-in.
   import { app, call, refreshInfo } from '../lib/api.svelte';
   import { backend } from '../lib/backend';
   import { t, tn } from '../lib/i18n/index.svelte';
   import { fmtDate, initials } from '../lib/format';
-  import { TILES, geocodeMissing, searchPlaces, type GeoProgress } from '../lib/geocode';
+  import { geocodeMissing, searchPlaces, type GeoProgress } from '../lib/geocode';
   import MapPinned from '@lucide/svelte/icons/map-pin-plus';
   import SearchIcon from '@lucide/svelte/icons/search';
   import X from '@lucide/svelte/icons/x';
@@ -364,8 +365,7 @@
     if (!map) {
       map = L.map(el, { zoomControl: false, worldCopyJump: true }).setView([52, 19], 4);
       L.control.zoom({ position: 'bottomright', zoomInTitle: t('Zoom in'), zoomOutTitle: t('Zoom out') }).addTo(map);
-      const style = TILES[app.settings?.appearance?.map_style || 'osm'] || TILES.osm;
-      L.tileLayer(style.url, { attribution: style.attribution, subdomains: style.sub || 'abc', maxZoom: style.max || 19 }).addTo(map);
+      addBaseMap(L, map, app.settings?.appearance?.map_style).catch(() => {});
       // placing a missing place by hand: click on the map
       map.on('click', (e: any) => {
         if (picking) saveCoords(picking, e.latlng.lat, e.latlng.lng, 'manual');

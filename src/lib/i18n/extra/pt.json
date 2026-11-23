@@ -1141,5 +1141,8 @@
  "call number %s": "cota %s",
  "Find the address on the map": "Encontrar a morada no mapa",
  "You can also click the place on the map or drag the marker.": "Também pode clicar no local do mapa ou arrastar o marcador.",
- "Not found on the map. Click the place or drag the marker.": "Não encontrado no mapa. Clique no local ou arraste o marcador."
+ "Not found on the map. Click the place or drag the marker.": "Não encontrado no mapa. Clique no local ou arraste o marcador.",
+ "Standard": "Padrão",
+ "Pale": "Clara",
+ "Night": "Escura"
 }

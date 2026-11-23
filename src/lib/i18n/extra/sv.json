@@ -1141,5 +1141,8 @@
  "call number %s": "signum %s",
  "Find the address on the map": "Hitta adressen på kartan",
  "You can also click the place on the map or drag the marker.": "Du kan också klicka på platsen på kartan eller dra markören.",
- "Not found on the map. Click the place or drag the marker.": "Hittades inte på kartan. Klicka på platsen eller dra markören."
+ "Not found on the map. Click the place or drag the marker.": "Hittades inte på kartan. Klicka på platsen eller dra markören.",
+ "Standard": "Standard",
+ "Pale": "Ljus",
+ "Night": "Mörk"
 }

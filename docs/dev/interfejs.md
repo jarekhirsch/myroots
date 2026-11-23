@@ -17,6 +17,8 @@ Svelte 5 (runy), TypeScript, Vite 8. Bez frameworka routingu: własny router w `
 | `src/lib/ui.svelte.ts` | `toast`, okna potwierdzenia, `progress` i `withProgress(etykieta, (report) => …)`: wspólny pasek postępu (`ProgressBar.svelte`) dla każdego wgrywania i importu. Nowe wgrywanie plików: zawsze przez `withProgress`. |
 | `src/lib/gedmedia.ts` | Zdjęcia z importu GEDCOM: `imagesFromZip` (fflate), `imagesFromFiles` (folder), `attachGedcomMedia` (dopasowanie ścieżek, `origin: gedcom:<ścieżka>` chroni przed duplikatami, potem `media.link_imported`). |
 | `src/lib/assoc.ts` | Role powiązań (chrzestny, świadek…): `ROLES`, `roleLabel(role, reverse)`. |
+| `src/lib/basemap.ts` | Podkład każdej mapy: `addBaseMap(L, mapa, styl)`. Style `osm`/`light`/`dark` to wektorowe mapy OpenFreeMap (liberty, positron, dark) z nazwami w języku aplikacji, `topo` to OpenTopoMap; bez WebGL rastrowe CARTO. Nowa mapa: zawsze przez tę funkcję, nie przez `L.tileLayer`. |
+| `src/lib/maplibre.ts` | MapLibre ładowany dopiero z mapą; skrypt roboczy wbudowany jako tekst i uruchamiany z adresu `blob:`. |
 | `src/lib/cemeteries.ts` | Cmentarze z OpenStreetMap w widocznym fragmencie mapy (Overpass API z zapasowymi serwerami, pamięć podręczna na siatce 0,05°). |
 | `src/lib/migrations.ts` | Migracje na mapie: `buildMigrations(węzły, miejsca, osoba, miejsce)`; `homePlaces()` (miejsca urodzeń do trybu „kto z tego miejsca poszedł dalej”). |
 | `src/lib/types.ts` | Typy danych silnika (trzymaj w zgodzie z `model.rs` i `query.rs`). |

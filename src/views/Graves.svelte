@@ -1,12 +1,12 @@
 <script lang="ts">
+  import { addBaseMap } from '../lib/basemap';
   import { printPage } from '../lib/print';
   // Graves of the family: by cemetery, on a map, and a route for a visit
   // (All Saints' Day) opened in Google Maps.
   import { app, call } from '../lib/api.svelte';
   import { useLoad } from '../lib/load.svelte';
   import { t, tn } from '../lib/i18n/index.svelte';
-  import { TILES } from '../lib/geocode';
-  import { openLightbox, toast } from '../lib/ui.svelte';
+    import { openLightbox, toast } from '../lib/ui.svelte';
   import Avatar from '../lib/components/Avatar.svelte';
   import Img from '../lib/components/Img.svelte';
   import Route from '@lucide/svelte/icons/route';
@@ -155,8 +155,7 @@
       await import('leaflet.markercluster');
       if (cancelled || !el) return;
       map = Lf.map(el, { zoomControl: true, scrollWheelZoom: false });
-      const style = TILES[app.settings?.appearance?.map_style || 'osm'] || TILES.osm;
-      Lf.tileLayer(style.url, { attribution: style.attribution, subdomains: style.sub || 'abc', maxZoom: style.max || 19 }).addTo(map);
+      addBaseMap(Lf, map, app.settings?.appearance?.map_style).catch(() => {});
       draw();
     })();
     return () => {

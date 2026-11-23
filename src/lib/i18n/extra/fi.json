@@ -1141,5 +1141,8 @@
  "call number %s": "signum %s",
  "Find the address on the map": "Etsi osoite kartalta",
  "You can also click the place on the map or drag the marker.": "Voit myös napsauttaa paikkaa kartalla tai vetää merkkiä.",
- "Not found on the map. Click the place or drag the marker.": "Ei löytynyt kartalta. Napsauta paikkaa tai vedä merkkiä."
+ "Not found on the map. Click the place or drag the marker.": "Ei löytynyt kartalta. Napsauta paikkaa tai vedä merkkiä.",
+ "Standard": "Vakio",
+ "Pale": "Vaalea",
+ "Night": "Tumma"
 }

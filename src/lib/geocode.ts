@@ -4,13 +4,6 @@ import { backend } from './backend';
 import { lang } from './i18n/index.svelte';
 import type { PlaceUse } from './types';
 
-export const TILES: Record<string, { url: string; attribution: string; sub?: string; max?: number }> = {
-  osm: { url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', max: 19 },
-  light: { url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>', sub: 'abcd', max: 19 },
-  dark: { url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>', sub: 'abcd', max: 19 },
-  topo: { url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)', sub: 'abc', max: 17 },
-};
-
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 type Hit = { label: string; lat: number; lng: number };

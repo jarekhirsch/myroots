@@ -1141,5 +1141,8 @@
  "call number %s": "signatur %s",
  "Find the address on the map": "Find adressen på kortet",
  "You can also click the place on the map or drag the marker.": "Du kan også klikke på stedet på kortet eller trække markøren.",
- "Not found on the map. Click the place or drag the marker.": "Ikke fundet på kortet. Klik på stedet eller træk markøren."
+ "Not found on the map. Click the place or drag the marker.": "Ikke fundet på kortet. Klik på stedet eller træk markøren.",
+ "Standard": "Standard",
+ "Pale": "Lys",
+ "Night": "Mørk"
 }

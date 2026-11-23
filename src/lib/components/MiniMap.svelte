@@ -1,11 +1,11 @@
 <script lang="ts">
+  import { addBaseMap } from '../basemap';
   // Small map of one person's places in the profile (only when map services
   // are turned on and the places already have coordinates).
   import { app, call } from '../api.svelte';
   import { t } from '../i18n/index.svelte';
   import { fmtDate } from '../format';
-  import { TILES } from '../geocode';
-  import 'leaflet/dist/leaflet.css';
+    import 'leaflet/dist/leaflet.css';
   import type { MapData } from '../types';
 
   let { person }: { person: number } = $props();
@@ -40,8 +40,7 @@
       if (cancelled || !el) return;
       map?.remove();
       map = L.map(el, { zoomControl: false, attributionControl: true, scrollWheelZoom: false, dragging: !L.Browser.mobile });
-      const style = TILES[app.settings?.appearance?.map_style || 'osm'] || TILES.osm;
-      L.tileLayer(style.url, { attribution: style.attribution, subdomains: style.sub || 'abc', maxZoom: style.max || 19 }).addTo(map);
+      addBaseMap(L, map, app.settings?.appearance?.map_style).catch(() => {});
       const bounds: [number, number][] = [];
       for (const p of points) {
         const evs = p.events.filter((e) => e.person === person);

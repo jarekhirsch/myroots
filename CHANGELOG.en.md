@@ -32,6 +32,7 @@ Big trees run smoothly, sources can be attached to every piece of information, a
 - Graves, data consistency and missing data are shown in parts, and the home page no longer builds the whole list of problems only to show their number.
 
 **Fixes**
+- Maps: the background now comes from OpenFreeMap (no limits, no keys) instead of openstreetmap.org tiles, which sometimes answered with error 403, especially in the desktop app. Names of places and countries are in the app language. Styles in the settings: Standard, Pale, Night and Terrain.
 - Importing a GEDCOM file again with new people no longer duplicates the people already in the tree: they are recognised by the identifiers in the file (_UID, RIN, REFN and others) or by name and dates.
 - The More menu shows only what is not in the bar, without repeats.
 - Links to the repository point to github.com/jarekhirsch/myroots.

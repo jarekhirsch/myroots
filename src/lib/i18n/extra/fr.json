@@ -1141,5 +1141,8 @@
  "call number %s": "cote %s",
  "Find the address on the map": "Trouver l’adresse sur la carte",
  "You can also click the place on the map or drag the marker.": "Vous pouvez aussi cliquer sur l’emplacement ou faire glisser le repère.",
- "Not found on the map. Click the place or drag the marker.": "Introuvable sur la carte. Cliquez sur l’emplacement ou faites glisser le repère."
+ "Not found on the map. Click the place or drag the marker.": "Introuvable sur la carte. Cliquez sur l’emplacement ou faites glisser le repère.",
+ "Standard": "Standard",
+ "Pale": "Claire",
+ "Night": "Sombre"
 }

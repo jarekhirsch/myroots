@@ -1,9 +1,10 @@
 <script lang="ts">
+  import { addBaseMap } from '../basemap';
   // Pick a point on the map (e.g. a grave): search a place, then click the exact spot.
   import Modal from './Modal.svelte';
   import { app, call, refreshInfo } from '../api.svelte';
   import { t } from '../i18n/index.svelte';
-  import { TILES, searchPlaces } from '../geocode';
+  import { searchPlaces } from '../geocode';
   import { toast } from '../ui.svelte';
   import SearchIcon from '@lucide/svelte/icons/search';
   import 'leaflet/dist/leaflet.css';
@@ -43,8 +44,7 @@
       L = (await import('leaflet')).default;
       if (cancelled || !el) return;
       map = L.map(el, { zoomControl: true });
-      const style = TILES[app.settings?.appearance?.map_style || 'osm'] || TILES.osm;
-      L.tileLayer(style.url, { attribution: style.attribution, subdomains: style.sub || 'abc', maxZoom: style.max || 19 }).addTo(map);
+      addBaseMap(L, map, app.settings?.appearance?.map_style).catch(() => {});
       if (point) {
         map.setView(point, 17);
         place(point);

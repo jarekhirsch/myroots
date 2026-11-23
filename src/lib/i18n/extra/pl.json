@@ -1175,5 +1175,8 @@
  "call number %s": "sygn. %s",
  "Find the address on the map": "Znajdź adres na mapie",
  "You can also click the place on the map or drag the marker.": "Możesz też kliknąć miejsce na mapie albo przeciągnąć znacznik.",
- "Not found on the map. Click the place or drag the marker.": "Nie znaleziono na mapie. Kliknij miejsce albo przeciągnij znacznik."
+ "Not found on the map. Click the place or drag the marker.": "Nie znaleziono na mapie. Kliknij miejsce albo przeciągnij znacznik.",
+ "Standard": "Standardowa",
+ "Pale": "Jasna",
+ "Night": "Ciemna"
 }
