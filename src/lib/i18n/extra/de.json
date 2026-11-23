@@ -1144,5 +1144,8 @@
  "Not found on the map. Click the place or drag the marker.": "Auf der Karte nicht gefunden. Klicken Sie auf die Stelle oder ziehen Sie die Markierung.",
  "Standard": "Standard",
  "Pale": "Hell",
- "Night": "Dunkel"
+ "Night": "Dunkel",
+ "There is no more room for MyRoots data on this device. Make a backup, then free up space or use the desktop app.": "Auf diesem Gerät ist kein Platz mehr für MyRoots-Daten. Erstelle eine Sicherung und schaffe dann Platz oder nutze die Desktop-App.",
+ "Changes could not be saved on this device. Make a backup now.": "Änderungen konnten auf diesem Gerät nicht gespeichert werden. Erstelle jetzt eine Sicherung.",
+ "Could not be read as a photo: %d": "Nicht als Foto lesbar: %d"
 }

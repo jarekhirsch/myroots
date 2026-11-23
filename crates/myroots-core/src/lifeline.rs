@@ -196,7 +196,7 @@ pub fn build(db: &Database, pol: &Policy, id: Id) -> Option<Lifeline> {
         e.age = None;
         ev.push(e);
     }
-    ev.sort_by(|a, b| date::sort_key(&a.date).cmp(&date::sort_key(&b.date)));
+    ev.sort_by_cached_key(|e| date::sort_key(&e.date));
     Some(Lifeline {
         person: id,
         name: d.full_name(),

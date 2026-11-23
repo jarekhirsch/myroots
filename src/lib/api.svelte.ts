@@ -68,3 +68,20 @@ export function cachedSummaries(): Summary[] | null {
 export function bump() {
   app.version++;
 }
+
+// Read-only results shared by several views (e.g. the family timeline on the
+// start page and in the people list), cached per data version. Only for
+// callers that do not change the result.
+const shared = new Map<string, { version: number; promise: Promise<any> }>();
+
+/** Like `call`, but one request per data version for the same method and parameters. */
+export function callShared<T = any>(method: string, params: unknown = {}): Promise<T> {
+  const key = method + JSON.stringify(params ?? {});
+  const v = app.version;
+  const hit = shared.get(key);
+  if (hit && hit.version === v) return hit.promise;
+  const promise = call<T>(method, params);
+  shared.set(key, { version: v, promise });
+  promise.catch(() => shared.get(key)?.promise === promise && shared.delete(key));
+  return promise;
+}

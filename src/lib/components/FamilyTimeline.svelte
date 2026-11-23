@@ -4,7 +4,7 @@
   // partners, parents and children. Generations fold into a thin overview,
   // and the axis zooms (buttons, or Ctrl / pinch on the scroll area).
   import { tick } from 'svelte';
-  import { call } from '../api.svelte';
+  import { callShared } from '../api.svelte';
   import { useLoad } from '../load.svelte';
   import { t, tx, tn } from '../i18n/index.svelte';
   import { buildTimeline, packGeneration, type Bar, type Generation } from '../generations';
@@ -21,7 +21,8 @@
   let { only = null }: { only?: Set<string> | null } = $props();
   let width = $state(0);
   let scroller: HTMLDivElement | undefined = $state();
-  const data = useLoad(() => call<{ nodes: TreeNode[] }>('tree.data'));
+  // shared with the other timeline (start page, people list): it never changes the nodes
+  const data = useLoad(() => callShared<{ nodes: TreeNode[] }>('tree.data'));
   const full = $derived(data.data ? buildTimeline(data.data.nodes) : null);
   // Filters of the people list keep the generations, but show only matching people.
   const tl = $derived.by(() => {

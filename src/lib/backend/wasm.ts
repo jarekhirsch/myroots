@@ -110,7 +110,11 @@ export class WasmBackend implements Backend {
         this.urls.delete(k);
       }
     }
-    this.queue = this.queue.then(() => idb.write('records', recOps)).then(() => idb.write('blobs', blobOps)).catch((e) => console.error('IndexedDB write failed', e));
+    this.queue = this.queue.then(() => idb.write('records', recOps)).then(() => idb.write('blobs', blobOps)).catch((e) => {
+        console.error('IndexedDB write failed', e);
+        // the change stays in memory only: tell the person (App shows it)
+        window.dispatchEvent(new CustomEvent('myroots-save-failed', { detail: e }));
+      });
   }
 
   async call<T>(method: string, params: unknown = {}): Promise<T> {

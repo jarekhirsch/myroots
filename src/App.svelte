@@ -7,6 +7,7 @@
   import { checkUpdates } from './lib/updates.svelte';
   import { route, go, back, canGoBack } from './lib/router.svelte';
   import { ui, toast } from './lib/ui.svelte';
+  import { errorText, isStorageFull } from './lib/errors';
   import { t, lang } from './lib/i18n/index.svelte';
   import { NAV, TABBAR, DOCK, visible, isActive } from './lib/nav';
   import { backend } from './lib/backend';
@@ -184,6 +185,20 @@
     ui.prompt?.resolve(v);
     ui.prompt = null;
   }
+
+  // A change could not be written to the browser storage (usually: no room left).
+  // Shown at most every 30 s, so a series of edits does not flood the screen.
+  $effect(() => {
+    let last = 0;
+    const h = (e: Event) => {
+      if (Date.now() - last < 30_000) return;
+      last = Date.now();
+      const err = (e as CustomEvent).detail;
+      toast(isStorageFull(err) ? errorText(err) : t('Changes could not be saved on this device. Make a backup now.'), 'error');
+    };
+    window.addEventListener('myroots-save-failed', h);
+    return () => window.removeEventListener('myroots-save-failed', h);
+  });
 
   // Remember the browser storage for the PWA; flush pending writes before leaving.
   $effect(() => {

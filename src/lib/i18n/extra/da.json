@@ -1144,5 +1144,8 @@
  "Not found on the map. Click the place or drag the marker.": "Ikke fundet på kortet. Klik på stedet eller træk markøren.",
  "Standard": "Standard",
  "Pale": "Lys",
- "Night": "Mørk"
+ "Night": "Mørk",
+ "There is no more room for MyRoots data on this device. Make a backup, then free up space or use the desktop app.": "Der er ikke mere plads til MyRoots-data på denne enhed. Lav en sikkerhedskopi, og frigør derefter plads eller brug computerappen.",
+ "Changes could not be saved on this device. Make a backup now.": "Ændringerne kunne ikke gemmes på denne enhed. Lav en sikkerhedskopi nu.",
+ "Could not be read as a photo: %d": "Kunne ikke læses som foto: %d"
 }

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { assetUrl } from '../lib/backend/assets';
   import { backend } from '../lib/backend';
-  import { app, call, refreshInfo } from '../lib/api.svelte';
+  import { app, call, callShared, refreshInfo } from '../lib/api.svelte';
   import { useLoad } from '../lib/load.svelte';
   import { t, tn, tx, locale } from '../lib/i18n/index.svelte';
   import { toast } from '../lib/ui.svelte';
@@ -25,7 +25,7 @@
   const ov = useLoad(() => call<Overview>('overview'));
   const ann = useLoad(() => call<Anniversary[]>('anniversaries', { days: 45, limit: 3 }));
   // only the number is shown here (the list is in Data health)
-  const issues = useLoad(() => (app.info?.viewer ? Promise.resolve({ count: 0 }) : call<{ count: number }>('health.count')));
+  const issues = useLoad(() => (app.info?.viewer ? Promise.resolve({ count: 0 }) : callShared<{ count: number }>('health.count')));
   let treeName = $state('');
   async function saveName() {
     if (!app.settings) return;

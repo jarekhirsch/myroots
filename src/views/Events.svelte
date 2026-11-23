@@ -37,7 +37,7 @@
     const f = Number(from) || -Infinity;
     const tt = Number(to) || Infinity;
     const list = evs.data || [];
-    const hay = words.length ? haystack(list, 'events', (e) => `${e.person_name} ${e.with_name} ${e.name} ${e.place} ${e.description}`) : [];
+    const hay = words.length ? haystack(list, 'events', (e) => `${e.person_name} ${e.with_name || ''} ${e.name || ''} ${e.place || ''} ${e.description || ''}`) : [];
     return list.filter((e, i) => {
       if (kind && e.kind !== kind) return false;
       if (from || to) {

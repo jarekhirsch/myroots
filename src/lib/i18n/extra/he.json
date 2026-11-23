@@ -1144,5 +1144,8 @@
  "Not found on the map. Click the place or drag the marker.": "לא נמצא במפה. לחצו על המקום או גררו את הסימון.",
  "Standard": "רגילה",
  "Pale": "בהירה",
- "Night": "כהה"
+ "Night": "כהה",
+ "There is no more room for MyRoots data on this device. Make a backup, then free up space or use the desktop app.": "אין עוד מקום לנתוני MyRoots במכשיר זה. צרו גיבוי, ואז פנו מקום או השתמשו באפליקציה למחשב.",
+ "Changes could not be saved on this device. Make a backup now.": "לא ניתן היה לשמור את השינויים במכשיר זה. צרו גיבוי עכשיו.",
+ "Could not be read as a photo: %d": "לא ניתן לקרוא כתמונה: %d"
 }

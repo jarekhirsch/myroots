@@ -1329,7 +1329,7 @@ pub fn save_settings(db: &mut Database, mut s: Settings) {
             e.id = format!("own-{i}");
         }
     }
-    own.sort_by(|a, b| date::sort_key(&a.date).cmp(&date::sort_key(&b.date)));
+    own.sort_by_cached_key(|e| date::sort_key(&e.date));
     s.history.own = own;
     s.tree_start_person = s.tree_start_person.filter(|p| db.persons.contains_key(p));
     s.privacy.sections.retain(|x| crate::privacy::SECTIONS.contains(&x.as_str()));

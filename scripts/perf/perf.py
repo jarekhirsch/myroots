@@ -4,7 +4,7 @@ import os, sys, time, json
 from playwright.sync_api import sync_playwright
 
 url, ged = sys.argv[1], sys.argv[2]
-VIEWS = ["/", "/people", "/tree", "/map", "/events", "/graves", "/places", "/stats", "/health", "/duplicates", "/sources", "/people", "/tree"]
+VIEWS = ["/", "/people", "/", "/tree", "/map", "/events", "/graves", "/places", "/stats", "/health", "/duplicates", "/sources", "/people", "/tree"]
 
 SETTLE = """async () => {
   const idle = () => new Promise(r => requestIdleCallback(() => r(), {timeout: 60000}));

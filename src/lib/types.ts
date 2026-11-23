@@ -129,7 +129,8 @@ export interface PlaceUse { name: string; count: number; lat: number | null; lng
 export interface PetView { pet: Pet; owner: Summary | null; years: string; alive: boolean }
 export interface SourceView { source: Source; persons: Summary[]; citations: [Summary, string[]][] }
 export interface GalleryEntry { media: Id; caption: string; kind: string; owner_id: Id; owner_name: string; owner_type: 'person' | 'pet' | 'source'; clans: string[]; date: string }
-export interface FamilyEvent { kind: string; name: string; date: string; place: string; description: string; image: Id | null; person: Id; person_name: string; photo: Id | null; clans: string[]; with_name: string; with_id: Id | null; cause: string }
+// Empty fields are left out by the engine (smaller list for big trees).
+export interface FamilyEvent { kind: string; name?: string; date: string; place?: string; description?: string; image?: Id | null; person: Id; person_name: string; photo?: Id | null; clans?: string[]; with_name?: string; with_id?: Id | null; cause?: string }
 export interface Suggestion { id: Id; person: Id | null; person_name: string; message: string; author: string; email: string; status: string; created: number; token: string }
 
 export interface LEvent { kind: string; date: string; place: string; name: string; description: string; image: Id | null; related: Id | null; related_name: string; role: string; age: number | null }

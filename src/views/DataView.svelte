@@ -8,7 +8,8 @@
   import { pickFile } from '../lib/media';
   import { slug, stamp } from '../lib/backend/util';
   import { downloadWpMedia, attachLocalFiles, type WpProgress } from '../lib/wpmedia';
-  import { attachGedcomMedia, imagesFromZip, imagesFromFiles, type MediaImport } from '../lib/gedmedia';
+  import { attachGedcomMedia, imagesFromZip, imagesFromFiles, type MediaFiles, type MediaImport } from '../lib/gedmedia';
+  import { zipEntries, zipBytes, type ZipEntry } from '../lib/zipindex';
   import FileUp from '@lucide/svelte/icons/file-up';
   import FileDown from '@lucide/svelte/icons/file-down';
   import type { GedcomReport, WpReport, WpPending } from '../lib/types';
@@ -72,10 +73,11 @@
     BIRT: t('Birth'), DEAT: t('Death'), MARR: t('Marriage'),
   });
   // photos named in the GEDCOM: from the archive, or from a folder the user picks
-  let gedBytes: Uint8Array | null = null;
+  // a .zip/.gdz: only its list of files is read; the photos are taken out one by one later
+  let gedZip: { file: File; entries: ZipEntry[] } | null = null;
   let mediaRefs = $state<NonNullable<GedcomReport['media']>>([]);
   let mediaDone = $state<MediaImport | null>(null);
-  async function attachMedia(files: Map<string, Blob>) {
+  async function attachMedia(files: MediaFiles) {
     busy = true;
     try {
       mediaDone = await withProgress(t('Adding photos…'), (report) => attachGedcomMedia(mediaRefs, files, report));
@@ -96,6 +98,12 @@
     input.click();
   }
 
+  /** The GEDCOM inside an archive (as the engine picks it: gedcom.ged first, then any .ged). */
+  function pickGed(entries: ZipEntry[]): ZipEntry | undefined {
+    const ok = entries.filter((e) => !e.name.startsWith('__MACOSX'));
+    return ok.find((e) => e.name.toLowerCase() === 'gedcom.ged') || ok.find((e) => /\.ged(com)?$/i.test(e.name));
+  }
+
   function b64(bytes: Uint8Array): string {
     let s = '';
     for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
@@ -106,8 +114,20 @@
     const f = await pickFile('.ged,.gedcom,.gdz,.zip,text/plain,application/zip');
     if (!f) return;
     gedFile = f;
-    gedBytes = new Uint8Array(await f.arrayBuffer());
-    gedB64 = await withProgress(t('Reading the file…'), async () => b64(gedBytes!));
+    gedZip = null;
+    gedB64 = await withProgress(t('Reading the file…'), async () => {
+      const head = new Uint8Array(await f.slice(0, 2).arrayBuffer());
+      if (head[0] === 0x50 && head[1] === 0x4b) {
+        // an archive with photos: send only the GEDCOM inside it to the engine
+        const entries = await zipEntries(f);
+        const ged = entries && pickGed(entries);
+        if (entries && ged) {
+          gedZip = { file: f, entries };
+          return b64(await zipBytes(f, ged));
+        }
+      }
+      return b64(new Uint8Array(await f.arrayBuffer()));
+    });
     mediaRefs = [];
     mediaDone = null;
     result = null;
@@ -124,11 +144,12 @@
         result = r;
         preview = null;
         mediaRefs = r.media || [];
-        const zipped = gedBytes && gedBytes[0] === 0x50 && gedBytes[1] === 0x4b;
+        const zip = gedZip;
         gedFile = null;
+        gedZip = null;
+        gedB64 = '';
         await refreshInfo();
-        if (mediaRefs.length && zipped) await attachMedia(imagesFromZip(gedBytes!));
-        gedBytes = null;
+        if (mediaRefs.length && zip) await attachMedia(imagesFromZip(zip.file, zip.entries));
       }
     } catch (e) {
       toast(errorText(e), 'error');
@@ -322,12 +343,18 @@
             </div>
           {/if}
           {#if mediaDone}
-            <div class="notice {mediaDone.missing.length ? '' : 'ok'}">
+            <div class="notice {mediaDone.missing.length || mediaDone.failed.length ? '' : 'ok'}">
               {t('Photos added and linked: %d', mediaDone.linked)}
               {#if mediaDone.missing.length}
                 <details>
                   <summary>{t('Not found: %d', mediaDone.missing.length)}</summary>
                   <ul class="small">{#each mediaDone.missing.slice(0, 30) as f}<li>{f}</li>{/each}</ul>
+                </details>
+              {/if}
+              {#if mediaDone.failed.length}
+                <details>
+                  <summary>{t('Could not be read as a photo: %d', mediaDone.failed.length)}</summary>
+                  <ul class="small">{#each mediaDone.failed.slice(0, 30) as f}<li>{f}</li>{/each}</ul>
                 </details>
               {/if}
             </div>

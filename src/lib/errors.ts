@@ -2,7 +2,14 @@ import { t } from './i18n/index.svelte';
 import type { EngineError } from './backend/types';
 
 /** Human message for an engine error code. */
+/** The browser has no more room for the data of this site. */
+export function isStorageFull(e: unknown): boolean {
+  const x = e as { name?: string; message?: string; inner?: { name?: string } };
+  return x?.name === 'QuotaExceededError' || x?.inner?.name === 'QuotaExceededError' || /quota/i.test(x?.message || '');
+}
+
 export function errorText(e: unknown): string {
+  if (isStorageFull(e)) return t('There is no more room for MyRoots data on this device. Make a backup, then free up space or use the desktop app.');
   const err = e as EngineError;
   switch (err?.code) {
     case 'cycle':

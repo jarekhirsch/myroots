@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generates a large, realistic GEDCOM file for performance tests.
 
-python3 gen_big_ged.py 20000 > big.ged
+python3 gen_big_ged.py 20000 [places] > big.ged   (places: 400 by default)
 """
 import random
 import sys
@@ -13,9 +13,9 @@ M_NAMES = "Jan Stanisław Józef Antoni Franciszek Piotr Andrzej Tomasz Michał 
 F_NAMES = "Maria Anna Katarzyna Zofia Agnieszka Barbara Jadwiga Helena Marianna Franciszka Józefa Rozalia Elżbieta Teresa Magdalena Apolonia Julianna Ewa Regina Wiktoria".split()
 SURN = "Kowalski Nowak Wiśniewski Wójcik Kamiński Lewandowski Zieliński Szymański Woźniak Dąbrowski Kozłowski Jankowski Mazur Kwiatkowski Krawczyk Piotrowski Grabowski Nowakowski Pawłowski Michalski Hirsch Piechowski Zawadzki Sikora Baran Rutkowski Michalak Ostrowski Tomaszewski Pietrzak".split()
 TOWNS = []
-for i in range(400):
-    TOWNS.append((f"Miejscowość {i:03d}", 49.0 + random.random() * 5.5, 14.2 + random.random() * 9.8))
-CEM = [f"Cmentarz parafialny, {TOWNS[i][0]}" for i in range(0, 400, 3)]
+for i in range(int(sys.argv[2]) if len(sys.argv) > 2 else 400):
+    TOWNS.append((f"Miejscowość {i:04d}", 49.0 + random.random() * 5.5, 14.2 + random.random() * 9.8))
+CEM = [f"Cmentarz parafialny, {TOWNS[i][0]}" for i in range(0, len(TOWNS), 3)]
 OCC = "rolnik kowal nauczyciel szewc krawiec młynarz kupiec stolarz lekarz urzędnik żołnierz gospodyni".split()
 EVENTS = [("BAPM", None), ("RESI", None), ("EMIG", None), ("CONF", None), ("GRAD", None)]
 MON = "JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC".split()

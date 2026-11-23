@@ -9,6 +9,7 @@ export const ui = $state({
 
 let n = 0;
 export function toast(text: string, kind: 'ok' | 'error' | 'info' = 'ok') {
+  if (ui.toasts.some((x) => x.text === text)) return; // the same message is already on screen
   const id = ++n;
   ui.toasts.push({ id, text, kind });
   setTimeout(() => {

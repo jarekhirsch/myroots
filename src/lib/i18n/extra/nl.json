@@ -1144,5 +1144,8 @@
  "Not found on the map. Click the place or drag the marker.": "Niet gevonden op de kaart. Klik op de plek of versleep de markering.",
  "Standard": "Standaard",
  "Pale": "Licht",
- "Night": "Donker"
+ "Night": "Donker",
+ "There is no more room for MyRoots data on this device. Make a backup, then free up space or use the desktop app.": "Er is geen ruimte meer voor MyRoots-gegevens op dit apparaat. Maak een back-up en maak daarna ruimte vrij of gebruik de desktop-app.",
+ "Changes could not be saved on this device. Make a backup now.": "Wijzigingen konden niet op dit apparaat worden opgeslagen. Maak nu een back-up.",
+ "Could not be read as a photo: %d": "Niet leesbaar als foto: %d"
 }

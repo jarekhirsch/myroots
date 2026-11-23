@@ -727,18 +727,27 @@ pub struct FamilyEvent {
     /// birth | death | marriage | event
     pub kind: String,
     /// Event name for custom events.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub name: String,
     pub date: String,
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub place: String,
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub description: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub image: Option<Id>,
     pub person: Id,
     pub person_name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub photo: Option<Id>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub clans: Vec<String>,
     /// Partner for marriages / cause of death.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub with_name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub with_id: Option<Id>,
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub cause: String,
 }
 
@@ -800,7 +809,7 @@ pub fn family_events(db: &Database, pol: &Policy) -> Vec<FamilyEvent> {
             }
         }
         let u2 = pol.redact_union(u, pol.is_living(a), b.map(|b| pol.is_living(b)).unwrap_or(false));
-        let (ar, _) = pol.redact(a);
+        let ar = pol.view(a);
         out.push(FamilyEvent {
             kind: "marriage".into(),
             name: String::new(),
@@ -817,7 +826,7 @@ pub fn family_events(db: &Database, pol: &Policy) -> Vec<FamilyEvent> {
             cause: String::new(),
         });
     }
-    out.sort_by(|a, b| date::sort_key(&a.date).cmp(&date::sort_key(&b.date)));
+    out.sort_by_cached_key(|e| date::sort_key(&e.date));
     out
 }
 

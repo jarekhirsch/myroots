@@ -1144,5 +1144,8 @@
  "Not found on the map. Click the place or drag the marker.": "Ei löytynyt kartalta. Napsauta paikkaa tai vedä merkkiä.",
  "Standard": "Vakio",
  "Pale": "Vaalea",
- "Night": "Tumma"
+ "Night": "Tumma",
+ "There is no more room for MyRoots data on this device. Make a backup, then free up space or use the desktop app.": "Tällä laitteella ei ole enää tilaa MyRootsin tiedoille. Tee varmuuskopio ja vapauta sitten tilaa tai käytä tietokonesovellusta.",
+ "Changes could not be saved on this device. Make a backup now.": "Muutoksia ei voitu tallentaa tälle laitteelle. Tee varmuuskopio nyt.",
+ "Could not be read as a photo: %d": "Ei luettavissa kuvana: %d"
 }
