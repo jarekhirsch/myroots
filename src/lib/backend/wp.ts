@@ -86,12 +86,33 @@ export class WpBackend implements Backend {
     // REST nonces expire after a day: keep a fresh one while the editor is open
     setInterval(() => b.refreshNonce().catch(() => {}), 30 * 60_000);
     window.addEventListener('beforeunload', (e) => {
-      if (b.pending.records.length || b.pending.deleted_media.length) {
+      if (b.pending.records.length || b.pending.deleted_media.length || b.busy) {
         e.preventDefault();
         e.returnValue = '';
       }
     });
     return b;
+  }
+
+  /** Publishing or restoring in progress: closing the page would leave it half done. */
+  private busy = 0;
+
+  private async whileBusy<T>(fn: () => Promise<T>): Promise<T> {
+    this.busy++;
+    try {
+      return await fn();
+    } finally {
+      this.busy--;
+    }
+  }
+
+  /** Runs the jobs a few at a time: photos reach the server several times faster than one by one. */
+  private async pool<T>(items: T[], fn: (item: T) => Promise<void>, size = 4): Promise<void> {
+    let i = 0;
+    const worker = async () => {
+      while (i < items.length) await fn(items[i++]);
+    };
+    await Promise.all(Array.from({ length: Math.min(size, items.length) }, worker));
   }
 
   /* ------------------------------------------------------------------ */
@@ -140,7 +161,19 @@ export class WpBackend implements Backend {
     }
     for (let off = 0; off < bytes.length; off += CHUNK) {
       const end = Math.min(off + CHUNK, bytes.length);
-      await this.api('POST', path, bytes.subarray(off, end), { ...query, offset: off, final: end >= bytes.length ? 1 : 0 });
+      const q = { ...query, offset: off, final: end >= bytes.length ? 1 : 0 };
+      // a busy shared hosting sometimes drops one request: try the piece again
+      for (let attempt = 0; ; attempt++) {
+        try {
+          await this.api('POST', path, bytes.subarray(off, end), q);
+          break;
+        } catch (e) {
+          const code = (e as WpError).code || '';
+          const retry = attempt < 3 && (!(e instanceof WpError) || /^wp_http_(5\d\d|429|408)$/.test(code));
+          if (!retry) throw e;
+          await new Promise((r) => setTimeout(r, 1000 * 2 ** attempt));
+        }
+      }
       onSent?.(end);
     }
   }
@@ -275,13 +308,13 @@ export class WpBackend implements Backend {
     return b.length ? b : null;
   }
 
-  private async loadBlobs(ids: number[], onEach?: () => void): Promise<Map<string, Uint8Array>> {
+  private async loadBlobs(ids: number[], onEach?: () => void, original: (id: number) => boolean = () => true): Promise<Map<string, Uint8Array>> {
     const map = new Map<string, Uint8Array>();
     let i = 0;
     const worker = async () => {
       while (i < ids.length) {
         const id = ids[i++];
-        const [o, t] = await Promise.all([this.mediaBytes(id, false), this.mediaBytes(id, true)]);
+        const [o, t] = await Promise.all([original(id) ? this.mediaBytes(id, false) : null, this.mediaBytes(id, true)]);
         if (o) map.set(`${id}`, o);
         if (t) map.set(`${id}_t`, t);
         onEach?.();
@@ -315,13 +348,21 @@ export class WpBackend implements Backend {
     const recs = JSON.parse(recordsJson) as Rec[];
     const { gen } = await this.api<{ gen: number }>('POST', 'reset');
     this.cfg.gen = gen;
-    // the photos go to the server one by one: the longest part of a restore
+    // the photos: the longest part of a restore, sent a few at a time
     const total = media.reduce((a, m) => a + m[2].length, 0) || 1;
     let sent = 0;
-    for (const [id, thumb, b] of media) {
-      await this.upload(`media/${id}`, b, { thumb: thumb ? 1 : 0 }, (n) => onProgress?.(sent + n, total));
-      sent += b.length;
-    }
+    const part = new Map<number, number>();
+    const report = () => onProgress?.(sent + [...part.values()].reduce((a, n) => a + n, 0), total);
+    let k = 0;
+    await this.whileBusy(() =>
+      this.pool(media, async ([id, thumb, b]) => {
+        const key = k++;
+        await this.upload(`media/${id}`, b, { thumb: thumb ? 1 : 0 }, (n) => (part.set(key, n), report()));
+        part.delete(key);
+        sent += b.length;
+        report();
+      }),
+    );
     this.pending = { records: recs, deleted_media: [] };
     // a backup from another device may have the weather on: ask again (off)
     await this.weatherOff();
@@ -373,7 +414,7 @@ export class WpBackend implements Backend {
    */
   publish(onProgress?: (p: PublishProgress) => void): Promise<void> {
     if (this.publishing) return this.publishing;
-    this.publishing = this.doPublish(onProgress).finally(() => (this.publishing = null));
+    this.publishing = this.whileBusy(() => this.doPublish(onProgress)).finally(() => (this.publishing = null));
     return this.publishing;
   }
 
@@ -403,7 +444,9 @@ export class WpBackend implements Backend {
     }
     const need = ids.filter((id) => state.sigs?.[id] !== sigs[id]);
     let fetched = 0;
-    const blobs = await this.loadBlobs(need, () => onProgress?.({ stage: 'prepare', done: ++fetched, total: need.length }));
+    // without full photos the website gets thumbnails only: no need to fetch the originals
+    const original = (id: number) => !!full || !meta.get(id)?.has_thumb || !String(meta.get(id)?.mime || '').startsWith('image/');
+    const blobs = await this.loadBlobs(need, () => onProgress?.({ stage: 'prepare', done: ++fetched, total: need.length }), original);
     const zip = this.engine.export_site(['.keep'], [new Uint8Array(0)], (id: number, thumb: boolean) => blobs.get(thumb ? `${id}_t` : `${id}`), now, today);
     blobs.clear();
     const files = await lockFiles(unzipSync(zip), settings?.site?.lock, { title: settings?.site?.title || settings?.tree_name || '', subtitle: settings?.site?.subtitle || '' });
@@ -412,10 +455,12 @@ export class WpBackend implements Backend {
     let done = 0;
     onProgress?.({ stage: 'upload', done, total });
     const token = (await this.api<{ token: string }>('POST', 'site/begin')).token;
-    for (const n of names) {
-      await this.upload('site/file', files[n], { token, path: n });
-      onProgress?.({ stage: 'upload', done: ++done, total });
-    }
+    await this.whileBusy(() =>
+      this.pool(names, async (n) => {
+        await this.upload('site/file', files[n], { token, path: n });
+        onProgress?.({ stage: 'upload', done: ++done, total });
+      }),
+    );
     // the data last: the website switches to the new version in one step
     await this.upload('site/file', files['data.js'], { token, path: 'data.js' });
     await this.api('POST', 'site/finish', { token, sigs });

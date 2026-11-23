@@ -32,6 +32,8 @@ Duże drzewa działają płynnie, źródła można przypisać do każdej informa
 - Groby, spójność danych i brakujące dane pokazują się w porcjach, a strona główna nie liczy już całej listy problemów tylko po to, żeby pokazać ich liczbę.
 
 **Poprawki**
+- MyRoots Server: zdjęcia ładują się równolegle. Wcześniej sesja logowania blokowała kolejne zapytania i zdjęcia w galerii i drzewie przychodziły jedno po drugim, a publiczna strona rodzinna otwierała sesję przy każdym zdjęciu.
+- MyRoots Server i WordPress: publikacja strony i przywracanie kopii wysyłają kilka zdjęć naraz (w teście o ok. 35% szybciej), ponawiają kawałek pliku, gdy hosting zgubi odpowiedź, i ostrzegają przed zamknięciem karty w trakcie. Strona bez pełnych zdjęć nie pobiera już do publikacji oryginałów.
 - Mapy: podkład z OpenFreeMap (bez limitów i kluczy) zamiast kafelków openstreetmap.org, które czasem odpowiadały błędem 403, zwłaszcza w aplikacji na komputer. Nazwy miejscowości i krajów są w języku aplikacji (Wiedeń, Lwów, Nowy Jork). Style w ustawieniach: Standardowa, Jasna, Ciemna i Teren.
 - Ponowny import GEDCOM z nowymi osobami nie dubluje już osób, które są w drzewie: rozpoznaje je po identyfikatorach z pliku (_UID, RIN, REFN i in.) albo po imieniu, nazwisku i datach.
 - Menu „Więcej” pokazuje tylko to, czego nie ma na pasku, bez powtórzeń.
