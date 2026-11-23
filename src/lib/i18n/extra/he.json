@@ -1147,5 +1147,20 @@
  "Night": "כהה",
  "There is no more room for MyRoots data on this device. Make a backup, then free up space or use the desktop app.": "אין עוד מקום לנתוני MyRoots במכשיר זה. צרו גיבוי, ואז פנו מקום או השתמשו באפליקציה למחשב.",
  "Changes could not be saved on this device. Make a backup now.": "לא ניתן היה לשמור את השינויים במכשיר זה. צרו גיבוי עכשיו.",
- "Could not be read as a photo: %d": "לא ניתן לקרוא כתמונה: %d"
+ "Could not be read as a photo: %d": "לא ניתן לקרוא כתמונה: %d",
+ "The app was updated. Reload the page.": "האפליקציה עודכנה. טענו את הדף מחדש.",
+ "No connection. Check the internet and try again.": "אין חיבור. בדקו את האינטרנט ונסו שוב.",
+ "Something went wrong. Try again; if it happens again, report the problem (menu: Report a problem).": "משהו השתבש. נסו שוב; אם זה קורה שוב, דווחו על הבעיה (תפריט: דיווח על בעיה).",
+ "Could not copy. Select the text and copy it by hand.": "ההעתקה נכשלה. סמנו את הטקסט והעתיקו אותו ידנית.",
+ "Report a problem": "דיווח על בעיה",
+ "What happened?": "מה קרה?",
+ "e.g. After clicking “Publish” nothing happens.": "למשל: אחרי לחיצה על „פרסום” לא קורה כלום.",
+ "What did you expect? (optional)": "למה ציפיתם? (רשות)",
+ "Attach technical details (no data from your tree)": "צרפו פרטים טכניים (ללא נתונים מהעץ)",
+ "Send by e-mail": "שליחה בדוא״ל",
+ "Problem report": "דיווח על בעיה",
+ "What I expected:": "למה ציפיתי:",
+ "Last errors:": "שגיאות אחרונות:",
+ "Screen": "מסך",
+ "People in the tree": "אנשים בעץ"
 }

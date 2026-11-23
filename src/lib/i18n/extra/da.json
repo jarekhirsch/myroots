@@ -1147,5 +1147,20 @@
  "Night": "Mørk",
  "There is no more room for MyRoots data on this device. Make a backup, then free up space or use the desktop app.": "Der er ikke mere plads til MyRoots-data på denne enhed. Lav en sikkerhedskopi, og frigør derefter plads eller brug computerappen.",
  "Changes could not be saved on this device. Make a backup now.": "Ændringerne kunne ikke gemmes på denne enhed. Lav en sikkerhedskopi nu.",
- "Could not be read as a photo: %d": "Kunne ikke læses som foto: %d"
+ "Could not be read as a photo: %d": "Kunne ikke læses som foto: %d",
+ "The app was updated. Reload the page.": "Appen er blevet opdateret. Genindlæs siden.",
+ "No connection. Check the internet and try again.": "Ingen forbindelse. Tjek internettet, og prøv igen.",
+ "Something went wrong. Try again; if it happens again, report the problem (menu: Report a problem).": "Noget gik galt. Prøv igen; hvis det sker igen, så rapportér problemet (menu: Rapportér et problem).",
+ "Could not copy. Select the text and copy it by hand.": "Kunne ikke kopiere. Markér teksten, og kopiér den manuelt.",
+ "Report a problem": "Rapportér et problem",
+ "What happened?": "Hvad skete der?",
+ "e.g. After clicking “Publish” nothing happens.": "f.eks. Efter klik på ”Udgiv” sker der ingenting.",
+ "What did you expect? (optional)": "Hvad forventede du? (valgfrit)",
+ "Attach technical details (no data from your tree)": "Vedhæft tekniske oplysninger (ingen data fra dit træ)",
+ "Send by e-mail": "Send med e-mail",
+ "Problem report": "Problemrapport",
+ "What I expected:": "Hvad jeg forventede:",
+ "Last errors:": "Seneste fejl:",
+ "Screen": "Skærm",
+ "People in the tree": "Personer i træet"
 }

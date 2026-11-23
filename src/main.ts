@@ -11,6 +11,7 @@ import { refreshInfo, app, call } from './lib/api.svelte';
 import { initRouter } from './lib/router.svelte';
 import { setLanguage, detectLanguage, t, tn } from './lib/i18n/index.svelte';
 import { applyAppearance } from './lib/theme';
+import { installErrorNet } from './lib/errorlog';
 import type { Anniversary } from './lib/types';
 
 declare const __VIEWER__: boolean;
@@ -42,6 +43,7 @@ async function notifyAnniversaries() {
 }
 
 async function start() {
+  installErrorNet(t);
   const target = document.getElementById('app')!;
   const boot = mount(Boot, { target, props: { error: '' } });
   try {

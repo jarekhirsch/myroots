@@ -89,7 +89,7 @@
   let site = $state<SiteState | null>(null);
   let prog = $state<PublishProgress | null>(null);
   $effect(() => {
-    if (wp) wp.siteState().then((v) => (site = v)).catch(() => {});
+    if (wp) wp.siteState().then((v) => (site = v)).catch((e) => toast(errorText(e), 'error'));
   });
   async function publish() {
     if (!wp) return;
@@ -123,7 +123,7 @@
       await navigator.clipboard.writeText(code);
       toast(t('Copied.'));
     } catch {
-      /* clipboard unavailable */
+      toast(t('Could not copy. Select the text and copy it by hand.'), 'error');
     }
   }
 
@@ -237,8 +237,8 @@
         <label class="check"><input type="checkbox" bind:checked={s.privacy.enabled} /> {t('Protect living people on the website')}</label>
         {#if s.privacy.enabled}
           <div class="lv">
-            <label class="check"><input type="radio" bind:group={s.privacy.level} value="censor_living" /> <span><strong>{t('Censor data of living people')}</strong> {t('— people are visible, but selected fields of living people are hidden.')}</span></label>
-            <label class="check"><input type="radio" bind:group={s.privacy.level} value="hide_living" /> <span><strong>{t('Hide living people')}</strong> {t('— sections are visible, but living people are omitted entirely.')}</span></label>
+            <label class="check"><input type="radio" bind:group={s.privacy.level} value="censor_living" /> <span><strong>{t('Censor data of living people')}</strong><br /><span class="hint">{t('People are visible, but selected fields of living people are hidden.')}</span></span></label>
+            <label class="check"><input type="radio" bind:group={s.privacy.level} value="hide_living" /> <span><strong>{t('Hide living people')}</strong><br /><span class="hint">{t('Sections are visible, but living people are omitted entirely.')}</span></span></label>
             <label class="check"><input type="radio" bind:group={s.privacy.level} value="full" /> <span><strong>{t('Full lock of selected sections')}</strong></span></label>
           </div>
           {#if s.privacy.level === 'censor_living'}

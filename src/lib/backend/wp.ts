@@ -3,6 +3,7 @@
 // uploads folder, both reached through the REST API of the MyRoots plugin.
 // The editor runs in wp-admin; visitors get the read-only family website,
 // published by the plugin at its own address.
+import { buildBackup, openBackup } from '../archivejs';
 import { unzipSync } from 'fflate';
 import { WasmEngine } from '../wasm/myroots_wasm.js';
 import { initWasm } from './wasm';
@@ -328,35 +329,37 @@ export class WpBackend implements Backend {
   /*  Backup                                                             */
   /* ------------------------------------------------------------------ */
 
-  async exportArchive(): Promise<string | null> {
+  async exportArchive(onProgress?: (done: number, total: number) => void): Promise<string | null> {
     await this.flush();
-    const list = await this.call<{ id: number }[]>('media.list');
-    const blobs = await this.loadBlobs(list.map((m) => m.id));
-    const bytes = this.engine.export_archive((id: number, thumb: boolean) => blobs.get(thumb ? `${id}_t` : `${id}`), Date.now());
+    // the records from the engine, the photos fetched from the server one at a time
+    const records = this.engine.export_archive(() => undefined, Date.now());
+    const ids = (await this.call<{ id: number }[]>('media.list')).map((m) => m.id);
+    const blob = await buildBackup(records, ids, (id, thumb) => this.mediaBytes(id, thumb), onProgress);
     const info = await this.call<any>('app.info');
     const name = `${slug(info.tree_name || 'myroots')}-${stamp()}.myroots`;
-    downloadBlob(name, bytes, 'application/zip');
+    downloadBlob(name, blob, 'application/zip');
     return name;
   }
 
-  async importArchive(bytes: Uint8Array, onProgress?: (done: number, total: number) => void): Promise<void> {
+  async importArchive(file: Blob, onProgress?: (done: number, total: number) => void): Promise<void> {
     await this.flush();
-    const media: [number, boolean, Uint8Array][] = [];
-    const recordsJson = this.engine.import_archive(bytes, (id: number, thumb: boolean, b: Uint8Array) => {
-      media.push([id, thumb, b.slice()]);
-    });
+    // the backup is not read whole: the photos are taken out one at a time while sending
+    const opened = await openBackup(file);
+    const recordsJson = this.engine.import_archive(opened ? opened.records : new Uint8Array(await file.arrayBuffer()), () => {});
+    const media = opened?.photos || [];
     const recs = JSON.parse(recordsJson) as Rec[];
     const { gen } = await this.api<{ gen: number }>('POST', 'reset');
     this.cfg.gen = gen;
     // the photos: the longest part of a restore, sent a few at a time
-    const total = media.reduce((a, m) => a + m[2].length, 0) || 1;
+    const total = media.reduce((a, m) => a + m.size, 0) || 1;
     let sent = 0;
     const part = new Map<number, number>();
     const report = () => onProgress?.(sent + [...part.values()].reduce((a, n) => a + n, 0), total);
     let k = 0;
     await this.whileBusy(() =>
-      this.pool(media, async ([id, thumb, b]) => {
+      this.pool(media, async (m) => {
         const key = k++;
+        const [id, thumb, b] = [m.id, m.thumb, await m.read()];
         await this.upload(`media/${id}`, b, { thumb: thumb ? 1 : 0 }, (n) => (part.set(key, n), report()));
         part.delete(key);
         sent += b.length;

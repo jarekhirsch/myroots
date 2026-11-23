@@ -1,4 +1,5 @@
 // Browser backend: the Rust engine compiled to WebAssembly + IndexedDB storage.
+import { buildBackup, openBackup } from '../archivejs';
 import init, { WasmEngine } from '../wasm/myroots_wasm.js';
 import wasmUrl from '../wasm/myroots_wasm_bg.wasm?url';
 import type { Backend, MediaInput, TreeList, TreesApi } from './types';
@@ -178,33 +179,39 @@ export class WasmBackend implements Backend {
     return map;
   }
 
-  async exportArchive(): Promise<string | null> {
+  async exportArchive(onProgress?: (done: number, total: number) => void): Promise<string | null> {
     await this.flush();
-    const blobs = await this.loadAllBlobs();
-    const bytes = this.engine.export_archive((id: number, thumb: boolean) => blobs.get(thumb ? `${id}_t` : `${id}`), Date.now());
+    // the engine writes the records; the photos are added one at a time (never all in memory)
+    const records = this.engine.export_archive(() => undefined, Date.now());
+    const ids = (await this.call<{ id: number }[]>('media.list')).map((m) => m.id);
+    const blob = await buildBackup(records, ids, async (id, thumb) => {
+      const v = await idb.get('blobs', thumb ? `${id}_t` : `${id}`);
+      return v ? new Uint8Array(v) : null;
+    }, onProgress);
     const info = await this.call<any>('app.info');
     const name = `${slug(info.tree_name || 'myroots')}-${stamp()}.myroots`;
-    downloadBlob(name, bytes, 'application/zip');
+    downloadBlob(name, blob, 'application/zip');
     return name;
   }
 
-  async importArchive(bytes: Uint8Array, onProgress?: (done: number, total: number) => void): Promise<void> {
+  async importArchive(file: Blob, onProgress?: (done: number, total: number) => void): Promise<void> {
     await this.flush();
-    const media: [string, any][] = [];
-    const recordsJson = this.engine.import_archive(bytes, (id: number, thumb: boolean, b: Uint8Array) => {
-      media.push([thumb ? `${id}_t` : `${id}`, b.slice()]);
-    });
+    // records checked by the engine first: a wrong file leaves the tree untouched
+    const opened = await openBackup(file);
+    const recordsJson = this.engine.import_archive(opened ? opened.records : new Uint8Array(await file.arrayBuffer()), () => {});
     for (const u of this.urls.values()) URL.revokeObjectURL(u);
     this.urls.clear();
     await idb.clear('records');
     await idb.clear('blobs');
     const recs = JSON.parse(recordsJson) as { kind: string; id: number }[];
     await idb.write('records', recs.map((r) => [`${r.kind}:${r.id}`, r]));
-    for (let i = 0; i < media.length; i += 50) {
-      onProgress?.(i, media.length);
-      await idb.write('blobs', media.slice(i, i + 50));
+    const photos = opened?.photos || [];
+    for (let i = 0; i < photos.length; i += 20) {
+      onProgress?.(i, photos.length);
+      const batch = photos.slice(i, i + 20);
+      await idb.write('blobs', await Promise.all(batch.map(async (p) => [p.thumb ? `${p.id}_t` : `${p.id}`, await p.read()] as [string, any])));
     }
-    onProgress?.(media.length, media.length);
+    onProgress?.(photos.length, photos.length);
   }
 
   async exportSite(): Promise<string | null> {

@@ -26,7 +26,7 @@
   async function backup() {
     busy = true;
     try {
-      const where = await backend.exportArchive();
+      const where = await withProgress(t('Working…'), (report) => backend.exportArchive(report));
       if (where) toast(t('Backup saved: %s', where));
     } catch (e) {
       toast(errorText(e), 'error');
@@ -40,7 +40,7 @@
     if (!app.info?.empty && !(await confirmDialog(t('Restore a backup?'), t('Everything currently in the app will be replaced by the content of the backup.'), t('Restore'), true))) return;
     busy = true;
     try {
-      await withProgress(t('Restoring the backup…'), async (report) => backend.importArchive(new Uint8Array(await f.arrayBuffer()), report));
+      await withProgress(t('Restoring the backup…'), async (report) => backend.importArchive(f, report));
       await refreshInfo();
       bump();
       toast(t('Backup restored.'));

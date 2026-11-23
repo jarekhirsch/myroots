@@ -92,8 +92,8 @@ export class TauriBackend implements Backend {
     return this.saveAs(`${slug(info.tree_name || 'myroots')}-${stamp()}.myroots`, 'myroots', 'MyRoots', async () => bytes(await invoke<ArrayBuffer>('archive_bytes')));
   }
 
-  async importArchive(data: Uint8Array): Promise<void> {
-    await invoke('archive_import', data);
+  async importArchive(file: Blob): Promise<void> {
+    await invoke('archive_import', new Uint8Array(await file.arrayBuffer()));
   }
 
   async exportSite(): Promise<string | null> {

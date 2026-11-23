@@ -1147,5 +1147,20 @@
  "Night": "Tumma",
  "There is no more room for MyRoots data on this device. Make a backup, then free up space or use the desktop app.": "Tällä laitteella ei ole enää tilaa MyRootsin tiedoille. Tee varmuuskopio ja vapauta sitten tilaa tai käytä tietokonesovellusta.",
  "Changes could not be saved on this device. Make a backup now.": "Muutoksia ei voitu tallentaa tälle laitteelle. Tee varmuuskopio nyt.",
- "Could not be read as a photo: %d": "Ei luettavissa kuvana: %d"
+ "Could not be read as a photo: %d": "Ei luettavissa kuvana: %d",
+ "The app was updated. Reload the page.": "Sovellus on päivitetty. Lataa sivu uudelleen.",
+ "No connection. Check the internet and try again.": "Ei yhteyttä. Tarkista internet ja yritä uudelleen.",
+ "Something went wrong. Try again; if it happens again, report the problem (menu: Report a problem).": "Jokin meni vikaan. Yritä uudelleen; jos se toistuu, ilmoita ongelmasta (valikko: Ilmoita ongelmasta).",
+ "Could not copy. Select the text and copy it by hand.": "Kopiointi epäonnistui. Valitse teksti ja kopioi se käsin.",
+ "Report a problem": "Ilmoita ongelmasta",
+ "What happened?": "Mitä tapahtui?",
+ "e.g. After clicking “Publish” nothing happens.": "esim. ”Julkaise”-painikkeen jälkeen mitään ei tapahdu.",
+ "What did you expect? (optional)": "Mitä odotit? (valinnainen)",
+ "Attach technical details (no data from your tree)": "Liitä tekniset tiedot (ei sukupuun tietoja)",
+ "Send by e-mail": "Lähetä sähköpostilla",
+ "Problem report": "Ongelmailmoitus",
+ "What I expected:": "Mitä odotin:",
+ "Last errors:": "Viimeisimmät virheet:",
+ "Screen": "Näyttö",
+ "People in the tree": "Henkilöitä sukupuussa"
 }

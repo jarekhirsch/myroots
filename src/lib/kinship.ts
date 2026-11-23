@@ -54,7 +54,7 @@ export function kinshipText(k: KinshipResult): [string, string] {
         break;
     }
     const rel = term ? t('%1$s is the %2$s of %3$s', nameB, term, nameA) : t('%1$s and %2$s are related by marriage.', nameA, nameB);
-    return [rel, t('No common ancestor — the people are connected by marriages.')];
+    return [rel, t('No common ancestor: the people are connected by marriages.')];
   }
   // blood
   const dA = k.depth_a;

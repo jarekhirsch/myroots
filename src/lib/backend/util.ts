@@ -4,8 +4,8 @@ export function todayLocal(): string {
   return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
 }
 
-export function downloadBlob(name: string, data: Uint8Array | string, mime: string) {
-  const blob = new Blob([typeof data === 'string' ? data : (data as BlobPart)], { type: mime });
+export function downloadBlob(name: string, data: Uint8Array | string | Blob, mime: string) {
+  const blob = data instanceof Blob ? data : new Blob([typeof data === 'string' ? data : (data as BlobPart)], { type: mime });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -13,7 +13,8 @@ export function downloadBlob(name: string, data: Uint8Array | string, mime: stri
   document.body.appendChild(a);
   a.click();
   a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 30_000);
+  // the browser reads the file while saving it: release it only when even a big backup is surely saved
+  setTimeout(() => URL.revokeObjectURL(url), 60_000 + Math.round(blob.size / 1_000_000) * 2_000);
 }
 
 export function stamp(): string {

@@ -1147,5 +1147,20 @@
  "Night": "Sombre",
  "There is no more room for MyRoots data on this device. Make a backup, then free up space or use the desktop app.": "Il n’y a plus de place pour les données MyRoots sur cet appareil. Faites une sauvegarde, puis libérez de l’espace ou utilisez l’application de bureau.",
  "Changes could not be saved on this device. Make a backup now.": "Les modifications n’ont pas pu être enregistrées sur cet appareil. Faites une sauvegarde maintenant.",
- "Could not be read as a photo: %d": "Illisibles comme photo : %d"
+ "Could not be read as a photo: %d": "Illisibles comme photo : %d",
+ "The app was updated. Reload the page.": "L’application a été mise à jour. Rechargez la page.",
+ "No connection. Check the internet and try again.": "Pas de connexion. Vérifiez Internet et réessayez.",
+ "Something went wrong. Try again; if it happens again, report the problem (menu: Report a problem).": "Un problème est survenu. Réessayez ; si cela se reproduit, signalez-le (menu : Signaler un problème).",
+ "Could not copy. Select the text and copy it by hand.": "Impossible de copier. Sélectionnez le texte et copiez-le à la main.",
+ "Report a problem": "Signaler un problème",
+ "What happened?": "Que s’est-il passé ?",
+ "e.g. After clicking “Publish” nothing happens.": "p. ex. Après un clic sur « Publier », rien ne se passe.",
+ "What did you expect? (optional)": "Qu’attendiez-vous ? (facultatif)",
+ "Attach technical details (no data from your tree)": "Joindre les détails techniques (aucune donnée de votre arbre)",
+ "Send by e-mail": "Envoyer par e-mail",
+ "Problem report": "Signalement d’un problème",
+ "What I expected:": "Ce que j’attendais :",
+ "Last errors:": "Dernières erreurs :",
+ "Screen": "Écran",
+ "People in the tree": "Personnes dans l’arbre"
 }

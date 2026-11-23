@@ -1181,5 +1181,20 @@
  "Night": "Ciemna",
  "There is no more room for MyRoots data on this device. Make a backup, then free up space or use the desktop app.": "Na tym urządzeniu zabrakło miejsca na dane MyRoots. Zrób kopię zapasową, a potem zwolnij miejsce albo użyj aplikacji na komputer.",
  "Changes could not be saved on this device. Make a backup now.": "Nie udało się zapisać zmian na tym urządzeniu. Zrób teraz kopię zapasową.",
- "Could not be read as a photo: %d": "Nie udało się odczytać jako zdjęcia: %d"
+ "Could not be read as a photo: %d": "Nie udało się odczytać jako zdjęcia: %d",
+ "The app was updated. Reload the page.": "Aplikacja została zaktualizowana. Odśwież stronę.",
+ "No connection. Check the internet and try again.": "Brak połączenia. Sprawdź internet i spróbuj ponownie.",
+ "Something went wrong. Try again; if it happens again, report the problem (menu: Report a problem).": "Coś poszło nie tak. Spróbuj ponownie, a jeśli to się powtórzy, zgłoś problem (menu: Zgłoś problem).",
+ "Could not copy. Select the text and copy it by hand.": "Nie udało się skopiować. Zaznacz tekst i skopiuj go ręcznie.",
+ "Report a problem": "Zgłoś problem",
+ "What happened?": "Co się stało?",
+ "e.g. After clicking “Publish” nothing happens.": "np. Po kliknięciu „Opublikuj” nic się nie dzieje.",
+ "What did you expect? (optional)": "Czego się spodziewałeś? (opcjonalnie)",
+ "Attach technical details (no data from your tree)": "Dołącz dane techniczne (bez danych z drzewa)",
+ "Send by e-mail": "Wyślij e-mailem",
+ "Problem report": "Zgłoszenie problemu",
+ "What I expected:": "Czego się spodziewałem:",
+ "Last errors:": "Ostatnie błędy:",
+ "Screen": "Ekran",
+ "People in the tree": "Osób w drzewie"
 }

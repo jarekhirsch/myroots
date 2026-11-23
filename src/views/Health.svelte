@@ -47,13 +47,13 @@
       case 'death_before_birth':
         return t('The date of death (%1$d) is earlier than the date of birth (%2$d).', a[0], a[1]);
       case 'implausible_age':
-        return t('A lifespan of %d years exceeds a plausible threshold — check the dates.', a[0]);
+        return t('A lifespan of %d years exceeds a plausible threshold. Check the dates.', a[0]);
       case 'parent_younger':
         return t('%1$s (%2$s) was born in the same year as the child or later.', role(a[0]), a[1]);
       case 'parent_too_young':
         return t('%1$s (%2$s) was only %3$d years old when the child was born.', role(a[0]), a[1], a[2]);
       case 'parent_too_old':
-        return t('%1$s (%2$s) was as old as %3$d when the child was born — check the dates.', role(a[0]), a[1], a[2]);
+        return t('%1$s (%2$s) was as old as %3$d when the child was born. Check the dates.', role(a[0]), a[1], a[2]);
       case 'parent_dead_before_birth':
         return t('%1$s (%2$s) died in %3$d, before the child was born (%4$d).', role(a[0]), a[1], a[2], a[3]);
       case 'gender_role_conflict_father':
@@ -63,13 +63,13 @@
       case 'marriage_before_birth':
         return t('Marriage in %1$d (to %2$s) before the person was born (%3$d).', a[0], a[1], a[2]);
       case 'marriage_too_young':
-        return t('Age at marriage: %1$d years (to %2$s) — check the dates.', a[0], a[1]);
+        return t('Age at marriage: %1$d years (to %2$s). Check the dates.', a[0], a[1]);
       case 'marriage_after_death':
         return t("Marriage in %1$d (to %2$s) after the person's death (%3$d).", a[0], a[1], a[2]);
       case 'marriage_end_before_start':
-        return t('Marriage ended (%1$d) before it began (%2$d) — with %3$s.', a[0], a[1], a[2]);
+        return t('Marriage ended (%1$d) before it began (%2$d), with %3$s.', a[0], a[1], a[2]);
       case 'ancestor_cycle':
-        return t('Ancestor loop: %s — the person is their own ancestor. The tree will not render correctly.', (a[0] || []).join(' → '));
+        return t('Ancestor loop: %s. The person is their own ancestor. The tree will not render correctly.', (a[0] || []).join(' → '));
       default:
         return i.type;
     }

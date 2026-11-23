@@ -9,6 +9,8 @@ export const LICENSE_URL = 'https://www.gnu.org/licenses/gpl-3.0.html';
 export const SOURCE_NOTE = 'GPL-3.0-or-later';
 /** Where the source code is published (section 6 of the GPL). */
 export const SOURCE_URL = 'https://github.com/jarekhirsch/myroots';
+/** Where "Report a problem" sends e-mails. */
+export const REPORT_EMAIL = 'kontakt@myroots.cc';
 
 /** The author's website, tagged so visits from the app and the family websites can be told apart. */
 export function authorUrl(medium: 'app' | 'family-website', content = 'credits'): string {
@@ -24,6 +26,8 @@ export const THIRD_PARTY: { name: string; license: string; url: string }[] = [
   { name: 'family-chart', license: 'ISC', url: 'https://github.com/donatso/family-chart' },
   { name: 'D3', license: 'ISC', url: 'https://d3js.org' },
   { name: 'Leaflet, Leaflet.markercluster', license: 'BSD-2-Clause, MIT', url: 'https://leafletjs.com' },
+  { name: 'MapLibre GL JS', license: 'BSD-3-Clause', url: 'https://maplibre.org' },
+  { name: 'Map background: OpenFreeMap, OpenMapTiles; terrain: OpenTopoMap; CARTO', license: 'BSD / CC BY-SA / CC BY', url: 'https://openfreemap.org' },
   { name: 'Map data © OpenStreetMap contributors', license: 'ODbL', url: 'https://www.openstreetmap.org/copyright' },
   { name: 'Weather data by Open-Meteo.com (ERA5, Copernicus Climate Change Service)', license: 'CC BY 4.0', url: 'https://open-meteo.com/' },
   { name: 'Place search: Nominatim and Photon (komoot), OpenStreetMap data', license: 'ODbL', url: 'https://photon.komoot.io/' },

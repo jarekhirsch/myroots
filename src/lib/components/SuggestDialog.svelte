@@ -60,7 +60,7 @@
       await navigator.clipboard.writeText(code);
       toast(t('Copied.'));
     } catch {
-      /* ignore */
+      toast(t('Could not copy. Select the text and copy it by hand.'), 'error');
     }
   }
 </script>
@@ -78,7 +78,7 @@
     <form id="sug" onsubmit={(e) => { e.preventDefault(); send(); }}>
       <label class="field">
         <span class="lbl">{t('What should be corrected or added?')}</span>
-        <textarea bind:value={message} rows="5" maxlength="5000" placeholder={t('e.g. The date of birth is 12.05.1932, not 1933 — I have a copy of the certificate.')} required></textarea>
+        <textarea bind:value={message} rows="5" maxlength="5000" placeholder={t('e.g. The date of birth is 12.05.1932, not 1933. I have a copy of the certificate.')} required></textarea>
       </label>
       <div class="form-grid two">
         <label class="field"><span class="lbl">{t('Your name (optional)')}</span><input type="text" bind:value={author} /></label>

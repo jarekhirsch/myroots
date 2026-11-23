@@ -1147,5 +1147,20 @@
  "Night": "Donker",
  "There is no more room for MyRoots data on this device. Make a backup, then free up space or use the desktop app.": "Er is geen ruimte meer voor MyRoots-gegevens op dit apparaat. Maak een back-up en maak daarna ruimte vrij of gebruik de desktop-app.",
  "Changes could not be saved on this device. Make a backup now.": "Wijzigingen konden niet op dit apparaat worden opgeslagen. Maak nu een back-up.",
- "Could not be read as a photo: %d": "Niet leesbaar als foto: %d"
+ "Could not be read as a photo: %d": "Niet leesbaar als foto: %d",
+ "The app was updated. Reload the page.": "De app is bijgewerkt. Laad de pagina opnieuw.",
+ "No connection. Check the internet and try again.": "Geen verbinding. Controleer het internet en probeer het opnieuw.",
+ "Something went wrong. Try again; if it happens again, report the problem (menu: Report a problem).": "Er ging iets mis. Probeer het opnieuw; als het weer gebeurt, meld het probleem (menu: Probleem melden).",
+ "Could not copy. Select the text and copy it by hand.": "Kopiëren mislukt. Selecteer de tekst en kopieer hem met de hand.",
+ "Report a problem": "Probleem melden",
+ "What happened?": "Wat is er gebeurd?",
+ "e.g. After clicking “Publish” nothing happens.": "bijv. Na een klik op ‘Publiceren’ gebeurt er niets.",
+ "What did you expect? (optional)": "Wat verwachtte je? (optioneel)",
+ "Attach technical details (no data from your tree)": "Technische gegevens bijvoegen (geen gegevens uit je stamboom)",
+ "Send by e-mail": "Per e-mail versturen",
+ "Problem report": "Probleemmelding",
+ "What I expected:": "Wat ik verwachtte:",
+ "Last errors:": "Laatste fouten:",
+ "Screen": "Scherm",
+ "People in the tree": "Personen in de stamboom"
 }

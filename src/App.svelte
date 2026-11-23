@@ -16,6 +16,8 @@
   import QuickSearch from './lib/components/QuickSearch.svelte';
   import BackButton from './lib/components/BackButton.svelte';
   import AboutDialog from './lib/components/AboutDialog.svelte';
+  import ReportDialog from './lib/components/ReportDialog.svelte';
+  import Bug from '@lucide/svelte/icons/bug';
   import { AUTHOR, YEAR, authorUrl } from './lib/credits';
   import MenuIcon from '@lucide/svelte/icons/menu';
   import More from '@lucide/svelte/icons/ellipsis';
@@ -120,6 +122,7 @@
   });
 
   let about = $state(false);
+  let report = $state(false);
   // Inside WordPress: the way back to the site and the save state of the editor.
   const wpLink = wpBack();
   const serverHost = isServerHost();
@@ -271,6 +274,11 @@
           {#if !viewer}<p class="wp-state small" class:err={!!wpSave.error} role="status">{wpSave.error ? t('Not saved yet, retrying…') : wpSave.saving ? t('Saving…') : serverHost ? t('Saved on the server') : t('Saved in WordPress')}</p>{/if}
         </div>
       {/if}
+      {#if !viewer}
+        <div class="report-link">
+          <button type="button" class="item" onclick={() => ((report = true), (ui.menuOpen = false))}><Bug size={18} strokeWidth={1.8} /><span>{t('Report a problem')}</span></button>
+        </div>
+      {/if}
       <div class="foot small faint">
         <button type="button" class="about-link" onclick={() => ((about = true), (ui.menuOpen = false))}>
           {#if viewer}{t('Made with MyRoots')}{:else}MyRoots {app.info?.version}{/if}
@@ -415,6 +423,7 @@
     <Lightbox />
   {/if}
 {#if about}<AboutDialog onclose={() => (about = false)} />{/if}
+{#if report}<ReportDialog onclose={() => (report = false)} />{/if}
 {#if unlockOpen && siteLock}<Modal title={t('Protected people')} onclose={() => (unlockOpen = false)}><Unlock header={siteLock} /></Modal>{/if}
 {/key}
 
@@ -630,11 +639,13 @@
     flex-direction: column;
     gap: 2px;
   }
-  .unlock-link {
+  .unlock-link,
+  .report-link {
     padding: 8px 10px 4px;
     border-top: 1px solid var(--line);
   }
-  .unlock-link .item {
+  .unlock-link .item,
+  .report-link .item {
     width: 100%;
     border: 0;
     background: none;

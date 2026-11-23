@@ -193,8 +193,8 @@ msgstr "A data de falecimento (%1$d) é anterior à data de nascimento (%2$d)."
 #. translators: %d: age in years
 #: includes/class-health.php:221
 #, php-format
-msgid "A lifespan of %d years exceeds a plausible threshold — check the dates."
-msgstr "Uma vida de %d anos excede um limite plausível — verifique as datas."
+msgid "A lifespan of %d years exceeds a plausible threshold. Check the dates."
+msgstr "Uma vida de %d anos excede um limite plausível. Verifique as datas."
 
 #: includes/class-health.php:239
 msgid "The person is set as their own parent."
@@ -263,8 +263,8 @@ msgstr "%1$s (%2$s) tinha apenas %3$d anos quando o filho nasceu."
 #. translators: 1: role, 2: full name, 3: age
 #: includes/class-health.php:324
 #, php-format
-msgid "%1$s (%2$s) was as old as %3$d when the child was born — check the dates."
-msgstr "%1$s (%2$s) já tinha %3$d anos quando o filho nasceu — verifique as datas."
+msgid "%1$s (%2$s) was as old as %3$d when the child was born. Check the dates."
+msgstr "%1$s (%2$s) já tinha %3$d anos quando o filho nasceu. Verifique as datas."
 
 #. translators: 1: role, 2: full name, 3: year of death, 4: child's year of birth
 #: includes/class-health.php:336
@@ -281,8 +281,8 @@ msgstr "Casamento em %1$d (com %2$s) antes do nascimento da pessoa (%3$d)."
 #. translators: 1: age, 2: spouse
 #: includes/class-health.php:366
 #, php-format
-msgid "Age at marriage: %1$d years (to %2$s) — check the dates."
-msgstr "Idade ao casar: %1$d anos (com %2$s) — verifique as datas."
+msgid "Age at marriage: %1$d years (to %2$s). Check the dates."
+msgstr "Idade ao casar: %1$d anos (com %2$s). Verifique as datas."
 
 #. translators: 1: year of marriage, 2: spouse, 3: year of death
 #: includes/class-health.php:374
@@ -293,8 +293,8 @@ msgstr "Casamento em %1$d (com %2$s) depois do falecimento da pessoa (%3$d)."
 #. translators: 1: year the marriage ended, 2: year of marriage, 3: spouse
 #: includes/class-health.php:381
 #, php-format
-msgid "Marriage ended (%1$d) before it began (%2$d) — with %3$s."
-msgstr "Fim do casamento (%1$d) antes da sua celebração (%2$d) — com %3$s."
+msgid "Marriage ended (%1$d) before it began (%2$d), with %3$s."
+msgstr "Fim do casamento (%1$d) antes da sua celebração (%2$d), com %3$s."
 
 #. translators: %s: full name
 #: includes/class-health.php:402
@@ -329,8 +329,8 @@ msgstr "A pessoa “%s” está indicada como mãe, mas é do sexo masculino."
 #. translators: %s: chain of people
 #: includes/class-health.php:497
 #, php-format
-msgid "Ancestor loop: %s — the person is their own ancestor. The tree will not render correctly."
-msgstr "Ciclo de antepassados: %s — a pessoa é o seu próprio antepassado. A árvore não será apresentada corretamente."
+msgid "Ancestor loop: %s. The person is their own ancestor. The tree will not render correctly."
+msgstr "Ciclo de antepassados: %s. A pessoa é o seu próprio antepassado. A árvore não será apresentada corretamente."
 
 #: includes/class-admin.php:2646 includes/class-backup.php:123 includes/class-backup.php:176 includes/class-gedcom.php:1129 includes/class-health.php:527 includes/class-history.php:214 includes/class-kinship.php:131 includes/class-map.php:565 includes/class-merge.php:313 includes/class-merge.php:439 includes/class-merge.php:656 includes/class-notifications.php:235 includes/class-suggestions.php:219
 msgid "You do not have permission to do this."
@@ -1032,8 +1032,8 @@ msgid "What should be corrected or added?"
 msgstr "O que deve ser corrigido ou acrescentado?"
 
 #: includes/class-suggestions.php:98
-msgid "e.g. The date of birth is 12.05.1932, not 1933 — I have a copy of the certificate."
-msgstr "p. ex. A data de nascimento é 12.05.1932, não 1933 — tenho uma cópia da certidão."
+msgid "e.g. The date of birth is 12.05.1932, not 1933. I have a copy of the certificate."
+msgstr "p. ex. A data de nascimento é 12.05.1932, não 1933. Tenho uma cópia da certidão."
 
 #: includes/class-suggestions.php:101
 msgid "Send suggestion"
@@ -1754,16 +1754,16 @@ msgid "Hide living people"
 msgstr "Ocultar pessoas vivas"
 
 #: includes/class-privacy.php:259
-msgid "— sections are visible, but living people are omitted entirely."
-msgstr "— as secções são visíveis, mas as pessoas vivas são totalmente omitidas."
+msgid "Sections are visible, but living people are omitted entirely."
+msgstr "As secções são visíveis, mas as pessoas vivas são totalmente omitidas."
 
 #: includes/class-privacy.php:261
 msgid "Censor data of living people"
 msgstr "Censurar dados de pessoas vivas"
 
 #: includes/class-privacy.php:262
-msgid "— people are visible, but selected fields of living people are hidden."
-msgstr "— as pessoas são visíveis, mas alguns campos das pessoas vivas são ocultados."
+msgid "People are visible, but selected fields of living people are hidden."
+msgstr "As pessoas são visíveis, mas alguns campos das pessoas vivas são ocultados."
 
 #: includes/class-privacy.php:264
 msgid "Works only when private mode is on. Administrators and genealogy editors always see the full data."
@@ -2144,8 +2144,8 @@ msgid "This is the same person."
 msgstr "É a mesma pessoa."
 
 #: includes/class-kinship.php:248
-msgid "No common ancestor — the people are connected by marriages."
-msgstr "Sem antepassado comum — as pessoas estão ligadas por casamentos."
+msgid "No common ancestor: the people are connected by marriages."
+msgstr "Sem antepassado comum: as pessoas estão ligadas por casamentos."
 
 #: includes/class-kinship.php:255
 msgid "No connection"

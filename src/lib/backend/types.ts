@@ -62,9 +62,9 @@ export interface Backend {
   /** Raw bytes of a media item. */
   mediaBytes(id: number, thumb?: boolean): Promise<Uint8Array | null>;
   /** Full backup (.myroots archive). Returns a save location / name. */
-  exportArchive(): Promise<string | null>;
+  exportArchive(onProgress?: (done: number, total: number) => void): Promise<string | null>;
   /** Restore from a .myroots archive (replaces everything); `onProgress(done, total)` for the progress bar. */
-  importArchive(bytes: Uint8Array, onProgress?: (done: number, total: number) => void): Promise<void>;
+  importArchive(file: Blob, onProgress?: (done: number, total: number) => void): Promise<void>;
   /** Family website (ZIP). */
   exportSite(): Promise<string | null>;
   /** Saves a text / binary file chosen by the user. */

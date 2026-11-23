@@ -7,6 +7,7 @@ import { inflateSync } from 'fflate';
 export interface ZipEntry {
   name: string;
   method: number;
+  crc: number;
   csize: number;
   size: number;
   offset: number;
@@ -55,6 +56,7 @@ export async function zipEntries(file: Blob): Promise<ZipEntry[] | null> {
     if (u32(cd, p) !== 0x02014b50) return null;
     const flags = u16(cd, p + 8);
     const method = u16(cd, p + 10);
+    const crc = u32(cd, p + 16);
     let csize = u32(cd, p + 20);
     let size = u32(cd, p + 24);
     const nameLen = u16(cd, p + 28);
@@ -79,7 +81,7 @@ export async function zipEntries(file: Blob): Promise<ZipEntry[] | null> {
       }
       e += 4 + len;
     }
-    if (!name.endsWith('/')) out.push({ name, method, csize, size, offset });
+    if (!name.endsWith('/')) out.push({ name, method, crc, csize, size, offset });
     p += 46 + nameLen + extraLen + commentLen;
   }
   return out;
