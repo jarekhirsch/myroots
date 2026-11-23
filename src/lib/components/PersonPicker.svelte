@@ -42,7 +42,7 @@
 
   const selected = $derived(all.find((p) => p.id === value) || null);
 
-  const text = (p: Summary) => `${p.name} ${p.maiden_name} ${p.years} ${p.birth_place}`;
+  const text = (p: Summary) => `${p.name} ${p.maiden_name} ${p.nickname || ''} ${p.years} ${p.birth_place}`;
   const results = $derived.by(() => {
     const ex = new Set(exclude);
     const keep = (p: Summary) => !ex.has(p.id);

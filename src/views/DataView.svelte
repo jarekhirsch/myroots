@@ -8,12 +8,14 @@
   import { pickFile } from '../lib/media';
   import { slug, stamp } from '../lib/backend/util';
   import { downloadWpMedia, attachLocalFiles, type WpProgress } from '../lib/wpmedia';
+  import { attachGedcomMedia, imagesFromZip, imagesFromFiles, type MediaImport } from '../lib/gedmedia';
   import FileUp from '@lucide/svelte/icons/file-up';
   import FileDown from '@lucide/svelte/icons/file-down';
   import type { GedcomReport, WpReport, WpPending } from '../lib/types';
 
   let people = $state(0);
   $effect(() => {
+    void app.version; // the count follows imports and restores
     call<{ persons: number }>('overview').then((o) => (people = o.persons));
   });
   let tab = $state(['gedcom', 'wp', 'archive', 'reset'].includes(route.query.tab) ? route.query.tab : 'archive');
@@ -65,7 +67,34 @@
     CHRA: t('Adult christening'), BLES: t('Blessing'), TITL: t('Title'), NATI: t('Nationality'), DSCR: t('Physical description'),
     PROP: t('Property'), ENGA: t('Engagement'), MARB: t('Marriage banns'), MARC: t('Marriage contract'), MARL: t('Marriage license'),
     MARS: t('Marriage settlement'), DIVF: t('Divorce filed'),
+    BAPL: t('Baptism (LDS)'), CONL: t('Confirmation (LDS)'), INIL: t('Initiatory (LDS)'), ENDL: t('Endowment (LDS)'),
+    SLGC: t('Sealing to parents (LDS)'), SLGS: t('Sealing to spouse (LDS)'), _TEMP: t('Temple'), _STAT: t('Status'),
+    BIRT: t('Birth'), DEAT: t('Death'), MARR: t('Marriage'),
   });
+  // photos named in the GEDCOM: from the archive, or from a folder the user picks
+  let gedBytes: Uint8Array | null = null;
+  let mediaRefs = $state<NonNullable<GedcomReport['media']>>([]);
+  let mediaDone = $state<MediaImport | null>(null);
+  async function attachMedia(files: Map<string, Blob>) {
+    busy = true;
+    try {
+      mediaDone = await withProgress(t('Adding photos…'), (report) => attachGedcomMedia(mediaRefs, files, report));
+      mediaRefs = [];
+      await refreshInfo();
+    } catch (e) {
+      toast(errorText(e), 'error');
+    } finally {
+      busy = false;
+    }
+  }
+  function chooseMediaFolder() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.multiple = true;
+    (input as any).webkitdirectory = true;
+    input.onchange = () => attachMedia(imagesFromFiles(Array.from(input.files || [])));
+    input.click();
+  }
 
   function b64(bytes: Uint8Array): string {
     let s = '';
@@ -77,7 +106,10 @@
     const f = await pickFile('.ged,.gedcom,.gdz,.zip,text/plain,application/zip');
     if (!f) return;
     gedFile = f;
-    gedB64 = await withProgress(t('Reading the file…'), async () => b64(new Uint8Array(await f.arrayBuffer())));
+    gedBytes = new Uint8Array(await f.arrayBuffer());
+    gedB64 = await withProgress(t('Reading the file…'), async () => b64(gedBytes!));
+    mediaRefs = [];
+    mediaDone = null;
     result = null;
     await runGed(true);
   }
@@ -91,8 +123,12 @@
       else {
         result = r;
         preview = null;
+        mediaRefs = r.media || [];
+        const zipped = gedBytes && gedBytes[0] === 0x50 && gedBytes[1] === 0x4b;
         gedFile = null;
         await refreshInfo();
+        if (mediaRefs.length && zipped) await attachMedia(imagesFromZip(gedBytes!));
+        gedBytes = null;
       }
     } catch (e) {
       toast(errorText(e), 'error');
@@ -265,6 +301,8 @@
               <li>{tn('%d family', '%d families', preview.families)}</li>
               {#if preview.pets_created}<li>{t('Pets added: %d', preview.pets_created)}</li>{/if}
               {#if preview.sources}<li>{tn('%d source', '%d sources', preview.sources)}</li>{/if}
+              {#if preview.associations}<li>{t('Godparents, witnesses and others: %d', preview.associations)}</li>{/if}
+              {#if preview.media?.length}<li>{t('Photos and scans named in the file: %d', preview.media.length)}</li>{/if}
             </ul>
             {#each preview.warnings.slice(0, 10) as w}<div class="small warn-t">{warnText(w)}</div>{/each}
             <button class="btn primary" onclick={() => runGed(false)} disabled={busy}>{t('Import')}</button>
@@ -276,6 +314,24 @@
             {t('People added: %d', result.created)}, {t('People updated: %d', result.updated)}.
             <a href="#/people">{t('People')}</a> · <a href="#/duplicates">{t('Possible duplicates')}</a>
           </div>
+          {#if mediaRefs.length}
+            <div class="notice">
+              <p>{t('The file names %d photos and scans. Choose the folder where they are (the one the program saved next to the .ged file).', mediaRefs.length)}</p>
+              <button class="btn" onclick={chooseMediaFolder} disabled={busy}><FileUp size={16} /> {t('Choose the folder with photos')}</button>
+              <button class="btn ghost" onclick={() => (mediaRefs = [])} disabled={busy}>{t('Skip')}</button>
+            </div>
+          {/if}
+          {#if mediaDone}
+            <div class="notice {mediaDone.missing.length ? '' : 'ok'}">
+              {t('Photos added and linked: %d', mediaDone.linked)}
+              {#if mediaDone.missing.length}
+                <details>
+                  <summary>{t('Not found: %d', mediaDone.missing.length)}</summary>
+                  <ul class="small">{#each mediaDone.missing.slice(0, 30) as f}<li>{f}</li>{/each}</ul>
+                </details>
+              {/if}
+            </div>
+          {/if}
         {/if}
       </section>
       <section class="panel">

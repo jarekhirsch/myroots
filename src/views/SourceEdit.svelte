@@ -15,7 +15,7 @@
 
   let { id }: { id: number | null } = $props();
   function blank(): Source {
-    return { id: 0, title: '', date: '', url: '', notes: '', media_url: '', photo: null, scans: [], persons: [], created: 0, updated: 0 };
+    return { id: 0, title: '', date: '', url: '', notes: '', media_url: '', photo: null, scans: [], persons: [], created: 0, updated: 0, repository: '', call_number: '' };
   }
   let src = $state<Source>(blank());
   let scans = $state<GalleryItem[]>([]);
@@ -67,6 +67,8 @@
         <div class="form-grid">
           <label class="field full"><span class="lbl">{t('Title')}</span><input type="text" bind:value={src.title} placeholder={t('e.g. Birth certificate of Jan Kowalski, parish of Wieliczka')} required /></label>
           <label class="field"><span class="lbl">{t('Date')}</span><DateInput bind:value={src.date} /></label>
+          <label class="field"><span class="lbl">{t('Archive, parish or library')}</span><input type="text" bind:value={src.repository} placeholder={t('e.g. Parish of St. Mary, Kraków')} /></label>
+          <label class="field"><span class="lbl">{t('Call number')}</span><input type="text" bind:value={src.call_number} placeholder={t('e.g. book 12, page 34')} /></label>
           <label class="field"><span class="lbl">{t('Link (URL)')}</span><input type="url" bind:value={src.url} placeholder="https://" /></label>
           <label class="field full"><span class="lbl">{t('Audio or video recording (URL)')}</span><input type="url" bind:value={src.media_url} placeholder="https://" /></label>
         </div>

@@ -141,7 +141,9 @@ Lista generowana przez `npm run docs` z pierwszego komentarza w każdym pliku. N
 | `aging.ts` | "Through the years": photos of one person aligned on the eyes and played |
 | `albumsplit.ts` | Finds the photos on a scanned album page: everything that differs from the |
 | `api.svelte.ts` | Shared reactive state. `version` changes after every write → views reload. |
+| `assoc.ts` | Godparents, witnesses and other people tied to a person (GEDCOM ASSO). |
 | `audio.ts` | Sound recordings: storing files and recordings from the microphone, and |
+| `cemeteries.ts` | Cemeteries of OpenStreetMap around the visible part of the map (Overpass |
 | `citations.ts` | Citations of sources for single facts (see `Person.citations` and |
 | `credits.ts` | Author, licence and the components MyRoots is built with (shown in "About"). |
 | `errors.ts` | Human message for an engine error code. |
@@ -149,6 +151,7 @@ Lista generowana przez `npm run docs` z pierwszego komentarza w każdym pliku. N
 | `faces.ts` | Finding the eyes on a photo, on the device (no network): a small face |
 | `familygraph.ts` | Layout of the whole family on one board (the plugin's "whole graph"): |
 | `format.ts` |  |
+| `gedmedia.ts` | Photos and scans named in a GEDCOM file (OBJE … FILE): read from the |
 | `generations.ts` | Family on a time axis: generations from the relations, a life span for |
 | `geocode.ts` | Geocoding of place names with OpenStreetMap Nominatim (opt-in, 1 request per second). |
 | `history.ts` | The most important events in the history of Poland since 1600 (for the whole |

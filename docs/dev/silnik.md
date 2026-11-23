@@ -44,7 +44,7 @@ Zasada: **wszystkie zmiany przez `put_*`/`del_*`**. Kod, który musi zmienić ma
 ## Wszystkie metody
 
 <!-- auto:engine-methods -->
-Metod: 77. „odczyt” = pasuje do `READ` w `src/lib/api.svelte.ts` (nie odświeża widoków). „strona” = dozwolona na stronie rodzinnej (`READ_ONLY` w `engine.rs`).
+Metod: 80. „odczyt” = pasuje do `READ` w `src/lib/api.svelte.ts` (nie odświeża widoków). „strona” = dozwolona na stronie rodzinnej (`READ_ONLY` w `engine.rs`).
 
 | Metoda | Rodzaj | Strona |
 |---|---|---|
@@ -80,6 +80,7 @@ Metod: 77. „odczyt” = pasuje do `READ` w `src/lib/api.svelte.ts` (nie odświ
 | `media.reserve` | **zapis** |  |
 | `media.register` | **zapis** |  |
 | `media.update` | **zapis** |  |
+| `media.link_imported` | **zapis** |  |
 | `media.get` | odczyt | tak |
 | `media.tags` | **zapis** |  |
 | `media.delete` | **zapis** |  |
@@ -95,6 +96,8 @@ Metod: 77. „odczyt” = pasuje do `READ` w `src/lib/api.svelte.ts` (nie odświ
 | `places.list` | odczyt | tak |
 | `places.missing` | odczyt |  |
 | `places.set` | **zapis** |  |
+| `cemeteries.save` | **zapis** |  |
+| `cemeteries.remove` | **zapis** |  |
 | `places.weather` | odczyt |  |
 | `places.rename` | **zapis** |  |
 | `tree.data` | odczyt | tak |

@@ -48,6 +48,7 @@
       <div>
         <h1>{s.title}</h1>
         {#if s.date}<p class="lead">{fmtDate(s.date)}</p>{/if}
+        {#if s.repository || s.call_number}<p class="muted">{[s.repository, s.call_number ? t('call number %s', s.call_number) : ''].filter(Boolean).join(' · ')}</p>{/if}
       </div>
       <div class="actions">
         <a class="btn primary" href="#/source/{id}/edit"><Pencil size={16} /> {t('Edit')}</a>

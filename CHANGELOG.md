@@ -17,6 +17,9 @@ Duże drzewa działają płynnie, źródła można przypisać do każdej informa
 - Osoba: pole „Adres” (miejsce zamieszkania), także w GEDCOM (RESI z ADDR), oraz „Niepotwierdzone informacje”: rodzinne opowieści i tropy do sprawdzenia, widoczne tylko dla Ciebie, nigdy na stronie rodzinnej.
 - Lista osób pokazuje przyczynę śmierci i adres, a wyszukiwarka je przeszukuje.
 - Mapa, migracje: „Kto z tego miejsca poszedł dalej”, czyli osoby urodzone w jednym miejscu (domu, wsi) i dokąd rozeszli się ich potomkowie. Kafelek „Gdzie mieszkała rodzina” na stronie startowej i przycisk „Migracje” na liście miejsc.
+- GEDCOM: zdjęcia i skany z innych programów (z archiwum .gdz/.zip albo z folderu wskazanego po imporcie), archiwa i parafie ze sygnaturami (REPO), chrzestni i świadkowie (ASSO), przydomki (NICK, ALIA), obrzędy LDS oraz daty kalendarza juliańskiego, hebrajskiego i republikańskiego przeliczane na gregoriański.
+- Osoba: przydomek oraz chrzestni, świadkowie, opiekunowie i inne powiązania, widoczne na obu profilach. Źródło: archiwum, parafia lub biblioteka i sygnatura.
+- Mapa: warstwa „Cmentarze” z cmentarzami rodziny, cmentarzami z OpenStreetMap w okolicy i własnymi; cmentarz dodasz, wpisując adres albo klikając na mapie.
 - Pasek postępu przy dodawaniu zdjęć i nagrań, wycinaniu zdjęć z albumu, imporcie GEDCOM i przywracaniu kopii.
 - Aktualizacje: aplikacja na Maca, Windowsa i Linuksa (AppImage) raz dziennie sprawdza, czy jest nowa wersja, i proponuje jej instalację. Można to wyłączyć w Ustawieniach.
 

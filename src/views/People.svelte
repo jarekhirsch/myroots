@@ -43,7 +43,7 @@
 
   const filtered = $derived.by(() => {
     const coll = collator(locale());
-    let list = search(people.data || [], 'people', (p) => `${p.name} ${p.maiden_name} ${p.birth_place} ${p.death_place} ${p.occupation} ${p.years} ${p.death_cause || ''} ${p.residence || ''}`, q, Infinity, (p) => !p.anon);
+    let list = search(people.data || [], 'people', (p) => `${p.name} ${p.maiden_name} ${p.birth_place} ${p.death_place} ${p.occupation} ${p.years} ${p.death_cause || ''} ${p.residence || ''} ${p.nickname || ''}`, q, Infinity, (p) => !p.anon);
     if (clan) list = list.filter((p) => (clan === '-' ? !p.clans.length : p.clans.includes(clan)));
     if (gender) list = list.filter((p) => (gender === 'U' ? p.gender !== 'M' && p.gender !== 'F' : p.gender === gender));
     if (life) list = list.filter((p) => (life === 'living' ? p.living : !p.living));

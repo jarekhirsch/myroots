@@ -369,6 +369,14 @@ impl Engine {
                 db.put_media_meta(m);
                 ok(json!({"ok": true}))
             }
+            "media.link_imported" => {
+                let links: Vec<(Id, crate::gedcom::MediaLink)> = params
+                    .get("links")
+                    .and_then(|v| v.as_array())
+                    .map(|a| a.iter().filter_map(|x| Some((x.get("media")?.as_u64()? as Id, serde_json::from_value(x.clone()).ok()?))).collect())
+                    .unwrap_or_default();
+                ok(json!({ "linked": ops::link_imported_media(db, ctx, &links) }))
+            }
             "media.get" => {
                 let id = id_param(&params, "id")?;
                 query::media_view(db, &pol, id).map(|v| serde_json::to_value(v).unwrap()).ok_or_else(|| Error::not_found("media", id))
@@ -424,6 +432,26 @@ impl Engine {
                 let a: P = p(&params)?;
                 let origin = if a.origin.is_empty() { "manual".to_string() } else { a.origin };
                 ok(json!({ "id": ops::set_place_coords(db, ctx, &a.name, a.lat, a.lng, &origin) }))
+            }
+            "cemeteries.save" => {
+                #[derive(Deserialize)]
+                struct P {
+                    #[serde(default)]
+                    id: Option<Id>,
+                    name: String,
+                    #[serde(default)]
+                    address: String,
+                    lat: Option<f64>,
+                    lng: Option<f64>,
+                    #[serde(default)]
+                    origin: String,
+                }
+                let a: P = p(&params)?;
+                ok(json!({ "id": ops::save_cemetery(db, ctx, a.id, &a.name, &a.address, a.lat, a.lng, &a.origin)? }))
+            }
+            "cemeteries.remove" => {
+                ops::remove_cemetery(db, ctx, id_param(&params, "id")?)?;
+                ok(json!({"ok": true}))
             }
             "places.weather" => {
                 #[derive(Deserialize)]

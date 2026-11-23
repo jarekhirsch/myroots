@@ -37,6 +37,9 @@ pub struct MapCemetery {
     pub persons: Vec<Id>,
     /// Graves shown on the map (with their own position or the cemetery's).
     pub located: usize,
+    /// Saved as a cemetery (Place kind "cemetery"): its id and address.
+    pub place_id: Option<Id>,
+    pub address: String,
 }
 
 #[derive(Serialize, Debug, Clone)]
@@ -154,7 +157,20 @@ pub fn build(db: &Database, pol: &Policy, only: Option<Id>) -> MapData {
             let n = pts.len() as f64;
             (Some(pts.iter().map(|p| p.0).sum::<f64>() / n), Some(pts.iter().map(|p| p.1).sum::<f64>() / n))
         };
-        out.cemeteries.push(MapCemetery { name, lat, lng, located: located.get(&key).copied().unwrap_or(0), persons });
+        let own = place(&name).filter(|p| p.kind == "cemetery");
+        let (lat, lng) = match own {
+            Some(p) if p.lat.is_some() && p.lng.is_some() => (p.lat, p.lng),
+            _ => (lat, lng),
+        };
+        out.cemeteries.push(MapCemetery { name, lat, lng, located: located.get(&key).copied().unwrap_or(0), persons, place_id: own.map(|p| p.id), address: own.map(|p| p.address.clone()).unwrap_or_default() });
+    }
+    // cemeteries saved by the user where nobody of the tree lies (yet)
+    if only.is_none() {
+        for p in db.places.values().filter(|p| p.kind == "cemetery") {
+            if !out.cemeteries.iter().any(|c| norm(&c.name) == norm(&p.name)) {
+                out.cemeteries.push(MapCemetery { name: p.name.clone(), lat: p.lat, lng: p.lng, located: 0, persons: vec![], place_id: Some(p.id), address: p.address.clone() });
+            }
+        }
     }
     out.cemeteries.sort_by_cached_key(|c| (c.name.is_empty(), norm(&c.name)));
     for (_, (name, events)) in by {

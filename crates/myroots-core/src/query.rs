@@ -36,6 +36,8 @@ pub struct Summary {
     pub death_cause: String,
     #[serde(skip_serializing_if = "String::is_empty")]
     pub residence: String,
+    #[serde(skip_serializing_if = "String::is_empty")]
+    pub nickname: String,
     pub updated: i64,
     /// Anonymous placeholder (privacy) — no data, no profile.
     #[serde(skip_serializing_if = "std::ops::Not::not")]
@@ -65,6 +67,7 @@ pub fn summary(p: &Person, max_age: u32, today: NaiveDate) -> Summary {
         occupation: p.occupation.clone(),
         death_cause: p.death_cause.clone(),
         residence: p.residence.clone(),
+        nickname: p.nickname.clone(),
         updated: p.updated,
         anon: false,
         censored: false,
@@ -183,6 +186,10 @@ pub struct SourceRef {
     pub linked: bool,
     /// Every citation of this source in the profile, with its details.
     pub cites: Vec<CiteRef>,
+    #[serde(skip_serializing_if = "String::is_empty")]
+    pub repository: String,
+    #[serde(skip_serializing_if = "String::is_empty")]
+    pub call_number: String,
 }
 
 /// One citation shown in a profile: what it confirms and where in the source.
@@ -231,6 +238,18 @@ pub struct Profile {
     pub censored: bool,
     /// Photos of others where this person is marked (group photos).
     pub tagged: Vec<GalleryItem>,
+    /// Godparents, witnesses… of this person, and (reverse) the people this
+    /// person is a godparent, witness… of.
+    pub associations: Vec<AssocView>,
+}
+
+#[derive(Serialize, Debug, Clone)]
+pub struct AssocView {
+    pub person: Summary,
+    pub role: String,
+    pub event: String,
+    /// true: this person is the `role` of `person` (e.g. godparent of).
+    pub reverse: bool,
 }
 
 pub fn profile(db: &Database, ctx: &Ctx, id: Id, pol: &Policy) -> Option<Profile> {
@@ -327,6 +346,8 @@ pub fn profile(db: &Database, ctx: &Ctx, id: Id, pol: &Policy) -> Option<Profile
         fields: vec![],
         linked: false,
         cites: vec![],
+        repository: s.repository.clone(),
+        call_number: s.call_number.clone(),
     };
     for sid in ix.sources_of(id) {
         if let Some(s) = db.sources.get(sid) {
@@ -386,8 +407,25 @@ pub fn profile(db: &Database, ctx: &Ctx, id: Id, pol: &Policy) -> Option<Profile
         revisions: db.revisions.values().filter(|r| r.person == id).count(),
         censored,
         tagged: tagged_photos(db, pol, raw),
+        associations: associations(db, pol, raw),
         person,
     })
+}
+
+fn associations(db: &Database, pol: &Policy, p: &Person) -> Vec<AssocView> {
+    let mut out: Vec<AssocView> = p
+        .associations
+        .iter()
+        .filter_map(|a| Some(AssocView { person: public_summary(db, pol, a.person).filter(|s| !s.anon)?, role: a.role.clone(), event: a.event.clone(), reverse: false }))
+        .collect();
+    for o in db.persons.values() {
+        for a in o.associations.iter().filter(|a| a.person == p.id) {
+            if let Some(s) = public_summary(db, pol, o.id).filter(|s| !s.anon) {
+                out.push(AssocView { person: s, role: a.role.clone(), event: a.event.clone(), reverse: true });
+            }
+        }
+    }
+    out
 }
 
 /// Summary respecting the policy (anonymous placeholder when hidden).
@@ -482,6 +520,7 @@ pub fn anon_summary(p: &Person) -> Summary {
         occupation: String::new(),
         death_cause: String::new(),
         residence: String::new(),
+        nickname: String::new(),
         updated: 0,
         anon: true,
         censored: false,
@@ -1028,6 +1067,9 @@ pub fn cemeteries(db: &Database) -> Vec<CemeteryUse> {
         if !c.is_empty() {
             m.entry(crate::model::norm(c)).or_insert_with(|| CemeteryUse { name: c.to_string(), count: 0 }).count += 1;
         }
+    }
+    for p in db.places.values().filter(|p| p.kind == "cemetery") {
+        m.entry(crate::model::norm(&p.name)).or_insert_with(|| CemeteryUse { name: p.name.clone(), count: 0 });
     }
     let mut v: Vec<(String, CemeteryUse)> = m.into_iter().collect();
     v.sort_by(|a, b| a.0.cmp(&b.0));

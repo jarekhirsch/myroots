@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { roleLabel } from '../lib/assoc';
   import { printPage } from '../lib/print';
   import { app, call } from '../lib/api.svelte';
   import { useLoad } from '../lib/load.svelte';
@@ -170,6 +171,7 @@
         <div class="ident">
         <h1 class="name">{P.summary.name}{#each cites('name') as n}<sup class="cite"><a href="#src-{n}">{n}</a></sup>{/each}</h1>
         {#if p.maiden_name}<div class="maiden">{t('née %s', p.maiden_name)}</div>{/if}
+        {#if p.nickname}<div class="maiden">{t('Nickname: %s', p.nickname)}</div>{/if}
         <div class="meta">
           {#if P.summary.years}<bdi class="yrs">{P.summary.years}</bdi>{/if}
           {#if P.age != null && !P.presumed_dead}<span class="age">{tn('%d year', '%d years', P.age)}</span>{/if}
@@ -306,7 +308,7 @@
                   <span class="grow">
                     {#if viewer}<span class="title">{s.title}</span>{:else}<a class="title" href="#/source/{s.id}">{s.title}</a>{/if}
                     <span class="sub">
-                      {[fmtDate(s.date), s.cites?.length ? '' : s.fields.map((f) => fieldLabel(f)).join(', ')].filter(Boolean).join(' · ')}
+                      {[fmtDate(s.date), s.repository, s.call_number, s.cites?.length ? '' : s.fields.map((f) => fieldLabel(f)).join(', ')].filter(Boolean).join(' · ')}
                     </span>
                     {#if s.cites?.length}
                       <ul class="cl">
@@ -434,6 +436,11 @@
             {#if P.grandchildren.length}
               <h3>{t('Grandchildren')} <span class="muted small">({P.grandchildren.length})</span></h3>
               {#each P.grandchildren as s (s.id)}<PersonLink p={s} />{/each}
+            {/if}
+
+            {#if P.associations?.length}
+              <h3>{t('Godparents, witnesses and others')}</h3>
+              {#each P.associations as a, i (i)}<PersonLink p={a.person} tag={roleLabel(a.role, a.reverse) + (a.event ? ` · ${a.event}` : '')} />{/each}
             {/if}
 
             {#if !P.father && !P.mother && !P.unions.length && !P.children.length && !P.siblings.length}

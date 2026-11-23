@@ -6,7 +6,7 @@ Wszystkie rekordy mają `#[serde(default)]`: brakujące pola wczytują się z wa
 
 | Rekord | Najważniejsze pola | Uwagi |
 |---|---|---|
-| `Person` | imię, nazwisko, nazwisko rodowe, płeć, daty i miejsca urodzenia i śmierci (daty w formacie `date.rs`), `deceased`, biografia, notatki i `research` (niepotwierdzone informacje; HTML z białej listy), zawód, wykształcenie, wyznanie, `residence` (adres), `ext_ids` (identyfikatory z innych programów, z GEDCOM), `mother`/`father` z rodzajem relacji, `events`, `clans`, zdjęcie, galeria, nagrania, „Przez lata”, `grave`, `custom`, `citations`, `citation_info` | Dzieci nie są zapisane: wynikają z `mother`/`father` (indeks). `research` nigdy nie wychodzi na stronę rodzinną (`site::public_db` czyści), a prywatność żyjących czyści `residence` (miejsca) i `research` (biografia). |
+| `Person` | imię, nazwisko, nazwisko rodowe, płeć, daty i miejsca urodzenia i śmierci (daty w formacie `date.rs`), `deceased`, biografia, notatki i `research` (niepotwierdzone informacje; HTML z białej listy), zawód, wykształcenie, wyznanie, `residence` (adres), `ext_ids` (identyfikatory z innych programów, z GEDCOM), `nickname` (przydomek), `associations` (chrzestni, świadkowie i in.: `{person, role, event}`; role znane aplikacji: godparent, witness, guardian, clergy, officiator, friend, neighbor, inne jako wolny tekst; widok odwrotny liczy `query::profile`), `mother`/`father` z rodzajem relacji, `events`, `clans`, zdjęcie, galeria, nagrania, „Przez lata”, `grave`, `custom`, `citations`, `citation_info` | Dzieci nie są zapisane: wynikają z `mother`/`father` (indeks). `research` nigdy nie wychodzi na stronę rodzinną (`site::public_db` czyści), a prywatność żyjących czyści `residence` (miejsca) i `research` (biografia). |
 | `Union` | `a`, `b` (albo imię partnera spoza drzewa), data i miejsce, koniec związku, `informal`, `citations` | Jeden rekord na parę. |
 | `LifeEvent` (w osobie) | nazwa, data, miejsce, opis, zdjęcie, `citations` | Standardowe nazwy GEDCOM tłumaczone przy imporcie. |
 | `Grave` (w osobie) | cmentarz, kwatera, `lat`/`lng`, zdjęcie nagrobka, link, notatki | Eksport GEDCOM jako `BURI`. |
@@ -37,3 +37,8 @@ Kolory aplikacji (`primary`, `accent`, `bg`, `text`, `border`), czcionka, rozmia
 ## Daty
 
 Tekst w formacie `date.rs`: `1900-03-05`, `1900-03`, `1900`, z kwalifikatorem `~` (około), `<` (przed), `>` (po), przedział `1900-01-01/1901`. `date::sort_key` daje klucz do sortowania (kosztowny: w pętlach używaj `sort_by_cached_key`).
+
+## Źródła i miejsca: pola z 3.1
+
+- `Source.repository`, `Source.call_number`: archiwum lub parafia i sygnatura (GEDCOM `REPO`, `CALN`).
+- `Place.kind = "cemetery"` i `Place.address`: cmentarz zapisany przez użytkownika na mapie (`cemeteries.save` / `cemeteries.remove`, `ops::save_cemetery`). Zmiana nazwy cmentarza zmienia ją w grobach. Mapa (`map::build`) pokazuje cmentarze z grobów rodziny i te zapisane, nawet bez pochówków.

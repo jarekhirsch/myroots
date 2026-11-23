@@ -16,6 +16,7 @@
   import ClanInput from '../lib/components/ClanInput.svelte';
   import CitationButton from '../lib/components/CitationButton.svelte';
   import { FACTS, perFact, personCites, withPersonCites } from '../lib/citations';
+  import { ROLES, roleLabel } from '../lib/assoc';
   import Plus from '@lucide/svelte/icons/plus';
   import X from '@lucide/svelte/icons/x';
   import Up from '@lucide/svelte/icons/arrow-up';
@@ -30,7 +31,7 @@
   function blank(): Person {
     return {
       id: 0, status: 'published', first_name: '', last_name: '', maiden_name: '', gender: '',
-      birth_date: '', birth_place: '', death_date: '', death_place: '', death_cause: '', deceased: false, biography: '', notes: '', research: '', residence: '',
+      birth_date: '', birth_place: '', death_date: '', death_place: '', death_cause: '', deceased: false, biography: '', notes: '', research: '', residence: '', nickname: '', associations: [],
       occupation: '', education: '', faith: '', height: '', eye_color: '', blood_type: '',
       mother: null, mother_rel: 'bio', father: null, father_rel: 'bio', events: [], clans: [], photo: null, gallery: [], recordings: [], aging: [], aging_audio: null, grave: emptyGrave(),
       custom: {}, citations: {}, citation_info: {}, created: 0, updated: 0,
@@ -45,6 +46,11 @@
   let graveOpen = $state(false);
   let person = $state<Person>(blank());
   let unions = $state<URow[]>([]);
+  // godparents, witnesses…: role "" + custom text for a role of one's own
+  type ARow = { person: number | null; role: string; custom: string; event: string };
+  let assoc = $state<ARow[]>([]);
+  const toRows = (list: Person['associations']): ARow[] =>
+    (list || []).map((a) => ((ROLES as readonly string[]).includes(a.role) ? { person: a.person, role: a.role, custom: '', event: a.event || '' } : { person: a.person, role: '', custom: a.role, event: a.event || '' }));
   let children = $state<(number | null)[]>([]);
   let sources = $state<number[]>([]);
   let allSources = $state.raw<SourceBrief[]>([]);
@@ -68,8 +74,10 @@
         });
         children = [...m.children];
         sources = [...m.sources];
+        assoc = toRows(m.person.associations);
       } else {
         person = blank();
+        assoc = [];
         unions = [];
         children = [];
         sources = [];
@@ -81,7 +89,7 @@
   });
 
   function snapshot() {
-    return JSON.stringify([person, unions, children, sources]);
+    return JSON.stringify([person, unions, children, sources, assoc]);
   }
   $effect(() => {
     if (loaded) dirty = snapshot() !== initial;
@@ -169,6 +177,7 @@
         partner_last_name: external ? x.partner_last_name : '',
       }));
       const relations = { unions: u, children: children.filter((c): c is number => !!c) };
+      person.associations = assoc.filter((a) => a.person).map((a) => ({ person: a.person as number, role: a.role || a.custom.trim(), event: a.event.trim() }));
       let pid = id;
       if (id) {
         await call('person.update', { person: { ...person, id }, relations });
@@ -255,6 +264,7 @@
             </div>
             <label class="field"><span class="lbl">{t('Surname')}</span><input type="text" bind:value={person.last_name} autocomplete="off" /></label>
             <label class="field"><span class="lbl">{t('Maiden name')}</span><input type="text" bind:value={person.maiden_name} autocomplete="off" /></label>
+            <label class="field"><span class="lbl">{t('Nickname')}</span><input type="text" bind:value={person.nickname} placeholder={t('e.g. Kuba, Big John')} autocomplete="off" /></label>
             <label class="field">
               <span class="lbl">{t('Gender')}</span>
               <select bind:value={person.gender}>
@@ -386,6 +396,27 @@
             </div>
           {/each}
           <button type="button" class="btn sm" onclick={() => (children = [...children, null])}><Plus size={15} /> {t('Add child')}</button>
+        </div>
+
+        <div class="panel">
+          <h2>{t('Godparents, witnesses and others')}</h2>
+          <p class="hint">{t('People tied to this person outside the family: godparents, witnesses of the wedding, guardians. They show on both profiles.')}</p>
+          {#each assoc as a, i (i)}
+            <div class="urow arow">
+              <div class="grow"><PersonPicker bind:value={a.person} exclude={self} /></div>
+              <select bind:value={a.role} aria-label={t('Role')}>
+                {#each ROLES as r}<option value={r}>{roleLabel(r)}</option>{/each}
+                <option value="">{t('Other…')}</option>
+              </select>
+              {#if !a.role}<input type="text" class="rtext" bind:value={a.custom} placeholder={t('Role')} />{/if}
+              <input type="text" class="rtext" bind:value={a.event} placeholder={t('At (e.g. Baptism)')} list="assoc-events" />
+              <button type="button" class="btn ghost icon" onclick={() => (assoc = assoc.filter((_, k) => k !== i))} aria-label={t('Remove')}><X size={16} /></button>
+            </div>
+          {/each}
+          <datalist id="assoc-events">
+            {#each [t('Baptism'), t('Marriage'), t('Confirmation'), t('First communion'), ...person.events.map((e) => e.name)] as n}<option value={n}></option>{/each}
+          </datalist>
+          <button type="button" class="btn sm" onclick={() => (assoc = [...assoc, { person: null, role: 'godparent', custom: '', event: '' }])}><Plus size={15} /> {t('Add a related person')}</button>
         </div>
       {:else if tab === 'life'}
         <div class="panel">
@@ -631,5 +662,12 @@
   }
   .panel.research {
     background: color-mix(in srgb, var(--heirloom-soft) 55%, var(--surface));
+  }
+  .arow {
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .arow .rtext {
+    max-width: 180px;
   }
 </style>

@@ -202,6 +202,15 @@ pub fn sanitize_person(p: &Person, db: &Database) -> Person {
     d.last_name = clean(&d.last_name);
     d.maiden_name = clean(&d.maiden_name);
     d.ext_ids = d.ext_ids.iter().map(|x| clean(x)).filter(|x| !x.is_empty()).take(20).collect();
+    d.nickname = clean(&d.nickname).chars().take(120).collect();
+    let mut seen = HashSet::new();
+    d.associations = d
+        .associations
+        .iter()
+        .map(|a| Association { person: a.person, role: clean(&a.role).chars().take(60).collect(), event: clean(&a.event).chars().take(80).collect() })
+        .filter(|a| a.person != d.id && db.persons.contains_key(&a.person) && seen.insert((a.person, a.role.to_lowercase(), a.event.to_lowercase())))
+        .take(50)
+        .collect();
     d.birth_date = date::sanitize(&d.birth_date);
     d.death_date = date::sanitize(&d.death_date);
     d.birth_place = clean(&d.birth_place);
@@ -812,6 +821,12 @@ pub fn delete_person(db: &mut Database, id: Id) -> Result<()> {
         s.persons.retain(|x| *x != id);
         db.put_source(s);
     }
+    let assoc: Vec<Id> = db.persons.values().filter(|p| p.associations.iter().any(|a| a.person == id)).map(|p| p.id).collect();
+    for pid in assoc {
+        let mut p = db.persons[&pid].clone();
+        p.associations.retain(|a| a.person != id);
+        db.put_person(p);
+    }
     let revs: Vec<Id> = db.revisions.values().filter(|r| r.person == id).map(|r| r.id).collect();
     for r in revs {
         db.del_revision(r);
@@ -892,6 +907,8 @@ pub fn save_source(db: &mut Database, ctx: &Ctx, s: Source) -> Result<Id> {
     s.url = safe_url(&clean(&s.url));
     s.media_url = safe_url(&clean(&s.media_url));
     s.notes = clean_multiline(&s.notes);
+    s.repository = clean(&s.repository).chars().take(300).collect();
+    s.call_number = clean(&s.call_number).chars().take(120).collect();
     s.photo = s.photo.filter(|m| db.media.contains_key(m));
     let mut seen = HashSet::new();
     s.scans.retain(|m| db.media.contains_key(m) && seen.insert(*m));
@@ -1373,6 +1390,29 @@ mod tests {
     }
 
     #[test]
+    fn own_cemeteries() {
+        let c = ctx();
+        let mut db = Database::new(c.now);
+        let mut p = person("Jan", "Kowalski", Gender::Male);
+        p.grave.cemetery = "Cmentarz Rakowicki".into();
+        let jan = create_person(&mut db, &c, p, Default::default()).unwrap();
+        assert!(save_cemetery(&mut db, &c, None, "Cmentarz", "", None, None, "").is_err());
+        let id = save_cemetery(&mut db, &c, None, "Cmentarz Rakowicki", "ul. Rakowicka 26, Kraków", Some(50.07), Some(19.95), "osm").unwrap();
+        let osobowice = save_cemetery(&mut db, &c, None, "Cmentarz Osobowicki", "", Some(51.14), Some(17.03), "").unwrap();
+        let pol = crate::privacy::Policy::owner(110, c.today);
+        let m = crate::map::build(&db, &pol, None);
+        let rak = m.cemeteries.iter().find(|x| x.name == "Cmentarz Rakowicki").unwrap();
+        assert_eq!((rak.place_id, rak.persons.clone(), rak.lat), (Some(id), vec![jan], Some(50.07)));
+        assert!(m.cemeteries.iter().any(|x| x.place_id == Some(osobowice) && x.persons.is_empty()));
+        assert!(crate::query::cemeteries(&db).iter().any(|x| x.name == "Cmentarz Osobowicki" && x.count == 0));
+        // renaming the cemetery renames it on the graves
+        save_cemetery(&mut db, &c, Some(id), "Cmentarz Rakowicki w Krakowie", "ul. Rakowicka 26", Some(50.07), Some(19.95), "").unwrap();
+        assert_eq!(db.persons[&jan].grave.cemetery, "Cmentarz Rakowicki w Krakowie");
+        remove_cemetery(&mut db, &c, osobowice).unwrap();
+        assert!(!crate::map::build(&db, &pol, None).cemeteries.iter().any(|x| x.name == "Cmentarz Osobowicki"));
+    }
+
+    #[test]
     fn relatives_and_cycles() {
         let c = ctx();
         let mut db = Database::new(c.now);
@@ -1404,4 +1444,104 @@ mod tests {
         assert_eq!(clean_html("<p onclick=\"x()\">a</p><script>alert(1)</script>"), "<p>a</p>");
         assert_eq!(clean_html("<a href=\"JavaScript:alert(1)\">x</a>"), "<a href=\"alert(1)\">x</a>");
     }
+}
+
+/// Links photos and scans read for a GEDCOM import (OBJE) to their people
+/// and sources: the gallery of the person (the profile photo for `_PRIM Y`,
+/// or when there is none yet) and the scans of a source. Returns how many
+/// links were made.
+pub fn link_imported_media(db: &mut Database, ctx: &Ctx, links: &[(Id, crate::gedcom::MediaLink)]) -> usize {
+    let mut n = 0;
+    for (mid, l) in links {
+        let Some(mut m) = db.media.get(mid).cloned() else { continue };
+        let mut meta = false;
+        if m.caption.is_empty() && !l.title.is_empty() {
+            m.caption = clean(&l.title);
+            meta = true;
+        }
+        if m.date.is_empty() && !l.date.is_empty() {
+            m.date = date::sanitize(&l.date);
+            meta = true;
+        }
+        if meta {
+            db.put_media_meta(m);
+        }
+        if let Some(pid) = l.person {
+            let Some(mut p) = db.persons.get(&pid).cloned() else { continue };
+            if !p.gallery.iter().any(|g| g.media == *mid) {
+                p.gallery.push(GalleryItem { media: *mid, caption: String::new() });
+            }
+            if l.primary || p.photo.is_none() {
+                p.photo = Some(*mid);
+            }
+            p.updated = ctx.now;
+            db.put_person(p);
+            n += 1;
+        } else if let Some(sid) = l.source {
+            let Some(mut s) = db.sources.get(&sid).cloned() else { continue };
+            if !s.scans.contains(mid) {
+                s.scans.push(*mid);
+                s.updated = ctx.now;
+                db.put_source(s);
+                n += 1;
+            }
+        }
+    }
+    n
+}
+
+/// Saves a cemetery the user keeps on the map (a place of kind "cemetery"):
+/// added by hand, or taken from OpenStreetMap. `id` renames an existing one,
+/// together with the graves that name it.
+pub fn save_cemetery(db: &mut Database, ctx: &Ctx, id: Option<Id>, name: &str, address: &str, lat: Option<f64>, lng: Option<f64>, origin: &str) -> Result<Id> {
+    let name = clean(name);
+    if name.is_empty() {
+        return Err(Error::invalid("name"));
+    }
+    let lat = lat.filter(|v| v.is_finite() && (-90.0..=90.0).contains(v));
+    let lng = lng.filter(|v| v.is_finite() && (-180.0..=180.0).contains(v));
+    if lat.is_none() || lng.is_none() {
+        return Err(Error::invalid("position"));
+    }
+    let mut p = match id.and_then(|i| db.places.get(&i)).cloned() {
+        Some(old) => {
+            if norm(&old.name) != norm(&name) {
+                if db.place_by_name(&name).is_some_and(|o| o.id != old.id) {
+                    return Err(Error::invalid("a place of this name already exists"));
+                }
+                let graves: Vec<Id> = db.persons.values().filter(|x| norm(&x.grave.cemetery) == norm(&old.name)).map(|x| x.id).collect();
+                for g in graves {
+                    let mut x = db.persons[&g].clone();
+                    x.grave.cemetery = name.clone();
+                    x.updated = ctx.now;
+                    db.put_person(x);
+                }
+            }
+            old
+        }
+        None => db.place_by_name(&name).cloned().unwrap_or_else(|| Place { id: db.next_id(), ..Default::default() }),
+    };
+    if p.lat != lat || p.lng != lng {
+        p.weather.clear();
+    }
+    p.name = name;
+    p.lat = lat;
+    p.lng = lng;
+    p.kind = "cemetery".into();
+    p.address = clean(address).chars().take(300).collect();
+    p.origin = if origin.is_empty() { "manual".into() } else { clean(origin).chars().take(20).collect() };
+    p.updated = ctx.now;
+    let id = p.id;
+    db.put_place(p);
+    Ok(id)
+}
+
+/// Removes a cemetery from the map (the place itself and the graves stay).
+pub fn remove_cemetery(db: &mut Database, ctx: &Ctx, id: Id) -> Result<()> {
+    let mut p = db.places.get(&id).cloned().ok_or_else(|| Error::not_found("place", id))?;
+    p.kind.clear();
+    p.address.clear();
+    p.updated = ctx.now;
+    db.put_place(p);
+    Ok(())
 }

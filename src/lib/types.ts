@@ -18,7 +18,9 @@ export interface Person {
   first_name: string; last_name: string; maiden_name: string; gender: Gender;
   birth_date: string; birth_place: string; death_date: string; death_place: string; death_cause: string; deceased?: boolean;
   biography: string; notes: string; research?: string;
-  occupation: string; education: string; faith: string; residence?: string; height: string; eye_color: string; blood_type: string;
+  occupation: string; education: string; faith: string; residence?: string; nickname?: string;
+  /** Godparents, witnesses… (GEDCOM ASSO). */
+  associations?: Association[]; height: string; eye_color: string; blood_type: string;
   mother: Id | null; mother_rel: ParentRel; father: Id | null; father_rel: ParentRel;
   events: LifeEvent[]; clans: string[];
   photo: Id | null; gallery: GalleryItem[];
@@ -43,8 +45,12 @@ export interface Pet {
   photo: Id | null; gallery: GalleryItem[]; created: number; updated: number;
 }
 
+export interface Association { person: Id; role: string; event?: string }
+export interface AssocView { person: Summary; role: string; event: string; reverse: boolean }
 export interface Source {
   id: Id; title: string; date: string; url: string; notes: string; media_url: string;
+  /** Archive or parish that keeps it, and the call number there (GEDCOM REPO, CALN). */
+  repository?: string; call_number?: string;
   photo: Id | null; scans: Id[]; persons: Id[]; created: number; updated: number;
 }
 
@@ -59,13 +65,13 @@ export interface DayWeather { code: number; tmax: number | null; tmin: number | 
 export interface Summary {
   id: Id; name: string; first_name: string; last_name: string; maiden_name: string; gender: Gender;
   birth_date: string; birth_place: string; death_date: string; death_place: string; years: string;
-  clans: string[]; photo: Id | null; living: boolean; status: Status; occupation: string; death_cause?: string; residence?: string; updated: number;
+  clans: string[]; photo: Id | null; living: boolean; status: Status; occupation: string; death_cause?: string; residence?: string; nickname?: string; updated: number;
   anon?: boolean; censored?: boolean;
 }
 
 export interface UnionView { union: Union; partner: Summary | null; partner_name: string; children: Id[] }
 export interface CiteRef { fact: string; label: string; index: number | null; union: Id | null; page: string; quality: number | null; note: string }
-export interface SourceRef { id: Id; title: string; date: string; url: string; notes: string; media_url: string; photo: Id | null; scans: Id[]; fields: string[]; linked: boolean; cites?: CiteRef[] }
+export interface SourceRef { id: Id; title: string; date: string; url: string; notes: string; media_url: string; photo: Id | null; scans: Id[]; fields: string[]; linked: boolean; cites?: CiteRef[]; repository?: string; call_number?: string }
 /** Id and title of a source (pickers). */
 export interface SourceBrief { id: Id; title: string; date: string }
 export interface PetRef { id: Id; name: string; species: string; breed: string; photo: Id | null; years: string }
@@ -77,6 +83,7 @@ export interface Profile {
   pets: PetRef[]; sources: SourceRef[]; grandparents: Summary[]; grandchildren: Summary[];
   revisions: number; censored: boolean;
   tagged?: { media: Id; caption: string }[];
+  associations?: AssocView[];
 }
 
 export interface EditModel { person: Person; unions: UnionView[]; children: Id[]; sources: Id[] }
@@ -130,7 +137,7 @@ export interface Lifeline { person: Id; name: string; gender: Gender; photo: Id 
 
 export interface MapEvent { person: Id; name: string; photo: Id | null; clans: string[]; kind: string; label: string; date: string }
 export interface MapPlace { place: string; lat: number | null; lng: number | null; events: MapEvent[] }
-export interface MapCemetery { name: string; lat: number | null; lng: number | null; persons: Id[]; located: number }
+export interface MapCemetery { name: string; lat: number | null; lng: number | null; persons: Id[]; located: number; place_id?: Id | null; address?: string }
 export interface MapData { geocoded: MapPlace[]; uncached: MapPlace[]; cemeteries?: MapCemetery[] }
 
 export interface NamedAge { id: Id; name: string; age: number }
@@ -171,7 +178,8 @@ export interface TreeNode {
   rels: { parents: string[]; spouses: string[]; children: string[] };
 }
 
-export interface GedcomReport { dry_run: boolean; created: number; updated: number; skipped: number; families: number; pets_created: number; pets_skipped: number; sources: number; places: number; warnings: [string, string][] }
+export interface GedcomReport { dry_run: boolean; created: number; updated: number; skipped: number; families: number; pets_created: number; pets_skipped: number; sources: number; places: number; warnings: [string, string][]; associations?: number; media?: GedcomMedia[] }
+export interface GedcomMedia { person: Id | null; source: Id | null; file: string; title: string; date: string; primary: boolean }
 export interface WpReport { persons: number; unions: number; pets: number; sources: number; media_pending: number; site: string; plugin: string; warnings: [string, string][] }
 export interface WpPending { site: string; items: { wp_id: number; refs: any[] }[] }
 

@@ -15,6 +15,9 @@ Svelte 5 (runy), TypeScript, Vite 8. Bez frameworka routingu: własny router w `
 | `src/lib/citations.ts` | Źródła przy faktach: `FACTS`, `personCites`, `withPersonCites`, `QUALITY`, `perFact()`. |
 | `src/lib/updates.svelte.ts` | Aktualizacje programu na komputer (Tauri updater). |
 | `src/lib/ui.svelte.ts` | `toast`, okna potwierdzenia, `progress` i `withProgress(etykieta, (report) => …)`: wspólny pasek postępu (`ProgressBar.svelte`) dla każdego wgrywania i importu. Nowe wgrywanie plików: zawsze przez `withProgress`. |
+| `src/lib/gedmedia.ts` | Zdjęcia z importu GEDCOM: `imagesFromZip` (fflate), `imagesFromFiles` (folder), `attachGedcomMedia` (dopasowanie ścieżek, `origin: gedcom:<ścieżka>` chroni przed duplikatami, potem `media.link_imported`). |
+| `src/lib/assoc.ts` | Role powiązań (chrzestny, świadek…): `ROLES`, `roleLabel(role, reverse)`. |
+| `src/lib/cemeteries.ts` | Cmentarze z OpenStreetMap w widocznym fragmencie mapy (Overpass API z zapasowymi serwerami, pamięć podręczna na siatce 0,05°). |
 | `src/lib/migrations.ts` | Migracje na mapie: `buildMigrations(węzły, miejsca, osoba, miejsce)`; `homePlaces()` (miejsca urodzeń do trybu „kto z tego miejsca poszedł dalej”). |
 | `src/lib/types.ts` | Typy danych silnika (trzymaj w zgodzie z `model.rs` i `query.rs`). |
 | `src/lib/i18n/` | Tłumaczenia (niżej). |

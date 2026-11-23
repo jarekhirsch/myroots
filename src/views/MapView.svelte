@@ -12,6 +12,9 @@
   import Play from '@lucide/svelte/icons/play';
   import Pause from '@lucide/svelte/icons/pause';
   import { buildMigrations, homePlaces, arc, type Move, type Birth } from '../lib/migrations';
+  import { osmCemeteries, metres, type OsmCemetery } from '../lib/cemeteries';
+  import Cross from '@lucide/svelte/icons/cross';
+  import type { MapCemetery } from '../lib/types';
   import type { PlaceUse, TreeNode } from '../lib/types';
   import { toast } from '../lib/ui.svelte';
   import NotFound from './NotFound.svelte';
@@ -198,6 +201,159 @@
   }
   const recent = $derived(moves.filter((m) => m.year <= yearNow).slice(-3).reverse());
 
+  /* ---------- cemeteries: the family's, saved by the user, and OpenStreetMap ---------- */
+  let cemOn = $state(route.query.cem === '1');
+  let cemLayer: any = null;
+  let osmLayer: any = null;
+  let osm = $state.raw<OsmCemetery[]>([]);
+  let osmState = $state<'' | 'zoom' | 'busy' | 'error'>('');
+  // the form of a cemetery being added or edited
+  let draft = $state<{ id: number | null; name: string; address: string; lat: number; lng: number; origin: string } | null>(null);
+  const cemIcon = (own: boolean) =>
+    L.divIcon({ className: `mr-cem${own ? '' : ' osm'}`, html: '<span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 3v18M7 8h10"/></svg></span>', iconSize: [26, 26], iconAnchor: [13, 13] });
+  function btn(label: string, cls: string, fn: () => void) {
+    const b = document.createElement('button');
+    b.className = `btn sm ${cls}`;
+    b.textContent = label;
+    b.onclick = (e) => {
+      e.stopPropagation();
+      map?.closePopup();
+      fn();
+    };
+    return b;
+  }
+  function cemPopup(c: MapCemetery): HTMLElement {
+    const d = document.createElement('div');
+    d.className = 'mp';
+    d.innerHTML = `<div class="mp-h">${esc(c.name || t('Cemetery not given'))}</div>${c.address ? `<div class="mp-a">${esc(c.address)}</div>` : ''}<div class="mp-a">${esc(t('Buried here: %d', c.persons.length))}</div>`;
+    const row = document.createElement('div');
+    row.className = 'mp-b';
+    if (c.persons.length) row.append(btn(t('Show the graves'), '', () => pickCemetery(c.name)));
+    if (!viewer && c.lat != null && c.lng != null) {
+      if (c.place_id) row.append(btn(t('Edit'), 'ghost', () => (draft = { id: c.place_id!, name: c.name, address: c.address || '', lat: c.lat!, lng: c.lng!, origin: '' })));
+      else row.append(btn(t('Save on the map'), 'ghost', () => (draft = { id: null, name: c.name, address: '', lat: c.lat!, lng: c.lng!, origin: 'manual' })));
+    }
+    d.append(row);
+    return d;
+  }
+  function osmPopup(o: OsmCemetery): HTMLElement {
+    const d = document.createElement('div');
+    d.className = 'mp';
+    d.innerHTML = `<div class="mp-h">${esc(o.name || t('Cemetery'))}</div>${o.address ? `<div class="mp-a">${esc(o.address)}</div>` : ''}<div class="mp-a small">OpenStreetMap</div>`;
+    if (!viewer) {
+      const row = document.createElement('div');
+      row.className = 'mp-b';
+      row.append(btn(t('Add to my cemeteries'), '', () => (draft = { id: null, name: o.name || '', address: o.address, lat: o.lat, lng: o.lng, origin: 'osm' })));
+      d.append(row);
+    }
+    return d;
+  }
+  function drawCems() {
+    cemLayer?.remove();
+    cemLayer = null;
+    osmLayer?.remove();
+    osmLayer = null;
+    if (!map || !L || !cemOn || mig) return;
+    cemLayer = L.layerGroup();
+    const mine: [number, number][] = [];
+    for (const c of cems) {
+      if (c.lat == null || c.lng == null) continue;
+      mine.push([c.lat, c.lng]);
+      L.marker([c.lat, c.lng], { icon: cemIcon(true), title: c.name, zIndexOffset: 500 }).bindPopup(() => cemPopup(c), { maxWidth: 280 }).addTo(cemLayer);
+    }
+    cemLayer.addTo(map);
+    osmLayer = L.layerGroup();
+    for (const o of osm) {
+      if (mine.some((m) => metres(m, [o.lat, o.lng]) < 250)) continue;
+      L.marker([o.lat, o.lng], { icon: cemIcon(false), title: o.name }).bindPopup(() => osmPopup(o), { maxWidth: 280 }).addTo(osmLayer);
+    }
+    osmLayer.addTo(map);
+  }
+  let osmTimer = 0;
+  function loadOsm() {
+    clearTimeout(osmTimer);
+    if (!map || !cemOn || mig) return;
+    if (map.getZoom() < 11) {
+      osmState = 'zoom';
+      return;
+    }
+    osmTimer = window.setTimeout(async () => {
+      const b = map.getBounds();
+      osmState = 'busy';
+      try {
+        osm = await osmCemeteries(b.getSouth(), b.getWest(), b.getNorth(), b.getEast());
+        osmState = '';
+      } catch {
+        osmState = 'error';
+      }
+      drawCems();
+    }, 500);
+  }
+  function toggleCems() {
+    cemOn = !cemOn;
+    drawCems();
+    loadOsm();
+  }
+  function newCemetery() {
+    const c = map?.getCenter();
+    draft = { id: null, name: '', address: '', lat: c?.lat ?? 52, lng: c?.lng ?? 19, origin: 'manual' };
+  }
+  // the position of the cemetery in the form: a marker that can be dragged
+  let draftMarker: any = null;
+  $effect(() => {
+    const d = draft;
+    if (!map || !L) return;
+    if (!d) {
+      draftMarker?.remove();
+      draftMarker = null;
+      return;
+    }
+    const at: [number, number] = [d.lat, d.lng];
+    if (!draftMarker) {
+      draftMarker = L.marker(at, { icon: cemIcon(true), draggable: true, zIndexOffset: 1000 }).addTo(map);
+      draftMarker.on('dragend', () => {
+        const p = draftMarker.getLatLng();
+        if (draft) (draft.lat = p.lat), (draft.lng = p.lng);
+      });
+    } else draftMarker.setLatLng(at);
+  });
+  let finding = $state(false);
+  async function findDraft() {
+    if (!draft) return;
+    const q = [draft.address, draft.name].map((x) => x.trim()).filter(Boolean).join(', ');
+    if (!q) return;
+    finding = true;
+    try {
+      const r = await searchPlaces(q);
+      if (r.length && draft) {
+        draft.lat = r[0].lat;
+        draft.lng = r[0].lng;
+        map?.setView([r[0].lat, r[0].lng], Math.max(map.getZoom(), 15));
+      } else toast(t('Not found on the map. Click the place or drag the marker.'));
+    } catch {
+      toast(t('The map search service did not answer. Try again in a moment.'), 'error');
+    } finally {
+      finding = false;
+    }
+  }
+  async function saveDraft() {
+    if (!draft || !draft.name.trim()) return;
+    try {
+      await call('cemeteries.save', { id: draft.id, name: draft.name.trim(), address: draft.address.trim(), lat: draft.lat, lng: draft.lng, origin: draft.origin });
+      toast(t('Saved: %s', draft.name.trim()));
+      draft = null;
+      await load();
+    } catch (e) {
+      toast((e as any)?.message || String(e), 'error');
+    }
+  }
+  async function removeDraft() {
+    if (!draft?.id) return;
+    await call('cemeteries.remove', { id: draft.id });
+    draft = null;
+    await load();
+  }
+
   async function render() {
     if (!el || !data || !enabled) return;
     if (!L) {
@@ -213,7 +369,13 @@
       // placing a missing place by hand: click on the map
       map.on('click', (e: any) => {
         if (picking) saveCoords(picking, e.latlng.lat, e.latlng.lng, 'manual');
+        else if (draft) {
+          // with the form open a click moves the cemetery
+          draft.lat = e.latlng.lat;
+          draft.lng = e.latlng.lng;
+        }
       });
+      map.on('moveend', loadOsm);
     }
     if (cluster) cluster.remove();
     if (mig) {
@@ -248,6 +410,7 @@
     }
     await backend.ensureMedia?.([...ids]);
     map.addLayer(cluster);
+    drawCems();
     if (focusOn) {
       map.setView(focusOn, Math.max(map.getZoom(), 9));
       focusOn = null;
@@ -372,6 +535,7 @@
         </div>
       {/if}
       <button class="migbtn" aria-pressed={mig} onclick={toggleMig}><Waypoints size={16} /> {t('Migrations')}</button>
+      {#if !mig}<button class="migbtn" aria-pressed={cemOn} onclick={toggleCems}><Cross size={16} /> {t('Cemeteries')}</button>{/if}
       {#if mig && !person && homes.length}
         <select value={home} onchange={(e) => setHome(e.currentTarget.value)} aria-label={t('From one place')}>
           <option value="">{t('The whole family')}</option>
@@ -412,9 +576,29 @@
         {/if}
         {#if data}<span class="count">{tn('%d place', '%d places', shownCount)}</span>{/if}
         {#if cem && !cem.located}<span class="count">{t('The graves at this cemetery have no position yet: set it in the grave form of a person.')}</span>{/if}
+        {#if cemOn && !mig}
+          {#if osmState === 'zoom'}<span class="count">{t('Zoom in to see the cemeteries of OpenStreetMap.')}</span>
+          {:else if osmState === 'busy'}<span class="count">{t('Looking for cemeteries…')}</span>
+          {:else if osmState === 'error'}<span class="count">{t('OpenStreetMap did not answer. Try again in a moment.')}</span>{/if}
+          {#if !viewer && !draft}<button class="btn sm" onclick={newCemetery}>{t('Add a cemetery')}</button>{/if}
+        {/if}
       </div>
     </div>
-    <div class="map" class:picking bind:this={el}></div>
+    <div class="map" class:picking={picking || !!draft} bind:this={el}></div>
+    {#if draft}
+      <form class="panel cemform no-print" onsubmit={(e) => (e.preventDefault(), saveDraft())}>
+        <h2>{draft.id ? t('Edit the cemetery') : t('New cemetery')}</h2>
+        <label class="field"><span class="lbl">{t('Name')}</span><input type="text" bind:value={draft.name} placeholder={t('e.g. Parish cemetery in Wieliczka')} required /></label>
+        <label class="field"><span class="lbl">{t('Address')}</span><input type="text" bind:value={draft.address} placeholder={t('Street, town, country')} /></label>
+        <button class="btn sm" type="button" onclick={findDraft} disabled={finding || !(draft.address.trim() || draft.name.trim())}><SearchIcon size={15} /> {t('Find the address on the map')}</button>
+        <p class="hint">{t('You can also click the place on the map or drag the marker.')} {t('Graves with this cemetery name are shown here. You can choose it in the grave form of a person.')}</p>
+        <div class="actions">
+          <button class="btn primary" type="submit">{t('Save')}</button>
+          <button class="btn ghost" type="button" onclick={() => (draft = null)}>{t('Cancel')}</button>
+          {#if draft.id}<button class="btn ghost danger" type="button" onclick={removeDraft}>{t('Remove from the map')}</button>{/if}
+        </div>
+      </form>
+    {/if}
 
     {#if mig}
       <div class="timeline no-print">
@@ -866,5 +1050,53 @@
       top: auto;
       max-height: 60%;
     }
+  }
+  .map :global(.mr-cem span) {
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--ink);
+    border: 2px solid var(--ink);
+    box-shadow: var(--shadow-raised);
+  }
+  .map :global(.mr-cem.osm span) {
+    border-style: dashed;
+    color: var(--ink-3);
+    border-color: var(--ink-3);
+    opacity: 0.85;
+  }
+  .map :global(.mp-a) {
+    color: var(--ink-3);
+    font-size: 0.85rem;
+    margin-top: 2px;
+  }
+  .map :global(.mp-b) {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .cemform {
+    position: absolute;
+    z-index: 1000;
+    right: 16px;
+    bottom: 16px;
+    width: min(360px, calc(100% - 32px));
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: var(--shadow-raised);
+  }
+  .cemform h2 {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+  .cemform .actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
   }
 </style>

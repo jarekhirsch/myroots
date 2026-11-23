@@ -17,6 +17,9 @@ Big trees run smoothly, sources can be attached to every piece of information, a
 - Person: an Address field (place of residence), also in GEDCOM (RESI with ADDR), and Unconfirmed information: family stories and clues to check, seen only by you and never on the family website.
 - The people list shows the cause of death and the address, and the search looks in them.
 - Map, migrations: Who from this place went further, that is the people born at one place (a house, a village) and where their descendants went. A Where the family lived tile on the home page and a Migrations button in the list of places.
+- GEDCOM: photos and scans from other programs (from the .gdz/.zip archive or a folder chosen after the import), archives and parishes with call numbers (REPO), godparents and witnesses (ASSO), nicknames (NICK, ALIA), LDS ordinances, and Julian, Hebrew and French Republican dates converted to the Gregorian calendar.
+- Person: nickname, and godparents, witnesses, guardians and other associations, shown on both profiles. Source: archive, parish or library, and call number.
+- Map: a Cemeteries layer with the family's cemeteries, the cemeteries of OpenStreetMap around, and your own; add a cemetery by its address or by clicking the map.
 - A progress bar when adding photos and recordings, cutting photos out of an album page, importing GEDCOM and restoring a backup.
 - Updates: the app for Mac, Windows and Linux (AppImage) checks once a day for a new version and offers to install it. This can be turned off in Settings.
 

@@ -210,22 +210,185 @@ fn ymd(y: i32, m: u32, d: u32) -> String {
     }
 }
 
+/* ---------- other calendars (GEDCOM: JULIAN, HEBREW, FRENCH_R) ---------- */
+// Day numbers are "fixed" days (RD) as in Reingold & Dershowitz,
+// "Calendrical Calculations": day 1 = 1 January 1 (Gregorian), the same
+// count as chrono's `num_days_from_ce`.
+
+#[derive(Clone, Copy, PartialEq, Debug)]
+enum Cal {
+    Gregorian,
+    Julian,
+    Hebrew,
+    French,
+}
+
+fn from_fixed(rd: i64) -> Option<NaiveDate> {
+    NaiveDate::from_num_days_from_ce_opt(i32::try_from(rd).ok()?)
+}
+
+fn fixed_from_julian(y: i64, m: i64, d: i64) -> i64 {
+    let leap = y.rem_euclid(4) == 0;
+    -2 + 365 * (y - 1) + (y - 1).div_euclid(4) + (367 * m - 362).div_euclid(12) + if m <= 2 { 0 } else if leap { -1 } else { -2 } + d
+}
+
+const HEBREW_EPOCH: i64 = -1_373_427;
+fn hebrew_leap(y: i64) -> bool {
+    (7 * y + 1).rem_euclid(19) < 7
+}
+fn hebrew_elapsed(y: i64) -> i64 {
+    let months = (235 * y - 234).div_euclid(19);
+    let parts = 12084 + 13753 * months;
+    let day = 29 * months + parts.div_euclid(25920);
+    if (3 * (day + 1)).rem_euclid(7) < 3 {
+        day + 1
+    } else {
+        day
+    }
+}
+fn hebrew_new_year(y: i64) -> i64 {
+    let (a, b, c) = (hebrew_elapsed(y - 1), hebrew_elapsed(y), hebrew_elapsed(y + 1));
+    let delay = if c - b == 356 { 2 } else if b - a == 382 { 1 } else { 0 };
+    HEBREW_EPOCH + b + delay
+}
+/// Months counted from Nisan (1) to Adar (12) and Adar II (13).
+fn hebrew_month_days(m: i64, y: i64) -> i64 {
+    let len = hebrew_new_year(y + 1) - hebrew_new_year(y);
+    let short = matches!(m, 2 | 4 | 6 | 10 | 13) || (m == 12 && !hebrew_leap(y)) || (m == 8 && len % 10 != 5) || (m == 9 && len % 10 == 3);
+    if short {
+        29
+    } else {
+        30
+    }
+}
+fn fixed_from_hebrew(y: i64, m: i64, d: i64) -> i64 {
+    let last = if hebrew_leap(y) { 13 } else { 12 };
+    let mut days = hebrew_new_year(y) + d - 1;
+    if m < 7 {
+        days += (7..=last).map(|x| hebrew_month_days(x, y)).sum::<i64>();
+        days += (1..m).map(|x| hebrew_month_days(x, y)).sum::<i64>();
+    } else {
+        days += (7..m).map(|x| hebrew_month_days(x, y)).sum::<i64>();
+    }
+    days
+}
+fn hebrew_month(s: &str) -> Option<i64> {
+    Some(match s {
+        "NSN" => 1,
+        "IYR" => 2,
+        "SVN" => 3,
+        "TMZ" => 4,
+        "AAV" => 5,
+        "ELL" => 6,
+        "TSH" => 7,
+        "CSH" => 8,
+        "KSL" => 9,
+        "TVT" => 10,
+        "SHV" => 11,
+        "ADR" => 12,
+        "ADS" => 13,
+        _ => return None,
+    })
+}
+
+/// French Republican calendar: year I began on 22 September 1792; the
+/// sextile (leap) years of its short use were III, VII and XI.
+fn fixed_from_french(y: i64, m: i64, d: i64) -> i64 {
+    let start = 654_415; // 22 September 1792
+    let before = 365 * (y - 1) + [3, 7, 11, 15].iter().filter(|&&s| s < y).count() as i64;
+    start + before + (m - 1) * 30 + d - 1
+}
+fn french_month(s: &str) -> Option<i64> {
+    ["VEND", "BRUM", "FRIM", "NIVO", "PLUV", "VENT", "GERM", "FLOR", "PRAI", "MESS", "THER", "FRUC", "COMP"].iter().position(|m| *m == s).map(|i| i as i64 + 1)
+}
+
+/// A date of another calendar → Gregorian YYYY[-MM[-DD]]. A day is converted
+/// exactly; a month or a year only approximately (its first day).
+fn other_calendar(cal: Cal, parts: &[&str]) -> String {
+    let month = |m: &str| -> Option<i64> {
+        match cal {
+            Cal::Hebrew => hebrew_month(m),
+            Cal::French => french_month(m),
+            _ => month_num(m).map(|x| x as i64),
+        }
+    };
+    let fixed = |y: i64, m: i64, d: i64| -> i64 {
+        match cal {
+            Cal::Hebrew => fixed_from_hebrew(y, m, d),
+            Cal::French => fixed_from_french(y, m, d),
+            _ => fixed_from_julian(y, m, d),
+        }
+    };
+    // a dual year ("1699/00", the year still began in March) is the later one
+    let year = |y: &str| -> Option<i64> {
+        let (first, dual) = match y.split_once('/') {
+            Some((a, _)) => (a, 1),
+            None => (y, 0),
+        };
+        (!first.is_empty() && first.len() <= 4 && first.bytes().all(|b| b.is_ascii_digit())).then(|| first.parse::<i64>().ok().map(|v| v + dual)).flatten()
+    };
+    let (y, m, d) = match parts {
+        [d, m, y] => match (d.parse::<i64>().ok(), month(m), year(y)) {
+            (Some(d), Some(m), Some(y)) if (1..=31).contains(&d) => (y, Some(m), Some(d)),
+            _ => return String::new(),
+        },
+        [m, y] => match (month(m), year(y)) {
+            (Some(m), Some(y)) => (y, Some(m), None),
+            _ => return String::new(),
+        },
+        [y] => match year(y) {
+            Some(y) => (y, None, None),
+            None => return String::new(),
+        },
+        _ => return String::new(),
+    };
+    if cal == Cal::Hebrew && (y < 3800 || y > 6000) || cal == Cal::French && !(1..=20).contains(&y) {
+        return String::new();
+    }
+    match (m, d) {
+        (Some(m), Some(d)) => from_fixed(fixed(y, m, d)).map(|g| g.format("%Y-%m-%d").to_string()).unwrap_or_default(),
+        (Some(m), None) => from_fixed(fixed(y, m, 1)).map(|g| if cal == Cal::Julian { format!("{y:04}-{m:02}") } else { g.format("%Y-%m").to_string() }).unwrap_or_default(),
+        _ => match cal {
+            Cal::Julian => format!("{y:04}"),
+            // a Hebrew or Republican year spans two Gregorian years: the one it begins in
+            Cal::Hebrew => from_fixed(fixed_from_hebrew(y, 7, 1)).map(|g| g.year().to_string()).unwrap_or_default(),
+            _ => from_fixed(fixed_from_french(y, 1, 1)).map(|g| g.year().to_string()).unwrap_or_default(),
+        },
+    }
+}
+
 /// Bare GEDCOM date (DD MON YYYY / MON YYYY / YYYY) → YYYY[-MM[-DD]].
 /// Also accepts calendar escapes, dual years, "1.05.1920", "1920-05-01" and
-/// "May 1, 1920", which other programs write despite the standard.
+/// "May 1, 1920", which other programs write despite the standard. Julian,
+/// Hebrew and French Republican dates are converted to the Gregorian calendar.
 fn gedcom_bare(raw: &str) -> String {
     let mut s = raw.trim().to_uppercase().replace(',', " ");
-    // calendar escapes (5.5.1 "@#DJULIAN@", GEDCOM 7 "JULIAN"): the date is kept as written
+    let mut cal = Cal::Gregorian;
+    // calendar escapes (5.5.1 "@#DJULIAN@", GEDCOM 7 "JULIAN")
     while let Some(a) = s.find("@#") {
         match s[a + 2..].find('@') {
-            Some(b) => s.replace_range(a..a + 3 + b, " "),
+            Some(b) => {
+                let esc = s[a + 2..a + 2 + b].to_string();
+                cal = match esc.trim_start_matches('D').trim() {
+                    "JULIAN" => Cal::Julian,
+                    "HEBREW" => Cal::Hebrew,
+                    "FRENCH R" => Cal::French,
+                    _ => cal,
+                };
+                s.replace_range(a..a + 3 + b, " ");
+            }
             None => break,
         }
     }
-    for cal in ["GREGORIAN ", "JULIAN "] {
-        if let Some(r) = s.trim_start().strip_prefix(cal) {
+    for (name, c) in [("GREGORIAN ", Cal::Gregorian), ("JULIAN ", Cal::Julian), ("HEBREW ", Cal::Hebrew), ("FRENCH_R ", Cal::French)] {
+        if let Some(r) = s.trim_start().strip_prefix(name) {
             s = r.to_string();
+            cal = c;
         }
+    }
+    if cal != Cal::Gregorian {
+        let parts: Vec<&str> = s.split_whitespace().collect();
+        return other_calendar(cal, &parts);
     }
     if s.contains("B.C") || s.ends_with(" BC") || s.ends_with("BCE") {
         return String::new();
@@ -409,8 +572,9 @@ mod tests {
 
     #[test]
     fn gedcom_dates_from_other_programs() {
-        assert_eq!(from_gedcom("@#DJULIAN@ 5 FEB 1700"), "1700-02-05");
-        assert_eq!(from_gedcom("JULIAN 5 FEB 1700"), "1700-02-05");
+        assert_eq!(from_gedcom("@#DJULIAN@ 5 FEB 1700"), "1700-02-15");
+        assert_eq!(from_gedcom("JULIAN 5 FEB 1700"), "1700-02-15");
+        assert_eq!(from_gedcom("@#DJULIAN@ FEB 1700"), "1700-02");
         assert_eq!(from_gedcom("12 FEB 1699/00"), "1700-02-12");
         assert_eq!(from_gedcom("INT 1900 (gravestone)"), "~1900");
         assert_eq!(from_gedcom("(during the war)"), "");
@@ -427,6 +591,24 @@ mod tests {
         assert_eq!(from_gedcom("100 B.C."), "");
         assert_eq!(from_gedcom("1 MAŁ 1920"), "");
         assert_eq!(from_gedcom("BET 1900"), ">1900");
+    }
+
+    #[test]
+    fn other_calendars() {
+        // the Gregorian reform: 4 October 1582 (Julian) was followed by 15 October
+        assert_eq!(from_gedcom("@#DJULIAN@ 5 OCT 1582"), "1582-10-15");
+        assert_eq!(from_gedcom("JULIAN 1 JAN 1900"), "1900-01-13");
+        assert_eq!(from_gedcom("ABT @#DJULIAN@ 1890"), "~1890");
+        // Rosh Hashana 5780 = 30 September 2019; 15 Nisan 5779 = 20 April 2019
+        assert_eq!(from_gedcom("@#DHEBREW@ 1 TSH 5780"), "2019-09-30");
+        assert_eq!(from_gedcom("HEBREW 15 NSN 5779"), "2019-04-20");
+        // 14 Adar II 5776 (a leap year) = 24 March 2016
+        assert_eq!(from_gedcom("@#DHEBREW@ 14 ADS 5776"), "2016-03-24");
+        assert_eq!(from_gedcom("@#DHEBREW@ 5680"), "1919");
+        // 18 Brumaire VIII = 9 November 1799; 1 Vendémiaire XIII = 23 September 1804
+        assert_eq!(from_gedcom("@#DFRENCH R@ 18 BRUM 8"), "1799-11-09");
+        assert_eq!(from_gedcom("FRENCH_R 1 VEND 13"), "1804-09-23");
+        assert_eq!(from_gedcom("@#DHEBREW@ 1 XYZ 5780"), "");
     }
 
     #[test]

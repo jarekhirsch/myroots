@@ -427,6 +427,14 @@ pub fn execute(db: &mut Database, ctx: &Ctx, a: Id, b: Id, keep: Id, sel: Select
             new.ext_ids.push(e.clone());
         }
     }
+    if new.nickname.is_empty() {
+        new.nickname = pr.nickname.clone();
+    }
+    for a in pa.associations.iter().chain(pb.associations.iter()) {
+        if a.person != keep && a.person != remove && !new.associations.contains(a) {
+            new.associations.push(a.clone());
+        }
+    }
     new.photo = match sel.avatar.as_str() {
         "none" => None,
         "b" => pb.photo.or(pa.photo),
@@ -448,6 +456,16 @@ pub fn execute(db: &mut Database, ctx: &Ctx, a: Id, b: Id, keep: Id, sel: Select
     let new = ops::sanitize_person(&new, db);
     db.put_person(new.clone());
 
+    // Associations of other people that point to `remove` now point to `keep`.
+    let assoc: Vec<Id> = db.persons.values().filter(|p| p.associations.iter().any(|a| a.person == remove)).map(|p| p.id).collect();
+    for pid in assoc {
+        let mut p = db.persons[&pid].clone();
+        for a in p.associations.iter_mut().filter(|a| a.person == remove) {
+            a.person = keep;
+        }
+        let p = ops::sanitize_person(&p, db);
+        db.put_person(p);
+    }
     // Children: everything pointing to `remove` now points to `keep`.
     let kids: Vec<Id> = db.persons.values().filter(|c| c.mother == Some(remove) || c.father == Some(remove)).map(|c| c.id).collect();
     for cid in kids {

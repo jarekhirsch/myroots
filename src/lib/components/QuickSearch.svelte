@@ -23,7 +23,7 @@
   const results = $derived.by(() => {
     const w = words(q);
     if (!w.length) return [];
-    return search(all, 'quick', (p) => `${p.name} ${p.maiden_name} ${p.years}`, w, 12, (p) => !p.anon);
+    return search(all, 'quick', (p) => `${p.name} ${p.maiden_name} ${p.nickname || ''} ${p.years}`, w, 12, (p) => !p.anon);
   });
 
   function pick(p: Summary) {

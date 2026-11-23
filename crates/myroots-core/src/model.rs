@@ -147,6 +147,21 @@ pub fn citation_key(field: &str, source: Id) -> String {
 
 #[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]
 #[serde(default)]
+pub struct Association {
+    pub person: Id,
+    /// "godparent", "witness", "guardian", "clergy", "officiator", "friend",
+    /// "neighbor", or free text.
+    pub role: String,
+    /// The event it belongs to, e.g. "Baptism" (empty: the person in general).
+    #[serde(skip_serializing_if = "String::is_empty")]
+    pub event: String,
+}
+
+/// Roles of associations known to the interface (translated there).
+pub const ASSOCIATION_ROLES: &[&str] = &["godparent", "witness", "guardian", "clergy", "officiator", "friend", "neighbor"];
+
+#[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]
+#[serde(default)]
 pub struct LifeEvent {
     pub name: String,
     /// Qualified date (see `date` module).
@@ -279,6 +294,15 @@ pub struct Person {
     /// same program finds the person by them instead of adding a copy.
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub ext_ids: Vec<String>,
+
+    /// Nickname or other name the person was known by (GEDCOM NICK, ALIA,
+    /// NAME TYPE aka).
+    #[serde(skip_serializing_if = "String::is_empty")]
+    pub nickname: String,
+    /// Godparents, witnesses and other people tied to this person
+    /// (GEDCOM ASSO): "X is the <role> of this person".
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub associations: Vec<Association>,
 
     /// Unix time in milliseconds.
     pub created: i64,
@@ -499,6 +523,12 @@ pub struct Source {
     pub scans: Vec<Id>,
     /// General links between the source and people.
     pub persons: Vec<Id>,
+    /// Archive, parish or library that keeps it (GEDCOM REPO).
+    #[serde(skip_serializing_if = "String::is_empty")]
+    pub repository: String,
+    /// Call number in that archive (GEDCOM CALN).
+    #[serde(skip_serializing_if = "String::is_empty")]
+    pub call_number: String,
     pub created: i64,
     pub updated: i64,
 }
@@ -553,9 +583,15 @@ pub struct Place {
     pub name: String,
     pub lat: Option<f64>,
     pub lng: Option<f64>,
-    /// "nominatim" | "manual" | "gedcom" | "failed"
+    /// "nominatim" | "manual" | "gedcom" | "osm" | "failed"
     pub origin: String,
     pub updated: i64,
+    /// "cemetery" for a cemetery the user keeps on the map ("" = an ordinary place).
+    #[serde(skip_serializing_if = "String::is_empty")]
+    pub kind: String,
+    /// Street address (cemeteries).
+    #[serde(skip_serializing_if = "String::is_empty")]
+    pub address: String,
     /// Historical weather on given days ("YYYY-MM-DD"), fetched on request.
     pub weather: BTreeMap<String, DayWeather>,
 }

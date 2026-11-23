@@ -165,6 +165,25 @@ pub struct ImportReport {
     pub places: usize,
     /// (code, detail) — e.g. ("indi_no_name", "@I12@")
     pub warnings: Vec<(String, String)>,
+    /// Godparents, witnesses and other associations (ASSO) linked.
+    pub associations: usize,
+    /// Photos and scans the file refers to (OBJE). The app reads them from
+    /// the archive or a folder chosen by the user and calls `media.link_imported`.
+    pub media: Vec<MediaLink>,
+}
+
+/// A file named in the GEDCOM (OBJE) for a person or a source.
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[serde(default)]
+pub struct MediaLink {
+    pub person: Option<Id>,
+    pub source: Option<Id>,
+    /// The path as written in the file (FILE), e.g. "media/anna.jpg" or "C:\\Zdjęcia\\anna.jpg".
+    pub file: String,
+    pub title: String,
+    pub date: String,
+    /// The profile photo (`_PRIM Y`).
+    pub primary: bool,
 }
 
 /// Standard individual events imported as life events.
@@ -196,6 +215,11 @@ const STD_EVENTS: &[(&str, &str)] = &[
     ("NATI", "Nationality"),
     ("DSCR", "Physical description"),
     ("PROP", "Property"),
+    ("BAPL", "Baptism (LDS)"),
+    ("CONL", "Confirmation (LDS)"),
+    ("INIL", "Initiatory (LDS)"),
+    ("ENDL", "Endowment (LDS)"),
+    ("SLGC", "Sealing to parents (LDS)"),
 ];
 
 /// Family events other than marriage and divorce, kept as life events of both partners.
@@ -206,7 +230,80 @@ const FAM_EVENTS: &[(&str, &str)] = &[
     ("MARL", "Marriage license"),
     ("MARS", "Marriage settlement"),
     ("DIVF", "Divorce filed"),
+    ("SLGS", "Sealing to spouse (LDS)"),
 ];
+
+/// Temple and status of the LDS ordinances (TEMP, STAT): part of the description.
+fn lds_detail(ev: &Node, c: &Ctx2) -> String {
+    let mut out = vec![];
+    for (tag, def) in [("TEMP", "Temple"), ("STAT", "Status")] {
+        let v = ev.val(tag);
+        if !v.is_empty() {
+            let label = c.opts.event_names.get(&format!("_{tag}")).cloned().unwrap_or_else(|| def.to_string());
+            out.push(format!("{label}: {v}"));
+        }
+    }
+    out.join(", ")
+}
+
+/// A file of an OBJE (inline, or a pointer to a 0 @O1@ OBJE record).
+#[derive(Clone, Default)]
+struct ObjRef {
+    file: String,
+    title: String,
+    date: String,
+    primary: bool,
+}
+
+fn obje_of(n: &Node, c: &Ctx2) -> Vec<ObjRef> {
+    let mut out = vec![];
+    for o in n.all("OBJE") {
+        let rec: &Node = match o.value.trim() {
+            v if v.starts_with('@') => match c.objects.get(&xref_of(v)) {
+                Some(r) => r,
+                None => continue,
+            },
+            _ => o,
+        };
+        let primary = ["_PRIM", "_PRIMARY", "_PHOTO"].iter().any(|t| o.val(t).eq_ignore_ascii_case("Y") || rec.val(t).eq_ignore_ascii_case("Y"));
+        let title = [o.val("TITL"), rec.val("TITL")].into_iter().find(|v| !v.is_empty()).unwrap_or_default();
+        let date = date::from_gedcom(&[o.val("DATE"), rec.val("DATE"), rec.val("_DATE")].into_iter().find(|v| !v.is_empty()).unwrap_or_default());
+        for f in rec.all("FILE") {
+            let file = f.value.trim().to_string();
+            if file.is_empty() {
+                continue;
+            }
+            let title = if title.is_empty() { f.val("TITL") } else { title.clone() };
+            out.push(ObjRef { file, title, date: date.clone(), primary });
+        }
+    }
+    out
+}
+
+/// Role of an association: GEDCOM 7 ROLE codes and the RELA texts of 5.5.1
+/// programs → a role known to the app (or the text as written).
+fn assoc_role(a: &Node) -> String {
+    let raw = [a.val("RELA"), a.val("ROLE")].into_iter().find(|v| !v.is_empty()).unwrap_or_default();
+    let phrase = a.child("ROLE").map(|r| r.val("PHRASE")).unwrap_or_default();
+    let k = norm(&raw);
+    let known = match k.as_str() {
+        "godp" | "godparent" | "godfather" | "godmother" | "sponsor" | "chrzestny" | "chrzestna" | "rodzic chrzestny" | "pate" | "patin" | "parrain" | "marraine" | "padrino" | "madrina" | "peetvader" | "peetmoeder" => "godparent",
+        "witn" | "witness" | "swiadek" | "zeuge" | "temoin" | "testigo" | "testimone" | "getuige" => "witness",
+        "clergy" | "priest" | "ksiadz" | "pastor" => "clergy",
+        "officiator" | "officiant" => "officiator",
+        "friend" | "przyjaciel" | "przyjaciolka" => "friend",
+        "nghbr" | "neighbor" | "neighbour" | "sasiad" | "sasiadka" => "neighbor",
+        "guardian" | "opiekun" | "opiekunka" => "guardian",
+        _ => "",
+    };
+    if !known.is_empty() {
+        return known.to_string();
+    }
+    if k == "other" && !phrase.is_empty() {
+        return phrase;
+    }
+    raw
+}
 
 struct Ctx2<'a> {
     notes: HashMap<String, String>,
@@ -216,6 +313,10 @@ struct Ctx2<'a> {
     /// The file comes from MyRoots (the WordPress plugin or this app): `_MARNM`
     /// and `NPFX` hold the maiden name there, elsewhere `_MARNM` is the married name.
     myroots: bool,
+    /// 0 @O1@ OBJE records
+    objects: HashMap<String, &'a Node>,
+    /// 0 @R1@ REPO records: name (with the city)
+    repos: HashMap<String, String>,
 }
 
 /// Key of a source reference: a pointer, or the text of an inline source.
@@ -291,6 +392,9 @@ struct Parsed {
     event_cites: Vec<(usize, String, CitationInfo)>,
     sources: Vec<String>,
     coords: Vec<(String, f64, f64)>,
+    /// (xref of the other person, role, event name)
+    assoc: Vec<(String, String, String)>,
+    media: Vec<ObjRef>,
 }
 
 /// Details of a citation (`n SOUR @S1@` with `PAGE`, `QUAY`, `DATA.TEXT`, `NOTE`).
@@ -386,6 +490,27 @@ fn extract(node: &Node, c: &Ctx2) -> Parsed {
             p.last_name = std::mem::take(&mut p.maiden_name);
         }
     }
+    // nicknames and other names the person was known by
+    let mut nick: Vec<String> = vec![];
+    let mut add_nick = |v: String| {
+        let v = v.replace('/', " ").split_whitespace().collect::<Vec<_>>().join(" ");
+        if !v.is_empty() && !nick.iter().any(|x| norm(x) == norm(&v)) {
+            nick.push(v);
+        }
+    };
+    for n in &names {
+        add_nick(n.val("NICK"));
+        if matches!(ntype(n).as_str(), "aka" | "nickname") {
+            add_nick(n.value.trim().to_string());
+        }
+    }
+    add_nick(node.val("NICK"));
+    for a in node.all("ALIA") {
+        if !a.value.trim().starts_with('@') {
+            add_nick(a.value.trim().to_string());
+        }
+    }
+    p.nickname = nick.join(", ");
     p.gender = match node.val("SEX").to_uppercase().as_str() {
         "M" => Gender::Male,
         "F" => Gender::Female,
@@ -508,6 +633,10 @@ fn extract(node: &Node, c: &Ctx2) -> Parsed {
             if !t.is_empty() && desc.is_empty() {
                 desc = t;
             }
+            let lds = lds_detail(ev, c);
+            if !lds.is_empty() {
+                desc = if desc.is_empty() { lds } else { format!("{desc}\n\n{lds}") };
+            }
             if !note.is_empty() {
                 desc = if desc.is_empty() { note } else { format!("{desc}\n\n{note}") };
             }
@@ -529,7 +658,32 @@ fn extract(node: &Node, c: &Ctx2) -> Parsed {
     }
     let sources: Vec<String> = node.all("SOUR").filter_map(source_key).collect();
     p.ext_ids = ext_ids(node);
-    Parsed { person: p, citations: cits, event_cites: ev_cits, sources, coords }
+    // associations of the person and of its events (godparents at a baptism…)
+    let mut assoc = vec![];
+    for a in node.all("ASSO") {
+        assoc.push((xref_of(&a.value), assoc_role(a), a.val("_EVENT")));
+    }
+    for ev in &node.children {
+        if ev.tag == "ASSO" {
+            continue;
+        }
+        for a in ev.all("ASSO") {
+            let ev_name = STD_EVENTS
+                .iter()
+                .find(|(t, _)| *t == ev.tag)
+                .map(|(t, d)| c.opts.event_names.get(*t).cloned().unwrap_or_else(|| d.to_string()))
+                .or_else(|| match ev.tag.as_str() {
+                    "BIRT" => Some(c.opts.event_names.get("BIRT").cloned().unwrap_or_else(|| "Birth".into())),
+                    "DEAT" => Some(c.opts.event_names.get("DEAT").cloned().unwrap_or_else(|| "Death".into())),
+                    "EVEN" | "FACT" => Some(ev.val("TYPE")),
+                    _ => None,
+                })
+                .unwrap_or_default();
+            assoc.push((xref_of(&a.value), assoc_role(a), ev_name));
+        }
+    }
+    let media = obje_of(node, c);
+    Parsed { person: p, citations: cits, event_cites: ev_cits, sources, coords, assoc, media }
 }
 
 /// Merges parsed values into an existing person (no overwrite with empty values).
@@ -540,7 +694,7 @@ fn merge_into(base: &mut Person, parsed: &Person) {
             if !parsed.$x.is_empty() { base.$x = parsed.$x.clone(); }
         )*};
     }
-    f!(first_name, last_name, maiden_name, birth_date, birth_place, death_date, death_place, death_cause, occupation, education, faith, height, eye_color, blood_type, biography, notes, research, residence, grave);
+    f!(first_name, last_name, maiden_name, birth_date, birth_place, death_date, death_place, death_cause, occupation, education, faith, height, eye_color, blood_type, biography, notes, research, residence, nickname, grave);
     // a more exact date entered in MyRoots stays ("1902-04-11" over "about 1902")
     let exact = |d: &str| d.len() == 10 && !d.starts_with(['~', '<', '>']);
     if exact(&old_birth) && !exact(&base.birth_date) && dates_agree(&old_birth, &base.birth_date).is_some() {
@@ -706,7 +860,7 @@ pub fn import(db: &mut Database, ctx: &Ctx, text: &str, opts: &ImportOptions) ->
     let mut fams: Vec<&Node> = vec![];
     let mut pets: Vec<&Node> = vec![];
     let myroots = nodes.iter().find(|n| n.tag == "HEAD").map(|h| h.val("SOUR").to_uppercase().contains("MYROOTS")).unwrap_or(false);
-    let mut c = Ctx2 { notes: HashMap::new(), sources: HashMap::new(), opts, myroots };
+    let mut c = Ctx2 { notes: HashMap::new(), sources: HashMap::new(), opts, myroots, objects: HashMap::new(), repos: HashMap::new() };
     let mut src_nodes: Vec<&Node> = vec![];
     for n in &nodes {
         let Some(x) = &n.xref else { continue };
@@ -718,6 +872,20 @@ pub fn import(db: &mut Database, ctx: &Ctx, text: &str, opts: &ImportOptions) ->
                 c.notes.insert(x.clone(), n.value.trim().to_string());
             }
             "SOUR" => src_nodes.push(n),
+            "OBJE" => {
+                c.objects.insert(x.clone(), n);
+            }
+            "REPO" => {
+                let mut name = n.val("NAME");
+                if name.is_empty() {
+                    name = n.value.trim().to_string();
+                }
+                let city = n.child("ADDR").map(|a| a.val("CITY")).unwrap_or_default();
+                if !city.is_empty() && !norm(&name).contains(&norm(&city)) {
+                    name = format!("{name}, {city}");
+                }
+                c.repos.insert(x.clone(), name);
+            }
             _ => {}
         }
     }
@@ -748,9 +916,25 @@ pub fn import(db: &mut Database, ctx: &Ctx, text: &str, opts: &ImportOptions) ->
         if title.is_empty() {
             continue;
         }
+        // the archive or parish that keeps it, with the call number
+        let (mut repository, mut call_number) = (String::new(), String::new());
+        if let Some(r) = s.child("REPO") {
+            let v = r.value.trim();
+            repository = if v.starts_with('@') { c.repos.get(&xref_of(v)).cloned().unwrap_or_default() } else { v.to_string() };
+            call_number = r.val("CALN");
+        }
+        let scans = obje_of(s, &c);
         let existing = by_title.get(&norm(&title)).copied();
         let id = match existing {
-            Some(id) => id,
+            Some(id) => {
+                let mut cur = db.sources[&id].clone();
+                if cur.repository.is_empty() && !repository.is_empty() {
+                    cur.repository = repository;
+                    cur.call_number = call_number;
+                    ops::save_source(db, ctx, cur)?;
+                }
+                id
+            }
             None => {
                 let mut notes = vec![];
                 for k in ["AUTH", "PUBL"] {
@@ -769,11 +953,14 @@ pub fn import(db: &mut Database, ctx: &Ctx, text: &str, opts: &ImportOptions) ->
                 let date = s.child("DATA").and_then(|d| d.child("EVEN")).map(|e| date::from_gedcom(&e.val("DATE"))).unwrap_or_default();
                 rep.sources += 1;
                 let key = norm(&title);
-                let id = ops::save_source(db, ctx, Source { title, url, notes: notes.join("\n"), date, ..Default::default() })?;
+                let id = ops::save_source(db, ctx, Source { title, url, notes: notes.join("\n"), date, repository, call_number, ..Default::default() })?;
                 by_title.insert(key, id);
                 id
             }
         };
+        for o in scans {
+            rep.media.push(MediaLink { person: None, source: Some(id), file: o.file, title: o.title, date: o.date, primary: false });
+        }
         c.sources.insert(s.xref.clone().unwrap_or_default(), id);
     }
 
@@ -783,6 +970,7 @@ pub fn import(db: &mut Database, ctx: &Ctx, text: &str, opts: &ImportOptions) ->
     let mut xmap: HashMap<String, Id> = HashMap::new();
     let mut taken: HashSet<Id> = HashSet::new();
     let mut coords_all = vec![];
+    let mut assoc_all: Vec<(Id, Vec<(String, String, String)>)> = vec![];
     for n in &indi {
         let xref = n.xref.clone().unwrap_or_default();
         let parsed = extract(n, &c);
@@ -858,7 +1046,31 @@ pub fn import(db: &mut Database, ctx: &Ctx, text: &str, opts: &ImportOptions) ->
             }
         }
         coords_all.extend(parsed.coords);
+        for o in parsed.media {
+            rep.media.push(MediaLink { person: Some(id), source: None, file: o.file, title: o.title, date: o.date, primary: o.primary });
+        }
+        if !parsed.assoc.is_empty() {
+            assoc_all.push((id, parsed.assoc));
+        }
         xmap.insert(xref, id);
+    }
+    // Associations, once every person has an id
+    for (id, list) in assoc_all {
+        let mut p = db.persons[&id].clone();
+        let before = p.associations.len();
+        for (x, role, event) in list {
+            if let Some(&other) = xmap.get(&x) {
+                let a = Association { person: other, role, event };
+                if other != id && !p.associations.contains(&a) {
+                    p.associations.push(a);
+                }
+            }
+        }
+        if p.associations.len() != before {
+            rep.associations += p.associations.len() - before;
+            let p = ops::sanitize_person(&p, db);
+            db.put_person(p);
+        }
     }
 
     // Families
@@ -871,13 +1083,42 @@ pub fn import(db: &mut Database, ctx: &Ctx, text: &str, opts: &ImportOptions) ->
             .or_else(|| f.all("HUSB").nth(1).and_then(|n| xmap.get(&xref_of(&n.value)).copied()));
         let husb = husb.or_else(|| f.all("WIFE").nth(1).and_then(|n| xmap.get(&xref_of(&n.value)).copied()));
         let marr = f.child("MARR");
+        // witnesses of the marriage (FAM.ASSO, MARR.ASSO): associations of both partners
+        let marr_name = c.opts.event_names.get("MARR").cloned().unwrap_or_else(|| "Marriage".into());
+        let fam_assoc: Vec<(Id, String, String)> = f
+            .all("ASSO")
+            .map(|a| (a, String::new()))
+            .chain(marr.into_iter().flat_map(|m| m.all("ASSO")).map(|a| (a, marr_name.clone())))
+            .filter_map(|(a, ev)| xmap.get(&xref_of(&a.value)).map(|&id| (id, assoc_role(a), ev)))
+            .collect();
+        if !fam_assoc.is_empty() {
+            for pid in [husb, wife].into_iter().flatten() {
+                let mut p = db.persons[&pid].clone();
+                let before = p.associations.len();
+                for (other, role, event) in &fam_assoc {
+                    let a = Association { person: *other, role: role.clone(), event: event.clone() };
+                    if *other != pid && !p.associations.contains(&a) {
+                        p.associations.push(a);
+                    }
+                }
+                if p.associations.len() != before {
+                    rep.associations += p.associations.len() - before;
+                    let p = ops::sanitize_person(&p, db);
+                    db.put_person(p);
+                }
+            }
+        }
         let div = f.child("DIV").or_else(|| f.child("ANUL"));
         // other family events: life events of both partners
         let mut fam_events: Vec<LifeEvent> = vec![];
         for (tag, def) in FAM_EVENTS {
             for ev in f.all(tag) {
                 let name = c.opts.event_names.get(*tag).cloned().unwrap_or_else(|| def.to_string());
-                let note = ev.child("NOTE").map(|n| note_text(n, &c)).unwrap_or_default();
+                let mut note = ev.child("NOTE").map(|n| note_text(n, &c)).unwrap_or_default();
+                let lds = lds_detail(ev, &c);
+                if !lds.is_empty() {
+                    note = if note.is_empty() { lds } else { format!("{lds}\n\n{note}") };
+                }
                 let mut cites = vec![];
                 for (k, info) in cites_of(ev, &c) {
                     if let Some(sid) = resolve_source(db, ctx, &mut c.sources, &mut by_title, &mut rep, &k)? {
@@ -1304,12 +1545,15 @@ pub fn export(db: &Database, ctx: &Ctx, o: &ExportOptions) -> String {
             }
             s
         };
+        let nick = if p.nickname.is_empty() { String::new() } else { gline(2, "NICK", &p.nickname) };
         if !m.is_empty() && norm(&m) != norm(&l) {
             out += &name(&m, "birth");
+            out += &nick;
             out += &cites(p, &["name"], 2);
             out += &name(&l, "married");
         } else {
             out += &name(&l, "");
+            out += &nick;
             out += &cites(p, &["name"], 2);
         }
         out += &format!("1 SEX {}\n", match p.gender { Gender::Male => "M", Gender::Female => "F", _ => "U" });
@@ -1444,6 +1688,23 @@ pub fn export(db: &Database, ctx: &Ctx, o: &ExportOptions) -> String {
                 out += "2 _TYPE research\n";
             }
         }
+        for a in p.associations.iter().filter(|a| persons.contains_key(&a.person)) {
+            out += &format!("1 ASSO @I{}@\n", a.person);
+            let role = match a.role.as_str() {
+                "godparent" => "Godparent",
+                "witness" => "Witness",
+                "guardian" => "Guardian",
+                "clergy" => "Clergy",
+                "officiator" => "Officiator",
+                "friend" => "Friend",
+                "neighbor" => "Neighbor",
+                other => other,
+            };
+            out += &gline(2, "RELA", if role.is_empty() { "Other" } else { role });
+            if !a.event.is_empty() {
+                out += &gline(2, "_EVENT", &a.event);
+            }
+        }
         if o.sources {
             for sid in ix.sources_of(p.id) {
                 out += &format!("1 SOUR @S{sid}@\n");
@@ -1520,6 +1781,7 @@ pub fn export(db: &Database, ctx: &Ctx, o: &ExportOptions) -> String {
         }
     }
     if o.sources {
+        let mut repos: HashMap<String, (usize, &str)> = HashMap::new();
         for s in db.sources.values() {
             out += &format!("0 @S{}@ SOUR\n1 TITL {}\n", s.id, gv(&s.title));
             let d = date::to_gedcom(&s.date);
@@ -1532,6 +1794,20 @@ pub fn export(db: &Database, ctx: &Ctx, o: &ExportOptions) -> String {
             if !s.notes.is_empty() {
                 out += &gnote(&s.notes, 1, "NOTE");
             }
+            if !s.repository.is_empty() {
+                let n = repos.len() + 1;
+                let r = repos.entry(norm(&s.repository)).or_insert((n, s.repository.as_str())).0;
+                out += &format!("1 REPO @R{r}@\n");
+                if !s.call_number.is_empty() {
+                    out += &gline(2, "CALN", &s.call_number);
+                }
+            }
+        }
+        let mut list: Vec<(usize, &str)> = repos.values().copied().collect();
+        list.sort();
+        for (n, name) in list {
+            out += &format!("0 @R{n}@ REPO\n");
+            out += &gline(1, "NAME", name);
         }
     }
     if o.pets {
@@ -1587,6 +1863,52 @@ mod tests {
     const SAMPLE: &str = "0 HEAD\n1 CHAR UTF-8\n0 @N1@ NOTE Shared note\n1 CONT second line\n0 @S1@ SOUR\n1 TITL Parish book\n0 @I1@ INDI\n1 NAME Jan /Kowalski/\n1 SEX M\n1 BIRT\n2 DATE ABT 1900\n2 PLAC Kraków\n3 MAP\n4 LATI N50.06\n4 LONG E19.94\n2 SOUR @S1@\n1 NOTE @N1@\n1 BURI\n2 DATE 1970\n1 FAMS @F1@\n0 @I2@ INDI\n1 NAME Anna /Nowak/\n1 SEX F\n1 FAMS @F1@\n0 @I3@ INDI\n1 NAME Ewa /Kowalska/\n1 SEX F\n1 FAMC @F1@\n2 PEDI adopted\n0 @F1@ FAM\n1 HUSB @I1@\n1 WIFE @I2@\n1 MARR\n2 DATE 12 JUN 1925\n1 CHIL @I3@\n0 @PET1@ _PET\n1 NAME Burek\n1 _SPECIES dog\n1 _OWNER @I1@\n0 TRLR\n";
 
     const CITED: &str = "0 HEAD\n1 CHAR UTF-8\n0 @S1@ SOUR\n1 TITL Księga urodzeń\n0 @S2@ SOUR\n1 TITL Księga ślubów\n0 @I1@ INDI\n1 NAME Jan /Kowalski/\n2 SOUR @S1@\n1 SEX M\n1 BIRT\n2 DATE 3 MAR 1900\n2 PLAC Kraków\n2 SOUR @S1@\n3 PAGE akt 112\n3 QUAY 3\n3 DATA\n4 TEXT Jan, syn Józefa\n1 OCCU kowal\n2 SOUR Spis ludności 1921\n3 PAGE s. 4\n1 RESI\n2 DATE 1930\n2 PLAC Tarnów\n2 SOUR @S1@\n3 PAGE k. 7\n1 BURI\n2 PLAC Cmentarz Rakowicki\n2 SOUR @S1@\n1 FAMS @F1@\n0 @I2@ INDI\n1 NAME Anna /Nowak/\n1 SEX F\n1 FAMS @F1@\n0 @F1@ FAM\n1 HUSB @I1@\n1 WIFE @I2@\n1 MARR\n2 DATE 1925\n2 SOUR @S2@\n3 PAGE akt 5\n3 QUAY 2\n0 TRLR\n";
+
+    const EXTRAS: &str = "0 HEAD\n1 CHAR UTF-8\n0 @R1@ REPO\n1 NAME Archiwum Parafii Mariackiej\n1 ADDR\n2 CITY Kraków\n0 @S1@ SOUR\n1 TITL Księga chrztów\n1 REPO @R1@\n2 CALN sygn. 12/3\n1 OBJE\n2 FILE skany/ksiega.jpg\n0 @O1@ OBJE\n1 FILE C:\\Zdjecia\\Jan.JPG\n2 FORM jpg\n2 TITL Jan w 1920\n0 @I1@ INDI\n1 NAME Jan /Kowalski/\n2 NICK Kuba\n1 ALIA Janek z Bronowic\n1 SEX M\n1 BIRT\n2 DATE @#DHEBREW@ 1 TSH 5661\n1 BAPM\n2 DATE 1900\n2 ASSO @I2@\n3 ROLE GODP\n1 BAPL\n2 DATE 1950\n2 TEMP SLAKE\n2 STAT COMPLETED\n1 OBJE @O1@\n2 _PRIM Y\n1 OBJE\n2 FILE media/inne.png\n1 ASSO @I3@\n2 RELA Świadek\n0 @I2@ INDI\n1 NAME Anna /Nowak/\n1 SEX F\n0 @I3@ INDI\n1 NAME Piotr /Lis/\n1 SEX M\n0 TRLR\n";
+
+    #[test]
+    fn media_repositories_associations_nicknames_lds() {
+        let c = Ctx::new(0, NaiveDate::from_ymd_opt(2026, 11, 23).unwrap());
+        let mut db = Database::new(0);
+        let r = import(&mut db, &c, EXTRAS, &ImportOptions::default()).unwrap();
+        let jan = db.persons.values().find(|p| p.first_name == "Jan").unwrap().clone();
+        let anna = db.persons.values().find(|p| p.first_name == "Anna").unwrap().id;
+        let piotr = db.persons.values().find(|p| p.first_name == "Piotr").unwrap().id;
+        assert_eq!(jan.nickname, "Kuba, Janek z Bronowic");
+        // 1 Tishri 5661 = 24 September 1900
+        assert_eq!(jan.birth_date, "1900-09-24");
+        assert!(jan.associations.contains(&Association { person: anna, role: "godparent".into(), event: "Baptism".into() }), "{:?}", jan.associations);
+        assert!(jan.associations.contains(&Association { person: piotr, role: "witness".into(), event: String::new() }));
+        assert_eq!(r.associations, 2);
+        let bapl = jan.events.iter().find(|e| e.name == "Baptism (LDS)").unwrap();
+        assert!(bapl.description.contains("SLAKE") && bapl.description.contains("COMPLETED"));
+        let src = db.sources.values().next().unwrap();
+        assert_eq!((src.repository.as_str(), src.call_number.as_str()), ("Archiwum Parafii Mariackiej, Kraków", "sygn. 12/3"));
+        // the files named in the GEDCOM come back for the app to read
+        let files: Vec<(&str, bool, bool)> = r.media.iter().map(|m| (m.file.as_str(), m.primary, m.person.is_some())).collect();
+        assert!(files.contains(&("C:\\Zdjecia\\Jan.JPG", true, true)), "{files:?}");
+        assert!(files.contains(&("media/inne.png", false, true)));
+        assert!(files.contains(&("skany/ksiega.jpg", false, false)));
+        // linking: the primary file becomes the profile photo
+        let mid = ops::register_media(&mut db, &c, Media { file_name: "Jan.JPG".into(), ..Default::default() });
+        let link = r.media.iter().find(|m| m.primary).unwrap().clone();
+        assert_eq!(ops::link_imported_media(&mut db, &c, &[(mid, link.clone())]), 1);
+        assert_eq!(ops::link_imported_media(&mut db, &c, &[(mid, link)]), 1);
+        assert_eq!(db.persons[&jan.id].photo, Some(mid));
+        assert_eq!(db.persons[&jan.id].gallery.len(), 1);
+        assert_eq!(db.media[&mid].caption, "Jan w 1920");
+        // export and back
+        let out = export(&db, &c, &ExportOptions::default());
+        for needle in ["2 NICK Kuba, Janek z Bronowic", "1 ASSO @I", "2 RELA Godparent", "2 _EVENT Baptism", "1 REPO @R1@", "2 CALN sygn. 12/3", "0 @R1@ REPO", "1 BAPL"] {
+            assert!(out.contains(needle), "missing {needle}");
+        }
+        let mut db2 = Database::new(0);
+        let r2 = import(&mut db2, &c, &out, &ImportOptions::default()).unwrap();
+        assert_eq!(r2.associations, 2);
+        let jan2 = db2.persons.values().find(|p| p.first_name == "Jan").unwrap();
+        assert_eq!(jan2.nickname, "Kuba, Janek z Bronowic");
+        assert_eq!(db2.sources.values().next().unwrap().call_number, "sygn. 12/3");
+    }
 
     #[test]
     fn reimport_with_new_people_does_not_duplicate() {
@@ -1717,7 +2039,8 @@ mod tests {
         let rep = import(&mut db, &c, &decode(&raw), &ImportOptions::default()).unwrap();
         let j = who(&db, "Józef");
         assert_eq!(j.last_name, "Wiśniewski");
-        assert_eq!(j.birth_date, "1700-02-12");
+        // 12 February 1699/1700 of the Julian calendar = 22 February 1700
+        assert_eq!(j.birth_date, "1700-02-22");
         assert!(j.biography.contains("Urodził się w małym dworku pod lasem.<br>Druga linia @ znak."), "{}", j.biography);
         assert_eq!(rep.sources, 1);
         assert!(db.sources.values().any(|s| s.title == "Księga metrykalna Zżąry" || s.title.starts_with("Księga metrykalna")));

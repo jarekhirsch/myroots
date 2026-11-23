@@ -120,7 +120,7 @@ export class TauriBackend implements Backend {
   async fetchBytes(url: string, headers?: Record<string, string>) {
     const { fetch } = await import('@tauri-apps/plugin-http');
     // map services (OpenStreetMap Nominatim) refuse requests without an identification
-    const r = await fetch(url, { headers: { 'User-Agent': 'MyRoots/3 (family tree app; https://hirsch.lt)', ...headers } });
+    const r = await fetch(url, { headers: { 'User-Agent': 'MyRoots/3 (family tree app; https://myroots.cc)', ...headers } });
     return { status: r.status, bytes: new Uint8Array(await r.arrayBuffer()), type: r.headers.get('content-type') || '' };
   }
 
