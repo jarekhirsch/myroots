@@ -1,6 +1,42 @@
-# MyRoots 3
+<p align="center">
+  <img src="public/icon.svg" alt="MyRoots" width="96" height="96">
+</p>
 
-MyRoots jako samodzielna aplikacja, bez WordPressa. Jeden silnik w Rust działa wszędzie:
+<h1 align="center">MyRoots</h1>
+
+<p align="center">
+  Drzewo genealogiczne, zdjęcia i historie rodziny na Twoim własnym urządzeniu.<br>
+  macOS, Windows, Linux, Android, przeglądarka, WordPress i własny serwer.
+</p>
+
+<p align="center">
+  <a href="https://myroots.cc">myroots.cc</a> ·
+  <a href="https://demo.myroots.cc">demo</a> ·
+  <a href="https://apps.microsoft.com/detail/9MX7K9QKVVCW">Microsoft Store</a> ·
+  <a href="CHANGELOG.md">co nowego</a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/jarekhirsch/myroots/actions/workflows/tests.yml"><img src="https://github.com/jarekhirsch/myroots/actions/workflows/tests.yml/badge.svg" alt="Testy"></a>
+  <img src="https://img.shields.io/badge/licencja-GPL--3.0-1f4a37" alt="Licencja GPL-3.0">
+  <img src="https://img.shields.io/badge/j%C4%99zyki-12-1f4a37" alt="12 języków">
+</p>
+
+<p align="center">
+  <img src="strona/static/img/drzewo-genealogiczne-online-myroots-1600.webp" alt="Drzewo rodziny w MyRoots z panelem osoby" width="860">
+</p>
+
+<table>
+  <tr>
+    <td width="33%"><img src="strona/static/img/profil-osoby-ze-zdjeciami-800.webp" alt="Profil osoby"><br><sub>Profil osoby: zdjęcia, linia życia, przejścia do mapy, plakatu i druku.</sub></td>
+    <td width="33%"><img src="strona/static/img/drzewo-genealogiczne-z-datami-os-czasu-800.webp" alt="Rodzina na osi czasu"><br><sub>Rodzina na osi czasu, pokolenie po pokoleniu.</sub></td>
+    <td width="33%"><img src="strona/static/img/album-rodzinny-galeria-800.webp" alt="Album rodzinny"><br><sub>Album zdjęć z oznaczonymi osobami.</sub></td>
+  </tr>
+</table>
+
+## O projekcie
+
+MyRoots to samodzielna aplikacja, bez WordPressa. Jeden silnik w Rust działa wszędzie:
 
 | Gdzie | Jak | Dane |
 |---|---|---|

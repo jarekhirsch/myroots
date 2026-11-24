@@ -11,7 +11,12 @@ permissions:
   actions: read
 
 jobs:
+  # all tests first (tests.yml); nothing is built when one fails
+  tests:
+    uses: ./.github/workflows/tests.yml
+
   desktop:
+    needs: tests
     strategy:
       fail-fast: false
       matrix:
@@ -96,6 +101,17 @@ jobs:
         id: msix
         shell: pwsh
         run: ./scripts/msix.ps1
+      - name: Check the package (unpacks, right version, the app inside)
+        shell: pwsh
+        run: |
+          $mk = Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin" -Recurse -Filter makeappx.exe | Where-Object { $_.FullName -match '\\x64\\' } | Select-Object -First 1
+          & $mk.FullName unpack /o /p "${{ steps.msix.outputs.msix }}" /d target/msix/check
+          if ($LASTEXITCODE -ne 0) { throw 'MSIX does not unpack' }
+          $m = [xml](Get-Content target/msix/check/AppxManifest.xml)
+          $v = (Get-Content src-tauri/tauri.conf.json -Raw | ConvertFrom-Json).version + '.0'
+          if ($m.Package.Identity.Version -ne $v) { throw "MSIX version $($m.Package.Identity.Version) is not $v" }
+          if (-not (Test-Path target/msix/check/myroots.exe)) { throw 'myroots.exe missing in the MSIX' }
+          if ((Get-Item target/msix/check/myroots.exe).Length -lt 5MB) { throw 'myroots.exe too small' }
       - name: Add the package to the release
         shell: bash
         env:

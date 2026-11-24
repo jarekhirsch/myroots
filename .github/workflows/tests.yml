@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   pull_request:
+  # the release (release.yml) runs these tests first and stops when one fails
+  workflow_call:
 
 jobs:
   test:
@@ -28,6 +30,37 @@ jobs:
         run: npm run build:viewer && npm run build:app
       - name: Audit
         run: npm audit --omit=dev
+
+  # The app on Windows and macOS: the build scripts, the app and the native
+  # part compile there too (a Linux-only test would not see a Windows path bug).
+  platforms:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Build scripts and the app
+        run: npm run build:viewer && npm run build:app
+      - name: Translations and docs
+        run: |
+          node scripts/build-app-strings.mjs
+          node scripts/check-i18n.mjs pl
+          npm run docs:check
+      - name: Native app compiles
+        run: cargo check -p myroots --locked
+      - name: Store version (no self-updates) builds
+        if: runner.os == 'Windows'
+        env:
+          VITE_MYROOTS_STORE: '1'
+        run: npm run build:app
 
   e2e:
     # the whole app in a browser: every screen, editing, import/export, backups,

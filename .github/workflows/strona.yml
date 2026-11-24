@@ -4,7 +4,7 @@ name: Site
 on:
   push:
     branches: [main]
-    paths: ['CHANGELOG.md', 'CHANGELOG.en.md', 'strona/**', 'scripts/updater-json.mjs', '.github/workflows/strona.yml']
+    paths: ['CHANGELOG.md', 'CHANGELOG.en.md', 'strona/**', 'scripts/updater-json.mjs', 'scripts/check-live.mjs', '.github/workflows/strona.yml']
   release:
     types: [published]
   workflow_dispatch:
@@ -104,3 +104,21 @@ jobs:
             **/.git*/**
             downloads/**
             updates/**
+
+      # Cloudflare keeps files; with the secrets CLOUDFLARE_API_TOKEN (permission
+      # "Cache Purge") and CLOUDFLARE_ZONE_ID the cache is emptied after an upload
+      - name: Empty the Cloudflare cache
+        if: env.DEPLOY == 'true'
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ZONE: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+        run: |
+          if [ -z "$CF_TOKEN" ] || [ -z "$CF_ZONE" ]; then echo "No Cloudflare secrets: cache not emptied."; exit 0; fi
+          curl -sf -X POST "https://api.cloudflare.com/client/v4/zones/$CF_ZONE/purge_cache" -H "Authorization: Bearer $CF_TOKEN" -H "Content-Type: application/json" --data '{"purge_everything":true}' | head -c 300
+
+      # the live websites answer as they should (pages, downloads, updates, demo)
+      - name: Check the live websites
+        if: env.DEPLOY == 'true' && github.event_name != 'push'
+        run: |
+          sleep 45
+          node scripts/check-live.mjs "${{ github.event_name == 'release' && steps.ver.outputs.version || '' }}"

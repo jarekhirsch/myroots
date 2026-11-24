@@ -39,6 +39,11 @@ Header always set X-Frame-Options "SAMEORIGIN"
 <FilesMatch "\.(apk|dmg|exe|zip|myroots|AppImage|deb|rpm)$">
 Header set Content-Disposition "attachment"
 </FilesMatch>
+# installers and update files keep their names between versions: browsers and
+# Cloudflare must ask again every time (otherwise an old version is served)
+<FilesMatch "\.(apk|dmg|exe|zip|AppImage|deb|rpm|json|sig|gz)$">
+Header set Cache-Control "no-cache"
+</FilesMatch>
 </IfModule>
 
 <IfModule mod_deflate.c>

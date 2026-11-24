@@ -25,4 +25,10 @@ Node.js 20+, Rust stable z celem `wasm32-unknown-unknown`, `wasm-bindgen-cli` w 
 
 Numer wersji w trzech miejscach: `package.json`, `Cargo.toml` (`[workspace.package]`), `src-tauri/tauri.conf.json`. Do tego wpis `## X.Y.Z (data)` w `CHANGELOG.md` i `CHANGELOG.en.md`.
 
+## Sprawdzenia
+
+- `tests.yml` przy każdej zmianie: testy silnika, tłumaczenia, dokumentacja, typy, budowanie, audyt, testy w przeglądarce (komputer i telefon) oraz budowanie na Windowsie i macOS (`platforms`: skrypty, aplikacja, część natywna, wersja ze Sklepu).
+- `release.yml` uruchamia najpierw całe `tests.yml`; przy błędzie nic się nie buduje. Pakiet MSIX jest rozpakowywany i sprawdzany (wersja, plik aplikacji).
+- `scripts/check-live.mjs`: myroots.cc (strony, styl, zrzuty, pliki do pobrania, `updates/latest.json` i pliki aktualizacji) i demo.myroots.cc (strona, pliki aplikacji, dane, logowanie). Uruchamiany po publikacji (`strona.yml`) i codziennie (`monitor.yml`); ręcznie: `node scripts/check-live.mjs [wersja]`.
+
 Wydawanie wersji (sklepy, podpisy, strona) jest opisane poza repozytorium.

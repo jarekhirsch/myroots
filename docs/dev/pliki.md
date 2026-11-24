@@ -205,6 +205,7 @@ Lista generowana przez `npm run docs` z pierwszego komentarza w każdym pliku. N
 | `build-app-strings.mjs` | Builds src/lib/i18n/extra/{lang}.json from the hand-written translation |
 | `build-wasm.mjs` | Builds the WebAssembly engine used by the browser app and the family website. |
 | `check-i18n.mjs` | Lists UI strings that have no translation in the catalogs (plugin .po + extra/*.json). |
+| `check-live.mjs` | Checks the live websites after a publication (and every day, monitor.yml): |
 | `docs.mjs` | Keeps the generated parts of docs/dev/*.md in step with the code. |
 | `finalize-viewer.mjs` | Makes the viewer template work from a local disk (file://): classic deferred |
 | `gen-icons.mjs` | Builds src/lib/icons/*.svelte from Phosphor Icons (MIT, @phosphor-icons/core). |
