@@ -1,14 +1,4 @@
-# Builds the installers when a version tag is pushed (git tag v3.1.0 && git push --tags)
-# and puts them on a draft GitHub release, together with the browser version.
-# Publishing the draft ("Publish release") starts strona.yml, which puts the
-# installers, the update files and the "What's new" page on myroots.cc.
-# Automatic updates: with the secret TAURI_SIGNING_PRIVATE_KEY (the file
-# _klucze/myroots-updater.key) every desktop package gets a signature (.sig).
-# Signing is optional: add the secrets below in the repository settings
-# (Settings -> Secrets and variables -> Actions) when you have the certificates.
-# Windows is signed for free by SignPath Foundation (open source): see the
-# "windows" job and signpath/README.md. Without SIGNPATH_API_TOKEN the Windows
-# installer is built unsigned, as before.
+# Builds the installers for a version tag (v*) and puts them on a draft release.
 name: Release
 
 on:
@@ -84,13 +74,7 @@ jobs:
           prerelease: false
           args: ${{ matrix.args }}${{ secrets.TAURI_SIGNING_PRIVATE_KEY != '' && ' --config src-tauri/tauri.updater.conf.json' || '' }}
 
-  # Microsoft Store ("MyRoots Family Tree", product 9MX7K9QKVVCW): an MSIX package
-  # that Microsoft signs after certification; the Store updates the app, so this
-  # build has no self-updates (VITE_MYROOTS_STORE=1). The .msix goes onto the
-  # draft release. With the secrets MSSTORE_TENANT_ID, MSSTORE_SELLER_ID,
-  # MSSTORE_CLIENT_ID and MSSTORE_CLIENT_SECRET (Partner Center -> Account
-  # settings -> User management -> Azure AD applications) it is also sent to the
-  # Store as a new submission; without them upload the .msix in Partner Center.
+  # Microsoft Store package (MSIX); the Store version has no self-updates.
   store:
     needs: desktop
     runs-on: windows-latest
@@ -126,11 +110,7 @@ jobs:
           msstore reconfigure --tenantId "${{ secrets.MSSTORE_TENANT_ID }}" --sellerId "${{ secrets.MSSTORE_SELLER_ID }}" --clientId "${{ secrets.MSSTORE_CLIENT_ID }}" --clientSecret "${{ secrets.MSSTORE_CLIENT_SECRET }}"
           msstore publish "${{ steps.msix.outputs.msix }}" -id 9MX7K9QKVVCW
 
-  # Windows: the app is built first, its .exe is signed through SignPath, then
-  # the installer is made from the signed .exe and signed too. SignPath checks
-  # that both files come from this repository and this workflow; every signing
-  # request waits for a manual approval in SignPath (the maintainer clicks
-  # "Approve", usually within minutes of the e-mail).
+  # Windows installer (optionally signed).
   windows:
     needs: desktop
     runs-on: windows-latest

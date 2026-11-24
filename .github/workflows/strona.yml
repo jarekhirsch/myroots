@@ -1,18 +1,4 @@
-# The site myroots.cc: built from strona/ and the changelogs, put on the
-# server over FTP.
-#
-# - A change of CHANGELOG.md, CHANGELOG.en.md or strona/ on main: the site is
-#   rebuilt (the "What's new" page included) and uploaded.
-# - "Publish release" on GitHub: in addition the installers go to
-#   myroots.cc/downloads/ (under names that stay the same in every version)
-#   and the update files to myroots.cc/updates/ (latest.json + signed
-#   packages), so the desktop apps update themselves.
-#
-# Settings → Secrets and variables → Actions:
-#   secrets  FTP_SERVER, FTP_USERNAME, FTP_PASSWORD
-#   variable FTP_DIR (folder of the site on the server, e.g. public_html/; default ./)
-#   variable FTP_PROTOCOL (ftps, ftp or ftps-legacy; default ftps)
-# Without the secrets the built site is only kept as an artifact of the run.
+# The site myroots.cc: built from strona/ and the changelogs.
 name: Site
 
 on:

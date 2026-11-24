@@ -100,7 +100,7 @@ npm run check
 
 ## Wydanie
 
-Instrukcja wydania (instalatory, wersja w przeglądarce, App Store, Google Play): `WYDANIE.md`. Teksty do sklepów: `STORE.md`, polityka prywatności: `PRIVACY.md`, zmiany: `CHANGELOG.md`.
+Polityka prywatności: `PRIVACY.md`, zmiany: `CHANGELOG.md`.
 
 ## Autor i licencja
 

@@ -1,7 +1,4 @@
-# Packs the Microsoft Store version (MSIX) from target/release/myroots.exe.
-# Build the app first with the Store switch (no self-updates):
-#   $env:VITE_MYROOTS_STORE = "1"; npx tauri build --no-bundle
-# Result: target/msix/MyRootsFamilyTree_<x.y.z.0>_x64.msix (unsigned: the Store signs it).
+# Packs target/release/myroots.exe as MSIX (build with VITE_MYROOTS_STORE=1).
 $ErrorActionPreference = 'Stop'
 $ver = (Get-Content src-tauri/tauri.conf.json -Raw | ConvertFrom-Json).version + '.0'
 $pkg = 'target/msix/pkg'

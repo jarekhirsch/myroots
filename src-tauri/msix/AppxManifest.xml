@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Microsoft Store package (MSIX) of MyRoots. Identity from Partner Center
-     (product 9MX7K9QKVVCW, "MyRoots Family Tree"); do not change it.
-     {VERSION} is set by scripts/msix.ps1 (x.y.z.0: the Store needs 0 at the end). -->
+<!-- {VERSION} is set by scripts/msix.ps1 -->
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
          xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
          xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
