@@ -14,8 +14,8 @@
   import { REGIONS } from '../lib/regions';
   import PlaceInput from '../lib/components/PlaceInput.svelte';
   import { fmtDate } from '../lib/format';
-  import Plus from '@lucide/svelte/icons/plus';
-  import X from '@lucide/svelte/icons/x';
+  import Plus from '../lib/icons/Plus.svelte';
+  import X from '../lib/icons/X.svelte';
   import type { Settings, CustomGroup } from '../lib/types';
 
   let tab = $state(['general', 'appearance', 'fields', 'notifications', 'history'].includes(route.query.tab) ? route.query.tab : 'general');
@@ -77,11 +77,11 @@
   }
 
   const COLORS: [keyof Settings['appearance'], () => string, string][] = [
-    ['primary', () => t('Main color'), '#1d5a44'],
+    ['primary', () => t('Main color'), '#1f4a37'],
     ['accent', () => t('Accent color'), '#c49a6c'],
-    ['bg', () => t('Background'), '#f6f8f6'],
-    ['text', () => t('Text'), '#17201b'],
-    ['border', () => t('Borders'), '#e3eae5'],
+    ['bg', () => t('Background'), '#ffffff'],
+    ['text', () => t('Text'), '#121613'],
+    ['border', () => t('Borders'), '#e6e9e4'],
   ];
   const TREE_COLORS: [keyof Settings['appearance'], () => string, string][] = [
     ['tree_bg', () => t('Tree background'), '#f6f8f6'],
@@ -114,7 +114,7 @@
     { name: () => t('Slate'), ap: { primary: '#334155', accent: '#0ea5a4', bg: '#f4f6f8', text: '', border: '' } },
   ];
   import AboutDialog from '../lib/components/AboutDialog.svelte';
-  import Info from '@lucide/svelte/icons/info';
+  import Info from '../lib/icons/Info.svelte';
   let about = $state(false);
 </script>
 
@@ -210,7 +210,7 @@
       <div class="presets">
         {#each PRESETS as p}
           <button class="btn sm" onclick={() => (s.appearance = { ...s.appearance, ...p.ap })}>
-            <span class="sw" style="background:{p.ap.primary || '#1d5a44'}"></span><span class="sw" style="background:{p.ap.accent || '#c49a6c'}"></span>
+            <span class="sw" style="background:{p.ap.primary || '#1f4a37'}"></span><span class="sw" style="background:{p.ap.accent || '#c49a6c'}"></span>
             {p.name()}
           </button>
         {/each}

@@ -11,8 +11,8 @@
   import Html from '../lib/components/Html.svelte';
   import PersonLink from '../lib/components/PersonLink.svelte';
   import NotFound from './NotFound.svelte';
-  import Pencil from '@lucide/svelte/icons/pencil';
-  import Trash from '@lucide/svelte/icons/trash';
+  import Pencil from '../lib/icons/PencilSimple.svelte';
+  import Trash from '../lib/icons/Trash.svelte';
   import type { PetView } from '../lib/types';
 
   let { id }: { id: number } = $props();

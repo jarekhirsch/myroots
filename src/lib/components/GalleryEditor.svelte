@@ -4,13 +4,13 @@
   import MediaLibrary from './MediaLibrary.svelte';
   import { pickImages, pickFile } from '../media';
   import AlbumSplitter from './AlbumSplitter.svelte';
-  import Scan from '@lucide/svelte/icons/scan-line';
+  import Scan from '../icons/Scan.svelte';
   import { t } from '../i18n/index.svelte';
-  import Upload from '@lucide/svelte/icons/upload';
-  import Library from '@lucide/svelte/icons/images';
-  import X from '@lucide/svelte/icons/x';
-  import Left from '@lucide/svelte/icons/arrow-left';
-  import Right from '@lucide/svelte/icons/arrow-right';
+  import Upload from '../icons/UploadSimple.svelte';
+  import Library from '../icons/Images.svelte';
+  import X from '../icons/X.svelte';
+  import Left from '../icons/ArrowLeft.svelte';
+  import Right from '../icons/ArrowRight.svelte';
   import type { GalleryItem } from '../types';
 
   let { items = $bindable([]), captions = true }: { items?: GalleryItem[]; captions?: boolean } = $props();

@@ -5,9 +5,9 @@
   import { pickImages } from '../media';
   import { t } from '../i18n/index.svelte';
   import { toast } from '../ui.svelte';
-  import Upload from '@lucide/svelte/icons/upload';
-  import Library from '@lucide/svelte/icons/images';
-  import X from '@lucide/svelte/icons/x';
+  import Upload from '../icons/UploadSimple.svelte';
+  import Library from '../icons/Images.svelte';
+  import X from '../icons/X.svelte';
 
   let {
     value = $bindable(null),

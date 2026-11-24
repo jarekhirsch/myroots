@@ -1,6 +1,6 @@
 <script lang="ts">
   import { assetUrl, wpBack } from './lib/backend/assets';
-  import WpIcon from '@lucide/svelte/icons/square-arrow-out-up-left';
+  import WpIcon from './lib/icons/ArrowSquareUpLeft.svelte';
   import { app, call, refreshInfo } from './lib/api.svelte';
   import UpdateBanner from './lib/components/UpdateBanner.svelte';
   import ProgressBar from './lib/components/ProgressBar.svelte';
@@ -14,16 +14,18 @@
   import Modal from './lib/components/Modal.svelte';
   import Lightbox from './lib/components/Lightbox.svelte';
   import QuickSearch from './lib/components/QuickSearch.svelte';
+  import SearchPalette from './lib/components/SearchPalette.svelte';
+  import SearchIcon from './lib/icons/MagnifyingGlass.svelte';
   import BackButton from './lib/components/BackButton.svelte';
   import AboutDialog from './lib/components/AboutDialog.svelte';
   import ReportDialog from './lib/components/ReportDialog.svelte';
-  import Bug from '@lucide/svelte/icons/bug';
-  import Heart from '@lucide/svelte/icons/heart';
+  import Bug from './lib/icons/Bug.svelte';
+  import Heart from './lib/icons/Heart.svelte';
   import { supportUrl } from './lib/credits';
   import { AUTHOR, YEAR, authorUrl } from './lib/credits';
-  import MenuIcon from '@lucide/svelte/icons/menu';
-  import More from '@lucide/svelte/icons/ellipsis';
-  import X from '@lucide/svelte/icons/x';
+  import MenuIcon from './lib/icons/List.svelte';
+  import More from './lib/icons/DotsThree.svelte';
+  import X from './lib/icons/X.svelte';
 
   import Home from './views/Home.svelte';
   import People from './views/People.svelte';
@@ -56,9 +58,9 @@
   import DataView from './views/DataView.svelte';
   import TreesView from './views/TreesView.svelte';
   import { trees, syncTreeName, hasTrees } from './lib/trees.svelte';
-  import FolderTree from '@lucide/svelte/icons/folder-tree';
-  import LockIcon from '@lucide/svelte/icons/lock-keyhole';
-  import LogOut from '@lucide/svelte/icons/log-out';
+  import FolderTree from './lib/icons/Folders.svelte';
+  import LockIcon from './lib/icons/LockKey.svelte';
+  import LogOut from './lib/icons/SignOut.svelte';
   import { isServerHost, wpConfig } from './lib/backend/assets';
   import Unlock from './lib/components/Unlock.svelte';
   import Website from './views/Website.svelte';
@@ -89,6 +91,26 @@
       .then((v) => (newSuggestions = v.filter((s) => s.status === 'new').length))
       .catch(() => {});
   });
+
+  // Quick search: Ctrl K / Cmd K from every screen, or "Search" at the top of the menu.
+  let palette = $state(false);
+  const canSearch = $derived(!app.info?.empty && (!viewer || sections?.list !== false));
+  $effect(() => {
+    const k = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && !e.altKey && e.key.toLowerCase() === 'k' && canSearch) {
+        e.preventDefault();
+        ui.menuOpen = false;
+        palette = !palette;
+      }
+    };
+    window.addEventListener('keydown', k);
+    return () => window.removeEventListener('keydown', k);
+  });
+  $effect(() => {
+    void route.path;
+    palette = false;
+  });
+  const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
 
   $effect(() => {
     const k = (e: KeyboardEvent) => {
@@ -219,15 +241,27 @@
   <div class="shell" class:viewer>
     <nav class="dock no-print" aria-label={t('Menu')}>
       <a href="#/" class="dock-logo" aria-label={title}><img src={assetUrl('icon.svg')} alt="" width="40" height="40" /></a>
+      {#if canSearch}
+        <button class="dk search" onclick={() => (palette = true)} aria-keyshortcuts={isMac ? 'Meta+K' : 'Control+K'}>
+          <span class="dk-ic"><SearchIcon size={22} /></span>
+          <span class="dk-l">{t('Search')}<kbd>{isMac ? '⌘K' : 'Ctrl K'}</kbd></span>
+        </button>
+      {/if}
       {#each dock as item (item!.path)}
         {@const Icon = item!.icon}
         <a href="#{item!.path}" class="dk" class:on={isActive(item!.path, route.path)} aria-current={isActive(item!.path, route.path) ? 'page' : undefined}>
-          <span class="dk-ic"><Icon size={21} strokeWidth={1.8} /></span>
+          <span class="dk-ic"><Icon size={21} /></span>
           <span class="dk-l">{(item!.short || item!.label)()}</span>
         </a>
       {/each}
+      {#if !viewer}
+        <a class="dk support" href={supportUrl(lang())} target="_blank" rel="noopener" title={t('Support the project')}>
+          <span class="dk-ic"><Heart size={18} /></span>
+          <span class="dk-l">{t('Support')}</span>
+        </a>
+      {/if}
       <button class="dk more" class:on={inMenu || ui.menuOpen} onclick={() => (ui.menuOpen = !ui.menuOpen)} aria-expanded={ui.menuOpen}>
-        <span class="dk-ic"><MenuIcon size={21} strokeWidth={1.8} />{#if newSuggestions && !viewer}<span class="dot" aria-hidden="true"></span>{/if}</span>
+        <span class="dk-ic"><MenuIcon size={21} />{#if newSuggestions && !viewer}<span class="dot" aria-hidden="true"></span>{/if}</span>
         <span class="dk-l">{t('More')}</span>
       </button>
     </nav>
@@ -243,7 +277,7 @@
         <button class="btn ghost icon close-menu" onclick={() => (ui.menuOpen = false)} aria-label={t('Close')}><X size={18} /></button>
       </div>
       {#if !viewer && trees.list.length > 1}
-        <a href="#/trees" class="tree-switch" onclick={() => (ui.menuOpen = false)}><FolderTree size={15} strokeWidth={1.8} /><span>{t('Switch tree (%d)', trees.list.length)}</span></a>
+        <a href="#/trees" class="tree-switch" onclick={() => (ui.menuOpen = false)}><FolderTree size={15} /><span>{t('Switch tree (%d)', trees.list.length)}</span></a>
       {/if}
       {#if !app.info?.empty && (!viewer || sections?.list !== false)}
         <div class="qs"><QuickSearch /></div>
@@ -256,7 +290,7 @@
             {#each g.items as item (item.path)}
               {@const Icon = item.icon}
               <a href="#{item.path}" class="item" class:indock={DOCK.includes(item.path)} class:intab={TABBAR.includes(item.path)} class:on={isActive(item.path, route.path)} aria-current={isActive(item.path, route.path) ? 'page' : undefined}>
-                <Icon size={18} strokeWidth={1.8} />
+                <Icon size={18} />
                 <span>{item.label()}</span>
                 {#if item.badge === 'suggestions' && newSuggestions}<span class="badge">{newSuggestions}</span>{/if}
               </a>
@@ -266,21 +300,21 @@
       </nav>
       {#if siteLock}
         <div class="unlock-link">
-          <button type="button" class="item" onclick={() => ((unlockOpen = true), (ui.menuOpen = false))}><LockIcon size={18} strokeWidth={1.8} /><span>{t('Show protected people')}</span></button>
+          <button type="button" class="item" onclick={() => ((unlockOpen = true), (ui.menuOpen = false))}><LockIcon size={18} /><span>{t('Show protected people')}</span></button>
         </div>
       {/if}
       {#if wpLink}
         <div class="wp-back">
-          <a href={wpLink.url} class="item"><WpIcon size={18} strokeWidth={1.8} /><span>{viewer ? wpLink.label || t('Back to the website') : serverHost ? wpLink.label : t('Back to WordPress')}</span></a>
-          {#if serverHost && wpCfg?.logout}<a href={wpCfg.logout} class="item"><LogOut size={18} strokeWidth={1.8} /><span>{t('Log out')}</span></a>{/if}
+          <a href={wpLink.url} class="item"><WpIcon size={18} /><span>{viewer ? wpLink.label || t('Back to the website') : serverHost ? wpLink.label : t('Back to WordPress')}</span></a>
+          {#if serverHost && wpCfg?.logout}<a href={wpCfg.logout} class="item"><LogOut size={18} /><span>{t('Log out')}</span></a>{/if}
           {#if !viewer}<p class="wp-state small" class:err={!!wpSave.error} role="status">{wpSave.error ? t('Not saved yet, retrying…') : wpSave.saving ? t('Saving…') : serverHost ? t('Saved on the server') : t('Saved in WordPress')}</p>{/if}
         </div>
       {/if}
       {#if !viewer}
         <div class="report-link">
-          <button type="button" class="item" onclick={() => ((report = true), (ui.menuOpen = false))}><Bug size={18} strokeWidth={1.8} /><span>{t('Report a problem')}</span></button>
+          <button type="button" class="item" onclick={() => ((report = true), (ui.menuOpen = false))}><Bug size={18} /><span>{t('Report a problem')}</span></button>
           <!-- discreet: a quiet line, never in the family website -->
-          <a class="item support" href={supportUrl(lang())} target="_blank" rel="noopener" onclick={() => (ui.menuOpen = false)}><Heart size={18} strokeWidth={1.8} /><span>{t('Support the project')}</span></a>
+          <a class="item support" href={supportUrl(lang())} target="_blank" rel="noopener" onclick={() => (ui.menuOpen = false)}><Heart size={18} /><span>{t('Support the project')}</span></a>
         </div>
       {/if}
       <div class="foot small faint">
@@ -295,7 +329,7 @@
     <header class="topbar no-print">
       <button class="btn ghost icon" onclick={() => (ui.menuOpen = true)} aria-label={t('Menu')}><MenuIcon size={20} /></button>
       <a href="#/" class="tb-title name">{title}</a>
-      <div class="tb-search"><QuickSearch compact /></div>
+      {#if canSearch}<button class="btn soft icon tb-search" onclick={() => (palette = true)} aria-label={t('Search')}><SearchIcon size={20} /></button>{/if}
     </header>
 
     <main class="main" class:with-back={withBack}>
@@ -380,17 +414,18 @@
       {#each tabs as item (item!.path)}
         {@const Icon = item!.icon}
         <a href="#{item!.path}" class:on={isActive(item!.path, route.path)}>
-          <Icon size={21} strokeWidth={1.8} />
+          <Icon size={24} />
           <span>{(item!.short || item!.label)()}</span>
         </a>
       {/each}
       <button onclick={() => (ui.menuOpen = true)}>
-        <More size={21} strokeWidth={1.8} />
+        <More size={24} />
         <span>{t('More')}</span>
       </button>
     </nav>
   </div>
 
+  {#if palette}<SearchPalette onclose={() => (palette = false)} />{/if}
   {#if !viewer}<UpdateBanner /><ProgressBar />{/if}
   <div class="toasts" aria-live="polite">
     {#each ui.toasts as tt (tt.id)}
@@ -448,7 +483,7 @@
     align-items: center;
     gap: 4px;
     padding: 16px 0;
-    background: var(--paper);
+    background: var(--surface-2);
     box-sizing: border-box;
   }
   .dock-logo {
@@ -503,8 +538,32 @@
   .dk.on .dk-l {
     font-weight: 680;
   }
+  .dk.search {
+    margin-bottom: 10px;
+  }
+  .dk.search .dk-ic {
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+  .dk.search kbd {
+    display: block;
+    font: inherit;
+    font-size: 0.66rem;
+    color: var(--faint);
+    margin-top: 1px;
+  }
+  .dk.support {
+    margin-top: auto;
+    color: var(--muted);
+  }
+  .dk.support .dk-l {
+    font-weight: 450;
+  }
   .dk.more {
     margin-top: auto;
+  }
+  .dk.support + .dk.more {
+    margin-top: 2px;
   }
   .dot {
     position: absolute;
@@ -514,7 +573,7 @@
     height: 9px;
     border-radius: 50%;
     background: var(--heirloom);
-    box-shadow: 0 0 0 2px var(--paper);
+    box-shadow: 0 0 0 2px var(--surface-2);
   }
   .rail {
     position: fixed;
@@ -778,7 +837,6 @@
     .shell {
       padding-inline-start: 0;
       padding-top: var(--topbar);
-      padding-bottom: calc(var(--tabbar) + env(safe-area-inset-bottom));
     }
     .rail {
       inset-inline-start: 0;
@@ -823,54 +881,59 @@
       min-width: 0;
     }
     .tb-search {
-      flex: 0 1 220px;
-      min-width: 0;
+      flex: none;
+      border-radius: 999px;
     }
+    /* floating pill in the accent color; the active place is a white circle */
     .tabbar {
       display: flex;
+      gap: 6px;
       position: fixed;
-      bottom: 0;
-      inset-inline: 0;
-      height: calc(var(--tabbar) + env(safe-area-inset-bottom));
-      padding-bottom: env(safe-area-inset-bottom);
-      /* solid: names scrolled under the bar made its labels hard to read */
-      background: var(--surface);
-      border-top: 1px solid var(--line);
+      left: 50%;
+      bottom: calc(22px + env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: var(--ink);
+      box-shadow: 0 10px 30px rgba(18, 22, 19, 0.2);
       z-index: 50;
+      animation: navup 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s both;
+    }
+    :global([dir='rtl']) .tabbar {
+      transform: translateX(50%);
+      left: auto;
+      right: 50%;
     }
     .tabbar a,
     .tabbar button {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      font: inherit;
-      font-size: 0.7rem;
-      color: var(--muted);
-      text-decoration: none;
+      width: 48px;
+      height: 48px;
+      flex: none;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      color: color-mix(in srgb, var(--surface) 86%, transparent);
       background: none;
       border: 0;
       cursor: pointer;
-      min-width: 0;
-    }
-    .tabbar span {
-      max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      padding: 0 2px;
+      transition: background 0.2s, color 0.2s;
     }
     .tabbar a.on {
+      background: var(--surface);
       color: var(--ink);
-      font-weight: 650;
     }
-    .tabbar a.on :global(svg) {
-      background: var(--ink-soft);
-      border-radius: 999px;
-      padding: 3px 14px;
-      box-sizing: content-box;
+    .tabbar span {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
+    @keyframes navup {
+      from {
+        opacity: 0;
+        translate: 0 30px;
+      }
     }
     .toasts {
       bottom: calc(var(--tabbar) + 14px + env(safe-area-inset-bottom));

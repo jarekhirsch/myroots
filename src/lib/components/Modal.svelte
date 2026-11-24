@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import X from '@lucide/svelte/icons/x';
+  import X from '../icons/X.svelte';
   import { t } from '../i18n/index.svelte';
   let { title = '', onclose, children, footer, wide = false }: { title?: string; onclose: () => void; children: Snippet; footer?: Snippet; wide?: boolean } = $props();
   let dlg: HTMLDivElement;

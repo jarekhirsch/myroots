@@ -9,8 +9,8 @@
   import RichText from '../lib/components/RichText.svelte';
   import PhotoField from '../lib/components/PhotoField.svelte';
   import GalleryEditor from '../lib/components/GalleryEditor.svelte';
-  import X from '@lucide/svelte/icons/x';
-  import Plus from '@lucide/svelte/icons/plus';
+  import X from '../lib/icons/X.svelte';
+  import Plus from '../lib/icons/Plus.svelte';
   import type { Source, SourceView, GalleryItem } from '../lib/types';
 
   let { id }: { id: number | null } = $props();

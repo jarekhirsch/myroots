@@ -6,8 +6,8 @@
   import { toast, confirmDialog } from '../lib/ui.svelte';
   import { pickFile } from '../lib/media';
   import Modal from '../lib/components/Modal.svelte';
-  import Trash from '@lucide/svelte/icons/trash';
-  import Paste from '@lucide/svelte/icons/clipboard-paste';
+  import Trash from '../lib/icons/Trash.svelte';
+  import Paste from '../lib/icons/ClipboardText.svelte';
   import type { Suggestion } from '../lib/types';
 
   const list = useLoad(() => call<Suggestion[]>('suggestions.list'));

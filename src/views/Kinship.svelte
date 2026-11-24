@@ -7,7 +7,7 @@
   import PersonPicker from '../lib/components/PersonPicker.svelte';
   import Avatar from '../lib/components/Avatar.svelte';
   import NotFound from './NotFound.svelte';
-  import Swap from '@lucide/svelte/icons/arrow-left-right';
+  import Swap from '../lib/icons/ArrowsLeftRight.svelte';
   import type { KinshipResult } from '../lib/types';
 
   let a = $state<number | null>(route.query.a ? Number(route.query.a) : null);

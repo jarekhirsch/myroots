@@ -9,9 +9,9 @@
   import { t, tn } from '../i18n/index.svelte';
   import { toast } from '../ui.svelte';
   import { errorText } from '../errors';
-  import BookMarked from '@lucide/svelte/icons/book-marked';
-  import Plus from '@lucide/svelte/icons/plus';
-  import X from '@lucide/svelte/icons/x';
+  import BookMarked from '../icons/BookBookmark.svelte';
+  import Plus from '../icons/Plus.svelte';
+  import X from '../icons/X.svelte';
   import { QUALITY } from '../citations';
   import type { Citation, SourceBrief } from '../types';
 

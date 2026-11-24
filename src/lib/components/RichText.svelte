@@ -4,14 +4,14 @@
   import DOMPurify from 'dompurify';
   import { t } from '../i18n/index.svelte';
   import { promptDialog } from '../ui.svelte';
-  import Bold from '@lucide/svelte/icons/bold';
-  import Italic from '@lucide/svelte/icons/italic';
-  import Heading from '@lucide/svelte/icons/heading-2';
-  import ListUl from '@lucide/svelte/icons/list';
-  import ListOl from '@lucide/svelte/icons/list-ordered';
-  import Quote from '@lucide/svelte/icons/quote';
-  import LinkIcon from '@lucide/svelte/icons/link';
-  import Eraser from '@lucide/svelte/icons/remove-formatting';
+  import Bold from '../icons/TextB.svelte';
+  import Italic from '../icons/TextItalic.svelte';
+  import Heading from '../icons/TextHTwo.svelte';
+  import ListUl from '../icons/ListBullets.svelte';
+  import ListOl from '../icons/ListNumbers.svelte';
+  import Quote from '../icons/Quotes.svelte';
+  import LinkIcon from '../icons/Link.svelte';
+  import Eraser from '../icons/TextTSlash.svelte';
 
   let { value = $bindable(''), label = '', minHeight = 140 }: { value?: string; label?: string; minHeight?: number } = $props();
   let el: HTMLDivElement;

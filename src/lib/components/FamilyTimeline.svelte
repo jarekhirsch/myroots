@@ -11,12 +11,12 @@
   import { tone } from '../text';
   import Avatar from './Avatar.svelte';
   import MiniDots from './MiniDots.svelte';
-  import Plus from '@lucide/svelte/icons/zoom-in';
-  import Minus from '@lucide/svelte/icons/zoom-out';
-  import Fit from '@lucide/svelte/icons/move-horizontal';
-  import Chevron from '@lucide/svelte/icons/chevron-down';
-  import Fold from '@lucide/svelte/icons/fold-vertical';
-  import Unfold from '@lucide/svelte/icons/unfold-vertical';
+  import Plus from '../icons/MagnifyingGlassPlus.svelte';
+  import Minus from '../icons/MagnifyingGlassMinus.svelte';
+  import Fit from '../icons/ArrowsHorizontal.svelte';
+  import Chevron from '../icons/CaretDown.svelte';
+  import Fold from '../icons/ArrowsInLineVertical.svelte';
+  import Unfold from '../icons/ArrowsOutLineVertical.svelte';
   import type { TreeNode } from '../types';
 
   let { only = null }: { only?: Set<string> | null } = $props();

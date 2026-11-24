@@ -12,17 +12,17 @@
   import { tone } from '../lib/text';
   import { initials } from '../lib/format';
   import PersonPicker from '../lib/components/PersonPicker.svelte';
-  import Printer from '@lucide/svelte/icons/printer';
-  import Download from '@lucide/svelte/icons/download';
-  import FanIcon from '@lucide/svelte/icons/fan';
-  import Tree from '@lucide/svelte/icons/network';
+  import Printer from '../lib/icons/Printer.svelte';
+  import Download from '../lib/icons/DownloadSimple.svelte';
+  import FanIcon from '../lib/icons/Fan.svelte';
+  import Tree from '../lib/icons/TreeStructure.svelte';
   import fontLatin from '@fontsource-variable/literata/files/literata-latin-wght-normal.woff2?url';
   import fontExt from '@fontsource-variable/literata/files/literata-latin-ext-wght-normal.woff2?url';
   import uiLatin from '@fontsource-variable/onest/files/onest-latin-wght-normal.woff2?url';
   import uiExt from '@fontsource-variable/onest/files/onest-latin-ext-wght-normal.woff2?url';
   import { svgToPdf } from '../lib/pdf';
   import { AUTHOR } from '../lib/credits';
-  import FileDown from '@lucide/svelte/icons/file-down';
+  import FileDown from '../lib/icons/FileArrowDown.svelte';
   import type { TreeNode } from '../lib/types';
 
   let { id = null }: { id?: number | null } = $props();

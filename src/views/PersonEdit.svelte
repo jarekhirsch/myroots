@@ -17,10 +17,10 @@
   import CitationButton from '../lib/components/CitationButton.svelte';
   import { FACTS, perFact, personCites, withPersonCites } from '../lib/citations';
   import { ROLES, roleLabel } from '../lib/assoc';
-  import Plus from '@lucide/svelte/icons/plus';
-  import X from '@lucide/svelte/icons/x';
-  import Up from '@lucide/svelte/icons/arrow-up';
-  import Down from '@lucide/svelte/icons/arrow-down';
+  import Plus from '../lib/icons/Plus.svelte';
+  import X from '../lib/icons/X.svelte';
+  import Up from '../lib/icons/ArrowUp.svelte';
+  import Down from '../lib/icons/ArrowDown.svelte';
   import type { Person, Union, EditModel, SourceBrief, Grave, Citation } from '../lib/types';
 
   let { id }: { id: number | null } = $props();

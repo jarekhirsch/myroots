@@ -3,7 +3,7 @@
   // natural parent: profile → people, edit → profile …).
   import { back, canGoBack, route } from '../router.svelte';
   import { t } from '../i18n/index.svelte';
-  import ArrowLeft from '@lucide/svelte/icons/arrow-left';
+  import ArrowLeft from '../icons/ArrowLeft.svelte';
 
   let { pill = false }: { pill?: boolean } = $props();
   const show = $derived((void route.path, void route.query, canGoBack()));

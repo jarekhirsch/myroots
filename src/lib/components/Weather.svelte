@@ -3,14 +3,14 @@
   import { weatherFor, weatherKind, weatherLabel } from '../weather';
   import { fmtNumber } from '../format';
   import { t } from '../i18n/index.svelte';
-  import Sun from '@lucide/svelte/icons/sun';
-  import CloudSun from '@lucide/svelte/icons/cloud-sun';
-  import Cloud from '@lucide/svelte/icons/cloud';
-  import CloudFog from '@lucide/svelte/icons/cloud-fog';
-  import CloudDrizzle from '@lucide/svelte/icons/cloud-drizzle';
-  import CloudRain from '@lucide/svelte/icons/cloud-rain';
-  import CloudSnow from '@lucide/svelte/icons/cloud-snow';
-  import CloudLightning from '@lucide/svelte/icons/cloud-lightning';
+  import Sun from '../icons/Sun.svelte';
+  import CloudSun from '../icons/CloudSun.svelte';
+  import Cloud from '../icons/Cloud.svelte';
+  import CloudFog from '../icons/CloudFog.svelte';
+  import CloudDrizzle from '../icons/CloudRain.svelte';
+  import CloudRain from '../icons/CloudRain.svelte';
+  import CloudSnow from '../icons/CloudSnow.svelte';
+  import CloudLightning from '../icons/CloudLightning.svelte';
   import type { DayWeather } from '../types';
 
   let { place, date, fetch = false, onshown }: { place: string; date: string; fetch?: boolean; onshown?: () => void } = $props();

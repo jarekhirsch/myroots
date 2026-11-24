@@ -12,13 +12,13 @@
   import Img from './Img.svelte';
   import Html from './Html.svelte';
   import AddRelative from './AddRelative.svelte';
-  import X from '@lucide/svelte/icons/x';
-  import User from '@lucide/svelte/icons/user';
-  import Pencil from '@lucide/svelte/icons/pencil';
-  import Crosshair from '@lucide/svelte/icons/crosshair';
-  import Plus from '@lucide/svelte/icons/plus';
-  import Up from '@lucide/svelte/icons/chevron-up';
-  import Down from '@lucide/svelte/icons/chevron-down';
+  import X from '../icons/X.svelte';
+  import User from '../icons/User.svelte';
+  import Pencil from '../icons/PencilSimple.svelte';
+  import Crosshair from '../icons/Crosshair.svelte';
+  import Plus from '../icons/Plus.svelte';
+  import Up from '../icons/CaretUp.svelte';
+  import Down from '../icons/CaretDown.svelte';
   import type { Profile, Summary } from '../types';
 
   let {

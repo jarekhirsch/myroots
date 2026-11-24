@@ -4,9 +4,9 @@
   import { t, tn } from '../lib/i18n/index.svelte';
   import { fmtNumber } from '../lib/format';
   import Avatar from '../lib/components/Avatar.svelte';
-  import Check from '@lucide/svelte/icons/circle-check';
-  import Alert from '@lucide/svelte/icons/circle-alert';
-  import Warn from '@lucide/svelte/icons/triangle-alert';
+  import Check from '../lib/icons/CheckCircle.svelte';
+  import Alert from '../lib/icons/WarningCircle.svelte';
+  import Warn from '../lib/icons/Warning.svelte';
   import type { Issue, Completeness, Summary } from '../lib/types';
 
   let tab = $state<'issues' | 'complete'>('issues');

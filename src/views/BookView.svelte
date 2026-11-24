@@ -13,7 +13,7 @@
   import Html from '../lib/components/Html.svelte';
   import LifelineList from '../lib/components/LifelineList.svelte';
   import NotFound from './NotFound.svelte';
-  import Printer from '@lucide/svelte/icons/printer';
+  import Printer from '../lib/icons/Printer.svelte';
   import type { Book, Chapter, Profile, Lifeline, ClanInfo } from '../lib/types';
 
   const blocked = $derived(app.info?.viewer && app.info?.sections?.list === false);

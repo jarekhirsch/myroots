@@ -4,7 +4,7 @@
   import { errorText } from '../errors';
   import { t } from '../i18n/index.svelte';
   import Avatar from './Avatar.svelte';
-  import X from '@lucide/svelte/icons/x';
+  import X from '../icons/X.svelte';
   import { search } from '../text';
   import type { Summary } from '../types';
 

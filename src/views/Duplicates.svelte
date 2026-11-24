@@ -10,7 +10,7 @@
   import Modal from '../lib/components/Modal.svelte';
   import PersonPicker from '../lib/components/PersonPicker.svelte';
   import Img from '../lib/components/Img.svelte';
-  import Merge from '@lucide/svelte/icons/git-merge';
+  import Merge from '../lib/icons/GitMerge.svelte';
   import type { MergeSuggestion, Comparison, MergeItem, Person } from '../lib/types';
 
   const sug = useLoad(() => call<MergeSuggestion[]>('merge.suggestions'));

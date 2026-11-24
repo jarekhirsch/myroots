@@ -4,7 +4,7 @@
   import { t, tn } from '../lib/i18n/index.svelte';
   import { toast, confirmDialog, promptDialog } from '../lib/ui.svelte';
   import { errorText } from '../lib/errors';
-  import Plus from '@lucide/svelte/icons/plus';
+  import Plus from '../lib/icons/Plus.svelte';
   import type { ClanInfo } from '../lib/types';
 
   const clans = useLoad(() => call<ClanInfo[]>('clans.list'));

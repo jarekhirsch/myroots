@@ -1166,5 +1166,10 @@
  "The server could not send your data. Try again in a moment; if it keeps happening, the hosting may need more PHP memory (memory_limit).": "השרת לא הצליח לשלוח את הנתונים. נסו שוב בעוד רגע; אם זה נמשך, ייתכן שהאחסון צריך יותר זיכרון PHP ‏(memory_limit).",
  "The map uses OpenStreetMap data: the map background is loaded from OpenFreeMap, place names are sent to a search service (Nominatim, Photon) to find coordinates, and cemeteries come from Overpass. Nothing else leaves your device.": "המפה משתמשת בנתוני OpenStreetMap: רקע המפה נטען מ-OpenFreeMap, שמות מקומות נשלחים לשירות חיפוש (Nominatim, Photon) כדי למצוא קואורדינטות, ובתי הקברות מגיעים מ-Overpass. שום דבר אחר לא יוצא מהמכשיר.",
  "Use the online map (OpenStreetMap data; the map background is loaded from OpenFreeMap)": "שימוש במפה המקוונת (נתוני OpenStreetMap; הרקע נטען מ-OpenFreeMap)",
- "Support the project": "תמכו בפרויקט"
+ "Support the project": "תמכו בפרויקט",
+ "Support": "תמיכה",
+ "Pages": "עמודים",
+ "Actions": "פעולות",
+ "Add a person": "הוספת אדם",
+ "Type a name, a place or a year.": "הקלידו שם, מקום או שנה."
 }

@@ -9,9 +9,9 @@
     import { openLightbox, toast } from '../lib/ui.svelte';
   import Avatar from '../lib/components/Avatar.svelte';
   import Img from '../lib/components/Img.svelte';
-  import Route from '@lucide/svelte/icons/route';
-  import Printer from '@lucide/svelte/icons/printer';
-  import Flower from '@lucide/svelte/icons/flower-2';
+  import Route from '../lib/icons/Signpost.svelte';
+  import Printer from '../lib/icons/Printer.svelte';
+  import Flower from '../lib/icons/FlowerTulip.svelte';
   import 'leaflet/dist/leaflet.css';
   import 'leaflet.markercluster/dist/MarkerCluster.css';
   import { haystack, norm, words } from '../lib/text';

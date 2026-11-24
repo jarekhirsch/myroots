@@ -10,8 +10,8 @@
   import { downloadWpMedia, attachLocalFiles, type WpProgress } from '../lib/wpmedia';
   import { attachGedcomMedia, imagesFromZip, imagesFromFiles, type MediaFiles, type MediaImport } from '../lib/gedmedia';
   import { zipEntries, zipBytes, type ZipEntry } from '../lib/zipindex';
-  import FileUp from '@lucide/svelte/icons/file-up';
-  import FileDown from '@lucide/svelte/icons/file-down';
+  import FileUp from '../lib/icons/FileArrowUp.svelte';
+  import FileDown from '../lib/icons/FileArrowDown.svelte';
   import type { GedcomReport, WpReport, WpPending } from '../lib/types';
 
   let people = $state(0);

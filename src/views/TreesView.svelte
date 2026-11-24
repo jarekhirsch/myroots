@@ -6,11 +6,11 @@
   import { errorText } from '../lib/errors';
   import { backend } from '../lib/backend';
   import { trees, loadTrees, treeLabel, openTree, createTree, renameTree, removeTree, hasTrees } from '../lib/trees.svelte';
-  import FolderTree from '@lucide/svelte/icons/folder-tree';
-  import Plus from '@lucide/svelte/icons/plus';
-  import Pencil from '@lucide/svelte/icons/pencil';
-  import Trash from '@lucide/svelte/icons/trash-2';
-  import Check from '@lucide/svelte/icons/check';
+  import FolderTree from '../lib/icons/Folders.svelte';
+  import Plus from '../lib/icons/Plus.svelte';
+  import Pencil from '../lib/icons/PencilSimple.svelte';
+  import Trash from '../lib/icons/Trash.svelte';
+  import Check from '../lib/icons/Check.svelte';
 
   let busy = $state(false);
   let people = $state<number | null>(null);

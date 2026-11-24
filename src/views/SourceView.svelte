@@ -10,9 +10,9 @@
   import Html from '../lib/components/Html.svelte';
   import PersonLink from '../lib/components/PersonLink.svelte';
   import NotFound from './NotFound.svelte';
-  import Pencil from '@lucide/svelte/icons/pencil';
-  import Trash from '@lucide/svelte/icons/trash';
-  import Ext from '@lucide/svelte/icons/external-link';
+  import Pencil from '../lib/icons/PencilSimple.svelte';
+  import Trash from '../lib/icons/Trash.svelte';
+  import Ext from '../lib/icons/ArrowSquareOut.svelte';
   import type { SourceView } from '../lib/types';
 
   let { id }: { id: number } = $props();

@@ -6,9 +6,9 @@
   import { pickAudio, canRecord } from '../audio';
   import { toast } from '../ui.svelte';
   import { t } from '../i18n/index.svelte';
-  import Upload from '@lucide/svelte/icons/upload';
-  import Mic from '@lucide/svelte/icons/mic';
-  import X from '@lucide/svelte/icons/x';
+  import Upload from '../icons/UploadSimple.svelte';
+  import Mic from '../icons/Microphone.svelte';
+  import X from '../icons/X.svelte';
   import type { Recording } from '../types';
 
   let { items = $bindable([]), name = '' }: { items?: Recording[]; name?: string } = $props();

@@ -1166,5 +1166,10 @@
  "The server could not send your data. Try again in a moment; if it keeps happening, the hosting may need more PHP memory (memory_limit).": "Palvelin ei voinut lähettää tietojasi. Yritä hetken päästä uudelleen; jos ongelma jatkuu, palvelu voi tarvita enemmän PHP-muistia (memory_limit).",
  "The map uses OpenStreetMap data: the map background is loaded from OpenFreeMap, place names are sent to a search service (Nominatim, Photon) to find coordinates, and cemeteries come from Overpass. Nothing else leaves your device.": "Kartta käyttää OpenStreetMapin tietoja: karttapohja ladataan OpenFreeMapista, paikannimet lähetetään hakupalveluun (Nominatim, Photon) koordinaattien löytämiseksi ja hautausmaat tulevat Overpassista. Mikään muu ei lähde laitteeltasi.",
  "Use the online map (OpenStreetMap data; the map background is loaded from OpenFreeMap)": "Käytä verkkokarttaa (OpenStreetMapin tiedot, karttapohja OpenFreeMapista)",
- "Support the project": "Tue projektia"
+ "Support the project": "Tue projektia",
+ "Support": "Tue",
+ "Pages": "Sivut",
+ "Actions": "Toiminnot",
+ "Add a person": "Lisää henkilö",
+ "Type a name, a place or a year.": "Kirjoita nimi, paikka tai vuosi."
 }

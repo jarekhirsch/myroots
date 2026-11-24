@@ -10,9 +10,9 @@
   import { t, tn } from '../i18n/index.svelte';
   import { year as yearOf } from '../format';
   import { slug, stamp } from '../backend/util';
-  import Play from '@lucide/svelte/icons/play';
-  import Pause from '@lucide/svelte/icons/pause';
-  import Download from '@lucide/svelte/icons/download';
+  import Play from '../icons/Play.svelte';
+  import Pause from '../icons/Pause.svelte';
+  import Download from '../icons/DownloadSimple.svelte';
   import type { AgingFrame } from '../types';
 
   let {

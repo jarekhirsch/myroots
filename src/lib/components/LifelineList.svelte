@@ -11,7 +11,7 @@
   import type { PlaceUse } from '../types';
   import { exactDay, refreshPlaces } from '../weather';
   import { backgroundEvents, historyShown, setHistoryShown, type Background } from '../history';
-  import Landmark from '@lucide/svelte/icons/landmark';
+  import Landmark from '../icons/Bank.svelte';
   import type { Lifeline, LEvent } from '../types';
 
   let { data, ruler = true, weather = true, history = true }: { data: Lifeline; ruler?: boolean; weather?: boolean; history?: boolean } = $props();

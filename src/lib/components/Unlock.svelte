@@ -2,7 +2,7 @@
   // Password of a protected family website (the whole website or chosen people).
   import { t, tn } from '../i18n/index.svelte';
   import { tryPassword, rememberKey, type LockHeader } from '../sitelock';
-  import LockIcon from '@lucide/svelte/icons/lock-keyhole';
+  import LockIcon from '../icons/LockKey.svelte';
 
   let { header, page = false }: { header: LockHeader; page?: boolean } = $props();
 

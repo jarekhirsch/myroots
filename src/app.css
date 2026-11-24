@@ -54,21 +54,22 @@
    Fills instead of borders; radius hierarchy 20 / 16 / 12 / pill. */
 
 :root {
-  --ink: #1d5a44; /* forest: primary actions, active state */
-  --ink-2: #2f7259;
-  --ink-soft: rgba(29, 90, 68, 0.09);
+  --ink: #1f4a37; /* forest: the one strong action, active state */
+  --ink-2: #2e624b;
+  --ink-soft: rgba(31, 74, 55, 0.09);
   --heirloom: #c49a6c; /* sand: anniversaries, highlights */
   --heirloom-soft: rgba(196, 154, 108, 0.18);
   --heirloom-text: #8a6236;
-  --paper: #f6f8f6;
+  /* Light and white: groups come from spacing and hairlines, not from panels. */
+  --paper: #ffffff;
   --surface: #ffffff;
-  --surface-2: #f0f4f1;
-  --sage: #dfe9e3;
-  --text: #17201b;
-  --muted: #56645b;
+  --surface-2: #f4f6f2; /* soft: icon buttons, chips without a photo, inputs */
+  --sage: #e8ede6;
+  --text: #121613;
+  --muted: #5b645d;
   --faint: #8a978f;
-  --line: #e3eae5;
-  --line-strong: #cdd8d1;
+  --line: #e6e9e4;
+  --line-strong: #d3d9d2;
   --danger: #b4423c;
   --danger-soft: rgba(180, 66, 60, 0.1);
   --ok: #2f7a52;
@@ -100,18 +101,18 @@
   --font-ui: 'Onest Variable', 'Onest', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
   --font-name: var(--font-ui);
   --fs: 15.5px;
-  --radius-lg: 20px;
+  --radius-lg: 22px;
   --radius: 16px;
   --radius-sm: 12px;
   /* One elevation tier: a hairline ring plus a short soft drop. Raised = hover,
      dropdowns and the search bar; pop = dialogs only. */
-  --shadow: 0 0 0 1px rgba(23, 32, 27, 0.05), 0 1px 2px rgba(23, 32, 27, 0.03);
+  --shadow: 0 0 0 1px var(--line);
   --shadow-raised: 0 0 0 1px rgba(23, 32, 27, 0.04), 0 2px 6px rgba(23, 32, 27, 0.05), 0 6px 14px rgba(23, 32, 27, 0.07);
   --shadow-pop: 0 18px 50px rgba(15, 42, 33, 0.18), 0 2px 6px rgba(15, 42, 33, 0.08);
   --rail: 280px;
   --dock: 84px;
   --topbar: 58px;
-  --tabbar: 66px;
+  --tabbar: 96px; /* room kept for the floating tab bar on the phone */
   color-scheme: light;
 }
 
@@ -222,13 +223,14 @@ h3,
 h4 {
   line-height: 1.15;
   margin: 0 0 0.5em;
-  font-weight: 650;
+  font-weight: 600;
   letter-spacing: -0.015em;
 }
 h1 {
-  font-size: 2.1rem;
-  letter-spacing: -0.032em;
-  font-weight: 680;
+  font-size: 2.6rem;
+  letter-spacing: -0.025em;
+  font-weight: 600;
+  line-height: 1.1;
 }
 h2 {
   font-size: 1.18rem;
@@ -335,7 +337,7 @@ section.block > h2 {
     padding: 22px 16px 110px;
   }
   h1 {
-    font-size: 1.7rem;
+    font-size: 1.85rem;
   }
   .panel {
     padding: 16px 16px;
@@ -352,18 +354,21 @@ section.block > h2 {
   padding: 8px 18px;
   border-radius: 999px;
   border: 0;
-  background: var(--surface-2);
+  /* outlined: one filled (primary) action per screen, the rest stay quiet */
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line);
   color: var(--text);
   font: inherit;
   font-size: 0.94rem;
-  font-weight: 560;
+  font-weight: 500;
   cursor: pointer;
   text-decoration: none;
   white-space: nowrap;
-  transition: background 0.15s, color 0.15s, transform 0.1s;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s, transform 0.1s;
 }
 .btn:hover {
-  background: var(--sage);
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
 }
 .btn:active {
   transform: scale(0.98);
@@ -376,19 +381,29 @@ section.block > h2 {
 .btn.primary {
   background: var(--ink);
   color: var(--surface);
+  box-shadow: none;
 }
 .btn.primary:hover {
   background: var(--ink-2);
 }
+.btn.soft {
+  background: var(--surface-2);
+  box-shadow: none;
+}
+.btn.soft:hover {
+  background: var(--sage);
+}
 .btn.danger {
   color: var(--danger);
   background: var(--danger-soft);
+  box-shadow: none;
 }
 .btn.danger:hover {
   background: color-mix(in srgb, var(--danger) 18%, transparent);
 }
 .btn.ghost {
   background: transparent;
+  box-shadow: none;
 }
 .btn.ghost:hover {
   background: var(--ink-soft);
@@ -414,6 +429,61 @@ section.block > h2 {
 }
 .btn svg {
   flex-shrink: 0;
+}
+/* The one strong action: a round button in the accent color (arrow or plus). */
+.btn.round {
+  width: 52px;
+  height: 52px;
+  min-height: 0;
+  padding: 0;
+  background: var(--ink);
+  color: var(--surface);
+  box-shadow: none;
+  flex: none;
+}
+.btn.round:hover {
+  background: var(--ink-2);
+}
+.btn.round.sm {
+  width: 44px;
+  height: 44px;
+}
+.btn.round svg {
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.btn.round:hover svg.turn,
+a:hover > .btn.round svg.turn {
+  transform: rotate(45deg);
+}
+
+/* ---------- glass labels on photos ---------- */
+.glass {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: nowrap;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  backdrop-filter: blur(14px) saturate(1.4);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+.glass.dark {
+  background: rgba(18, 22, 19, 0.55);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+/* ---------- big thin numbers (years on timelines, counters) ---------- */
+.num-thin {
+  font-weight: 220;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  font-variant-numeric: lining-nums;
 }
 
 /* ---------- forms ---------- */
@@ -619,12 +689,11 @@ button.row {
 }
 
 /* ---------- tabs (segmented) ---------- */
+/* ---------- tabs: text with an accent underline ---------- */
 .tabs {
-  display: inline-flex;
-  gap: 4px;
-  padding: 4px;
-  background: var(--surface-2);
-  border-radius: 999px;
+  display: flex;
+  gap: 22px;
+  border-bottom: 1px solid var(--line);
   margin-bottom: 22px;
   max-width: 100%;
   overflow-x: auto;
@@ -634,21 +703,23 @@ button.row {
   border: 0;
   background: none;
   font: inherit;
-  font-size: 0.92rem;
-  font-weight: 550;
-  padding: 7px 16px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 8px 0 10px;
+  margin-bottom: -1px;
   color: var(--muted);
   cursor: pointer;
-  border-radius: 999px;
+  border-bottom: 2px solid transparent;
   white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
 }
 .tabs button:hover {
   color: var(--text);
 }
 .tabs button[aria-selected='true'] {
-  color: var(--text);
-  background: var(--surface);
-  box-shadow: 0 1px 3px rgba(23, 32, 27, 0.1);
+  color: var(--ink);
+  font-weight: 600;
+  border-bottom-color: var(--ink);
 }
 
 /* ---------- notices ---------- */
@@ -727,6 +798,40 @@ table.data thead th {
 }
 .ev-event {
   --ev: var(--ev-event);
+}
+
+/* ---------- motion ---------- */
+@keyframes mr-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* a page enters block by block */
+.page > * {
+  animation: mr-rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.page > :nth-child(2) {
+  animation-delay: 0.06s;
+}
+.page > :nth-child(3) {
+  animation-delay: 0.12s;
+}
+.page > :nth-child(4) {
+  animation-delay: 0.18s;
+}
+.page > :nth-child(n + 5) {
+  animation-delay: 0.24s;
+}
+.zoom-img img {
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.zoom-img:hover img {
+  transform: scale(1.04);
 }
 
 @media (prefers-reduced-motion: reduce) {

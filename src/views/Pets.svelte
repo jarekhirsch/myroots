@@ -5,7 +5,7 @@
   import { speciesLabel } from '../lib/format';
   import { norm } from '../lib/text';
   import Avatar from '../lib/components/Avatar.svelte';
-  import Plus from '@lucide/svelte/icons/plus';
+  import Plus from '../lib/icons/Plus.svelte';
   import type { PetView } from '../lib/types';
 
   const viewer = $derived(!!app.info?.viewer);

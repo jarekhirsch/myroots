@@ -6,9 +6,9 @@
   import { gpsFromFile } from '../exif';
   import { toast } from '../ui.svelte';
   import { t } from '../i18n/index.svelte';
-  import Crosshair from '@lucide/svelte/icons/locate-fixed';
-  import MapPin from '@lucide/svelte/icons/map-pin';
-  import X from '@lucide/svelte/icons/x';
+  import Crosshair from '../icons/GpsFix.svelte';
+  import MapPin from '../icons/MapPin.svelte';
+  import X from '../icons/X.svelte';
   import type { Grave } from '../types';
 
   let { grave = $bindable(), name = '' }: { grave: Grave; name?: string } = $props();

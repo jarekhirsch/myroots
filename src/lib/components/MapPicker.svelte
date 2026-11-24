@@ -6,7 +6,7 @@
   import { t } from '../i18n/index.svelte';
   import { searchPlaces } from '../geocode';
   import { toast } from '../ui.svelte';
-  import SearchIcon from '@lucide/svelte/icons/search';
+  import SearchIcon from '../icons/MagnifyingGlass.svelte';
   import 'leaflet/dist/leaflet.css';
 
   let {

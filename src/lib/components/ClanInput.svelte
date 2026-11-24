@@ -2,7 +2,7 @@
   // Clans (lineages) of a person: chips + input with suggestions.
   import { call } from '../api.svelte';
   import { t } from '../i18n/index.svelte';
-  import X from '@lucide/svelte/icons/x';
+  import X from '../icons/X.svelte';
   import type { ClanInfo } from '../types';
 
   let { value = $bindable([]) }: { value?: string[] } = $props();

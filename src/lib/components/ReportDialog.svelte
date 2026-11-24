@@ -9,9 +9,9 @@
   import { toast } from '../ui.svelte';
   import { recentErrors } from '../errorlog';
   import { SOURCE_URL, REPORT_EMAIL } from '../credits';
-  import Mail from '@lucide/svelte/icons/mail';
-  import External from '@lucide/svelte/icons/external-link';
-  import Copy from '@lucide/svelte/icons/copy';
+  import Mail from '../icons/EnvelopeSimple.svelte';
+  import External from '../icons/ArrowSquareOut.svelte';
+  import Copy from '../icons/Copy.svelte';
 
   let { onclose }: { onclose: () => void } = $props();
   let what = $state('');

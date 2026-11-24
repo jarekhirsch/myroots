@@ -1,6 +1,6 @@
 <script lang="ts">
   import { t } from '../lib/i18n/index.svelte';
-  import Lock from '@lucide/svelte/icons/lock';
+  import Lock from '../lib/icons/Lock.svelte';
   let { private: priv = false }: { private?: boolean } = $props();
 </script>
 

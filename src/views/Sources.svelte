@@ -5,8 +5,8 @@
   import { fmtDate } from '../lib/format';
   import { norm, stripHtml } from '../lib/text';
   import Img from '../lib/components/Img.svelte';
-  import Plus from '@lucide/svelte/icons/plus';
-  import FileText from '@lucide/svelte/icons/file-text';
+  import Plus from '../lib/icons/Plus.svelte';
+  import FileText from '../lib/icons/FileText.svelte';
   import type { SourceView } from '../lib/types';
 
   const src = useLoad(() => call<SourceView[]>('sources.list'));

@@ -2,8 +2,8 @@
   // A quiet bar at the bottom: a new version of the desktop app is ready.
   import { upd, installUpdate, newsUrl } from '../updates.svelte';
   import { t, locale } from '../i18n/index.svelte';
-  import Download from '@lucide/svelte/icons/download';
-  import X from '@lucide/svelte/icons/x';
+  import Download from '../icons/DownloadSimple.svelte';
+  import X from '../icons/X.svelte';
 </script>
 
 {#if upd.available && !upd.dismissed}

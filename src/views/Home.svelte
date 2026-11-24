@@ -8,13 +8,13 @@
   import Html from '../lib/components/Html.svelte';
   import QuickSearch from '../lib/components/QuickSearch.svelte';
   import FamilyTimeline from '../lib/components/FamilyTimeline.svelte';
-  import UserPlus from '@lucide/svelte/icons/user-plus';
-  import FileUp from '@lucide/svelte/icons/file-up';
-  import Archive from '@lucide/svelte/icons/archive-restore';
-  import Press from '@lucide/svelte/icons/newspaper';
-  import Globe from '@lucide/svelte/icons/globe';
-  import Shield from '@lucide/svelte/icons/shield-check';
-  import MapIcon from '@lucide/svelte/icons/map';
+  import UserPlus from '../lib/icons/UserPlus.svelte';
+  import FileUp from '../lib/icons/FileArrowUp.svelte';
+  import Archive from '../lib/icons/Archive.svelte';
+  import Press from '../lib/icons/Newspaper.svelte';
+  import Globe from '../lib/icons/GlobeSimple.svelte';
+  import Shield from '../lib/icons/ShieldCheck.svelte';
+  import MapIcon from '../lib/icons/MapTrifold.svelte';
   import type { Overview, Anniversary } from '../lib/types';
 
   const viewer = $derived(!!app.info?.viewer);

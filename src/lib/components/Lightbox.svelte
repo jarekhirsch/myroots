@@ -9,18 +9,18 @@
   import { guessPhotoDate, guessToDate, type DateGuess } from '../photodate';
   import { fmtDate } from '../format';
   import DateInput from './DateInput.svelte';
-  import CalendarClock from '@lucide/svelte/icons/calendar-clock';
-  import Sparkles from '@lucide/svelte/icons/sparkles';
+  import CalendarClock from '../icons/CalendarDots.svelte';
+  import Sparkles from '../icons/Sparkle.svelte';
   import { errorText } from '../errors';
   import { t, tn, tx } from '../i18n/index.svelte';
   import Img from './Img.svelte';
   import PersonPicker from './PersonPicker.svelte';
-  import X from '@lucide/svelte/icons/x';
-  import Left from '@lucide/svelte/icons/chevron-left';
-  import Right from '@lucide/svelte/icons/chevron-right';
-  import ScanFace from '@lucide/svelte/icons/scan-face';
-  import Check from '@lucide/svelte/icons/check';
-  import Trash from '@lucide/svelte/icons/trash';
+  import X from '../icons/X.svelte';
+  import Left from '../icons/CaretLeft.svelte';
+  import Right from '../icons/CaretRight.svelte';
+  import ScanFace from '../icons/UserFocus.svelte';
+  import Check from '../icons/Check.svelte';
+  import Trash from '../icons/Trash.svelte';
   import type { MediaView, PhotoTag, TagView } from '../types';
 
   type Rect = [number, number, number, number];

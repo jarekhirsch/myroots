@@ -17,3 +17,4 @@ src-tauri/gen/android/keystore.properties
 _klucze/
 
 __pycache__/
+.shots/

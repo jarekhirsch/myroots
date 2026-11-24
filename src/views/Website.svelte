@@ -5,15 +5,15 @@
   import { toast } from '../lib/ui.svelte';
   import { errorText } from '../lib/errors';
   import RichText from '../lib/components/RichText.svelte';
-  import Globe from '@lucide/svelte/icons/globe';
-  import Upload from '@lucide/svelte/icons/upload-cloud';
-  import External from '@lucide/svelte/icons/external-link';
+  import Globe from '../lib/icons/GlobeSimple.svelte';
+  import Upload from '../lib/icons/CloudArrowUp.svelte';
+  import External from '../lib/icons/ArrowSquareOut.svelte';
   import { locale } from '../lib/i18n/index.svelte';
   import type { WpBackend, SiteState, PublishProgress } from '../lib/backend/wp';
   import type { Settings, SiteLock } from '../lib/types';
   import PersonPicker from '../lib/components/PersonPicker.svelte';
-  import LockIcon from '@lucide/svelte/icons/lock-keyhole';
-  import X from '@lucide/svelte/icons/x';
+  import LockIcon from '../lib/icons/LockKey.svelte';
+  import X from '../lib/icons/X.svelte';
   import { deriveKey } from '../lib/sitelock';
   import { summaries } from '../lib/api.svelte';
 

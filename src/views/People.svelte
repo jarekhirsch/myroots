@@ -6,7 +6,7 @@
   import { year, fmtDateShort } from '../lib/format';
   import { collator, search } from '../lib/text';
   import Avatar from '../lib/components/Avatar.svelte';
-  import UserPlus from '@lucide/svelte/icons/user-plus';
+  import UserPlus from '../lib/icons/UserPlus.svelte';
   import FamilyTimeline from '../lib/components/FamilyTimeline.svelte';
   import type { Summary, ClanInfo } from '../lib/types';
 

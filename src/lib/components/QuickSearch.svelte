@@ -4,8 +4,8 @@
   import { go } from '../router.svelte';
   import { t } from '../i18n/index.svelte';
   import Avatar from './Avatar.svelte';
-  import Search from '@lucide/svelte/icons/search';
-  import ArrowRight from '@lucide/svelte/icons/arrow-right';
+  import Search from '../icons/MagnifyingGlass.svelte';
+  import ArrowRight from '../icons/ArrowRight.svelte';
   import { search, words } from '../text';
   import type { Summary } from '../types';
 

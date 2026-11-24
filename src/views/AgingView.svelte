@@ -17,11 +17,11 @@
   import FramePreview from '../lib/components/FramePreview.svelte';
   import Modal from '../lib/components/Modal.svelte';
   import NotFound from './NotFound.svelte';
-  import Upload from '@lucide/svelte/icons/upload';
-  import Images from '@lucide/svelte/icons/images';
-  import X from '@lucide/svelte/icons/x';
-  import Crosshair from '@lucide/svelte/icons/crosshair';
-  import Check from '@lucide/svelte/icons/check';
+  import Upload from '../lib/icons/UploadSimple.svelte';
+  import Images from '../lib/icons/Images.svelte';
+  import X from '../lib/icons/X.svelte';
+  import Crosshair from '../lib/icons/Crosshair.svelte';
+  import Check from '../lib/icons/Check.svelte';
   import type { Profile, AgingFrame } from '../lib/types';
 
   let { id }: { id: number } = $props();

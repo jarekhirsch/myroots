@@ -36,6 +36,6 @@ export const THIRD_PARTY: { name: string; license: string; url: string }[] = [
   { name: 'face-api (face detection, TensorFlow.js)', license: 'MIT, Apache-2.0', url: 'https://github.com/vladmandic/face-api' },
   { name: 'DOMPurify', license: 'MPL-2.0 / Apache-2.0', url: 'https://github.com/cure53/DOMPurify' },
   { name: 'fflate', license: 'MIT', url: 'https://github.com/101arrowz/fflate' },
-  { name: 'Lucide icons', license: 'ISC', url: 'https://lucide.dev' },
+  { name: 'Phosphor Icons', license: 'MIT', url: 'https://phosphoricons.com' },
   { name: 'Literata, Onest fonts', license: 'SIL OFL 1.1', url: 'https://fontsource.org' },
 ];

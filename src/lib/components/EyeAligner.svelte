@@ -6,9 +6,9 @@
   import { detectEyes } from '../faces';
   import { photoUrl } from '../aging';
   import { t } from '../i18n/index.svelte';
-  import Wand from '@lucide/svelte/icons/wand-sparkles';
-  import ZoomIn from '@lucide/svelte/icons/zoom-in';
-  import ZoomOut from '@lucide/svelte/icons/zoom-out';
+  import Wand from '../icons/MagicWand.svelte';
+  import ZoomIn from '../icons/MagnifyingGlassPlus.svelte';
+  import ZoomOut from '../icons/MagnifyingGlassMinus.svelte';
   import type { AgingFrame } from '../types';
 
   let { frame, onsave, onclose }: { frame: AgingFrame; onsave: (eyes: [number, number, number, number]) => void; onclose: () => void } = $props();

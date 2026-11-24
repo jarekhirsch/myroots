@@ -2,8 +2,8 @@
   // A small player for one recording: play / pause, a scrubbable bar and the time.
   import { audioUrl, fmtTime } from '../audio';
   import { t } from '../i18n/index.svelte';
-  import Play from '@lucide/svelte/icons/play';
-  import Pause from '@lucide/svelte/icons/pause';
+  import Play from '../icons/Play.svelte';
+  import Pause from '../icons/Pause.svelte';
 
   let { media, title = '', sub = '' }: { media: number; title?: string; sub?: string } = $props();
 

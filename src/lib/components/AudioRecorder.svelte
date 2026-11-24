@@ -3,9 +3,9 @@
   import Modal from './Modal.svelte';
   import { recorderMime, storeAudio, fmtTime } from '../audio';
   import { t } from '../i18n/index.svelte';
-  import Mic from '@lucide/svelte/icons/mic';
-  import Square from '@lucide/svelte/icons/square';
-  import RotateCcw from '@lucide/svelte/icons/rotate-ccw';
+  import Mic from '../icons/Microphone.svelte';
+  import Square from '../icons/Square.svelte';
+  import RotateCcw from '../icons/ArrowCounterClockwise.svelte';
 
   let { name = '', onsave, onclose }: { name?: string; onsave: (media: number, title: string) => void; onclose: () => void } = $props();
 
