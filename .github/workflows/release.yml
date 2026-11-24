@@ -30,10 +30,10 @@ jobs:
             args: ''
     runs-on: ${{ matrix.platform }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - uses: dtolnay/rust-toolchain@stable
         with:
@@ -86,10 +86,10 @@ jobs:
     env:
       MSSTORE: ${{ secrets.MSSTORE_CLIENT_SECRET != '' }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - uses: dtolnay/rust-toolchain@stable
       - run: npm ci
@@ -134,10 +134,10 @@ jobs:
       SIGN: ${{ secrets.SIGNPATH_API_TOKEN != '' }}
       UPDATER: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY != '' }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - uses: dtolnay/rust-toolchain@stable
       - run: npm ci
@@ -151,7 +151,7 @@ jobs:
       - name: Upload the app for signing
         if: env.SIGN == 'true'
         id: up-app
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: myroots-exe-unsigned
           path: target/release/myroots.exe
@@ -180,7 +180,7 @@ jobs:
       - name: Upload the installer for signing
         if: env.SIGN == 'true'
         id: up-setup
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: myroots-setup-unsigned
           path: target/release/bundle/nsis/*-setup.exe
@@ -216,7 +216,7 @@ jobs:
           ls target/release/bundle/nsis/
 
       - name: Keep the installer with the run
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: myroots-windows
           path: target/release/bundle/nsis/*-setup.exe*
@@ -231,10 +231,10 @@ jobs:
     needs: desktop
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - run: npm ci
       - run: npm run build:viewer && npm run build:app
