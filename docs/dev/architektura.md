@@ -36,7 +36,7 @@ Uruchomienie: platforma wczytuje wszystkie rekordy i buduje `Database::from_reco
 
 Każde drzewo to osobna baza (folder w Tauri, baza IndexedDB w przeglądarce, osobne tabele / foldery w WP i na serwerze). Lista drzew: `TreesApi` w `backend/types.ts`. Zmiana drzewa przeładowuje stronę.
 
-## Powiązane foldery poza repozytorium (w `~/Downloads/myroots`)
+## Powiązane foldery poza repozytorium (w `~/Documents/myroots`)
 
 | Folder | Co to jest | Jak aktualizować po zmianach w aplikacji |
 |---|---|---|
