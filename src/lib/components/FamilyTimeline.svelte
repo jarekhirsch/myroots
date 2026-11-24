@@ -290,13 +290,13 @@
   }
   .axis {
     position: relative;
-    height: 64px;
+    height: 50px;
   }
   .big {
     position: absolute;
     top: 0;
     transform: translateX(-50%);
-    font-size: 3.3rem;
+    font-size: 2.25rem;
     line-height: 1;
     font-weight: 220;
     letter-spacing: -0.04em;
@@ -538,7 +538,7 @@
   }
   @media (max-width: 640px) {
     .big {
-      font-size: 2.4rem;
+      font-size: 1.7rem;
     }
   }
 </style>

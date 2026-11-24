@@ -83,7 +83,7 @@
         <ol class="tl">
           {#each shown.slice(0, limit) as e, i (i)}
             <li class="ev-{e.kind}">
-              <span class="dt">{fmtDate(e.date)}</span>
+              <span class="dt" title={fmtDate(e.date)}><span class="y num-thin">{year(e.date) ?? ''}</span><span class="dd">{fmtDate(e.date).replace(/\s*\b\d{4}\b\s*/, ' ').trim()}</span></span>
               <div class="card">
                 <a class="who" href="#/person/{e.person}">
                   <Avatar photo={e.photo} name={e.person_name} size={34} />
@@ -156,18 +156,24 @@
     padding: 6px 0;
   }
   .dt {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
     text-align: end;
-    font-size: 0.86rem;
+    font-size: 0.84rem;
     color: var(--muted);
-    padding-top: 10px;
+    padding-top: 8px;
     border-inline-end: 3px solid var(--ev, var(--line));
-    padding-inline-end: 12px;
+    padding-inline-end: 14px;
+  }
+  /* the year leads, big and thin; the day under it */
+  .dt .y {
+    font-size: 1.75rem;
+    color: var(--faint);
   }
   .card {
-    background: var(--surface);
-    box-shadow: var(--shadow);
-    border-radius: var(--radius);
-    padding: 8px 12px;
+    padding: 8px 4px 14px;
   }
   .who {
     display: flex;

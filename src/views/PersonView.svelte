@@ -196,19 +196,20 @@
               {/if}
             </div>
           {/if}
-          {#if sec.tree !== false}<a class="btn" href="#/tree/{id}"><Tree size={16} /> {t('Family tree')}</a>{/if}
-          <span class="icons">
-            {#if sec.map}<a class="btn ghost icon" href="#/map/{id}" title={t('Map')} aria-label={t('Map')}><MapIcon size={18} /></a>{/if}
-            {#if sec.kinship !== false}<a class="btn ghost icon" href="#/kinship?a={id}" title={t('Kinship')} aria-label={t('Kinship')}><Link size={18} /></a>{/if}
-            {#if !viewer || (p.aging?.length || 0) >= 2}<a class="btn ghost icon" href="#/person/{id}/years" title={t('Through the years')} aria-label={t('Through the years')}><Film size={18} /></a>{/if}
-            {#if !viewer && P.revisions}<a class="btn ghost icon" href="#/person/{id}/history" title="{t('History')} ({P.revisions})" aria-label={t('History')}><Clock size={18} /></a>{/if}
-            {#if sec.tree !== false}<a class="btn ghost icon" href="#/poster/{id}" title={t('Poster')} aria-label={t('Poster')}><Frame size={18} /></a>{/if}
-            <button class="btn ghost icon" onclick={printPage} aria-label={t('Print / PDF')} title={t('Print / PDF')}><Printer size={18} /></button>
-          </span>
+          {#if sec.tree !== false}<a class="btn" class:primary={viewer} href="#/tree/{id}"><Tree size={18} /> {t('Family tree')}</a>{/if}
           {#if viewer && app.info?.suggestions?.enabled}
-            <button class="btn ghost" onclick={() => (suggest = true)}><Flag size={16} /> {t('Suggest a correction')}</button>
+            <button class="btn ghost" onclick={() => (suggest = true)}><Flag size={18} /> {t('Suggest a correction')}</button>
           {/if}
-          {#if !viewer}<button class="btn ghost danger icon" onclick={remove} aria-label={t('Delete')} title={t('Delete')}><Trash size={16} /></button>{/if}
+        </div>
+        <!-- the way to everything else about this person, labelled so it reads at a glance -->
+        <div class="tools no-print" role="toolbar" aria-label={t('More about this person')}>
+          {#if sec.map}<a class="btn soft sm" href="#/map/{id}"><MapIcon size={17} /> {t('Map')}</a>{/if}
+          {#if sec.kinship !== false}<a class="btn soft sm" href="#/kinship?a={id}"><Link size={17} /> {t('Kinship')}</a>{/if}
+          {#if !viewer || (p.aging?.length || 0) >= 2}<a class="btn soft sm" href="#/person/{id}/years"><Film size={17} /> {t('Through the years')}</a>{/if}
+          {#if sec.tree !== false}<a class="btn soft sm" href="#/poster/{id}"><Frame size={17} /> {t('Poster')}</a>{/if}
+          {#if !viewer && P.revisions}<a class="btn soft sm" href="#/person/{id}/history" title="{t('History')} ({P.revisions})"><Clock size={17} /> {t('History')}</a>{/if}
+          <button class="btn soft sm" onclick={printPage}><Printer size={17} /> {t('Print / PDF')}</button>
+          {#if !viewer}<button class="btn ghost danger sm icon" onclick={remove} aria-label={t('Delete')} title={t('Delete')}><Trash size={17} /></button>{/if}
         </div>
       </div>
     </header>
@@ -509,22 +510,33 @@
   }
   .hero {
     display: flex;
-    gap: 34px;
-    align-items: center;
-    margin: 8px 0 36px;
+    gap: 40px;
+    align-items: flex-end;
+    margin: 8px 0 40px;
   }
   .photo {
     border: 0;
     padding: 0;
     background: none;
-    border-radius: 50px;
+    border-radius: 28px;
+    overflow: hidden;
     cursor: zoom-in;
     flex-shrink: 0;
-    box-shadow: var(--shadow-raised);
+  }
+  .photo :global(.av) {
+    width: 232px;
+    height: 290px;
+    border-radius: 28px;
+    font-size: 4rem;
+  }
+  .photo :global(img) {
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .photo:hover :global(img) {
+    transform: scale(1.04);
   }
   .photo:disabled {
     cursor: default;
-    box-shadow: none;
   }
   .id {
     min-width: 0;
@@ -532,8 +544,8 @@
   }
   .id h1 {
     margin: 0;
-    font-size: clamp(2rem, 4vw, 2.9rem);
-    letter-spacing: -0.035em;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    letter-spacing: -0.025em;
     line-height: 1.05;
   }
   .maiden {
@@ -566,9 +578,11 @@
     font-size: 0.9rem;
     font-weight: 520;
   }
-  .icons {
-    display: inline-flex;
-    gap: 2px;
+  .tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
   }
   .menu-wrap {
     position: relative;
@@ -764,28 +778,40 @@
     display: none;
   }
   @media (max-width: 640px) {
+    /* the photo leads the profile: full width, the name under it */
     .hero {
-      display: grid;
-      grid-template-columns: 84px minmax(0, 1fr);
-      gap: 0 16px;
-      align-items: center;
-      margin-bottom: 18px;
-    }
-    .id {
-      display: contents;
-    }
-    .id > .actions {
-      grid-column: 1 / -1;
-      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 18px;
+      margin-bottom: 22px;
     }
     .photo,
     .photo :global(.av) {
-      width: 84px !important;
-      height: 84px !important;
+      width: 100% !important;
+      height: auto !important;
+      aspect-ratio: 4 / 4.4;
+      max-height: 440px;
       border-radius: 28px;
     }
+    .photo:disabled :global(.av) {
+      aspect-ratio: 4 / 2.2;
+    }
     .photo :global(.av) {
-      font-size: 1.9rem;
+      font-size: 3rem;
+    }
+    .id > .actions {
+      margin-top: 14px;
+    }
+    .tools {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      margin-inline: -16px;
+      padding-inline: 16px;
+      scrollbar-width: none;
+    }
+    .tools > * {
+      flex: none;
     }
     .id h1 {
       font-size: 1.75rem;

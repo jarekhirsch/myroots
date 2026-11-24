@@ -13,6 +13,7 @@
   import Html from './Html.svelte';
   import AddRelative from './AddRelative.svelte';
   import X from '../icons/X.svelte';
+  import ArrowUpRight from '../icons/ArrowUpRight.svelte';
   import User from '../icons/User.svelte';
   import Pencil from '../icons/PencilSimple.svelte';
   import Crosshair from '../icons/Crosshair.svelte';
@@ -41,6 +42,7 @@
   // On phones the panel is a sheet folded to one line, so the tree stays visible.
   const phone = typeof matchMedia === 'function' && matchMedia('(max-width: 640px)').matches;
   let open = $state(!phone);
+  const cover = $derived(open && !phone && !!p?.photo && !P?.summary.anon);
 
   const facts = $derived.by(() => {
     if (!P || !p) return [] as { label: string; value: string }[];
@@ -78,7 +80,15 @@
 
 {#if P && p}
   <aside class="td" class:folded={!open} aria-label={P.summary.name}>
-    <header>
+    {#if cover}
+      <!-- the photo leads the panel, with the place on a glass label -->
+      <div class="cover">
+        <button class="cv" onclick={() => openLightbox([{ media: p.photo!, caption: P.summary.name }, ...gallery.filter((x) => x.media !== p.photo)])} aria-label={t('Enlarge')}><Img id={p.photo!} alt="" /></button>
+        {#if p.birth_place}<span class="glass where">{p.birth_place.split(',')[0]}</span>{/if}
+        {#if onclose}<button class="glass x" onclick={onclose} aria-label={t('Close')}><X size={18} /></button>{/if}
+      </div>
+    {/if}
+    <header class:withcover={cover}>
       <button class="ph" onclick={() => p.photo && openLightbox([{ media: p.photo, caption: P.summary.name }, ...gallery.filter((x) => x.media !== p.photo)])} disabled={!p.photo} aria-label={t('Enlarge')}>
         <Avatar photo={p.photo} name={P.summary.name} gender={p.gender} size={open ? 64 : 44} anon={P.summary.anon} />
       </button>
@@ -93,13 +103,15 @@
       {#if phone}
         <button class="btn ghost icon sm" onclick={() => (open = !open)} aria-expanded={open} aria-label={open ? t('Hide') : t('Show')}>{#if open}<Down size={18} />{:else}<Up size={18} />{/if}</button>
       {/if}
-      {#if onclose}<button class="btn ghost icon sm" onclick={onclose} aria-label={t('Close')}><X size={18} /></button>{/if}
+      {#if cover}
+        <a class="btn round sm" href="#/person/{id}" aria-label={t('Open profile')} title={t('Open profile')}><ArrowUpRight size={22} class="turn" /></a>
+      {:else if onclose}<button class="btn ghost icon sm" onclick={onclose} aria-label={t('Close')}><X size={18} /></button>{/if}
     </header>
 
     {#if open}
       <div class="body">
         <div class="acts">
-          <a class="btn sm" href="#/person/{id}"><User size={15} /> {t('Open profile')}</a>
+          {#if !cover}<a class="btn sm" href="#/person/{id}"><User size={15} /> {t('Open profile')}</a>{/if}
           {#if !viewer}<a class="btn sm" href="#/person/{id}/edit"><Pencil size={15} /> {t('Edit')}</a>{/if}
           {#if oncenter}<button class="btn sm" onclick={oncenter}><Crosshair size={15} /> {tx('tree', 'Around this person')}</button>{/if}
         </div>
@@ -200,6 +212,50 @@
     border-radius: 24px;
     box-shadow: var(--shadow-raised);
     overflow: hidden;
+  }
+  .cover {
+    position: relative;
+    height: 210px;
+    flex: none;
+    animation: none;
+  }
+  .cv {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    padding: 0;
+    background: var(--surface-2);
+    cursor: zoom-in;
+    overflow: hidden;
+  }
+  .cv :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 25%;
+    display: block;
+  }
+  .cover .where {
+    position: absolute;
+    inset-inline-start: 14px;
+    bottom: 14px;
+  }
+  .cover .x {
+    position: absolute;
+    top: 12px;
+    inset-inline-end: 12px;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    justify-content: center;
+    cursor: pointer;
+  }
+  header.withcover .ph {
+    display: none;
+  }
+  header.withcover {
+    padding-top: 16px;
   }
   header {
     display: flex;

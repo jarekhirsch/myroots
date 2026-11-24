@@ -182,6 +182,7 @@
           <span class="pic">
             <Avatar photo={p.photo} name={p.name} gender={p.gender} fill />
             {#if p.status !== 'published' && !viewer}<span class="tag warn flag">{p.status === 'draft' ? t('Draft') : t('Private')}</span>{/if}
+            {#if p.photo && p.birth_place}<span class="glass where">{p.birth_place.split(',')[0]}</span>{/if}
           </span>
           <span class="nm">{p.name}</span>
           <span class="meta"><bdi>{p.years}</bdi>{#if p.maiden_name}<span class="faint"> · {t('née %s', p.maiden_name)}</span>{/if}</span>
@@ -281,10 +282,23 @@
     container-type: inline-size;
     margin-bottom: 10px;
     border-radius: var(--radius-lg);
-    transition: box-shadow 0.15s;
+    overflow: hidden;
   }
-  .tile:hover .pic {
-    box-shadow: var(--shadow-raised);
+  .pic :global(img) {
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .tile:hover .pic :global(img) {
+    transform: scale(1.04);
+  }
+  .where {
+    position: absolute;
+    inset-inline-start: 8px;
+    bottom: 8px;
+    max-width: calc(100% - 16px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.75rem;
+    padding: 4px 10px;
   }
   .flag {
     position: absolute;

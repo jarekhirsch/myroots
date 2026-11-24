@@ -84,10 +84,9 @@
     margin-bottom: 22px;
   }
   .tile {
-    background: var(--surface);
-    box-shadow: var(--shadow);
-    border-radius: var(--radius);
-    padding: 14px 16px;
+    background: var(--surface-2);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
     display: flex;
     flex-direction: column;
     gap: 2px;
@@ -96,11 +95,12 @@
     text-decoration: none;
   }
   .tile b {
-    font-size: 1.55rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
+    font-size: 2.3rem;
+    font-weight: 220;
+    letter-spacing: -0.04em;
     color: var(--text);
-    line-height: 1.15;
+    line-height: 1.1;
+    font-variant-numeric: lining-nums;
   }
   .tile b small {
     font-family: var(--font-ui);

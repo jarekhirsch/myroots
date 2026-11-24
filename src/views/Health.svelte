@@ -238,8 +238,8 @@
   }
   .big b {
     font-size: 2.4rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
+    font-weight: 220;
+    letter-spacing: -0.04em;
     line-height: 1;
   }
   .big span {

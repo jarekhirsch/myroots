@@ -524,6 +524,7 @@
     padding: 0 18px 18px 0;
     box-sizing: border-box;
     z-index: 20;
+    animation: mr-slide 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
   }
   :global([dir='rtl']) .side {
     padding: 0 0 18px 18px;

@@ -897,7 +897,7 @@
       background: var(--ink);
       box-shadow: 0 10px 30px rgba(18, 22, 19, 0.2);
       z-index: 50;
-      animation: navup 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s both;
+      animation: navup 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s backwards;
     }
     :global([dir='rtl']) .tabbar {
       transform: translateX(50%);

@@ -168,7 +168,13 @@
         <li class="ev-{e.kind}" class:own={own.has(e.kind)} style="margin-top: {r.gap}px">
           <span class="dot" aria-hidden="true"></span>
           <div class="when">
-            <span class="d" title={ageText(e)}>{left(e)}</span>
+            {#if own.has(e.kind) && year(e.date)}
+              <!-- the person's own events: the year big and thin, the age under it -->
+              <span class="y num-thin">{year(e.date)}</span>
+              {#if e.kind !== 'birth' && e.age != null && e.age >= 0}<span class="a">{tn('%d year', '%d years', e.age)}</span>{/if}
+            {:else}
+              <span class="d" title={ageText(e)}>{left(e)}</span>
+            {/if}
           </div>
           <div class="what">
             <div class="ttl">
@@ -313,6 +319,17 @@
   li:not(.own) .when {
     font-weight: 450;
     color: var(--muted);
+  }
+  .when .y {
+    font-size: 1.45rem;
+    color: var(--faint);
+    margin-top: -3px;
+  }
+  .when .a {
+    font-size: 0.78rem;
+    font-weight: 450;
+    color: var(--muted);
+    margin-top: 3px;
   }
   .what {
     grid-column: 3;
