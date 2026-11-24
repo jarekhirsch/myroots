@@ -2,6 +2,19 @@
 
 ## 3.1.0 (2026-11-22)
 
+**New look**
+- Lighter and calmer: a white background, hairlines instead of panels everywhere, one filled button per screen and outlined ones for the rest. Tabs as text with an underline.
+- New icons (Phosphor), thinner and less generic.
+- Quick search: "Search" at the top of the menu and Ctrl K (Cmd K on a Mac) from every screen. People with photo, years and place, pages of the app and "Add a person"; arrows choose, Enter opens.
+- Profile: a large photo (full width on the phone) and labelled links: Map, Kinship, Through the years, Poster, History, Print / PDF.
+- Timelines: the year big and thin on the lifeline, in the events and in the family timeline; numbers in statistics and the data check in the same style.
+- Panel beside the tree: the person's photo on top with the place of birth and a round button to the profile.
+- People album: the place of birth on a glass label over the photo.
+- Phone: a floating menu bar in the accent color.
+- A discreet "Support" link in the menu (Suppi in Polish, Ko-fi in other languages).
+- Gentle animations when a screen opens and over photos; off when the system asks for reduced motion.
+- The appearance settings (colors, presets, font, text size, corners, shadows, dark theme) work as before.
+
 Big trees run smoothly, sources can be attached to every piece of information, and MyRoots is available for Linux.
 
 **New**

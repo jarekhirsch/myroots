@@ -1,6 +1,6 @@
 # Kierunek wyglądu: „lżej, więcej zdjęć, jedna mocna akcja”
 
-Status: **propozycja do akceptacji**. Prototyp ekranów (teraz obok propozycji): kanwa „MyRoots – kierunek wyglądu (prototyp)”. Nic z tego nie jest jeszcze w aplikacji.
+Status: **zatwierdzony i wdrożony** (listopad 2026). Prototyp ekranów: kanwa „MyRoots – kierunek wyglądu (prototyp)”. Ustawienia wyglądu (kolory, motywy, font, wielkość, zaokrąglenia, cienie, ciemny motyw) zostają: nowy wygląd korzysta z tych samych zmiennych.
 
 Punkt wyjścia: zarzut, że aplikacja wygląda „AI-slopowo”, bo wszystko wygląda tak samo. Dziś każdy ekran ma ten sam rytm: szarozielone tło, białe panele z tym samym promieniem i cieniem, ciemnozielone pigułki, ikony Lucide. Nic nie wybija się na pierwszy plan. Referencja (aplikacja do kompensacji CO₂, listopad 2026) pokazuje ten sam charakter, ale z większą ilością bieli, zdjęciami w roli głównej i szklanymi etykietami.
 
@@ -86,7 +86,7 @@ Ciemny motyw: te same role, wartości z obecnego ciemnego motywu; szklane etykie
 ## 7. Wdrożenie (po akceptacji)
 
 1. Tokeny w `src/lib/theme.ts` i `src/app.css` (tło, `--soft`, `--line`, `--accent-soft`), bez zmian w układzie. Sprawdzenie wszystkich ekranów testem `tests/e2e/smoke.spec.ts` i zrzutami.
-2. Zamiana ikon: jeden plik mapujący nazwy (`src/lib/icons.ts`) z Lucide na Phosphor light, potem podmiana importów (111 różnych ikon, 199 importów w 51 plikach; mechanicznie).
+2. Zamiana ikon: `scripts/gen-icons.mjs` (mapa nazw Lucide → Phosphor) generuje `src/lib/icons/*.svelte`; importy podmienione mechanicznie.
 3. Przyciski: klasa `.btn.primary` zostaje tylko dla jednej akcji na ekran; pozostałe `.btn` konturowe; nowa klasa `.btn.round` (okrągła akcja).
 4. Komponent `GlassTag.svelte` i karty prowadzone zdjęciem: album osób, profil, start, galeria.
 5. Pływający pasek nawigacji na telefonie; na komputerze menu bez zmian plus „Szukaj” z oknem szybkiego wyszukiwania (Ctrl K).

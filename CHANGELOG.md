@@ -2,6 +2,19 @@
 
 ## 3.1.0 (2026-11-22)
 
+**Nowy wygląd**
+- Jaśniej i spokojniej: białe tło, cienkie linie zamiast paneli wszędzie, jeden wypełniony przycisk na ekranie, reszta konturowa. Zakładki jako tekst z podkreśleniem.
+- Nowe ikony (Phosphor), cieńsze i mniej szablonowe.
+- Szybkie wyszukiwanie: „Szukaj” na górze menu i skrót Ctrl K (na Macu Cmd K) z każdego ekranu. Osoby ze zdjęciem, latami i miejscem, strony aplikacji i „Dodaj osobę”; strzałki wybierają, Enter otwiera.
+- Profil osoby: duże zdjęcie (na telefonie na całą szerokość) i podpisane przejścia: Mapa, Pokrewieństwo, Przez lata, Plakat, Historia, Drukuj / PDF.
+- Osie czasu: rok duży i cienki na linii życia, w wydarzeniach i w osi rodziny; liczby w statystykach i kondycji danych tym samym krojem.
+- Panel obok drzewa: zdjęcie osoby na górze z miejscem urodzenia i okrągły przycisk do profilu.
+- Album osób: miejsce urodzenia na szklanej etykiecie na zdjęciu.
+- Telefon: pływający pasek menu w kolorze akcentu.
+- W menu dyskretny link „Wesprzyj” (Suppi po polsku, Ko-fi w innych językach).
+- Delikatne animacje wejścia ekranów i najechania na zdjęcia; wyłączone, gdy system ma ustawione ograniczanie ruchu.
+- Ustawienia wyglądu (kolory, motywy, font, wielkość tekstu, zaokrąglenia, cienie, ciemny motyw) działają jak dotąd.
+
 Duże drzewa działają płynnie, źródła można przypisać do każdej informacji, a MyRoots jest dostępny na Linuksie.
 
 **Nowe**

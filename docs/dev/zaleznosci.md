@@ -15,7 +15,7 @@ Zasada: najnowsze stabilne wersje. Sprawdzenie: `npm outdated`, `npm audit`, `ca
 | `@vladmandic/face-api` | Twarze na zdjęciach (na urządzeniu), modele w `public/models/face/`. |
 | `dompurify` | Czyszczenie HTML w podglądzie. |
 | `fflate` | ZIP w przeglądarce (strona rodzinna, kopie). |
-| `@lucide/svelte` | Ikony. |
+| `@phosphor-icons/core` (dev) | Źródło ikon (MIT). Komponenty `src/lib/icons/*.svelte` generuje `node scripts/gen-icons.mjs`; aplikacja nie ładuje pakietu w czasie działania. |
 | `@fontsource-variable/onest`, `literata` | Fonty. |
 | `binaryen` | `wasm-opt` przy budowaniu silnika. |
 | Rust: `serde`, `serde_json`, `chrono`, `zip`, `base64` | Silnik. |
@@ -32,7 +32,6 @@ Zasada: najnowsze stabilne wersje. Sprawdzenie: `npm outdated`, `npm audit`, `ca
 |---|---|---|
 | `@fontsource-variable/literata` | ^5.3.0 | aplikacja |
 | `@fontsource-variable/onest` | ^5.3.1 | aplikacja |
-| `@lucide/svelte` | ^1.77.0 | aplikacja |
 | `@maplibre/maplibre-gl-leaflet` | ^0.1.4 | aplikacja |
 | `@tauri-apps/api` | ^2.12.5 | aplikacja |
 | `@tauri-apps/plugin-dialog` | ^2.8.4 | aplikacja |
