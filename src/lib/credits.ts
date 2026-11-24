@@ -9,6 +9,8 @@ export const LICENSE_URL = 'https://www.gnu.org/licenses/gpl-3.0.html';
 export const SOURCE_NOTE = 'GPL-3.0-or-later';
 /** Where the source code is published (section 6 of the GPL). */
 export const SOURCE_URL = 'https://github.com/jarekhirsch/myroots';
+/** "Support the project": Suppi for Polish, Ko-fi for every other language (as on myroots.cc). */
+export const supportUrl = (lang: string) => (lang.startsWith('pl') ? 'https://suppi.pl/jarekhirsch' : 'https://ko-fi.com/jarekhirsch');
 /** Where "Report a problem" sends e-mails. */
 export const REPORT_EMAIL = 'kontakt@myroots.cc';
 

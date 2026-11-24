@@ -97,6 +97,8 @@ test('report a problem and the safety net', async ({ page, errors }) => {
   errors.length = 0; // the error above was made on purpose
 
   await page.locator('button.dk.more').click();
+  // a discreet link to support the project (Ko-fi outside Polish)
+  await expect(page.getByRole('link', { name: 'Support the project' })).toHaveAttribute('href', 'https://ko-fi.com/jarekhirsch');
   await page.getByRole('button', { name: 'Report a problem' }).click();
   const d = page.getByRole('dialog');
   await expect(d.getByRole('link', { name: /Send by e-mail/ })).toHaveClass(/disabled/);

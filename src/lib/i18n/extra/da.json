@@ -1165,5 +1165,6 @@
  "People in the tree": "Personer i træet",
  "The server could not send your data. Try again in a moment; if it keeps happening, the hosting may need more PHP memory (memory_limit).": "Serveren kunne ikke sende dine data. Prøv igen om lidt; hvis det bliver ved, har hostingen måske brug for mere PHP-hukommelse (memory_limit).",
  "The map uses OpenStreetMap data: the map background is loaded from OpenFreeMap, place names are sent to a search service (Nominatim, Photon) to find coordinates, and cemeteries come from Overpass. Nothing else leaves your device.": "Kortet bruger data fra OpenStreetMap: kortbaggrunden hentes fra OpenFreeMap, stednavne sendes til en søgetjeneste (Nominatim, Photon) for at finde koordinater, og kirkegårde kommer fra Overpass. Intet andet forlader din enhed.",
- "Use the online map (OpenStreetMap data; the map background is loaded from OpenFreeMap)": "Brug onlinekortet (data fra OpenStreetMap, baggrunden hentes fra OpenFreeMap)"
+ "Use the online map (OpenStreetMap data; the map background is loaded from OpenFreeMap)": "Brug onlinekortet (data fra OpenStreetMap, baggrunden hentes fra OpenFreeMap)",
+ "Support the project": "Støt projektet"
 }

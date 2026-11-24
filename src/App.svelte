@@ -18,6 +18,8 @@
   import AboutDialog from './lib/components/AboutDialog.svelte';
   import ReportDialog from './lib/components/ReportDialog.svelte';
   import Bug from '@lucide/svelte/icons/bug';
+  import Heart from '@lucide/svelte/icons/heart';
+  import { supportUrl } from './lib/credits';
   import { AUTHOR, YEAR, authorUrl } from './lib/credits';
   import MenuIcon from '@lucide/svelte/icons/menu';
   import More from '@lucide/svelte/icons/ellipsis';
@@ -277,6 +279,8 @@
       {#if !viewer}
         <div class="report-link">
           <button type="button" class="item" onclick={() => ((report = true), (ui.menuOpen = false))}><Bug size={18} strokeWidth={1.8} /><span>{t('Report a problem')}</span></button>
+          <!-- discreet: a quiet line, never in the family website -->
+          <a class="item support" href={supportUrl(lang())} target="_blank" rel="noopener" onclick={() => (ui.menuOpen = false)}><Heart size={18} strokeWidth={1.8} /><span>{t('Support the project')}</span></a>
         </div>
       {/if}
       <div class="foot small faint">
@@ -643,6 +647,10 @@
   .report-link {
     padding: 8px 10px 4px;
     border-top: 1px solid var(--line);
+  }
+  .report-link .support {
+    color: var(--muted);
+    text-decoration: none;
   }
   .unlock-link .item,
   .report-link .item {
