@@ -22,6 +22,9 @@ const DAY = 24 * 3600 * 1000;
 
 /** The desktop app built with Tauri (not the phone apps, not the browser). */
 export function canUpdate(): boolean {
+  // The Microsoft Store version (MSIX) is updated by the Store only: Store rules
+  // forbid other updates, and the app folder of a Store app is read-only.
+  if (import.meta.env.VITE_MYROOTS_STORE === '1') return false;
   return !!(window as any).__TAURI_INTERNALS__ && !/Android|iPhone|iPad/i.test(navigator.userAgent);
 }
 

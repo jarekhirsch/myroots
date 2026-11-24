@@ -84,6 +84,48 @@ jobs:
           prerelease: false
           args: ${{ matrix.args }}${{ secrets.TAURI_SIGNING_PRIVATE_KEY != '' && ' --config src-tauri/tauri.updater.conf.json' || '' }}
 
+  # Microsoft Store ("MyRoots Family Tree", product 9MX7K9QKVVCW): an MSIX package
+  # that Microsoft signs after certification; the Store updates the app, so this
+  # build has no self-updates (VITE_MYROOTS_STORE=1). The .msix goes onto the
+  # draft release. With the secrets MSSTORE_TENANT_ID, MSSTORE_SELLER_ID,
+  # MSSTORE_CLIENT_ID and MSSTORE_CLIENT_SECRET (Partner Center -> Account
+  # settings -> User management -> Azure AD applications) it is also sent to the
+  # Store as a new submission; without them upload the .msix in Partner Center.
+  store:
+    needs: desktop
+    runs-on: windows-latest
+    env:
+      MSSTORE: ${{ secrets.MSSTORE_CLIENT_SECRET != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+      - run: npm ci
+      - name: Build the app for the Store (no self-updates)
+        env:
+          VITE_MYROOTS_STORE: '1'
+        run: npx tauri build --no-bundle
+      - name: MSIX package
+        id: msix
+        shell: pwsh
+        run: ./scripts/msix.ps1
+      - name: Add the package to the release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ github.ref_name }}" "${{ steps.msix.outputs.msix }}" --clobber
+      - uses: microsoft/setup-msstore-cli@v1
+        if: env.MSSTORE == 'true'
+      - name: Send to the Microsoft Store
+        if: env.MSSTORE == 'true'
+        shell: pwsh
+        run: |
+          msstore reconfigure --tenantId "${{ secrets.MSSTORE_TENANT_ID }}" --sellerId "${{ secrets.MSSTORE_SELLER_ID }}" --clientId "${{ secrets.MSSTORE_CLIENT_ID }}" --clientSecret "${{ secrets.MSSTORE_CLIENT_SECRET }}"
+          msstore publish "${{ steps.msix.outputs.msix }}" -id 9MX7K9QKVVCW
+
   # Windows: the app is built first, its .exe is signed through SignPath, then
   # the installer is made from the signed .exe and signed too. SignPath checks
   # that both files come from this repository and this workflow; every signing
