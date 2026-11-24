@@ -130,6 +130,7 @@ Lista generowana przez `npm run docs` z pierwszego komentarza w każdym pliku. N
 | `RecordingsEditor.svelte` | Voice recordings of a person: upload files or record from the microphone. |
 | `ReportDialog.svelte` | "Report a problem": a description plus technical details (version, system, |
 | `RichText.svelte` | Small rich-text editor (bold, italic, headings, lists, quote, link). |
+| `SearchPalette.svelte` | Quick search (Ctrl K / Cmd K, "Search" at the top of the menu): people first, then |
 | `SuggestDialog.svelte` | "Suggest a correction" on the family website. There is no server: the |
 | `TreeDetails.svelte` | Data panel beside the tree: everything important about the selected |
 | `Unlock.svelte` | Password of a protected family website (the whole website or chosen people). |
@@ -206,6 +207,7 @@ Lista generowana przez `npm run docs` z pierwszego komentarza w każdym pliku. N
 | `check-i18n.mjs` | Lists UI strings that have no translation in the catalogs (plugin .po + extra/*.json). |
 | `docs.mjs` | Keeps the generated parts of docs/dev/*.md in step with the code. |
 | `finalize-viewer.mjs` | Makes the viewer template work from a local disk (file://): classic deferred |
+| `gen-icons.mjs` | Builds src/lib/icons/*.svelte from Phosphor Icons (MIT, @phosphor-icons/core). |
 | `po2json.mjs` | Converts the WordPress plugin translations (.po) + extra strings of the app |
 | `updater-json.mjs` | Prepares the update files for myroots.cc/updates/ from the assets of a |
 <!-- /auto:files -->

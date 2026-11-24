@@ -49,6 +49,7 @@ Zasada: najnowsze stabilne wersje. Sprawdzenie: `npm outdated`, `npm audit`, `ca
 | `leaflet` | ^1.9.4 | aplikacja |
 | `leaflet.markercluster` | ^1.5.3 | aplikacja |
 | `maplibre-gl` | ^6.19.0 | aplikacja |
+| `@phosphor-icons/core` | ^2.1.1 | budowanie |
 | `@playwright/test` | ^1.65.1 | budowanie |
 | `@sveltejs/vite-plugin-svelte` | ^7.3.1 | budowanie |
 | `@tauri-apps/cli` | ^2.12.6 | budowanie |
