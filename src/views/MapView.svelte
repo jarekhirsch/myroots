@@ -516,7 +516,7 @@
       {#if viewer}
         <p>{t('This family website does not use online maps.')}</p>
       {:else}
-        <p>{t('The map uses OpenStreetMap: map tiles are loaded from its servers and place names are sent to its search service (Nominatim) to find coordinates. Nothing else leaves your device.')}</p>
+        <p>{t('The map uses OpenStreetMap data: the map background is loaded from OpenFreeMap, place names are sent to a search service (Nominatim, Photon) to find coordinates, and cemeteries come from Overpass. Nothing else leaves your device.')}</p>
         <button class="btn primary" onclick={enable}>{t('Turn on the map')}</button>
         <p class="hint">{t('You can also enter coordinates by hand in Places.')}</p>
       {/if}

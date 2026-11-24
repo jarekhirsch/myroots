@@ -288,7 +288,7 @@
 
       <section class="panel">
         <h2>{t('Map on the website')}</h2>
-        <label class="check"><input type="checkbox" bind:checked={s.map_external} /> {t('Use OpenStreetMap (map tiles are loaded from its servers)')}</label>
+        <label class="check"><input type="checkbox" bind:checked={s.map_external} /> {t('Use the online map (OpenStreetMap data; the map background is loaded from OpenFreeMap)')}</label>
       </section>
 
       {#if !wp}

@@ -1163,5 +1163,7 @@
  "Last errors:": "Últimos errores:",
  "Screen": "Pantalla",
  "People in the tree": "Personas en el árbol",
- "The server could not send your data. Try again in a moment; if it keeps happening, the hosting may need more PHP memory (memory_limit).": "El servidor no pudo enviar tus datos. Inténtalo de nuevo en un momento; si sigue ocurriendo, el alojamiento puede necesitar más memoria PHP (memory_limit)."
+ "The server could not send your data. Try again in a moment; if it keeps happening, the hosting may need more PHP memory (memory_limit).": "El servidor no pudo enviar tus datos. Inténtalo de nuevo en un momento; si sigue ocurriendo, el alojamiento puede necesitar más memoria PHP (memory_limit).",
+ "The map uses OpenStreetMap data: the map background is loaded from OpenFreeMap, place names are sent to a search service (Nominatim, Photon) to find coordinates, and cemeteries come from Overpass. Nothing else leaves your device.": "El mapa usa datos de OpenStreetMap: el fondo del mapa se carga desde OpenFreeMap, los nombres de lugares se envían a un servicio de búsqueda (Nominatim, Photon) para encontrar coordenadas y los cementerios vienen de Overpass. Nada más sale de tu dispositivo.",
+ "Use the online map (OpenStreetMap data; the map background is loaded from OpenFreeMap)": "Usar el mapa en línea (datos de OpenStreetMap; el fondo se carga desde OpenFreeMap)"
 }

@@ -83,7 +83,7 @@
 
 <Modal {title} {onclose} wide>
   {#if !enabled}
-    <p>{t('The map uses OpenStreetMap: map tiles are loaded from its servers and place names are sent to its search service (Nominatim) to find coordinates. Nothing else leaves your device.')}</p>
+    <p>{t('The map uses OpenStreetMap data: the map background is loaded from OpenFreeMap, place names are sent to a search service (Nominatim, Photon) to find coordinates, and cemeteries come from Overpass. Nothing else leaves your device.')}</p>
     <button type="button" class="btn primary" onclick={enable}>{t('Turn on the map')}</button>
   {:else}
     <form class="srch" onsubmit={(e) => (e.preventDefault(), search())}>
