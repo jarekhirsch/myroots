@@ -38,6 +38,7 @@ Big trees run smoothly, sources can be attached to every piece of information, a
 - Every unexpected error gives a message instead of silence; a wrong file when restoring a backup says it is not a MyRoots backup.
 - A big backup is no longer cut off while saving to disk.
 - New: "Report a problem" in the menu (e-mail or GitHub, with technical details, without tree data).
+- Phone: the bottom bar no longer shows the content scrolled under it.
 - MyRoots Server: photos load in parallel. Before, the login session blocked the next requests, so photos in the gallery and the tree arrived one after another, and the public family website opened a session for every photo.
 - MyRoots Server and WordPress: publishing the website and restoring a backup send several photos at once (about 35% faster in the test), send a piece of a file again when the hosting loses an answer, and warn before the tab is closed in the middle. A website without full photos no longer fetches the originals to publish.
 - Maps: the background now comes from OpenFreeMap (no limits, no keys) instead of openstreetmap.org tiles, which sometimes answered with error 403, especially in the desktop app. Names of places and countries are in the app language. Styles in the settings: Standard, Pale, Night and Terrain.

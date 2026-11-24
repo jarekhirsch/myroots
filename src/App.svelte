@@ -825,9 +825,8 @@
       inset-inline: 0;
       height: calc(var(--tabbar) + env(safe-area-inset-bottom));
       padding-bottom: env(safe-area-inset-bottom);
-      background: color-mix(in srgb, var(--surface) 92%, transparent);
-      backdrop-filter: saturate(1.4) blur(12px);
-      -webkit-backdrop-filter: saturate(1.4) blur(12px);
+      /* solid: names scrolled under the bar made its labels hard to read */
+      background: var(--surface);
       border-top: 1px solid var(--line);
       z-index: 50;
     }
