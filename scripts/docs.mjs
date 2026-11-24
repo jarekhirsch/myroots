@@ -9,7 +9,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const read = (p) => fs.readFileSync(path.join(root, p), 'utf8');
+// line endings as in the repository (LF), also on a Windows checkout with CRLF
+const lf = (t) => t.replace(/\r\n/g, '\n');
+const read = (p) => lf(fs.readFileSync(path.join(root, p), 'utf8'));
 const check = process.argv.includes('--check');
 
 /* ---------- engine methods ---------- */
@@ -33,7 +35,7 @@ function engineMethods() {
 
 /* ---------- files with their first comment ---------- */
 function firstComment(file) {
-  const t = fs.readFileSync(file, 'utf8');
+  const t = lf(fs.readFileSync(file, 'utf8'));
   const lines = t.split('\n').slice(0, 12);
   for (const l of lines) {
     const m = l.match(/^\s*(?:\/\/!?|\/\*\*?|\*|<!--)\s*(.+?)\s*(?:\*\/|-->)?$/);
@@ -90,7 +92,7 @@ const BLOCKS = { 'engine-methods': engineMethods, files, deps };
 let stale = [];
 for (const f of fs.readdirSync(path.join(root, 'docs/dev')).filter((x) => x.endsWith('.md'))) {
   const p = path.join(root, 'docs/dev', f);
-  const before = fs.readFileSync(p, 'utf8');
+  const before = lf(fs.readFileSync(p, 'utf8'));
   const after = before.replace(/(<!-- auto:([a-z-]+) -->)[\s\S]*?(<!-- \/auto:\2 -->)/g, (all, open, name, close) => {
     if (!BLOCKS[name]) return all;
     return `${open}\n${BLOCKS[name]()}\n${close}`;
