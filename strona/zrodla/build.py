@@ -248,7 +248,7 @@ def page(c, title, desc, body, lds, og_img=None, script='', file=None, index=Tru
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(desc)}">
-{canon}{alts}<meta name="theme-color" content="#1d5a44">
+{canon}{alts}<meta name="theme-color" content="#1f4a37">
 <meta name="author" content="Jarek Hirsch">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="{L['locale']}">

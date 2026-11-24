@@ -556,8 +556,14 @@
   }
   .dep select {
     width: auto;
+    flex: none;
     min-height: 32px;
-    padding: 4px 8px;
+    padding-block: 4px;
+    padding-inline: 10px 30px;
+    background-position: right 10px center;
+  }
+  :global([dir='rtl']) .dep select {
+    background-position: left 10px center;
   }
   .chart {
     flex: 1;
