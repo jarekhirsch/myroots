@@ -19,7 +19,7 @@ L = {
         'demo': 'Katso demo',
         'facts': 'Tiliä ei tarvita. Mieluummin paperilla? <a href="{S_tpl}">Tulostettavat pohjat</a>.',
         'hero_alt': 'Sukupuu MyRootsissa: Zawadzkin perheen viisi sukupolvea ihmisten ja lemmikkien kuvineen ja valitun henkilön tietopaneeli',
-        'hero_cap': 'MyRoots 3.1, näkymä ”Henkilön ympärillä” ja tietopaneeli. Korttien vieressä olevat pienet ympyrät ovat lemmikkejä.',
+        'hero_cap': 'MyRoots 3.2, näkymä ”Henkilön ympärillä” ja tietopaneeli. Korttien vieressä olevat pienet ympyrät ovat lemmikkejä.',
         'pitch_label': 'Kenelle MyRoots on',
         'free_h': 'Koko ohjelma ilmaiseksi, ilman henkilörajaa',
         'free_p': 'MyHeritagen ilmaisversiossa sukupuussa voi olla enintään 250 henkilöä ja 500&nbsp;Mt kuvia. MyRootsissa ei ole rajoja eikä maksullista versiota. Animaatiot, sukukirja, julisteet ja suvun sivusto toimivat heti ensimmäisestä käynnistyksestä.',

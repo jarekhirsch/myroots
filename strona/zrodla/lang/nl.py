@@ -19,7 +19,7 @@ L = {
         'demo': 'Bekijk de demo',
         'facts': 'Geen account nodig. Liever op papier? <a href="{S_tpl}">Sjablonen om af te drukken</a>.',
         'hero_alt': 'Stamboom in MyRoots: vijf generaties van de familie Zawadzki met foto’s van mensen en huisdieren en een paneel met gegevens van de gekozen persoon',
-        'hero_cap': 'MyRoots 3.1, weergave „Rond een persoon” met het gegevenspaneel. De kleine cirkels bij de kaartjes zijn huisdieren.',
+        'hero_cap': 'MyRoots 3.2, weergave „Rond een persoon” met het gegevenspaneel. De kleine cirkels bij de kaartjes zijn huisdieren.',
         'pitch_label': 'Voor wie MyRoots is',
         'free_h': 'Het hele programma gratis, zonder limiet op personen',
         'free_p': 'In het gratis abonnement van MyHeritage mag een stamboom hooguit 250 personen en 500&nbsp;MB aan foto’s bevatten. MyRoots heeft geen limieten en geen betaalde versie. Animaties, familieboek, posters en familiewebsite werken vanaf de eerste start.',

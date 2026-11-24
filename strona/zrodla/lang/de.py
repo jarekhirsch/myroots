@@ -19,7 +19,7 @@ L = {
         'demo': 'Demo ansehen',
         'facts': 'Kein Konto nötig. Lieber auf Papier? <a href="{S_tpl}">Vorlagen zum Ausdrucken</a>.',
         'hero_alt': 'Stammbaum in MyRoots: fünf Generationen der Familie Zawadzki mit Fotos von Menschen und Tieren und einem Datenfeld zur gewählten Person',
-        'hero_cap': 'MyRoots 3.1, Ansicht „Um eine Person“ mit Datenfeld. Die kleinen Kreise an den Karten sind Haustiere.',
+        'hero_cap': 'MyRoots 3.2, Ansicht „Um eine Person“ mit Datenfeld. Die kleinen Kreise an den Karten sind Haustiere.',
         'pitch_label': 'Für wen MyRoots ist',
         'free_h': 'Das ganze Programm kostenlos, ohne Personenlimit',
         'free_p': 'Im kostenlosen Tarif von MyHeritage darf ein Stammbaum höchstens 250 Personen und 500&nbsp;MB Fotos haben. MyRoots hat keine Limits und keine Bezahlversion. Animationen, Familienbuch, Poster und Familien-Website funktionieren vom ersten Start an.',

@@ -1,6 +1,6 @@
 # MyRoots a standard GEDCOM
 
-Stan na wersję 3.1.0. Kod: `crates/myroots-core/src/gedcom.rs` (import i eksport), `date.rs` (daty), `charsets.rs` (kodowanie znaków). Testy: `cargo test -p myroots-core gedcom`.
+Stan na wersję 3.2.0. Kod: `crates/myroots-core/src/gedcom.rs` (import i eksport), `date.rs` (daty), `charsets.rs` (kodowanie znaków). Testy: `cargo test -p myroots-core gedcom`.
 
 ## W skrócie
 

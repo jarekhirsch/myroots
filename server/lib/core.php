@@ -10,7 +10,7 @@
 
 declare(strict_types=1);
 
-const MR_VERSION = '3.1.0';
+const MR_VERSION = '3.2.0';
 const MR_DB_VERSION = 1;
 
 define('MR_ROOT', dirname(__DIR__));

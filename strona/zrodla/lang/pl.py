@@ -22,7 +22,7 @@ L = {
         'demo': 'Zobacz demo',
         'facts': 'Nie wymaga konta. Wolisz kartkę? <a href="{S_tpl}">Szablony do druku</a>.',
         'hero_alt': 'Drzewo genealogiczne w MyRoots: pięć pokoleń rodziny Zawadzkich ze zdjęciami osób i zwierząt oraz panel z danymi wybranej osoby',
-        'hero_cap': 'MyRoots 3.1, widok „Wokół osoby” z panelem danych. Małe kółka przy kartach to zwierzęta.',
+        'hero_cap': 'MyRoots 3.2, widok „Wokół osoby” z panelem danych. Małe kółka przy kartach to zwierzęta.',
         'pitch_label': 'Dla kogo jest MyRoots',
         'free_h': 'Cały program za 0&nbsp;zł, bez limitu osób',
         'free_p': 'W darmowym planie MyHeritage drzewo może mieć najwyżej 250 osób i 500&nbsp;MB zdjęć. MyRoots nie ma limitów ani płatnej wersji. Animacje, księga rodu, plakat i strona rodzinna działają od pierwszego uruchomienia.',

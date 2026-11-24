@@ -4,7 +4,7 @@ Tags: genealogy, family tree, gedcom, ancestry, family history
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.1.0
+Stable tag: 3.2.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -50,6 +50,10 @@ In the WordPress database (table wp_myroots_records) and in wp-content/uploads/m
 Yes, by default it is republished a few seconds after each change. You can turn this off in the app (Family website).
 
 == Changelog ==
+
+= 3.2.0 =
+* New: the plugin is tested on a real WordPress (6.5 and the newest) before every release.
+* Fix: the ZIP package has file permissions every hosting can read.
 
 = 3.1.0 =
 * New: sources next to every fact (page, reliability, record text), or one list per person, chosen in Settings.

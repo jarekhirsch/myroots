@@ -19,7 +19,7 @@ L = {
         'demo': 'Se demon',
         'facts': 'Inget konto behövs. Hellre på papper? <a href="{S_tpl}">Mallar att skriva ut</a>.',
         'hero_alt': 'Släktträd i MyRoots: fem generationer av familjen Zawadzki med foton av människor och djur och en panel med uppgifter om den valda personen',
-        'hero_cap': 'MyRoots 3.1, vyn ”Runt en person” med uppgiftspanelen. De små cirklarna vid korten är husdjur.',
+        'hero_cap': 'MyRoots 3.2, vyn ”Runt en person” med uppgiftspanelen. De små cirklarna vid korten är husdjur.',
         'pitch_label': 'Vem MyRoots är för',
         'free_h': 'Hela programmet gratis, utan gräns för antal personer',
         'free_p': 'I MyHeritages gratisabonnemang får ett släktträd ha högst 250 personer och 500&nbsp;MB foton. MyRoots har inga gränser och ingen betalversion. Animationer, släktbok, affischer och familjesajt fungerar från första start.',

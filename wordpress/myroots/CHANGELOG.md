@@ -1,5 +1,12 @@
 # MyRoots dla WordPressa
 
+## 3.2.0 (2026-11-24)
+
+Wtyczka zawiera aplikację MyRoots 3.2 (zmiany: CHANGELOG.md aplikacji).
+
+- Przed każdym wydaniem wtyczka jest testowana na prawdziwym WordPressie (6.5 i najnowszym): włączenie bez komunikatów PHP, edytor, kopia ze zdjęciami, publikacja, strona dla gościa, shortcode.
+- Paczka ZIP z uprawnieniami plików, które każdy hosting odczyta.
+
 ## 3.1.0 (2026-11-23)
 
 Wtyczka zawiera aplikację MyRoots 3.1 (zmiany: CHANGELOG.md aplikacji).

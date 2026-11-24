@@ -1,6 +1,6 @@
 # Dokumentacja robocza MyRoots
 
-Dla osoby (albo asystenta), która zmienia kod. Opisuje stan na wersję 3.1.0. Każda zmiana w kodzie aktualizuje te pliki w tym samym commicie (zasady w [zasady.md](zasady.md)).
+Dla osoby (albo asystenta), która zmienia kod. Opisuje stan na wersję 3.2.0. Każda zmiana w kodzie aktualizuje te pliki w tym samym commicie (zasady w [zasady.md](zasady.md)).
 
 | Plik | Co zawiera |
 |---|---|

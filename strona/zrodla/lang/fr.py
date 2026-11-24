@@ -19,7 +19,7 @@ L = {
         'demo': 'Voir la démo',
         'facts': 'Aucun compte nécessaire. Vous préférez le papier ? <a href="{S_tpl}">Modèles à imprimer</a>.',
         'hero_alt': 'Arbre généalogique dans MyRoots : cinq générations de la famille Zawadzki avec les photos des personnes et des animaux, et un panneau de détails sur la personne choisie',
-        'hero_cap': 'MyRoots 3.1, vue « Autour d’une personne » avec le panneau de détails. Les petits cercles près des cartes sont les animaux.',
+        'hero_cap': 'MyRoots 3.2, vue « Autour d’une personne » avec le panneau de détails. Les petits cercles près des cartes sont les animaux.',
         'pitch_label': 'Pour qui est MyRoots',
         'free_h': 'Tout le logiciel gratuit, sans limite de personnes',
         'free_p': 'Avec l’offre gratuite de MyHeritage, un arbre compte au plus 250 personnes et 500&nbsp;Mo de photos. MyRoots n’a ni limite ni version payante. Animations, livre de famille, posters et site familial fonctionnent dès le premier lancement.',

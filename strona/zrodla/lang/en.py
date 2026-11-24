@@ -19,7 +19,7 @@ L = {
         'demo': 'Try the demo',
         'facts': 'No account needed. Prefer paper? <a href="{S_tpl}">Printable templates</a>.',
         'hero_alt': 'Family tree in MyRoots: five generations of the Zawadzki family with photos of people and pets, and a panel with details of the selected person',
-        'hero_cap': 'MyRoots 3.1, the “Around a person” view with the details panel. The small circles next to the cards are pets.',
+        'hero_cap': 'MyRoots 3.2, the “Around a person” view with the details panel. The small circles next to the cards are pets.',
         'pitch_label': 'Who MyRoots is for',
         'free_h': 'The whole app, free, with no limit on people',
         'free_p': 'On the free MyHeritage plan a tree can hold at most 250 people and 500&nbsp;MB of photos. MyRoots has no limits and no paid version. Animations, the family book, posters and the family website work from the first launch.',

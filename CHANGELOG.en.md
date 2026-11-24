@@ -1,5 +1,12 @@
 # Changes
 
+## 3.2.0 (2026-11-24)
+
+- MyRoots Server: photos on the public family website load at once. The server keeps them next to the website as plain files that the hosting sends without PHP (before, every photo waited in the PHP queue).
+- Microsoft Store: the Store version is updated by the Store and shows no update notices of its own.
+- MyRoots Server and the WordPress plugin: ZIP packages with file permissions every hosting can read. After an FTP upload there is no more blank page or 403 error.
+- Every release first passes the full tests: the app in a browser on a computer and a phone, builds on Windows and macOS, MyRoots Server on PHP and the plugin on a real WordPress (the oldest supported version and the newest).
+
 ## 3.1.0 (2026-11-22)
 
 **New look**

@@ -1,5 +1,12 @@
 # Zmiany
 
+## 3.2.0 (2026-11-24)
+
+- MyRoots Server: zdjęcia na publicznej stronie rodzinnej ładują się od razu. Serwer trzyma je obok strony jako zwykłe pliki, które hosting wysyła bez PHP (wcześniej każde zdjęcie czekało w kolejce do PHP).
+- Microsoft Store: wersja ze Sklepu aktualizuje się przez Sklep i nie pokazuje własnych powiadomień o nowej wersji.
+- MyRoots Server i wtyczka WordPress: paczki ZIP z uprawnieniami plików, które każdy hosting odczyta. Po wgraniu przez FTP nie ma już pustej strony ani błędu 403.
+- Każde wydanie przechodzi najpierw pełne testy: aplikacja w przeglądarce na komputerze i telefonie, budowanie na Windowsie i macOS, MyRoots Server na PHP oraz wtyczka na prawdziwym WordPressie (najstarsza obsługiwana wersja i najnowsza).
+
 ## 3.1.0 (2026-11-22)
 
 **Nowy wygląd**

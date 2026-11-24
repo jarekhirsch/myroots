@@ -3,7 +3,7 @@
  * Plugin Name:       MyRoots
  * Plugin URI:        https://myroots.pl/
  * Description:       Family tree for WordPress, with the very same interface and engine as the MyRoots 3 app for Mac, Windows, Linux, phones and the browser. Edit the tree in the admin panel and publish a read-only family website for your relatives.
- * Version:           3.1.0
+ * Version:           3.2.0
  * Author:            Jarek Hirsch
  * Author URI:        https://hirsch.fi/
  * License:           GPL-3.0-or-later
@@ -26,7 +26,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'MYROOTS_VERSION', '3.1.0' );
+define( 'MYROOTS_VERSION', '3.2.0' );
 define( 'MYROOTS_FILE', __FILE__ );
 define( 'MYROOTS_PATH', plugin_dir_path( __FILE__ ) );
 define( 'MYROOTS_URL', plugin_dir_url( __FILE__ ) );

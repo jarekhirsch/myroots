@@ -59,7 +59,7 @@ export default defineConfig(({ mode }) => {
     base: './',
     define: {
       __VIEWER__: JSON.stringify(viewer),
-      __APP_VERSION__: JSON.stringify(process.env.npm_package_version || '3.1.0'),
+      __APP_VERSION__: JSON.stringify(process.env.npm_package_version || '3.2.0'),
     },
     server: { port: 1420, strictPort: true, watch: { ignored: ['**/src-tauri/**', '**/target/**'] } },
     build: viewer
