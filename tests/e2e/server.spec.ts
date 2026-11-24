@@ -41,7 +41,7 @@ test.beforeAll(async () => {
 
 test.afterAll(() => {
   php?.kill();
-  if (dir) fs.rmSync(dir, { recursive: true, force: true });
+  if (dir && !process.env.KEEP_SERVER) fs.rmSync(dir, { recursive: true, force: true });
 });
 
 test('install, log in, restore, publish', async ({ page }) => {
@@ -51,6 +51,7 @@ test('install, log in, restore, publish', async ({ page }) => {
   await page.fill('input[name=login]', 'admin');
   await page.fill('input[name=pass]', 'secret-pass-1');
   await page.fill('input[name=pass2]', 'secret-pass-1');
+  await page.selectOption('select[name=visibility]', 'public');
   await page.locator('form button').last().click();
   await expect(page.locator('main')).toBeVisible();
 
@@ -86,11 +87,23 @@ test('install, log in, restore, publish', async ({ page }) => {
   const v = await visitor.newPage();
   await v.goto(url);
   await expect(v.locator('main')).toBeVisible();
-  await v.goto(url + '#/gallery');
-  await expect.poll(() => v.locator('main img').evaluateAll((l) => l.filter((i) => (i as HTMLImageElement).naturalWidth > 0).length), { timeout: 30_000 }).toBeGreaterThan(0);
+  await v.goto(url + '#/people');
+  await expect(v.locator('main a[href^="#/person/"]').first()).toBeVisible({ timeout: 30_000 });
   // the editor is closed for a visitor
   const r = await v.request.get(url + 'api/records');
   expect(r.status()).toBe(403);
+  // photos of a public website are plain files next to index.php, sent without PHP
+  // (the sample tree may publish no photos: then there is nothing to mirror)
+  const sdir = path.join(dir, 'data', 'site-default', 'media');
+  const published = fs.existsSync(sdir) ? fs.readdirSync(sdir).filter((f) => !f.endsWith('.part')) : [];
+  const mdir = path.join(dir, 'media');
+  const media = fs.existsSync(mdir) ? fs.readdirSync(mdir).filter((f) => !f.startsWith('.')) : [];
+  expect(media.sort()).toEqual(published.sort());
+  if (media.length) {
+    const m = await v.request.get(url + 'media/' + media[0]);
+    expect(m.status()).toBe(200);
+    expect(m.headers()['x-powered-by']).toBeUndefined();
+  }
   await visitor.close();
 });
 
