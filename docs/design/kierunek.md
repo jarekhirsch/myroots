@@ -79,7 +79,7 @@ Ciemny motyw: te same role, wartości z obecnego ciemnego motywu; szklane etykie
 - Szybkie wyszukiwanie: tło przyciemnia się, okno wyskakuje z góry. Pasek na telefonie wsuwa się od dołu.
 - Krzywa: cubic-bezier(.2,.7,.2,1). Przy prefers-reduced-motion wszystkie animacje są wyłączone.
 - Profil osoby: pod przyciskami Edytuj / Dodaj krewnego / W drzewie jest rząd miękkich przycisków z podpisami (Mapa, Pokrewieństwo, Przez lata, Plakat, Historia, Drukuj / PDF) i ikona usuwania na końcu. Na telefonie ten rząd przewija się w poziomie. Zestaw jest taki sam jak w obecnej aplikacji, tylko z podpisami zamiast samych ikon.
-- Osie czasu (linia życia w profilu, lista wydarzeń): rok duży po lewej (22 px w profilu, 26 px w wydarzeniach, półgruby, cyfry równej szerokości), pod nim mniejszy dzień albo wiek. Opis wydarzenia po prawej, za ikoną na linii.
+- Osie czasu (linia życia w profilu, lista wydarzeń, „Rodzina na osi czasu” na starcie; tam lata na skali też 22 px): rok duży po lewej (22 px w profilu, 26 px w wydarzeniach, półgruby, cyfry równej szerokości), pod nim mniejszy dzień albo wiek. Opis wydarzenia po prawej, za ikoną na linii.
 - W menu (rail i pasek boczny) dyskretny link „Wesprzyj projekt” (serce, kolor wyciszony), nad „Więcej”.
 
 ## 7. Wdrożenie (po akceptacji)
