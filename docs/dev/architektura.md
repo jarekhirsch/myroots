@@ -36,17 +36,6 @@ Uruchomienie: platforma wczytuje wszystkie rekordy i buduje `Database::from_reco
 
 Każde drzewo to osobna baza (folder w Tauri, baza IndexedDB w przeglądarce, osobne tabele / foldery w WP i na serwerze). Lista drzew: `TreesApi` w `backend/types.ts`. Zmiana drzewa przeładowuje stronę.
 
-## Powiązane foldery poza repozytorium (w `~/Documents/myroots`)
-
-| Folder | Co to jest | Jak aktualizować po zmianach w aplikacji |
-|---|---|---|
-| `myroots-server/` | MyRoots Server (PHP 8 + SQLite). W `app/` zbudowana aplikacja (`dist/`). | Zbudować `npm run build` i podmienić `app/`. |
-| `myroots-wordpress-3/` | Wtyczka WordPress 3.x. W `myroots/app/` zbudowana aplikacja. | `zrodla/Zbuduj wtyczke.command` (buduje z `myroots-app`). |
-| `myroots-demo/` | Drzewo demo („Rodzina Zawadzkich”) do importu na demo.myroots.cc. | Import w panelu `/admin` serwera demo. |
-| `wydanie-12/myroots-wydanie/` | Ostatnie wydanie strony i plików (stan z 19.11.2026). Od 3.1 źródła strony są w repozytorium: `strona/`. | Nie aktualizować, zostaje jako archiwum. |
-| `_klucze/` | Klucz Androida (`myroots-upload.jks`) i klucz aktualizacji (`myroots-updater.key`). Nigdy do repozytorium. | |
-| (katalog główny) | Stara wtyczka WordPress 2.x (`my-roots.php`, `includes/`, `assets/`). Aplikacja importuje jej kopie JSON. | Nie rozwijana. |
-
 ## Strona myroots.cc
 
-Źródła w `strona/`: generator `strona/zrodla/build.py` (12 języków, teksty w `lang/*.py` i `lang_news.py`) i pliki stałe w `strona/static/`. Strona „Co nowego” powstaje z `CHANGELOG.md` i `CHANGELOG.en.md`. Publikacja: [budowanie.md](budowanie.md#strona-myrootscc).
+Źródła w `strona/`: generator `strona/zrodla/build.py` (12 języków, teksty w `lang/*.py` i `lang_news.py`) i pliki stałe w `strona/static/`. Strona „Co nowego” powstaje z `CHANGELOG.md` i `CHANGELOG.en.md`.
