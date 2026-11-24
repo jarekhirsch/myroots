@@ -80,6 +80,7 @@ Ciemny motyw: te same role, wartości z obecnego ciemnego motywu; szklane etykie
 - Krzywa: cubic-bezier(.2,.7,.2,1). Przy prefers-reduced-motion wszystkie animacje są wyłączone.
 - Profil osoby: pod przyciskami Edytuj / Dodaj krewnego / W drzewie jest rząd miękkich przycisków z podpisami (Mapa, Pokrewieństwo, Przez lata, Plakat, Historia, Drukuj / PDF) i ikona usuwania na końcu. Na telefonie ten rząd przewija się w poziomie. Zestaw jest taki sam jak w obecnej aplikacji, tylko z podpisami zamiast samych ikon.
 - Osie czasu (linia życia w profilu, lista wydarzeń, „Rodzina na osi czasu” na starcie): rok duży i cienki, jak w obecnej osi rodziny: grubość 220, kolor wyciszony (#8A978F), odstęp liter -0.04em. Rozmiary: 35 px na skali osi rodziny, 27 px w wydarzeniach, 22 px w profilu. Pod rokiem mały dzień albo wiek. Nigdy półgruby.
+- Duże liczby (kafelki na starcie: osoby, pokolenia, zdjęcia, źródła; analogicznie statystyki, kondycja danych i inne liczniki): ten sam cienki krój co lata, grubość 220, odstęp liter -0.04em, 36 px w kafelku. Kolor zwykłego tekstu, bo kafelek ma jasnoszare tło i szara liczba byłaby słabo czytelna. Podpis pod liczbą mały i wyciszony.
 - W menu (rail i pasek boczny) dyskretny link „Wesprzyj projekt” (serce, kolor wyciszony), nad „Więcej”.
 
 ## 7. Wdrożenie (po akceptacji)
