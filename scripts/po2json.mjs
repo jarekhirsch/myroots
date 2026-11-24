@@ -3,8 +3,9 @@
 // key = msgid, or msgctxt + "\u0004" + msgid.
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const poDir = path.join(root, 'src/lib/i18n/po');
 const extraDir = path.join(root, 'src/lib/i18n/extra');
 const outDir = path.join(root, 'src/lib/i18n/locales');

@@ -5,8 +5,9 @@
 // ([key, pluralOrNull] pairs). Lines starting with # are comments.
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dir = path.join(root, 'src/lib/i18n/app-strings');
 const outDir = path.join(root, 'src/lib/i18n/extra');
 const LANGS = ['pl', 'de', 'fr', 'es', 'it', 'pt', 'nl', 'sv', 'fi', 'da', 'he'];

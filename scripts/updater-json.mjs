@@ -6,13 +6,14 @@
 // verifies every file with the public key in src-tauri/tauri.conf.json.
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const [version, assets, out, base = 'https://myroots.cc/updates'] = process.argv.slice(2);
 if (!version || !assets || !out) {
   console.error('usage: updater-json.mjs <version> <assets dir> <out dir> [base url]');
   process.exit(1);
 }
-const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const files = fs.readdirSync(assets);
 // which file updates which platform (Tauri 2 updater keys)
 const RULES = [

@@ -2,7 +2,8 @@
 // Usage: node scripts/check-i18n.mjs [lang] [--json]  → prints missing msgids (keys).
 import fs from 'node:fs';
 import path from 'node:path';
-const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+import { fileURLToPath } from 'node:url';
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const lang = process.argv[2] && !process.argv[2].startsWith('--') ? process.argv[2] : 'pl';
 const files = [];
 const walk = (d) => { for (const f of fs.readdirSync(d)) { const p = path.join(d, f); if (fs.statSync(p).isDirectory()) { if (!['wasm', 'locales', 'po'].includes(f)) walk(p); } else if (/\.(svelte|ts)$/.test(f)) files.push(p); } };

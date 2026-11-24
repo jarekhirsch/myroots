@@ -2,7 +2,8 @@
 // script instead of a module script, file name index.html.
 import fs from 'node:fs';
 import path from 'node:path';
-const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+import { fileURLToPath } from 'node:url';
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dir = path.join(root, 'dist-viewer');
 let html = fs.readFileSync(path.join(dir, 'viewer.html'), 'utf8');
 html = html.replace(/<script type="module" crossorigin src="([^"]+)"><\/script>/, '<script defer src="$1"></script>');
