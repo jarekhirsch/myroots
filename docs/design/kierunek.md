@@ -70,6 +70,16 @@ Ciemny motyw: te same role, wartości z obecnego ciemnego motywu; szklane etykie
 - Cele dotyku co najmniej 44 px (przyciski ikonowe 44–48 px, pozycje paska 48 px).
 - `--muted` na bieli spełnia 4,5:1; akcent na bieli i biel na akcencie także.
 
+## 6a. Ruch
+
+- Wejście widoku: bloki wsuwają się od dołu (16 px, 0,7 s) z opóźnieniem 70 ms między kolejnymi; siatki zdjęć i list co 50 ms.
+- Najechanie na zdjęcie: lekkie powiększenie 1,04. Wciśnięcie elementu: skala 0,98.
+- Okrągły przycisk ze strzałką obraca strzałkę o 45° przy najechaniu.
+- Drzewo: linie rysują się przy wejściu, panel szczegółów wjeżdża z prawej, wybrana osoba ma delikatny puls.
+- Szybkie wyszukiwanie: tło przyciemnia się, okno wyskakuje z góry. Pasek na telefonie wsuwa się od dołu.
+- Krzywa: cubic-bezier(.2,.7,.2,1). Przy prefers-reduced-motion wszystkie animacje są wyłączone.
+- W menu (rail i pasek boczny) dyskretny link „Wesprzyj projekt” (serce, kolor wyciszony), nad „Więcej”.
+
 ## 7. Wdrożenie (po akceptacji)
 
 1. Tokeny w `src/lib/theme.ts` i `src/app.css` (tło, `--soft`, `--line`, `--accent-soft`), bez zmian w układzie. Sprawdzenie wszystkich ekranów testem `tests/e2e/smoke.spec.ts` i zrzutami.
