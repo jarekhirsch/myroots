@@ -32,15 +32,6 @@ scripts                budowanie WASM, tłumaczeń i podglądu strony rodzinnej
 
 Zbudowany silnik WASM jest już w `src/lib/wasm`, więc samego interfejsu można używać bez Rusta. Rust potrzebny jest dopiero przy zmianach w silniku i do aplikacji natywnej.
 
-## Najprościej na Macu
-
-W folderze projektu są dwa pliki do kliknięcia dwa razy w Finderze:
-
-- **Uruchom w przegladarce.command**: wersja przeglądarkowa na http://localhost:1420. Wymaga tylko Node.js (https://nodejs.org, wersja LTS). Pierwsze uruchomienie pobiera biblioteki, kolejne startują od razu. Zamknięcie okna Terminala zatrzymuje aplikację.
-- **Zbuduj aplikacje na Maca.command**: buduje MyRoots.app i instalator .dmg. Sprawdza i pomaga doinstalować Node.js, narzędzia Xcode i Rust. Pierwsze budowanie trwa 5-10 minut.
-
-Jeśli macOS nie pozwala otworzyć pliku .command, kliknij go prawym przyciskiem i wybierz Otwórz.
-
 ## Uruchomienie
 
 ```bash
@@ -98,7 +89,7 @@ cargo test -p myroots-core -p myroots-store
 npm run check
 ```
 
-## Wydanie
+## Dokumenty
 
 Polityka prywatności: `PRIVACY.md`, zmiany: `CHANGELOG.md`.
 

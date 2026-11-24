@@ -19,3 +19,6 @@ _klucze/
 __pycache__/
 .shots/
 CLAUDE.md
+
+# local helper scripts (Mac), kept off GitHub
+*.command
