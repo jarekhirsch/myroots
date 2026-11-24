@@ -10,7 +10,9 @@ Zasada nadrzędna: **nie zmieniamy tego, co działa** (układ, nawigacja, czcion
 
 - Czcionka **Onest** (400/500/600/700).
 - Zieleń MyRoots jako jedyny akcent (domyślnie `#1F4A37`).
-- Układ ekranów, kolejność sekcji, nazwy, nawigacja (dock na komputerze, pasek na telefonie).
+- Układ ekranów, kolejność sekcji, nazwy.
+- **Menu na komputerze bez zmian:** wąska kolumna (ok. 96 px) z logo, ikoną nad podpisem i aktywną pozycją w pełnej, kontrastowej pigułce w kolorze akcentu; „Więcej” na dole. Tło kolumny `--soft`, treść na bieli. (Wersja z szerokim białym menu odrzucona: słabszy kontrast.)
+- **Drzewo:** kropkowane tło, kropka płci i licznik ukrytych krewnych na kartach, pasek z Przodkami/Potomkami/Liniami i podpowiedź na dole zostają.
 - Ciemny motyw i motywy kolorystyczne z Ustawień (zmieniają tylko wartości tokenów poniżej).
 
 ## 2. Co się zmienia
@@ -44,6 +46,9 @@ Ciemny motyw: te same role, wartości z obecnego ciemnego motywu; szklane etykie
 
 ## 4. Elementy
 
+- **Szybkie wyszukiwanie (nowe):** pozycja „Szukaj” na górze menu (pod logo) i skrót Ctrl K / Cmd K z każdego ekranu. Otwiera okno na środku (660 px, promień 28 px, przyciemnione tło) z wynikami w grupach: osoby (zdjęcie, lata, miejsce), rody i zdjęcia, źródła i akcje („Dodaj osobę …”). Strzałki wybierają, Enter otwiera, Esc zamyka.
+- **Panel boczny drzewa:** zdjęcie na górze ze szklanymi etykietami i przyciskiem zamknięcia, imię, lata, okrągła akcja „Otwórz profil”, kilka danych i przyciski Edytuj/Krewny.
+
 - **Karta osoby (album):** zdjęcie 4:5, promień 22 px, szklana etykieta z miejscem urodzenia w lewym dolnym rogu, pod spodem imię i nazwisko (15 px, 600) i lata (13 px, `--muted`). Bez ramki i cienia.
 - **Profil osoby (telefon):** zdjęcie na całą szerokość (ok. 470 px), na nim szklany przycisk „Wstecz” i etykiety; biała karta z treścią nachodzi na zdjęcie o 28 px (promień 28 px u góry). Obok nazwiska okrągła akcja „Otwórz w drzewie”.
 - **Profil osoby (komputer):** zdjęcie 380×470 po lewej, po prawej kontekst, imię, lata, przyciski (jeden wypełniony „Edytuj”, reszta konturowe) i dane w dwóch kolumnach bez panelu.
@@ -71,5 +76,5 @@ Ciemny motyw: te same role, wartości z obecnego ciemnego motywu; szklane etykie
 2. Zamiana ikon: jeden plik mapujący nazwy (`src/lib/icons.ts`) z Lucide na Phosphor light, potem podmiana importów (111 różnych ikon, 199 importów w 51 plikach; mechanicznie).
 3. Przyciski: klasa `.btn.primary` zostaje tylko dla jednej akcji na ekran; pozostałe `.btn` konturowe; nowa klasa `.btn.round` (okrągła akcja).
 4. Komponent `GlassTag.svelte` i karty prowadzone zdjęciem: album osób, profil, start, galeria.
-5. Pływający pasek nawigacji na telefonie.
+5. Pływający pasek nawigacji na telefonie; na komputerze menu bez zmian plus „Szukaj” z oknem szybkiego wyszukiwania (Ctrl K).
 6. Strona rodzinna (ten sam kod) dostaje to samo automatycznie.
