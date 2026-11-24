@@ -22,3 +22,11 @@ CLAUDE.md
 
 # local helper scripts (Mac), kept off GitHub
 *.command
+
+# MyRoots Server and the WordPress plugin: the app inside is the build (scripts/packages.mjs),
+# data and settings belong to a running installation
+server/app/
+server/data/
+server/media/
+server/config.php
+wordpress/myroots/app/

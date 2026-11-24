@@ -1,0 +1,141 @@
+#
+msgid ""
+msgstr ""
+"Language: pl_PL\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+
+msgid "Address of the family website"
+msgstr "Adres strony rodzinnej"
+
+msgid "Allow search engines to index the family website"
+msgstr "Pozwól wyszukiwarkom indeksować stronę rodzinną"
+
+msgid ""
+"Delete the family tree, photos and the website when the plugin is deleted"
+msgstr "Usuń drzewo, zdjęcia i stronę rodzinną przy usuwaniu wtyczki"
+
+msgid "Edit the family tree"
+msgstr "Edytuj drzewo genealogiczne"
+
+msgid "Everybody"
+msgstr "Wszyscy"
+
+msgid "Family tree"
+msgstr "Drzewo genealogiczne"
+
+msgid "Family website"
+msgstr "Strona rodzinna"
+
+msgid "From:"
+msgstr "Od:"
+
+msgid "Genealogy Editor"
+msgstr "Redaktor genealogii"
+
+msgid ""
+"Living people are additionally protected by the privacy settings in the app "
+"(Family website)."
+msgstr ""
+"Żyjące osoby dodatkowo chronią ustawienia prywatności w aplikacji (Strona "
+"rodzinna)."
+
+msgid "Make a backup first (in the app: Import and backup)."
+msgstr "Najpierw zrób kopię zapasową (w aplikacji: Import i kopia)."
+
+msgid "MyRoots settings"
+msgstr "Ustawienia MyRoots"
+
+msgid "Nobody (only editors of the tree)"
+msgstr "Nikt (tylko redaktorzy drzewa)"
+
+msgid "Only logged-in users of this site (family accounts)"
+msgstr "Tylko zalogowani użytkownicy tej strony (konta rodziny)"
+
+msgid "Open"
+msgstr "Otwórz"
+
+msgid "Open MyRoots"
+msgstr "Otwórz MyRoots"
+
+msgid "Open MyRoots and publish it"
+msgstr "Otwórz MyRoots i opublikuj je"
+
+msgid "Open the family tree in full screen"
+msgstr "Otwórz drzewo na pełnym ekranie"
+
+msgid "Open the family website"
+msgstr "Otwórz stronę rodzinną"
+
+msgid "Removing the plugin"
+msgstr "Usuwanie wtyczki"
+
+msgid "Search engines"
+msgstr "Wyszukiwarki"
+
+msgid "Send me an e-mail when someone suggests a correction"
+msgstr "Wyślij mi e-mail, gdy ktoś zaproponuje poprawkę"
+
+msgid "Settings"
+msgstr "Ustawienia"
+
+msgid "Sorry, you are not allowed to access this page."
+msgstr "Niestety, nie masz dostępu do tej strony."
+
+msgid ""
+"Suggestions appear in the app under Suggestions, the next time it is opened."
+msgstr ""
+"Propozycje pojawią się w aplikacji w zakładce Propozycje przy jej następnym "
+"otwarciu."
+
+msgid "Suggestions from the family"
+msgstr "Propozycje od rodziny"
+
+msgid "The family tree is not published yet."
+msgstr "Drzewo genealogiczne nie zostało jeszcze opublikowane."
+
+msgid ""
+"The family tree, its privacy, appearance and the content of the family "
+"website are set in the app itself."
+msgstr ""
+"Drzewo, jego prywatność, wygląd i treść strony rodzinnej ustawia się w samej"
+" aplikacji."
+
+msgid ""
+"Turn on pretty permalinks (Settings → Permalinks) to choose a nicer address."
+msgstr ""
+"Włącz przyjazne bezpośrednie odnośniki (Ustawienia → Bezpośrednie "
+"odnośniki), aby wybrać ładniejszy adres."
+
+msgid "View the family website"
+msgstr "Zobacz stronę rodzinną"
+
+msgid "Who can see it"
+msgstr "Kto może ją oglądać"
+
+msgid "[MyRoots] New correction suggestion: %s"
+msgstr "[MyRoots] Nowa propozycja poprawki: %s"
+
+msgid ""
+"Family tree for WordPress, with the very same interface and engine as the "
+"MyRoots 3 app for Mac, Windows, Linux, phones and the browser. Edit the tree"
+" in the admin panel and publish a read-only family website for your "
+"relatives."
+msgstr ""
+"Drzewo genealogiczne dla WordPressa z tym samym interfejsem i silnikiem co "
+"aplikacja MyRoots 3 na Maca, Windowsa, Linuksa, telefony i przeglądarkę. "
+"Edytuj drzewo w panelu i publikuj stronę rodzinną tylko do odczytu dla "
+"bliskich."
+
+msgid "Family tree %d"
+msgstr "Drzewo genealogiczne %d"
+
+msgid "Family trees"
+msgstr "Drzewa genealogiczne"
+
+msgid ""
+"Trees are added, renamed and deleted in the app (Family trees). Each one is "
+"published separately."
+msgstr ""
+"Drzewa dodaje się, zmienia ich nazwy i usuwa w aplikacji (Drzewa "
+"genealogiczne). Każde publikuje się osobno."

@@ -209,6 +209,7 @@ Lista generowana przez `npm run docs` z pierwszego komentarza w każdym pliku. N
 | `docs.mjs` | Keeps the generated parts of docs/dev/*.md in step with the code. |
 | `finalize-viewer.mjs` | Makes the viewer template work from a local disk (file://): classic deferred |
 | `gen-icons.mjs` | Builds src/lib/icons/*.svelte from Phosphor Icons (MIT, @phosphor-icons/core). |
+| `packages.mjs` | MyRoots Server and the WordPress plugin as ready ZIPs, with a check of each. |
 | `po2json.mjs` | Converts the WordPress plugin translations (.po) + extra strings of the app |
 | `updater-json.mjs` | Prepares the update files for myroots.cc/updates/ from the assets of a |
 <!-- /auto:files -->

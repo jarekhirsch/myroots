@@ -56,6 +56,9 @@ crates/myroots-store   zapis w SQLite + pliki zdjęć (aplikacja natywna)
 src-tauri              aplikacja Tauri (komendy, protokół media://, okna, pliki .myroots)
 src                    interfejs Svelte 5 (wspólny dla wszystkich platform)
 scripts                budowanie WASM, tłumaczeń i podglądu strony rodzinnej
+server                 MyRoots Server: ta sama aplikacja na zwykłym hostingu z PHP
+wordpress/myroots      wtyczka WordPress z tą samą aplikacją w panelu
+tests/e2e              testy całej aplikacji w przeglądarce, na serwerze PHP i na WordPressie
 ```
 
 ## Wymagania
@@ -101,6 +104,15 @@ npm run tauri ios build
 
 Zawartość `dist/` po `npm run build` to gotowa aplikacja do wrzucenia na dowolny hosting statyczny. Działa offline (service worker) i da się ją zainstalować z przeglądarki. Dane zostają w przeglądarce użytkownika, więc warto regularnie robić kopię (Import i kopia, plik `.myroots`).
 
+### MyRoots Server i wtyczka WordPress
+
+```bash
+npm run build:viewer
+node scripts/packages.mjs   # target/packages/myroots-server.zip i myroots.zip
+```
+
+`myroots-server.zip` rozpakowany na hostingu z PHP 8 to MyRoots Server (opis instalacji w `server/CZYTAJ-MNIE.md`). `myroots.zip` to wtyczka do wgrania w WordPressie (Wtyczki, Dodaj nową, Wyślij wtyczkę na serwer).
+
 ## Przeniesienie danych z WordPressa
 
 1. We wtyczce MyRoots 2.x zrób kopię zapasową (JSON).
@@ -123,7 +135,10 @@ W „Strona rodzinna” ustawiasz, co widać publicznie (żyjące osoby są domy
 ```bash
 cargo test -p myroots-core -p myroots-store
 npm run check
+npm run build:app && npm run test:e2e
 ```
+
+GitHub przy każdej zmianie uruchamia też testy na MyRoots Server (PHP) i na prawdziwym WordPressie (najstarsza obsługiwana wersja i najnowsza). Szczegóły: `docs/dev/budowanie.md`.
 
 ## Dokumenty
 

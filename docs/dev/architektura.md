@@ -28,7 +28,7 @@ Cała baza drzewa jest w pamięci (`Database` w `db.rs`: mapy `BTreeMap<Id, …>
 | Tauri (`src-tauri/src/lib.rs`, `crates/myroots-store`) | SQLite: wiersze JSON `(kind, id)` w folderze danych aplikacji, osobny folder na każde drzewo | pliki `media/<id>` i `media/<id>_t` (miniatura), protokół `media://` |
 | Przeglądarka (`backend/wasm.ts`, `idb.ts`) | IndexedDB, baza na drzewo, kolejka zapisów | IndexedDB `blobs`, adresy `blob:` (`ensureMedia`) |
 | Strona rodzinna (`backend/viewer.ts`) | tylko odczyt z `data.js` (publiczna kopia, opcjonalnie szyfrowana: `sitelock.ts`) | pliki w ZIP strony |
-| WordPress / Server (`backend/wp.ts`) | REST API wtyczki lub serwera, paczki zmian z ponawianiem | REST, pliki na serwerze |
+| WordPress / Server (`backend/wp.ts`) | REST API wtyczki (`wordpress/myroots/includes/class-rest.php`) lub serwera (`server/lib/api.php`), paczki zmian z ponawianiem | REST, pliki na serwerze; strona publiczna serwera: zdjęcia kopiowane do `media/` i wysyłane bez PHP |
 
 Uruchomienie: platforma wczytuje wszystkie rekordy i buduje `Database::from_records`. Przy 20 000 osób to ok. 0,3 s natywnie.
 

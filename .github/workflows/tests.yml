@@ -64,7 +64,7 @@ jobs:
 
   e2e:
     # the whole app in a browser: every screen, editing, import/export, backups,
-    # 12 languages, on a computer and a phone (MyRoots Server tests run locally)
+    # 12 languages, on a computer and a phone, and MyRoots Server on PHP
     runs-on: ubuntu-22.04
     needs: test
     steps:
@@ -73,13 +73,99 @@ jobs:
         with:
           node-version: 20
           cache: npm
+      - uses: shivammathur/setup-php@v2
+        with:
+          # the oldest PHP that MyRoots Server supports
+          php-version: '8.0'
+          extensions: pdo_sqlite, mbstring
       - run: npm ci
       # the engine (WebAssembly) is committed in src/lib/wasm, built by the job above's tests
       - run: npm run build:viewer && npm run build:app
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
+        env:
+          MYROOTS_SERVER_DIR: ${{ github.workspace }}/server
       - if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: e2e-report
+          path: target/e2e-report
+
+  # The WordPress plugin on a real WordPress (Apache + MariaDB, as on a hosting),
+  # the oldest supported version and the newest: activation without PHP notices,
+  # the editor, restoring a backup with photos, saving, publishing, the family
+  # website for a visitor, the shortcode, a subscriber kept out of the editor.
+  wordpress:
+    runs-on: ubuntu-22.04
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ['wordpress:6.5-php8.1-apache', 'wordpress:php8.4-apache']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build:viewer
+      - name: MyRoots Server and the plugin, as they are released (zipped and checked)
+        run: node scripts/packages.mjs
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+      - name: The plugin parses on PHP 7.4 (its minimum)
+        run: find wordpress -name '*.php' -print0 | xargs -0 -n1 php -l
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+      - name: MyRoots Server parses on PHP 8.0 (its minimum)
+        run: find server -name '*.php' -print0 | xargs -0 -n1 php -l
+      - name: WordPress with the plugin
+        env:
+          IMAGE: ${{ matrix.image }}
+        run: |
+          rm -rf target/wp && mkdir -p target/wp && unzip -q target/packages/myroots.zip -d target/wp
+          docker network create wp
+          docker run -d --name db --network wp -e MARIADB_DATABASE=wp -e MARIADB_USER=wp -e MARIADB_PASSWORD=wp -e MARIADB_RANDOM_ROOT_PASSWORD=1 mariadb:11
+          docker run -d --name wp --network wp -p 8088:80 \
+            -e WORDPRESS_DB_HOST=db -e WORDPRESS_DB_USER=wp -e WORDPRESS_DB_PASSWORD=wp -e WORDPRESS_DB_NAME=wp \
+            -e WORDPRESS_DEBUG=1 -e WORDPRESS_CONFIG_EXTRA="define('WP_DEBUG_LOG', true); define('WP_DEBUG_DISPLAY', false);" \
+            -v "$PWD/target/wp/myroots:/var/www/html/wp-content/plugins/myroots:ro" "$IMAGE"
+          curl -sSfLo wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          for i in $(seq 60); do docker exec wp test -f /var/www/html/wp-config.php && break; sleep 2; done
+          docker cp wp-cli.phar wp:/usr/local/bin/wp
+          docker exec wp chmod 755 /usr/local/bin/wp
+          W="docker exec -u www-data -e HOME=/tmp wp wp"
+          for i in $(seq 60); do
+            $W core install --url=http://localhost:8088 --title=Test --admin_user=admin --admin_password=secret-pass-1 --admin_email=admin@example.com --skip-email && break
+            sleep 3
+          done
+          $W core version
+          $W rewrite structure '/%postname%/'
+          $W plugin activate myroots
+          $W rewrite flush
+          $W user create family family@example.com --role=subscriber --user_pass=family-pass-1
+          $W post create --post_type=page --post_status=publish --post_title='Tree page' --post_name=tree-page --post_content='[myroots view="/people"]'
+          curl -sSf -o /dev/null http://localhost:8088/tree-page/
+      - run: npx playwright install --with-deps chromium
+      - name: Tests on WordPress
+        env:
+          MYROOTS_WP_URL: http://localhost:8088/
+          MYROOTS_WP_PAGE: tree-page/
+          MYROOTS_WP_SUBSCRIBER: family:family-pass-1
+        run: npx playwright test wordpress --project=desktop
+      - name: No PHP errors, warnings or notices from the plugin
+        if: always()
+        run: |
+          docker exec wp sh -c 'cat /var/www/html/wp-content/debug.log 2>/dev/null' > debug.log || true
+          cat debug.log
+          if grep -i 'plugins/myroots' debug.log; then echo "::error::PHP messages from the plugin (above)"; exit 1; fi
+      - if: failure()
+        run: docker logs wp 2>&1 | tail -100
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wordpress-report-${{ strategy.job-index }}
           path: target/e2e-report

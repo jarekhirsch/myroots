@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "myroots/tree",
+	"title": "MyRoots",
+	"category": "embed",
+	"icon": "networking",
+	"description": "The family tree from MyRoots: people, tree, map, statistics and more.",
+	"keywords": [ "genealogy", "family tree", "myroots" ],
+	"textdomain": "myroots",
+	"attributes": {
+		"view": { "type": "string", "default": "/" },
+		"height": { "type": "string", "default": "85vh" },
+		"tree": { "type": "string", "default": "" }
+	},
+	"supports": { "html": false, "align": [ "wide", "full" ] }
+}

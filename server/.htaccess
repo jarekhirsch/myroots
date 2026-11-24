@@ -1,0 +1,28 @@
+# MyRoots Server (Apache / LiteSpeed). Every address goes to index.php,
+# except the files of the app (app/, assets/) and the public photos (media/).
+Options -Indexes
+DirectoryIndex index.php
+
+<IfModule mod_mime.c>
+  AddType application/wasm .wasm
+  AddType application/manifest+json .webmanifest
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # the data folder, the code and the configuration are never served
+  RewriteRule ^(data|lib)(/|$) - [F,L]
+  RewriteRule ^config\.php$ - [F,L]
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^(app|assets)/ - [L]
+  # public photos of the family website, sent without PHP (see MR_Site::mirror)
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^([a-z0-9][a-z0-9-]*/)?media/[0-9]+(_t)?\.[a-z0-9]+$ - [L]
+  RewriteRule ^ index.php [L,QSA]
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|css|wasm|woff2|png|svg|shard)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+</IfModule>

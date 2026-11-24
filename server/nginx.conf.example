@@ -1,0 +1,12 @@
+# MyRoots Server behind nginx (installed in /rodzina/; for the main folder use "/" instead).
+location /rodzina/ {
+    try_files $uri /rodzina/index.php$is_args$args;
+}
+location ~ ^/rodzina/(data|lib)/ { deny all; return 404; }
+location = /rodzina/config.php { deny all; return 404; }
+location ~ \.php$ {
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+}
+types { application/wasm wasm; application/manifest+json webmanifest; }
