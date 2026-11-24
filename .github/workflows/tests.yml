@@ -28,3 +28,25 @@ jobs:
         run: npm run build:viewer && npm run build:app
       - name: Audit
         run: npm audit --omit=dev
+
+  e2e:
+    # the whole app in a browser: every screen, editing, import/export, backups,
+    # 12 languages, on a computer and a phone (MyRoots Server tests run locally)
+    runs-on: ubuntu-22.04
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      # the engine (WebAssembly) is committed in src/lib/wasm, built by the job above's tests
+      - run: npm run build:viewer && npm run build:app
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-report
+          path: target/e2e-report

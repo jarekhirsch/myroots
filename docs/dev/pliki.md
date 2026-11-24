@@ -118,6 +118,7 @@ Lista generowana przez `npm run docs` z pierwszego komentarza w każdym pliku. N
 | `Lightbox.svelte` | A photo at full size. People marked on it are listed under the photo and |
 | `MapPicker.svelte` | Pick a point on the map (e.g. a grave): search a place, then click the exact spot. |
 | `MediaLibrary.svelte` | Picks images already stored in the app (shared between people, pets and sources). |
+| `MiniDots.svelte` | A folded generation of the family timeline drawn on one canvas: one dot per |
 | `MiniMap.svelte` | Small map of one person's places in the profile (only when map services |
 | `Modal.svelte` |  |
 | `PersonLink.svelte` |  |
@@ -127,6 +128,7 @@ Lista generowana przez `npm run docs` z pierwszego komentarza w każdym pliku. N
 | `ProgressBar.svelte` | Bar of long file work (see `progress` / `withProgress` in ui.svelte.ts). |
 | `QuickSearch.svelte` | Search box in the menu: jumps to a person's profile. |
 | `RecordingsEditor.svelte` | Voice recordings of a person: upload files or record from the microphone. |
+| `ReportDialog.svelte` | "Report a problem": a description plus technical details (version, system, |
 | `RichText.svelte` | Small rich-text editor (bold, italic, headings, lists, quote, link). |
 | `SuggestDialog.svelte` | "Suggest a correction" on the family website. There is no server: the |
 | `TreeDetails.svelte` | Data panel beside the tree: everything important about the selected |
@@ -141,12 +143,15 @@ Lista generowana przez `npm run docs` z pierwszego komentarza w każdym pliku. N
 | `aging.ts` | "Through the years": photos of one person aligned on the eyes and played |
 | `albumsplit.ts` | Finds the photos on a scanned album page: everything that differs from the |
 | `api.svelte.ts` | Shared reactive state. `version` changes after every write → views reload. |
+| `archivejs.ts` | .myroots backups built and read piece by piece, so a tree with thousands of |
 | `assoc.ts` | Godparents, witnesses and other people tied to a person (GEDCOM ASSO). |
 | `audio.ts` | Sound recordings: storing files and recordings from the microphone, and |
+| `basemap.ts` | Map background for every map in the app (map view, graves, place picker, |
 | `cemeteries.ts` | Cemeteries of OpenStreetMap around the visible part of the map (Overpass |
 | `citations.ts` | Citations of sources for single facts (see `Person.citations` and |
 | `credits.ts` | Author, licence and the components MyRoots is built with (shown in "About"). |
-| `errors.ts` | Human message for an engine error code. |
+| `errorlog.ts` | Safety net for errors no view handled: the person always gets a message, and |
+| `errors.ts` | The browser has no more room for the data of this site. |
 | `exif.ts` | GPS position from the EXIF data of a JPEG photo (taken with a phone at the grave). |
 | `faces.ts` | Finding the eyes on a photo, on the device (no network): a small face |
 | `familygraph.ts` | Layout of the whole family on one board (the plugin's "whole graph"): |
@@ -157,6 +162,7 @@ Lista generowana przez `npm run docs` z pierwszego komentarza w każdym pliku. N
 | `history.ts` | The most important events in the history of Poland since 1600 (for the whole |
 | `kinship.ts` | Kinship terms, ported from the WordPress plugin (MyRoots_Kinship) so that |
 | `load.svelte.ts` | Reactive loader: runs `fn` on mount and again after every data change |
+| `maplibre.ts` | MapLibre for Leaflet, loaded only when a map is shown. The worker script is |
 | `media.ts` | Image processing before storing: downscale very large photos and make a thumbnail. |
 | `migrations.ts` | Moves of the family between places: from a parent's place of birth to the |
 | `nav.ts` | Navigation of the app and of the read-only family website. |
@@ -175,6 +181,7 @@ Lista generowana przez `npm run docs` z pierwszego komentarza w każdym pliku. N
 | `updates.svelte.ts` | Updates of the desktop app (macOS, Windows, Linux AppImage) from myroots.cc. |
 | `weather.ts` | Historical weather of a day at a place: Open-Meteo, ERA5 reanalysis |
 | `wpmedia.ts` | Brings the photos and scans of a WordPress MyRoots site into the app. |
+| `zipindex.ts` | Reads a zip archive without loading it into memory: only the list of files |
 
 ### src/lib/backend
 

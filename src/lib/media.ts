@@ -1,4 +1,5 @@
 // Image processing before storing: downscale very large photos and make a thumbnail.
+import { errorText, isStorageFull } from './errors';
 import { backend } from './backend';
 import { toast, withProgress } from './ui.svelte';
 import { t } from './i18n/index.svelte';
@@ -84,6 +85,11 @@ export function pickImages(multiple = true, onFile?: (file: File, id: number) =>
             ids.push(id);
             onFile?.(f, id);
           } catch (e) {
+            // no room left: the next photos would fail too
+            if (isStorageFull(e)) {
+              toast(errorText(e), 'error');
+              break;
+            }
             console.warn('skipped', f.name, e);
             failed.push(f.name);
           }

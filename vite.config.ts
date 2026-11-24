@@ -16,7 +16,7 @@ const CSP_APP = [
   "img-src 'self' data: blob: https:",
   "media-src 'self' blob:",
   "font-src 'self' data:",
-  "connect-src 'self' https:",
+  "connect-src 'self' blob: data: https:",
   "worker-src 'self' blob:",
   "object-src 'none'",
   "base-uri 'self'",

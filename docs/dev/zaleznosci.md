@@ -33,6 +33,7 @@ Zasada: najnowsze stabilne wersje. Sprawdzenie: `npm outdated`, `npm audit`, `ca
 | `@fontsource-variable/literata` | ^5.3.0 | aplikacja |
 | `@fontsource-variable/onest` | ^5.3.1 | aplikacja |
 | `@lucide/svelte` | ^1.77.0 | aplikacja |
+| `@maplibre/maplibre-gl-leaflet` | ^0.1.4 | aplikacja |
 | `@tauri-apps/api` | ^2.12.5 | aplikacja |
 | `@tauri-apps/plugin-dialog` | ^2.8.4 | aplikacja |
 | `@tauri-apps/plugin-fs` | ^2.7.1 | aplikacja |
@@ -49,7 +50,7 @@ Zasada: najnowsze stabilne wersje. Sprawdzenie: `npm outdated`, `npm audit`, `ca
 | `leaflet` | ^1.9.4 | aplikacja |
 | `leaflet.markercluster` | ^1.5.3 | aplikacja |
 | `maplibre-gl` | ^6.19.0 | aplikacja |
-| `@maplibre/maplibre-gl-leaflet` | ^0.1.4 | aplikacja |
+| `@playwright/test` | ^1.65.1 | budowanie |
 | `@sveltejs/vite-plugin-svelte` | ^7.3.1 | budowanie |
 | `@tauri-apps/cli` | ^2.12.6 | budowanie |
 | `@tsconfig/svelte` | ^5.0.9 | budowanie |
@@ -57,6 +58,7 @@ Zasada: najnowsze stabilne wersje. Sprawdzenie: `npm outdated`, `npm audit`, `ca
 | `@types/leaflet` | ^1.9.22 | budowanie |
 | `@types/leaflet.markercluster` | ^1.5.6 | budowanie |
 | `binaryen` | ^132.0.0 | budowanie |
+| `jszip` | ^3.10.2 | budowanie |
 | `svelte` | ^5.59.1 | budowanie |
 | `svelte-check` | ^4.7.8 | budowanie |
 | `typescript` | ~6.0.3 | budowanie |

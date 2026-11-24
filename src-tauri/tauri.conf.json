@@ -28,7 +28,7 @@
         "font-src": "'self' data:",
         "img-src": "'self' data: blob: media: http://media.localhost https://tiles.openfreemap.org https://*.basemaps.cartocdn.com https://*.tile.opentopomap.org",
         "media-src": "'self' blob: media: http://media.localhost",
-        "connect-src": "'self' ipc: http://ipc.localhost https://tiles.openfreemap.org",
+        "connect-src": "'self' ipc: http://ipc.localhost blob: data: https://tiles.openfreemap.org",
         "object-src": "'none'",
         "base-uri": "'self'",
         "form-action": "'none'",

@@ -32,6 +32,12 @@ Big trees run smoothly, sources can be attached to every piece of information, a
 - Graves, data consistency and missing data are shown in parts, and the home page no longer builds the whole list of problems only to show their number.
 
 **Fixes**
+- Big trees (tens of thousands of people, thousands of photos): GEDCOM import with a ZIP of photos of any size (before, a few hundred MB were impossible), backups built and restored piece by piece, faster start page, events and places, also on phones.
+- MyRoots Server and WordPress: the editor opens big trees also on hosting with a 128 MB PHP memory limit (before: an error); tree data and the family website are sent compressed (many times less data).
+- When the browser runs out of space, the app says so clearly and stops the import (before, changes could silently fail to save).
+- Every unexpected error gives a message instead of silence; a wrong file when restoring a backup says it is not a MyRoots backup.
+- A big backup is no longer cut off while saving to disk.
+- New: "Report a problem" in the menu (e-mail or GitHub, with technical details, without tree data).
 - MyRoots Server: photos load in parallel. Before, the login session blocked the next requests, so photos in the gallery and the tree arrived one after another, and the public family website opened a session for every photo.
 - MyRoots Server and WordPress: publishing the website and restoring a backup send several photos at once (about 35% faster in the test), send a piece of a file again when the hosting loses an answer, and warn before the tab is closed in the middle. A website without full photos no longer fetches the originals to publish.
 - Maps: the background now comes from OpenFreeMap (no limits, no keys) instead of openstreetmap.org tiles, which sometimes answered with error 403, especially in the desktop app. Names of places and countries are in the app language. Styles in the settings: Standard, Pale, Night and Terrain.

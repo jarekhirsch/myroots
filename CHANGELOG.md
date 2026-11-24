@@ -32,6 +32,13 @@ Duże drzewa działają płynnie, źródła można przypisać do każdej informa
 - Groby, spójność danych i brakujące dane pokazują się w porcjach, a strona główna nie liczy już całej listy problemów tylko po to, żeby pokazać ich liczbę.
 
 **Poprawki**
+- Duże drzewa (dziesiątki tysięcy osób, tysiące zdjęć): import GEDCOM-u z ZIP-em zdjęć dowolnej wielkości (wcześniej powyżej kilkuset MB był niemożliwy), kopia zapasowa składana i przywracana kawałek po kawałku, szybsza strona startowa, wydarzenia i miejsca, także na telefonie.
+- MyRoots Server i WordPress: edytor otwiera duże drzewa także na hostingu z limitem pamięci PHP 128 MB (wcześniej błąd), dane drzewa i strona rodzinna idą skompresowane (kilkanaście razy mniej danych).
+- Gdy w przeglądarce zabraknie miejsca, aplikacja wyraźnie o tym mówi i zatrzymuje import (wcześniej zmiany mogły się po cichu nie zapisać).
+- Każdy nieoczekiwany błąd daje komunikat zamiast ciszy; zły plik przy przywracaniu kopii mówi, że to nie jest kopia MyRoots.
+- Duża kopia zapasowa nie jest już przerywana przy zapisie na dysk.
+- Nowe: „Zgłoś problem” w menu (e-mail albo GitHub, z danymi technicznymi, bez danych drzewa).
+- Teksty bez półpauz w zdaniach.
 - MyRoots Server: zdjęcia ładują się równolegle. Wcześniej sesja logowania blokowała kolejne zapytania i zdjęcia w galerii i drzewie przychodziły jedno po drugim, a publiczna strona rodzinna otwierała sesję przy każdym zdjęciu.
 - MyRoots Server i WordPress: publikacja strony i przywracanie kopii wysyłają kilka zdjęć naraz (w teście o ok. 35% szybciej), ponawiają kawałek pliku, gdy hosting zgubi odpowiedź, i ostrzegają przed zamknięciem karty w trakcie. Strona bez pełnych zdjęć nie pobiera już do publikacji oryginałów.
 - Mapy: podkład z OpenFreeMap (bez limitów i kluczy) zamiast kafelków openstreetmap.org, które czasem odpowiadały błędem 403, zwłaszcza w aplikacji na komputer. Nazwy miejscowości i krajów są w języku aplikacji (Wiedeń, Lwów, Nowy Jork). Style w ustawieniach: Standardowa, Jasna, Ciemna i Teren.
