@@ -7,6 +7,17 @@ SITE = 'https://myroots.cc'
 HERE = os.path.dirname(os.path.abspath(__file__))
 # Where the site is written (MYROOTS_SITE_OUT), by default "out" next to this file.
 OUT = os.path.abspath(os.environ.get('MYROOTS_SITE_OUT') or os.path.join(HERE, 'out')) + '/'
+
+
+_VER = {}
+def ver(rel):
+    """?v=<hash of the file>: a changed file gets a new address, so browsers and Cloudflare
+    never keep serving the old style sheet or screenshot (they are cached for days)."""
+    if rel not in _VER:
+        import hashlib
+        f = OUT + rel
+        _VER[rel] = '?v=' + hashlib.md5(open(f, 'rb').read()).hexdigest()[:8] if os.path.exists(f) else ''
+    return _VER[rel]
 # Files that are not generated (images, fonts, style, templates, .htaccess) are
 # copied from ../static when that folder exists (the layout of the repository).
 STATIC = os.path.join(HERE, '..', 'static')
@@ -182,15 +193,17 @@ class Ctx:
         return re.sub(r'\{FIG:([^|}]+)\|([^|}]+)\|([^}]+)\}', lambda m: f'<figure class="shot-hero">{self.img(m.group(1), m.group(2))}<figcaption class="shot-cap">{m.group(3)}</figcaption></figure>', s)
 
     def img(self, name, alt, cls='shot', lazy=True):
-        d = self.R + self.img_dir
+        rel = self.img_dir
         if not os.path.exists(OUT + self.img_dir + name + '-1600.webp'):
-            d = self.R + 'img/'
-        return f'<img class="{cls}" src="{d}{name}-1600.webp" srcset="{d}{name}-800.webp 800w, {d}{name}-1600.webp 1600w" sizes="(max-width: 860px) 100vw, 860px" width="1600" height="1000" alt="{html.escape(alt)}"{" loading=\"lazy\"" if lazy else ""} decoding="async">'
+            rel = 'img/'
+        d = self.R + rel
+        a, b = name + '-1600.webp', name + '-800.webp'
+        return f'<img class="{cls}" src="{d}{a}{ver(rel + a)}" srcset="{d}{b}{ver(rel + b)} 800w, {d}{a}{ver(rel + a)} 1600w" sizes="(max-width: 860px) 100vw, 860px" width="1600" height="1000" alt="{html.escape(alt)}"{" loading=\"lazy\"" if lazy else ""} decoding="async">'
 
     def imgpath(self, name):
         if os.path.exists(OUT + self.img_dir + name):
-            return self.R + self.img_dir + name
-        return self.R + 'img/' + name
+            return self.R + self.img_dir + name + ver(self.img_dir + name)
+        return self.R + 'img/' + name + ver('img/' + name)
 
 
 def faq_html(items):
@@ -260,9 +273,9 @@ def page(c, title, desc, body, lds, og_img=None, script='', file=None, index=Tru
 <meta property="og:image:width" content="1600">
 <meta property="og:image:height" content="1000">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" type="image/svg+xml" href="{R}favicon.svg">
+<link rel="icon" type="image/svg+xml" href="{R}favicon.svg{ver('favicon.svg')}">
 <link rel="preload" href="{R}fonts/onest-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="{R}style.css">
+<link rel="stylesheet" href="{R}style.css{ver('style.css')}">
 {''.join(ld(x) for x in lds)}
 {umami}</head>
 <body>
